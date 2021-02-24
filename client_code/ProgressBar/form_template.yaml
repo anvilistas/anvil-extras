@@ -1,0 +1,14 @@
+container:
+  type: HtmlTemplate
+  properties: {html: "<center style=\"font-style:italic; color:#888; margin: 3em;\"\
+      >\n  (Insert your custom HTML here)\n</center>"}
+components: []
+is_package: true
+custom_component: true
+properties:
+- {name: min, type: number, default_value: 0, default_binding_prop: true}
+- {name: max, type: number, default_value: 100}
+- {name: track_colours, type: 'text[]', default_value: null}
+- {name: indicator_colours, type: 'text[]', default_value: null}
+- {name: legend, type: string, default_value: ''}
+- {name: legend_colours, type: 'text[]', default_value: null}
