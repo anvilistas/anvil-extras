@@ -3,7 +3,11 @@ from anvil import *
 
 class Demo(DemoTemplate):
   def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
+    self.progress = 0
     self.init_components(**properties)
 
-    # Any code you write here will run when the form opens.
+
+  def timer_1_tick(self, **event_args):
+      if self.progress < 100:
+          self.progress_bar.progress = self.progress
+          self.progress += 0.01

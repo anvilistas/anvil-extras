@@ -38,7 +38,7 @@ class IndeterminateProgressBar(IndeterminateProgressBarTemplate):
     @track_colour.setter
     def track_colour(self, value):
         self._track_colour = value
-        document.body.style.setProperty("--track-colour", value)
+        document.body.style.setProperty("--indeterminate-track-colour", value)
 
     @property
     def indicator_colour(self):
@@ -47,4 +47,4 @@ class IndeterminateProgressBar(IndeterminateProgressBarTemplate):
     @indicator_colour.setter
     def indicator_colour(self, value):
         self._indicator_colour = value
-        document.body.style.setProperty("--indicator-colour", value)
+        document.body.style.setProperty("--indeterminate-indicator-colour", value)
