@@ -49,6 +49,10 @@ class MessagePill(MessagePillTemplate):
 
     @level.setter
     def level(self, value):
+        if value not in ("info", "success", "warning", "error"):
+            raise ValueError(
+                "level must be one of 'info', 'success', 'warning' or 'error'"
+            )
         self.item["level"] = value
         self.label.background = self.backgrounds[value]
         self.label.foreground = self.foregrounds[value]
