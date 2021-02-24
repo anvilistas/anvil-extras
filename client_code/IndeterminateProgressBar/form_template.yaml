@@ -1,0 +1,21 @@
+container:
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: "<style type=text/css>\n:root {--track-colour: #b3d4fc; --indicator-colour:\
+      \ #1976D2}\n.progress-line, .progress-line:before {\n  height: 3px;\n  width:\
+      \ 100%;\n  margin: 0;\n}\n.progress-line {\n  background-color: var(--indicator-colour);\n\
+      \  display: -webkit-flex;\n  display: flex;\n}\n.progress-line:before {\n  background-color:\
+      \ var(--track-colour);\n  content: '';\n  -webkit-animation: running-progress\
+      \ 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;\n  animation: running-progress 2s\
+      \ cubic-bezier(0.4, 0, 0.2, 1) infinite;\n}\n@-webkit-keyframes running-progress\
+      \ {\n  0% { margin-left: 0px; margin-right: 100%; }\n  50% { margin-left: 25%;\
+      \ margin-right: 0%; }\n  100% { margin-left: 100%; margin-right: 0; }\n}\n@keyframes\
+      \ running-progress {\n  0% { margin-left: 0px; margin-right: 100%; }\n  50%\
+      \ { margin-left: 25%; margin-right: 0%; }\n  100% { margin-left: 100%; margin-right:\
+      \ 0; }\n}\n</style>\n<div class=\"progress-line\"></div>"}
+components: []
+is_package: true
+custom_component: true
+properties:
+- {name: track_colour, type: string, default_value: '#b3d4fc', default_binding_prop: true}
+- {name: indicator_colour, type: string, default_value: '#1976D2'}

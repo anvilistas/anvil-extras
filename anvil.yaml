@@ -1,0 +1,13 @@
+services: []
+startup: {type: form, module: Form1}
+package_name: extras
+allow_embedding: false
+name: Extras
+runtime_options: {version: 2, client_version: '3', server_version: python3-full}
+metadata: {}
+startup_form: IndeterminateProgressBar
+native_deps: {head_html: "<script>\nfunction setTrackColour(colour){\n  document.body.style.setProperty('--track-colour',\
+    \ colour)\n};\nfunction setIndicatorColour(colour){\n  document.body.style.setProperty('--indicator-colour',\
+    \ colour)\n};\n</script>"}
+db_schema: []
+renamed: true
