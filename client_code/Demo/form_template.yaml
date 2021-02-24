@@ -1,0 +1,32 @@
+container:
+  type: ColumnPanel
+  properties: {col_widths: '{}'}
+components:
+- type: form:MessagePill
+  properties: {level: info, message: MessagePill with level 'info'}
+  name: message_pill_1
+  layout_properties: {grid_position: 'ZNPMZP,WQEHXP'}
+- type: form:MessagePill
+  properties: {level: success, message: MessagePill with level 'success'}
+  name: message_pill_2
+  layout_properties: {grid_position: 'XCQIYO,BMGHER'}
+- type: form:MessagePill
+  properties: {level: warning, message: MessagePill with level 'warning'}
+  name: message_pill_3
+  layout_properties: {grid_position: 'GUSGTP,SSRSAE'}
+- type: form:MessagePill
+  properties: {level: error, message: MessagePill with level 'error'}
+  name: message_pill_4
+  layout_properties: {grid_position: 'CNITUV,WYNUFR'}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: IndeterminateProgressBar with default colours, font_size: null, font: '',
+    spacing_above: small, icon_align: left, spacing_below: none, italic: false, background: '',
+    bold: false, underline: false, icon: ''}
+  name: label_1
+  layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
+- type: form:IndeterminateProgressBar
+  properties: {}
+  name: indeterminate_progress_bar_1
+  layout_properties: {grid_position: 'YOHVQO,SIOOTN'}
+is_package: true

@@ -1,5 +1,5 @@
 services: []
-startup: {type: form, module: Form1}
+startup: {type: form, module: Demo}
 package_name: extras
 allow_embedding: false
 name: Extras
