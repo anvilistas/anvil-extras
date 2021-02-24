@@ -24,7 +24,8 @@
 from ._anvil_designer import ProgressBarTemplate
 from anvil.js.window import document
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
+
 
 class ProgressBar(ProgressBarTemplate):
     def __init__(self, **properties):
@@ -47,11 +48,11 @@ class ProgressBar(ProgressBarTemplate):
     def indicator_colour(self, value):
         self._indicator_colour = value
         document.body.style.setProperty("--indicator-colour", value)
-        
+
     @property
     def progress(self):
         return self._progress
-      
+
     @progress.setter
     def progress(self, value):
         self._progress = value
