@@ -24,7 +24,7 @@
 from ._anvil_designer import IndeterminateProgressBarTemplate
 from anvil.js.window import document
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 class IndeterminateProgressBar(IndeterminateProgressBarTemplate):

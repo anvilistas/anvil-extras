@@ -23,7 +23,7 @@
 # This software is published at https://github.com/meatballs/anvil-extras
 from ._anvil_designer import MessagePillTemplate
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 class MessagePill(MessagePillTemplate):
