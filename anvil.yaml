@@ -6,8 +6,6 @@ name: Extras
 runtime_options: {version: 2, client_version: '3', server_version: python3-full}
 metadata: {}
 startup_form: IndeterminateProgressBar
-native_deps: {head_html: "<script>\nfunction setTrackColour(colour){\n  document.body.style.setProperty('--track-colour',\
-    \ colour)\n};\nfunction setIndicatorColour(colour){\n  document.body.style.setProperty('--indicator-colour',\
-    \ colour)\n};\n</script>"}
+native_deps: {head_html: ''}
 db_schema: []
 renamed: true

@@ -22,6 +22,7 @@
 #
 # This software is published at https://github.com/meatballs/anvil-extras
 from ._anvil_designer import IndeterminateProgressBarTemplate
+from anvil.js.window import document
 
 __version__ = "0.1.0"
 
@@ -37,7 +38,7 @@ class IndeterminateProgressBar(IndeterminateProgressBarTemplate):
     @track_colour.setter
     def track_colour(self, value):
         self._track_colour = value
-        self.call_js("setTrackColour", value)
+        document.body.style.setProperty("--track-colour", value)
 
     @property
     def indicator_colour(self):
@@ -46,4 +47,4 @@ class IndeterminateProgressBar(IndeterminateProgressBarTemplate):
     @indicator_colour.setter
     def indicator_colour(self, value):
         self._indicator_colour = value
-        self.call_js("setIndicatorColour", value)
+        document.body.style.setProperty("--indicator-colour", value)

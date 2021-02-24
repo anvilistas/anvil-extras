@@ -20,13 +20,13 @@ components:
   layout_properties: {grid_position: 'CNITUV,WYNUFR'}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: IndeterminateProgressBar with default colours, font_size: null, font: '',
+    text: IndeterminateProgressBar with custom colours, font_size: null, font: '',
     spacing_above: small, icon_align: left, spacing_below: none, italic: false, background: '',
     bold: false, underline: false, icon: ''}
   name: label_1
   layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
 - type: form:IndeterminateProgressBar
-  properties: {}
+  properties: {track_colour: orange, indicator_colour: '#f57c00'}
   name: indeterminate_progress_bar_1
   layout_properties: {grid_position: 'YOHVQO,SIOOTN'}
 is_package: true
