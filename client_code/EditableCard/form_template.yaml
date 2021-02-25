@@ -191,11 +191,9 @@ components:
       event_bindings: {change: yesno_dropdown_change}
   event_bindings: {show: card_1_show}
   data_bindings:
-  - {property: background, code: 'self.background_colours[self.automated]'}
 is_package: true
 custom_component: true
 properties:
 - {name: editable, type: boolean, default_value: true}
 - {name: icon, type: icon, default_value: null}
 - {name: datatype, type: string, default_value: text}
-- {name: automated, type: boolean, default_value: null}
