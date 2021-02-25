@@ -1,3 +1,7 @@
 roles:
 - name: message-pill
   components: [Label]
+- {name: progress-track}
+- {name: progress-indicator}
+- {name: switch-track}
+- {name: switch-togge}
