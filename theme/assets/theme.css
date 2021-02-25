@@ -1,4 +1,29 @@
-.anvil-role-rounded {
+.anvil-role-message-pill {
     padding: 0.5em 0 0 1em;
     border-radius: 2em;
+}
+
+.anvil-role-progress-track {
+  
+}
+
+.anvil-role-progress-track > .holder {
+  display: block !important;
+}
+
+.anvil-role-progress-indicator {
+  
+}
+
+.anvil-role-switch-track {
+  display: block;
+  width: 100%;
+}
+
+.anvil-role-switch-track > .holder {
+  display: block !important;
+}
+
+.anvil-role-switch-indicator {
+  
 }

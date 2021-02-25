@@ -190,7 +190,7 @@ components:
       layout_properties: {grid_position: 'GDORQF,BVERJG'}
       event_bindings: {change: yesno_dropdown_change}
   event_bindings: {show: card_1_show}
-  data_bindings:
+  data_bindings: null
 is_package: true
 custom_component: true
 properties:

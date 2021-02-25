@@ -1,2 +1,3 @@
 roles:
-- {name: rounded}
+- name: message-pill
+  components: [Label]
