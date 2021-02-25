@@ -24,7 +24,7 @@
 from ._anvil_designer import ProgressBarTemplate
 from anvil.js.window import document
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 
 class ProgressBar(ProgressBarTemplate):
