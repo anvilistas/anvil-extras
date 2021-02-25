@@ -6,7 +6,6 @@ name: Extras
 runtime_options: {version: 2, client_version: '3', server_version: python3-full}
 metadata: {}
 startup_form: IndeterminateProgressBar
-native_deps: {head_html: "<style>\n.anvil-role-message-pill {\n    padding: 0.5em\
-    \ 0 0 1em;\n    border-radius: 2em;\n}\n</style>"}
+native_deps: {head_html: ''}
 db_schema: []
 renamed: true
