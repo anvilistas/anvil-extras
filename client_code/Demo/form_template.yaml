@@ -25,7 +25,7 @@ components:
     underline: false, icon: ''}
   name: label_1
   layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
-- type: form:IndeterminateProgressBar
+- type: form:ProgressBars.IndeterminateProgressBar
   properties: {track_colour: '', indicator_colour: ''}
   name: indeterminate_progress_bar_1
   layout_properties: {grid_position: 'LPYAIQ,APFJHG'}
@@ -38,11 +38,11 @@ components:
   layout_properties:
     col_widths: {}
     grid_position: YOHVQO,NLYAQR
-- type: form:ProgressBar
+- type: form:ProgressBars.ProgressBar
   properties: {}
   name: progress_bar
   layout_properties: {grid_position: 'TCRTHL,CPDEMW'}
-- type: form:NewProgressBar
+- type: form:ProgressBars.NewProgressBar
   properties: {progress: 0.75}
   name: new_progress_bar_1
   layout_properties: {grid_position: 'YNJGBC,ZUKIKY'}

@@ -21,10 +21,13 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/meatballs/anvil-extras
-from ._anvil_designer import ProgressBarTemplate
 from anvil.js.window import document
+from extras import ProgressBars, session
+
+from ._anvil_designer import ProgressBarTemplate
 
 __version__ = "0.1.4"
+session.style_injector.inject(ProgressBars.css)
 
 
 class ProgressBar(ProgressBarTemplate):

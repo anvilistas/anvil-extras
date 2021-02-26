@@ -1,6 +1,4 @@
 from ._anvil_designer import NewProgressBarTemplate
-
-
 class NewProgressBar(NewProgressBarTemplate):
     def __init__(self, progress, **properties):
         self.progress = progress

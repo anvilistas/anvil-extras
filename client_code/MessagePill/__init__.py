@@ -22,8 +22,17 @@
 #
 # This software is published at https://github.com/meatballs/anvil-extras
 from ._anvil_designer import MessagePillTemplate
+from .. import session
 
 __version__ = "0.1.4"
+
+css = """
+.anvil-role-message-pill {
+    padding-left: 1em;
+    border-radius: 2em;
+}
+"""
+session.style_injector.inject(css)
 
 
 class MessagePill(MessagePillTemplate):
