@@ -26,7 +26,7 @@ from copy import deepcopy
 
 from ._anvil_designer import EditableCardTemplate
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 day_format = "%d/%m/%Y"
 time_format = "%I.%M %p"

@@ -23,7 +23,7 @@
 # This software is published at https://github.com/meatballs/anvil-extras
 from anvil.js.window import document
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 
 class Injector:

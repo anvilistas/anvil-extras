@@ -23,6 +23,6 @@
 # This software is published at https://github.com/meatballs/anvil-extras
 from . import style
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 style_injector = style.Injector()
