@@ -21,8 +21,8 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/meatballs/anvil-extras
-from ._anvil_designer import MessagePillTemplate
 from .. import session
+from ._anvil_designer import MessagePillTemplate
 
 __version__ = "0.1.4"
 
