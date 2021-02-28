@@ -24,54 +24,32 @@
 from anvil.js.window import document
 from extras import ProgressBars, session
 
-from ._anvil_designer import ProgressBarTemplate
-
+from ._anvil_designer import DeterminateTemplate
 __version__ = "0.1.5"
 session.style_injector.inject(ProgressBars.css)
 
 
-class ProgressBar(ProgressBarTemplate):
-    def __init__(self, **properties):
+class Determinate(DeterminateTemplate):
+    def __init__(self, track_colour, indicator_colour, **properties):
         self.uid = session.get_uid()
         css = f"""
 :root {{
-  --track-colour-{self.uid}: #b3d4fc;
-  --indicator-colour-{self.uid}: #1976D2;
   --progress-{self.uid}: 50%;
 }}
 
-.anvil-role-progress-track-{self.uid} {{
-  background-color: var(--track-colour-{self.uid});
-  width: 100%;
-}}
-
 .anvil-role-progress-indicator-{self.uid} {{
-  background-color: var(--indicator-colour-{self.uid});
   width: var(--progress-{self.uid});
 }}
         """
         session.style_injector.inject(css)
-        self.role = ["progress-track", f"progress-track-{self.uid}"]
-        self.indicator_panel.role = ["progress-indicator", f"progress-indicator-{self.uid}"]
+        self.role = "progress-track"
+        self.indicator_panel.role = [
+            "progress-indicator",
+            f"progress-indicator-{self.uid}",
+        ]
+        self.background = track_colour
+        self.indicator_panel.background = indicator_colour
         self.init_components(**properties)
-
-    @property
-    def track_colour(self):
-        return self._track_colour
-
-    @track_colour.setter
-    def track_colour(self, value):
-        self._track_colour = value
-        document.body.style.setProperty(f"--track-colour-{self.uid}", value)
-
-    @property
-    def indicator_colour(self):
-        return self._indicator_colour
-
-    @indicator_colour.setter
-    def indicator_colour(self, value):
-        self._indicator_colour = value
-        document.body.style.setProperty(f"--indicator-colour-{self.uid}", value)
 
     @property
     def progress(self):

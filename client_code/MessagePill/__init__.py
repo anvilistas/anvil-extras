@@ -50,6 +50,7 @@ class MessagePill(MessagePillTemplate):
     )
 
     def __init__(self, **properties):
+        self.label.role = "message-pill"
         self.init_components(**properties)
 
     @property

@@ -1,5 +1,1 @@
-roles:
-- name: message-pill
-  components: [Label]
-- {name: switch-track}
-- {name: switch-toggle}
+roles: []

@@ -1,0 +1,19 @@
+components:
+- type: ColumnPanel
+  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true,
+    wrap_on: mobile, col_spacing: medium, spacing_above: small, col_widths: '{}',
+    spacing_below: small, background: ''}
+  name: indicator_panel
+  layout_properties: {grid_position: 'BSBUXX,ZCPRGS', full_width_row: true}
+  components: []
+  data_bindings: []
+container:
+  type: ColumnPanel
+  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true,
+    wrap_on: mobile, col_spacing: medium, spacing_above: small, col_widths: '{}',
+    spacing_below: small, background: ''}
+is_package: true
+custom_component: true
+properties:
+- {name: track_colour, type: color, default_value: '#b3d4fc', default_binding_prop: true}
+- {name: indicator_colour, type: color, default_value: '#1976D2'}

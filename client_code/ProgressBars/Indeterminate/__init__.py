@@ -21,33 +21,32 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/meatballs/anvil-extras
-from anvil.js.window import document
 from extras import ProgressBars, session
 
-from ._anvil_designer import IndeterminateProgressBarTemplate
-
+from ._anvil_designer import IndeterminateTemplate
 __version__ = "0.1.5"
 session.style_injector.inject(ProgressBars.css)
 
 
-class IndeterminateProgressBar(IndeterminateProgressBarTemplate):
-    def __init__(self, **properties):
+class Indeterminate(IndeterminateTemplate):
+    def __init__(self, track_colour, indicator_colour, **properties):
+        self.uid = session.get_uid()
+        css = f"""
+.anvil-role-indeterminate-progress-indicator-{self.uid} {{
+  background-colour: {self.indicator_colour}
+}}
+
+.anvil-role-indeterminate-progress-indicator-{self.uid}:before {{
+  background-color: {self.track_colour}
+ 
+}}
+"""
+        session.style_injector.inject(css)
+        self.role = "progress-track"
+        self.indicator_panel.role = [
+            "indeterminate-progress-indicator",
+            f"indeterminate-progress-indicator-{self.uid}",
+        ]
+        self.background = track_colour
+        self.indicator_panel.background = indicator_colour
         self.init_components(**properties)
-
-    @property
-    def track_colour(self):
-        return self._track_colour
-
-    @track_colour.setter
-    def track_colour(self, value):
-        self._track_colour = value
-        document.body.style.setProperty("--indeterminate-track-colour", value)
-
-    @property
-    def indicator_colour(self):
-        return self._indicator_colour
-
-    @indicator_colour.setter
-    def indicator_colour(self, value):
-        self._indicator_colour = value
-        document.body.style.setProperty("--indeterminate-indicator-colour", value)
