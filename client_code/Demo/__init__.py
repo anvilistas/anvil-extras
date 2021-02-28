@@ -9,6 +9,6 @@ class Demo(DemoTemplate):
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
-        if self.progress < 100:
+        if self.progress < 1:
             self.progress_bar.progress = self.progress
             self.progress += 0.01

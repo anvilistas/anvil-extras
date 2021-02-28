@@ -1,16 +1,19 @@
 container:
-  type: HtmlTemplate
-  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: "<style type=text/css>\n:root {\n  --track-colour: #b3d4fc;\n\
-      \  --indicator-colour: #1976D2;\n  --progress: 50%;\n}\n\n.progress-track, .progress-indicator\
-      \ {\n    height: 3px;\n    margin: 0;\n}\n  \n.progress-track {\n  background-color:\
-      \ var(--track-colour);\n  width: 100%;\n}\n\n.progress-indicator {\n  background-color:\
-      \ var(--indicator-colour);\n  width: var(--progress);\n}\n\n</style>\n<div class=\"\
-      progress-track\">\n  <div class=\"progress-indicator\"></div>\n</div>"}
-components: []
+  type: ColumnPanel
+  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true,
+    wrap_on: mobile, col_spacing: medium, spacing_above: small, col_widths: '{}',
+    spacing_below: small, background: ''}
+components:
+- type: ColumnPanel
+  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true,
+    wrap_on: mobile, col_spacing: medium, spacing_above: small, col_widths: '{}',
+    spacing_below: small, background: ''}
+  name: indicator_panel
+  layout_properties: {grid_position: 'BSBUXX,ZCPRGS', full_width_row: true}
+  components: []
 is_package: true
 custom_component: true
 properties:
-- {name: track_colour, type: string, default_value: null}
-- {name: indicator_colour, type: string, default_value: null}
-- {name: progress, type: number, default_value: 0.5}
+- {name: track_colour, type: string, default_value: '', default_binding_prop: true}
+- {name: indicator_colour, type: string, default_value: ''}
+- {name: progress, type: number, default_value: 0.25}

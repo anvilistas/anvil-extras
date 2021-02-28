@@ -21,8 +21,14 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/meatballs/anvil-extras
+import random
 from . import style
 
 __version__ = "0.1.5"
 
 style_injector = style.Injector()
+
+
+def get_uid(length=8):
+    characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+    return "".join([random.choice(characters) for _ in range(length)])

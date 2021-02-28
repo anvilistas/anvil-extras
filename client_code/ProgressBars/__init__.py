@@ -1,11 +1,16 @@
 css = """
-.anvil-role-progress-track {
+
+.anvil-role-progress-track, .anvil-role-progress-indicator {
     display: block;
+    height: 3px;
+    margin: 0;
+}
+
+.anvil-role-progress-track {
     width: 100%;
 }
 
 .anvil-role-progress-indicator {
-    display: block;
     top: 0 !important;
 }
 

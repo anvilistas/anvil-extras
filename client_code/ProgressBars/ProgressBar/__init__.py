@@ -32,6 +32,27 @@ session.style_injector.inject(ProgressBars.css)
 
 class ProgressBar(ProgressBarTemplate):
     def __init__(self, **properties):
+        self.uid = session.get_uid()
+        css = f"""
+:root {{
+  --track-colour-{self.uid}: #b3d4fc;
+  --indicator-colour-{self.uid}: #1976D2;
+  --progress-{self.uid}: 50%;
+}}
+
+.anvil-role-progress-track-{self.uid} {{
+  background-color: var(--track-colour-{self.uid});
+  width: 100%;
+}}
+
+.anvil-role-progress-indicator-{self.uid} {{
+  background-color: var(--indicator-colour-{self.uid});
+  width: var(--progress-{self.uid});
+}}
+        """
+        session.style_injector.inject(css)
+        self.role = ["progress-track", f"progress-track-{self.uid}"]
+        self.indicator_panel.role = ["progress-indicator", f"progress-indicator-{self.uid}"]
         self.init_components(**properties)
 
     @property
@@ -41,7 +62,7 @@ class ProgressBar(ProgressBarTemplate):
     @track_colour.setter
     def track_colour(self, value):
         self._track_colour = value
-        document.body.style.setProperty("--track-colour", value)
+        document.body.style.setProperty(f"--track-colour-{self.uid}", value)
 
     @property
     def indicator_colour(self):
@@ -50,7 +71,7 @@ class ProgressBar(ProgressBarTemplate):
     @indicator_colour.setter
     def indicator_colour(self, value):
         self._indicator_colour = value
-        document.body.style.setProperty("--indicator-colour", value)
+        document.body.style.setProperty(f"--indicator-colour-{self.uid}", value)
 
     @property
     def progress(self):
@@ -59,4 +80,4 @@ class ProgressBar(ProgressBarTemplate):
     @progress.setter
     def progress(self, value):
         self._progress = value
-        document.body.style.setProperty("--progress", f"{value:%}")
+        document.body.style.setProperty(f"--progress-{self.uid}", f"{value:%}")
