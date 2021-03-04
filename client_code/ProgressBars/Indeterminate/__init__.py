@@ -33,11 +33,11 @@ class Indeterminate(IndeterminateTemplate):
         self.uid = session.get_uid()
         css = f"""
 .anvil-role-indeterminate-progress-indicator-{self.uid} {{
-  background-colour: {self.indicator_colour}
+  background-colour: {indicator_colour}
 }}
 
 .anvil-role-indeterminate-progress-indicator-{self.uid}:before {{
-  background-color: {self.track_colour}
+  background-color: {track_colour}
  
 }}
 """
@@ -47,6 +47,5 @@ class Indeterminate(IndeterminateTemplate):
             "indeterminate-progress-indicator",
             f"indeterminate-progress-indicator-{self.uid}",
         ]
-        self.background = track_colour
         self.indicator_panel.background = indicator_colour
         self.init_components(**properties)
