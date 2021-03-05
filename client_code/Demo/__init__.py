@@ -1,5 +1,3 @@
-from anvil import *
-
 from ._anvil_designer import DemoTemplate
 
 

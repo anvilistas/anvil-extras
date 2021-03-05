@@ -25,7 +25,7 @@ components:
     underline: false, icon: ''}
   name: label_1
   layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
-- type: form:ProgressBars.Indeterminate
+- type: form:ProgressBar.Indeterminate
   properties: {}
   name: indeterminate_progress_bar_1
   layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
@@ -38,7 +38,7 @@ components:
   layout_properties:
     col_widths: {}
     grid_position: YOHVQO,NLYAQR
-- type: form:ProgressBars.Determinate
+- type: form:ProgressBar.Determinate
   properties: {track_colour: '#b3d4fc', indicator_colour: '#1976D2', progress: 0.5}
   name: progress_bar
   layout_properties: {grid_position: 'TUUBRI,CREBNE'}
