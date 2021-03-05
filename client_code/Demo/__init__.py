@@ -1,5 +1,7 @@
 from ._anvil_designer import DemoTemplate
 
+__version__ = "0.1.6"
+
 
 class Demo(DemoTemplate):
     def __init__(self, **properties):

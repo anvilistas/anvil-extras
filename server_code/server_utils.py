@@ -32,7 +32,9 @@ __version__ = "0.1.6"
 def get_logger():
     logging.basicConfig(level=logging.INFO)
     handler = logging.StreamHandler(sys.stdout)
-    formatter = logging.Formatter("%(asctime)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+    formatter = logging.Formatter(
+        "%(asctime)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    )
     handler.setFormatter(formatter)
     logger = logging.getLogger(__name__)
     logger.addHandler(handler)
@@ -43,7 +45,7 @@ LOGGER = get_logger()
 
 
 def _signature(func, args, kwargs):
-    arguments = ([str(a) for a in args])
+    arguments = [str(a) for a in args]
     arguments.extend([f"{key}={value}" for key, value in kwargs.items()])
     return f"{func.__name__}({','.join(arguments)})"
 

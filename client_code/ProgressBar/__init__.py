@@ -1,5 +1,6 @@
-css = """
-.anvil-role-progress-track, .anvil-role-progress-indicator {
+__version__ = "0.1.6"
+
+css = """ .anvil-role-progress-track, .anvil-role-progress-indicator {
     display: block;
     height: 3px;
     margin: 0;
