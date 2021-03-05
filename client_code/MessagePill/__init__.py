@@ -1,6 +1,7 @@
 # MIT License
 #
-# Copyright (c) 2021 Owen Campbell
+# Copyright (c) 2021 The Anvil Extras project team members listed at
+# https://github.com/meatballs/anvil-extras/graphs/contributors
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
