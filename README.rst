@@ -17,6 +17,7 @@ Features
 
 - `Publish/Subscribe Messaging <https://anvil-extras.readthedocs.io/en/latest/guides/messaging.html>`_
 - `Dynamic Menu Construction <https://anvil-extras.readthedocs.io/en/latest/guides/navigation.html>`_
+- `Role Based Authorisation <https://anvil-extras.readthedocs.io/en/lates/guides/authorisation.html>`_
 - Client and server side logging/timing utilities
 
 Contributors

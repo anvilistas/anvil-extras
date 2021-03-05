@@ -5,3 +5,4 @@ Guides
 
     messaging
     navigation
+    authorisation
