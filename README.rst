@@ -13,7 +13,7 @@ Features
 
 - User interface components
 
-  .. image:: images/extras_demo.gig
+  .. image:: images/extras_demo.gif
 
 - Publish/Subscribe Messaging
 - Client and server side logging/timing utilities
