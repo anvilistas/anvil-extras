@@ -23,7 +23,7 @@
 # This software is published at https://github.com/meatballs/anvil-extras
 from time import time, gmtime, strftime
 
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 
 def _signature(func, args, kwargs):

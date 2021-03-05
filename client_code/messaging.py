@@ -20,7 +20,7 @@
 # SOFTWARE.
 
 # This software is published at https://github.com/meatballs/anvil-extras
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 
 class Message:
