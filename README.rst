@@ -11,6 +11,11 @@ Full documentation is available at https://anvil-extras.readthedocs.io/en/latest
 Features
 --------
 
+- User interface components
+  .. image:: images/extras_demo.gig
+- Publish/Subscribe Messaging
+- Client and server side logging/timing utilities
+
 Contributors
 ------------
 
