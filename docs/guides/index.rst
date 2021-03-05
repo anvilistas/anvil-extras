@@ -4,3 +4,4 @@ Guides
 .. toctree::
 
     messaging
+    navigation
