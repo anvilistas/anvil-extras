@@ -15,7 +15,7 @@ Features
 
   .. image:: images/extras_demo.gif
 
-- Publish/Subscribe Messaging
+- `Publish/Subscribe Messaging <https://anvil-extras.readthedocs.io/en/latest/guides/messaging.html>`_
 - Client and server side logging/timing utilities
 
 Contributors
