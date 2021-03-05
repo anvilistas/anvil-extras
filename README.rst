@@ -21,7 +21,7 @@ Features
 Contributors
 ------------
 
-The Core developers of the project are:
+The core developers of the project are:
 
-- `meatballs <https://github.com/meatballs>`_
-- `s-cork <https://github.com/s-cork>`_
+- `Owen Campbell <https://github.com/meatballs>`_
+- `Stu Cork <https://github.com/s-cork>`_
