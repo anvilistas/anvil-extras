@@ -1,4 +1,4 @@
-.. image:: https://readthedocs.org/projects/pip/badge/
+.. image:: https://readthedocs.org/projects/anvil-extras/badge/
     :target: https://pip.pypa.io/en/stable/?badge=stable
     :alt: Documentation Status
 
