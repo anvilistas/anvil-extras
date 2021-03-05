@@ -1,5 +1,5 @@
 .. image:: https://readthedocs.org/projects/anvil-extras/badge/
-    :target: https://pip.pypa.io/en/stable/?badge=stable
+    :target: https://anvil-extras.readthedocs.io/en/latest/
     :alt: Documentation Status
 
 Anvil Extras
