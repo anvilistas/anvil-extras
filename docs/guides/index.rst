@@ -3,3 +3,4 @@ Guides
 
 .. toctree::
 
+    messaging
