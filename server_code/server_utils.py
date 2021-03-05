@@ -26,7 +26,7 @@ import sys
 from functools import wraps
 from time import time
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 
 def get_logger():
