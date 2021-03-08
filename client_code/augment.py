@@ -23,8 +23,9 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil import js as _js, Component as _Component
 import anvil as _anvil
+from anvil import Component as _Component
+from anvil import js as _js
 from anvil.js.window import jQuery as _S
 
 
@@ -34,18 +35,24 @@ def add_event(component, event):
     """
     init(component)  # adds the trigger method to the component type
     if not isinstance(event, str):
-        raise TypeError('event must be type str and not ' + type(event))
+        raise TypeError("event must be type str and not " + type(event))
     _add_event(component, event)
 
     def handler(e):
-        event_args = {'event_type': e.type}
-        if event.startswith('key'):
-            event_args |= {'key': e.key, 'key_code': e.keyCode, 'shift_key': e.shiftKey,
-                           'alt_key': e.altKey, 'meta_key': e.metaKey, 'ctrl_key': e.ctrlKey}
+        event_args = {"event_type": e.type}
+        if event.startswith("key"):
+            event_args |= {
+                "key": e.key,
+                "key_code": e.keyCode,
+                "shift_key": e.shiftKey,
+                "alt_key": e.altKey,
+                "meta_key": e.metaKey,
+                "ctrl_key": e.ctrlKey,
+            }
         if component.raise_event(event, **event_args):
             e.preventDefault()
 
-    js_event_name = 'mouseenter mouseleave' if event is 'hover' else event
+    js_event_name = "mouseenter mouseleave" if event is "hover" else event
     _get_jquery_for_component(component).off(js_event_name)
     _get_jquery_for_component(component).on(js_event_name, handler)
 
@@ -66,9 +73,8 @@ def init(component):
     elif issubclass(component, _Component):
         pass
     else:
-        raise TypeError("expected a component not {}".format(
-            type(component).__name__))
-    if hasattr(component, 'trigger'):
+        raise TypeError("expected a component not {}".format(type(component).__name__))
+    if hasattr(component, "trigger"):
         return
     else:
         component.trigger = trigger
@@ -79,8 +85,8 @@ def trigger(self, event):
     if event is a dictionary it should include an event key e.g. {'event': 'keypress', 'which': 13}
     """
     if isinstance(event, dict):
-        event = _S.Event(event['event'], event)
-    event = 'mouseenter mouseleave' if event is 'hover' else event
+        event = _S.Event(event["event"], event)
+    event = "mouseenter mouseleave" if event is "hover" else event
     _get_jquery_for_component(self).trigger(event)
 
 
@@ -88,25 +94,29 @@ def _get_jquery_for_component(component):
     if isinstance(component, _anvil.Button):
         return _S(_js.get_dom_node(component).firstElementChild)
     elif isinstance(component, _anvil.FileLoader):
-        return _S(_js.get_dom_node(component)).find('form')
+        return _S(_js.get_dom_node(component)).find("form")
     else:
         return _S(_js.get_dom_node(component))
 
 
 def _add_event(component, event):
-    _js.call_js('_add_event', component, event)
+    _js.call_js("_add_event", component, event)
 
 
 # the following is a bit of a hack so that an anvil component knows about its new event names
-_ = _js.window.document.createElement('script')
+_ = _js.window.document.createElement("script")
 _js.window.document.body.appendChild(_)
-_.textContent = 'function _add_event(c, e) { PyDefUtils.unwrapOrRemapToPy(c)._anvil.eventTypes[e] = {name: e} }'
+_.textContent = "function _add_event(c, e) { PyDefUtils.unwrapOrRemapToPy(c)._anvil.eventTypes[e] = {name: e} }"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _ = _anvil.ColumnPanel()
-    _.set_event_handler('show', lambda **e: _anvil.Notification(
-        'oops AnvilAugment is a dependency', timeout=None).show())
+    _.set_event_handler(
+        "show",
+        lambda **e: _anvil.Notification(
+            "oops AnvilAugment is a dependency", timeout=None
+        ).show(),
+    )
     _anvil.open_form(_)
 
 _ = None

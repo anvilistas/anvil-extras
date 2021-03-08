@@ -1,4 +1,4 @@
-# MIT License 
+# MIT License
 #
 # Copyright (c) 2021 The Anvil Extras project team members listed at
 # https://github.com/meatballs/anvil-extras/graphs/contributors

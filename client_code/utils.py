@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/meatballs/anvil-extras
-from time import time, gmtime, strftime
+from time import gmtime, strftime, time
 
 __version__ = "0.1.9"
 
@@ -31,8 +31,8 @@ def _signature(func, args, kwargs):
     arguments = [str(a) for a in args]
     arguments.extend([f"{key}={value}" for key, value in kwargs.items()])
     return f"{func.__name__}({','.join(arguments)})"
-  
-  
+
+
 def _timestamp(seconds):
     return strftime("%Y-%m-%d %H:%M:%S", gmtime(seconds))
 

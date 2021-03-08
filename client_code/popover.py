@@ -31,19 +31,26 @@
 # https://bootstrapdocs.com/v3.3.6/docs/javascript/#popovers
 #
 
+from random import choice as _random_choice
+from string import ascii_letters as _letters
+
 import anvil as _anvil
-from anvil.js.window import jQuery as _S, window as _window, document as _document
+from anvil.js.window import document as _document
+from anvil.js.window import jQuery as _S
+from anvil.js.window import window as _window
 
 
-def popover(self, content,
-            title='',
-            placement='right',
-            trigger='click',
-            animation=True,
-            delay={"show": 100, "hide": 100},
-            max_width=None,
-            auto_dismiss=True
-            ):
+def popover(
+    self,
+    content,
+    title="",
+    placement="right",
+    trigger="click",
+    animation=True,
+    delay={"show": 100, "hide": 100},
+    max_width=None,
+    auto_dismiss=True,
+):
     """should be called by a button or link
     content - either text or an anvil component or Form
     placement -  right, left, top, bottom (for left/right best to have links and buttons inside flow panels)
@@ -56,46 +63,60 @@ def popover(self, content,
     """
     html = not isinstance(content, str)
     if html:
-        content.popper = self   # add the popper to the content form
+        content.popper = self  # add the popper to the content form
         content = _anvil.js.get_dom_node(content)  # get the dom node
 
     max_width = _default_max_width if max_width is None else max_width
 
     # can effect the title of the popover so temporarily set it to ''
-    tooltip, self.tooltip = self.tooltip, ''
+    tooltip, self.tooltip = self.tooltip, ""
 
     popper_id = _get_random_string(5)
     popper_element = _get_jquery_popper_element(self)
-    
-    if trigger is 'stickyhover':
-        trigger = 'manual' 
-        popper_element.on('mouseenter', lambda e: None if pop(self, 'is_visible') else pop(self, 'show'))\
-                      .on('mouseleave', lambda e: None if _S('[popover_id={}]:hover'.format(popper_id)) else pop(self, 'hide'))
+
+    if trigger is "stickyhover":
+        trigger = "manual"
+        popper_element.on(
+            "mouseenter",
+            lambda e: None if pop(self, "is_visible") else pop(self, "show"),
+        ).on(
+            "mouseleave",
+            lambda e: None
+            if _S("[popover_id={}]:hover".format(popper_id))
+            else pop(self, "hide"),
+        )
         _set_sticky_hover()
         _sticky_popovers.add(popper_id)
-      
 
-    popper_element.popover({
-        'content': content,
-        'title': title,
-        'placement': placement,
-        'trigger': trigger,
-        'animation': animation,
-        'delay': delay,
-        'html': html,
-        'template': _template.format(popper_id, max_width),
-        'container': 'body'
-    })
+    popper_element.popover(
+        {
+            "content": content,
+            "title": title,
+            "placement": placement,
+            "trigger": trigger,
+            "animation": animation,
+            "delay": delay,
+            "html": html,
+            "template": _template.format(popper_id, max_width),
+            "container": "body",
+        }
+    )
 
     if tooltip:
         self.tooltip = tooltip
         # otherwise the tooltip doesn't work for Buttons
-        popper_element.attr('title', tooltip)
-      
-    popper_element.on("show.bs.popover", lambda e: _visible_popovers.update({popper_id: popper_element}) if auto_dismiss else None)\
-                  .on("hide.bs.popover", lambda e: _visible_popovers.pop(popper_id, None))\
-                  .addClass('anvil-popover')\
-                  .attr('popover_id', popper_id)
+        popper_element.attr("title", tooltip)
+
+    popper_element.on(
+        "show.bs.popover",
+        lambda e: _visible_popovers.update({popper_id: popper_element})
+        if auto_dismiss
+        else None,
+    ).on("hide.bs.popover", lambda e: _visible_popovers.pop(popper_id, None)).addClass(
+        "anvil-popover"
+    ).attr(
+        "popover_id", popper_id
+    )
 
 
 def pop(self, behavior):
@@ -108,34 +129,38 @@ def pop(self, behavior):
     is_visible: same as shown
     """
     popper_element = _get_jquery_popper_element(self)
-    if behavior is 'shown' or behavior is 'is_visible':
+    if behavior is "shown" or behavior is "is_visible":
         return _is_visible(popper_element)
-    elif behavior is 'update':
+    elif behavior is "update":
         return _update_positions()
-    if behavior is 'hide':
-        popper_element.data('bs.popover').inState.click = False # see bug https://github.com/twbs/bootstrap/issues/16732
-    elif behavior is 'show':
-        popper_element.data('bs.popover').inState.click = True
-    elif behavior is 'toggle':
-        current = popper_element.data('bs.popover').inState.click
-        popper_element.data('bs.popover').inState.click = not current
+    if behavior is "hide":
+        popper_element.data(
+            "bs.popover"
+        ).inState.click = (
+            False  # see bug https://github.com/twbs/bootstrap/issues/16732
+        )
+    elif behavior is "show":
+        popper_element.data("bs.popover").inState.click = True
+    elif behavior is "toggle":
+        current = popper_element.data("bs.popover").inState.click
+        popper_element.data("bs.popover").inState.click = not current
     try:
         popper_element.popover(behavior)
     except:
-        raise ValueError('unrecognized behavior: {}'.format(behavior))
-    
+        raise ValueError("unrecognized behavior: {}".format(behavior))
+
+
 # this is the default behavior
 def dismiss_on_outside_click(dismiss=True):
     """hide popovers when a user clicks outside the popover
     this is the default behavior 
     """
-    _document.body.removeEventListener('click', _hide_popovers_on_outside_click)
+    _document.body.removeEventListener("click", _hide_popovers_on_outside_click)
     if dismiss:
-        _document.body.addEventListener('click', _hide_popovers_on_outside_click, True)
-      
+        _document.body.addEventListener("click", _hide_popovers_on_outside_click, True)
 
 
-_default_max_width = ''
+_default_max_width = ""
 
 
 def set_default_max_width(width):
@@ -152,45 +177,59 @@ for _ in [_anvil.Button, _anvil.Link, _anvil.Label, _anvil.Image]:
 
 _sticky_popovers = set()
 
+
 def _sticky_leave(e):
     popper_element = None
-    popover_id = _S(e.currentTarget).attr('popover_id')
-    if popover_id in _sticky_popovers and not _S('[popover_id={}]:hover'.format(popover_id)):
+    popover_id = _S(e.currentTarget).attr("popover_id")
+    if popover_id in _sticky_popovers and not _S(
+        "[popover_id={}]:hover".format(popover_id)
+    ):
         popper_element = _visible_popovers.get(popover_id)
     if popper_element is not None:
-        popper_element.data('bs.popover').inState.click = False # see bug https://github.com/twbs/bootstrap/issues/16732
-        popper_element.popover('hide')
-            
+        popper_element.data(
+            "bs.popover"
+        ).inState.click = (
+            False  # see bug https://github.com/twbs/bootstrap/issues/16732
+        )
+        popper_element.popover("hide")
+
+
 def _set_sticky_hover():
     if not _sticky_popovers:
-        _S('body').on('mouseleave', '.popover', _sticky_leave)
+        _S("body").on("mouseleave", ".popover", _sticky_leave)
 
 
 def _update_positions(*args):
-    _S('.popover').addClass("PopNoTransition")\
-                  .popover('show')\
-                  .removeClass("PopNoTransition")
+    _S(".popover").addClass("PopNoTransition").popover("show").removeClass(
+        "PopNoTransition"
+    )
 
 
-_window.addEventListener('resize', _update_positions)
+_window.addEventListener("resize", _update_positions)
 
 
 def _hide(popover_id, visible_popovers):
-    popper = visible_popovers[popover_id].popover('hide')
+    popper = visible_popovers[popover_id].popover("hide")
     # hack for click https://github.com/twbs/bootstrap/issues/16732
-    try: popper.data('bs.popover').inState.click = False
-    except: pass
-      
-def _hide_all(e):
-  visible_popovers = _visible_popovers.copy()
-  for popover_id in visible_popovers:  # use copy since we don't want the dict to change size
-      _hide(popover_id, visible_popovers)
+    try:
+        popper.data("bs.popover").inState.click = False
+    except:
+        pass
 
-_window.addEventListener('scroll', _hide_all, True)
+
+def _hide_all(e):
+    visible_popovers = _visible_popovers.copy()
+    for (
+        popover_id
+    ) in visible_popovers:  # use copy since we don't want the dict to change size
+        _hide(popover_id, visible_popovers)
+
+
+_window.addEventListener("scroll", _hide_all, True)
 
 
 def _is_visible(popper_element):
-    return popper_element.attr('popover_id') in _visible_popovers
+    return popper_element.attr("popover_id") in _visible_popovers
 
 
 def _get_jquery_popper_element(popper):
@@ -204,12 +243,14 @@ def _get_jquery_popper_element(popper):
 
 def _hide_popovers_on_outside_click(e):
     target = e.target
-    if target.classList.contains('anvil-popover'):
-        nearest_id = target.getAttribute('popover_id')
+    if target.classList.contains("anvil-popover"):
+        nearest_id = target.getAttribute("popover_id")
     else:
-        nearest_id = _S(target).closest('.anvil-popover').attr('popover_id')
+        nearest_id = _S(target).closest(".anvil-popover").attr("popover_id")
     visible_popovers = _visible_popovers.copy()
-    for popover_id in visible_popovers:  # use copy since we don't want the dict to change size
+    for (
+        popover_id
+    ) in visible_popovers:  # use copy since we don't want the dict to change size
         if nearest_id is not popover_id:
             _hide(popover_id, visible_popovers)
 
@@ -218,10 +259,8 @@ def _hide_popovers_on_outside_click(e):
 dismiss_on_outside_click(True)
 
 
-from random import choice as _random_choice
-from string import ascii_letters as _letters
 def _get_random_string(_len):
-    return ''.join(_random_choice(_letters) for _ in range(_len))
+    return "".join(_random_choice(_letters) for _ in range(_len))
 
 
 _visible_popovers = {}
@@ -229,7 +268,8 @@ _visible_popovers = {}
 _template = '<div class="popover anvil-popover" role="tooltip" popover_id={} style="max-width:{}; "><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
 
 # temp style for updating popovers without transition animations
-_S("""<style>
+_S(
+    """<style>
 .PopNoTransition {
     -moz-transition: none !important;
     -webkit-transition: none !important;
@@ -237,13 +277,18 @@ _S("""<style>
     transition: none !important;
 }
 </style>
-""").appendTo(_S('head'))
+"""
+).appendTo(_S("head"))
 
 
 if __name__ == "__main__":
     _ = _anvil.ColumnPanel()
-    _.set_event_handler('show', lambda **e: _anvil.Notification(
-        'oops, popover is a dependency', style='danger', timeout=None).show())
+    _.set_event_handler(
+        "show",
+        lambda **e: _anvil.Notification(
+            "oops, popover is a dependency", style="danger", timeout=None
+        ).show(),
+    )
     _anvil.open_form(_)
 
 _ = None
