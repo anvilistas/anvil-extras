@@ -6,3 +6,4 @@ Guides
     messaging
     navigation
     authorisation
+    augmentation
