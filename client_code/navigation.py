@@ -24,7 +24,7 @@
 # This software is published at https://github.com/meatballs/anvil-extras
 from anvil import Label, Link, get_open_form, set_url_hash
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 # A dict mapping a form's name to a further dict with the form's class and title
 _forms = {}

@@ -24,7 +24,7 @@
 # This software is published at https://github.com/meatballs/anvil-extras
 from ._anvil_designer import DemoTemplate
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 
 class Demo(DemoTemplate):

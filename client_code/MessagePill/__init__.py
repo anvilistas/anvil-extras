@@ -25,7 +25,7 @@
 from .. import session
 from ._anvil_designer import MessagePillTemplate
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 css = """
 .anvil-role-message-pill {

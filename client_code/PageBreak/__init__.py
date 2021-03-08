@@ -25,7 +25,7 @@
 import anvil.server
 from ._anvil_designer import PageBreakTemplate
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 
 class PageBreak(PageBreakTemplate):
