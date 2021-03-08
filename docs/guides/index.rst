@@ -7,3 +7,4 @@ Guides
     navigation
     authorisation
     augmentation
+    popover
