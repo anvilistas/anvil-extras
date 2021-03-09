@@ -23,13 +23,13 @@
 #
 # This software is published at https://github.com/meatballs/anvil-extras
 from anvil.js.window import document
-from anvil_extras import ProgressBars, session
+from anvil_extras import ProgressBar, session
 
 from ._anvil_designer import DeterminateTemplate
 
 __version__ = "0.1.9"
 
-session.style_injector.inject(ProgressBars.css)
+session.style_injector.inject(ProgressBar.css)
 
 
 class Determinate(DeterminateTemplate):
