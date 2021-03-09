@@ -12,7 +12,7 @@ Examples
 
 .. code-block:: python
 
-    from extras.augment import augment
+    from anvil_extras import augment
     augment.set_event_handler(self.link, 'hover', self.link_hover)
     # equivalent to
     # augment.set_event_handler(self.link, 'mouseenter', self.link_hover)

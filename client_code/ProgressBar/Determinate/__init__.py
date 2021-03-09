@@ -1,7 +1,7 @@
 # MIT License
 #
 # Copyright (c) 2021 The Anvil Extras project team members listed at
-# https://github.com/meatballs/anvil-extras/graphs/contributors
+# https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# This software is published at https://github.com/meatballs/anvil-extras
+# This software is published at https://github.com/anvilistas/anvil-extras
 from anvil.js.window import document
-from extras import ProgressBars, session
+from anvil_extras import ProgressBar, session
 
 from ._anvil_designer import DeterminateTemplate
 
 __version__ = "0.1.9"
 
-session.style_injector.inject(ProgressBars.css)
+session.style_injector.inject(ProgressBar.css)
 
 
 class Determinate(DeterminateTemplate):

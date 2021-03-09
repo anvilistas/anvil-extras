@@ -38,7 +38,7 @@ an error if not. e.g.:
 .. code-block:: python
 
     import anvil.server
-    from Extras.authorisation import authentication_required
+    from anvil_extras.authorisation import authentication_required
 
     @anvil.server.callable
     @authentication_required
@@ -53,7 +53,7 @@ function is called and raises an error if not:
 .. code-block:: python
 
     import anvil.server
-    from Extras.authorisation import authorisation_required
+    from anvil_extras.authorisation import authorisation_required
 
     @anvil.server.callable
     @authorisation_required("can_edit_sensitive_thing")
