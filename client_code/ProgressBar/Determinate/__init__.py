@@ -23,7 +23,7 @@
 #
 # This software is published at https://github.com/meatballs/anvil-extras
 from anvil.js.window import document
-from extras import ProgressBars, session
+from anvil_extras import ProgressBars, session
 
 from ._anvil_designer import DeterminateTemplate
 

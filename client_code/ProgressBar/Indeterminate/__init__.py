@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/meatballs/anvil-extras
-from extras import ProgressBars, session
+from anvil_extras import ProgressBars, session
 
 from ._anvil_designer import IndeterminateTemplate
 
