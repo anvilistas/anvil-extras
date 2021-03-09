@@ -21,7 +21,7 @@ on its class definition. e.g. Assuming the module is installed as a dependency n
 
     from ._anvil_designer import HomeTemplate
     from anvil import *
-    from Extras import navigation
+    from anvil_extras import navigation
 
 
     @navigation.register(name="home")
@@ -39,7 +39,7 @@ Menu
 
     from ._anvil_designer import MainTemplate
     from anvil import *
-    from Extras import navigation
+    from anvil_extras import navigation
     from HashRouting import routing
 
     menu = [
@@ -125,7 +125,7 @@ By default, the menu builder will also add a Label to the title slot of your Mai
 
     from ._anvil_designer import HomeTemplate
     from anvil import *
-    from Extras import navigation
+    from anvil_extras import navigation
 
 
     @navigation.register(name="home", title="Home")

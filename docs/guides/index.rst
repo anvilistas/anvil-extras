@@ -6,3 +6,5 @@ Guides
     messaging
     navigation
     authorisation
+    augmentation
+    popover
