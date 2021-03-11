@@ -28,6 +28,8 @@ from anvil import Component as _Component
 from anvil import js as _js
 from anvil.js.window import jQuery as _S
 
+__version__ = "0.1.9"
+
 
 def add_event(component, event):
     """component: (instantiated) anvil component
