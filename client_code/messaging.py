@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-__version__ = "0.1.9"
+__version__ = "1.0.0"
 
 
 class Message:
