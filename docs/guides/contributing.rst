@@ -20,6 +20,10 @@ All the components in the library are intended to work from the anvil toolbox as
 
 If you are thinking of submitting a new component, please ensure that it is entirely standalone and does not require any css or javascript from within a theme element or native library.
 
+If your component has custom properties or events, it must be able to cope with multiple instances of itself on the same form. There are examples of how to do this using a unique id in several of the existing components.
+
+Whilst canvas based components will be considered, the preference is for solutions using standard Anvil components, custom HTML forms and css.
+
 Python Code
 -----------
 Please try, as far as possible, to follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_.
