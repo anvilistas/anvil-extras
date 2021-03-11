@@ -1,5 +1,5 @@
-Anvil Messaging
-===============
+Messaging
+=========
 
 Introduction
 ------------
