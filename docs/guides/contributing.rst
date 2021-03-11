@@ -26,6 +26,10 @@ Please try, as far as possible, to follow `PEP8 <https://www.python.org/dev/peps
 
 Use the `Black formatter <https://github.com/ambv/black>`_ to format all code and the `isort utility <https://github.com/timothycrosley/isort>`_ to sort import statements.
 
+Add the licence text and copyright statement to the top of your code.
+
+Ensure that there is a line with the current version number towards the top of your code .
+
 Documentation
 -------------
 Please include documentation for your contribution as part of your PR. Our documents are written in `reStructuredText <https://en.wikipedia.org/wiki/ReStructuredText>`_ and hosted at `Read The Docs <https://anvil-extras.readthedocs.io/en/latest/>`_
