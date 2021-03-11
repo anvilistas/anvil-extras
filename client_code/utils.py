@@ -24,7 +24,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from time import gmtime, strftime, time
 
-__version__ = "0.1.9"
+__version__ = "1.0.0"
 
 
 def _signature(func, args, kwargs):

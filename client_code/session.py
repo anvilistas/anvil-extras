@@ -26,7 +26,7 @@ import random
 
 from . import style
 
-__version__ = "0.1.9"
+__version__ = "1.0.0"
 
 style_injector = style.Injector()
 
