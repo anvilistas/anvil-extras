@@ -1,6 +1,5 @@
 .. image:: https://readthedocs.org/projects/anvil-extras/badge/
-    :target: https://anvil-extras.readthedocs.io/en/latest/
-    :alt: Documentation Status
+    :target: https://anvil-extras.readthedocs.io/en/latest/ :alt: Documentation Status
 
 Anvil Extras
 ============
@@ -22,10 +21,24 @@ Features
 - `Popovers <https://anvil-extras.readthedocs.io/en/latest/guides/popover.html>`_
 - Client and server side logging/timing utilities
 
-Contributors
+Installation
 ------------
+Clone the libary to your account and add it as a dependency to your app.
 
-The core developers of the project are:
+   .. image:: https://anvil.works/img/forum/copy-app.png
+      :height: 40px
+      :target: https://anvil.works/build#clone:C6ZZPAPN4YYF5NVJ=UGGCKFPRVZ7ELJH6RRZTHV6Y
+
+Contributing
+------------
+All contributions are welcome!
+
+Please read our `Contribution guide <https://anvil-extras.readthedocs.io/en/latest/guides/contributing.html>`_ before starting any work.
+
+Maintainers
+-----------
+
+The maintainers of the project are:
 
 - `Owen Campbell <https://github.com/meatballs>`_
 - `Stu Cork <https://github.com/s-cork>`_
