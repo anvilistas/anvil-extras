@@ -8,3 +8,5 @@ container:
       \ print {\n    .break-container {\n      border: none;\n    }\n  }\n</style>"}
 components: []
 is_package: true
+custom_component: true
+properties: []
