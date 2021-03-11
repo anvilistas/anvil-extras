@@ -22,8 +22,9 @@ If you are thinking of submitting a new component, please ensure that it is enti
 
 Python Code
 -----------
-* Please try, as far as possible, to follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_
-* Use the `Black formatter <https://github.com/ambv/black>`_ to format all code and the `isort utility <https://github.com/timothycrosley/isort>`_ to sort import statements.
+Please try, as far as possible, to follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_.
+
+Use the `Black formatter <https://github.com/ambv/black>`_ to format all code and the `isort utility <https://github.com/timothycrosley/isort>`_ to sort import statements.
 
 Documentation
 -------------
