@@ -52,7 +52,7 @@ def add_event(component, event):
         if component.raise_event(event, **event_args):
             e.preventDefault()
 
-    js_event_name = "mouseenter mouseleave" if event is "hover" else event
+    js_event_name = "mouseenter mouseleave" if event == "hover" else event
     _get_jquery_for_component(component).off(js_event_name)
     _get_jquery_for_component(component).on(js_event_name, handler)
 
@@ -86,7 +86,7 @@ def trigger(self, event):
     """
     if isinstance(event, dict):
         event = _S.Event(event["event"], event)
-    event = "mouseenter mouseleave" if event is "hover" else event
+    event = "mouseenter mouseleave" if event == "hover" else event
     _get_jquery_for_component(self).trigger(event)
 
 

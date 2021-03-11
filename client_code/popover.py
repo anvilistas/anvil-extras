@@ -74,7 +74,7 @@ def popover(
     popper_id = _get_random_string(5)
     popper_element = _get_jquery_popper_element(self)
 
-    if trigger is "stickyhover":
+    if trigger == "stickyhover":
         trigger = "manual"
         popper_element.on(
             "mouseenter",
@@ -129,19 +129,19 @@ def pop(self, behavior):
     is_visible: same as shown
     """
     popper_element = _get_jquery_popper_element(self)
-    if behavior is "shown" or behavior is "is_visible":
+    if behavior == "shown" or behavior == "is_visible":
         return _is_visible(popper_element)
-    elif behavior is "update":
+    elif behavior == "update":
         return _update_positions()
-    if behavior is "hide":
+    if behavior == "hide":
         popper_element.data(
             "bs.popover"
         ).inState.click = (
             False  # see bug https://github.com/twbs/bootstrap/issues/16732
         )
-    elif behavior is "show":
+    elif behavior == "show":
         popper_element.data("bs.popover").inState.click = True
-    elif behavior is "toggle":
+    elif behavior == "toggle":
         current = popper_element.data("bs.popover").inState.click
         popper_element.data("bs.popover").inState.click = not current
     try:
@@ -153,7 +153,7 @@ def pop(self, behavior):
 # this is the default behavior
 def dismiss_on_outside_click(dismiss=True):
     """hide popovers when a user clicks outside the popover
-    this is the default behavior 
+    this is the default behavior
     """
     _document.body.removeEventListener("click", _hide_popovers_on_outside_click)
     if dismiss:
