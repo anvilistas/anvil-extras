@@ -12,7 +12,7 @@ Commits
 -------
 Please try to use commit messages that give a meaningful history for anyone using git's log features. Try to use messages that complete the sentence, "This commit will..." There is some excellent guidance on the subject from `Chris Beams <https://chris.beams.io/posts/git-commit/>`_
 
-Please ensure that your commits do no include changes to either `anvil.yaml` or `.anvil_editor.yaml`.
+Please ensure that your commits do not include changes to either `anvil.yaml` or `.anvil_editor.yaml`.
 
 Components
 ----------
