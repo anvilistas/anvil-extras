@@ -4,6 +4,7 @@ Guides
 .. toctree::
 
     installation
+    contributing
     messaging
     navigation
     authorisation
