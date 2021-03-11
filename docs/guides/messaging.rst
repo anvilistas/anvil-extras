@@ -69,7 +69,7 @@ world' messages:
 
 
     class MySubscribingForm(MySubscribingFormTemplate):
-    
+
         def __init__(self, **properties):
             publisher.subscribe(
                 channel="general", subscriber=self, handler=self.general_messages_handler
@@ -80,7 +80,7 @@ world' messages:
             if message.title = "Hello world":
                 print(message.title)
 
-You can unsubscribe from a channel using the publisher's `unsubscribe` method. 
+You can unsubscribe from a channel using the publisher's `unsubscribe` method.
 
 You can also remove an entire channel using the publisher's `close_channel` method.
 
@@ -91,17 +91,17 @@ continue to be called.
 Logging
 +++++++
 By default, the publisher will log each message it receieves to your app's logs (and
-the output pane if you're in the IDE). 
+the output pane if you're in the IDE).
 
 You can change this default behaviour when you first create your publisher instance:
 
 
 
 .. code-block:: python
-    from .messaging import Publisher
 
+    from .messaging import Publisher
     publisher = Publisher(with_logging=False)
     )
 
-The `publish`, `subscribe`, `unsubscribe` and `close_channel` methods each take an 
+The `publish`, `subscribe`, `unsubscribe` and `close_channel` methods each take an
 optional `with_logging` parameter which can be used to override the default behaviour.
