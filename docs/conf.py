@@ -18,15 +18,18 @@
 # -- Project information -----------------------------------------------------
 
 project = "Anvil Extras"
-copyright = "2020, Owen Campbell, Stuart Cork"
-author = "Owen Campbell, Stuart Cork"
+copyright = (
+    "2021 The Anvil Extras project team members listed at "
+    "https://github.com/anvilistas/anvil-extras/graphs/contributors"
+)
+author = "The Anvil Extras project team"
 
 
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
+# ones
 extensions = [
     "sphinx_rtd_theme",
 ]
