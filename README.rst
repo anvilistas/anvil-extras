@@ -10,7 +10,7 @@ Full documentation is available at https://anvil-extras.readthedocs.io/en/latest
 Features
 --------
 
-- User interface components
+- `User interface components <https://anvil-extras.readthedocs.io/en/latest/guides/components/index.html>`_
 
   .. image:: images/extras_demo.gif
 
