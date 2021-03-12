@@ -104,11 +104,11 @@ class Switch(SwitchTemplate):
         session.style_injector.inject(css)
         self.check_box.role = ["switch", f"switch-{self.uid}"]
         self.init_components(**properties)
-        
+
     @property
     def checked(self):
         return self._checked
-      
+
     @checked.setter
     def checked(self, value):
         self._checked = value
