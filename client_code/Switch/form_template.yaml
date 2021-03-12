@@ -1,0 +1,19 @@
+container:
+  type: ColumnPanel
+  properties: {col_widths: '{}'}
+components:
+- type: CheckBox
+  properties: {role: null, align: left, tooltip: '', border: '', enabled: true, foreground: '',
+    visible: true, text: '', font_size: null, font: '', spacing_above: small, spacing_below: small,
+    italic: false, background: '', bold: false, checked: false, underline: false}
+  name: check_box
+  layout_properties: {grid_position: 'LOEHGF,VJLTIW', full_width_row: true}
+  data_bindings:
+  - {property: checked, code: self.checked, writeback: true}
+is_package: true
+custom_component: true
+properties:
+- {name: checked_colour, type: color, default_value: '#2196F3', default_binding_prop: true}
+- {name: checked, type: boolean, default_value: false}
+events:
+- {name: changed, default_event: true}
