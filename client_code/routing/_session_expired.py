@@ -1,4 +1,5 @@
-from anvil.js.window import jQuery as _S, location
+from anvil.js.window import jQuery as _S
+from anvil.js.window import location
 
 modal = _S("#session-expired-modal")
 modal_button = _S("#session-expired-modal .modal-footer button")

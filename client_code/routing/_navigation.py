@@ -1,6 +1,8 @@
-from anvil.js.window import document, window, history, location
 from time import sleep
+
 from anvil import get_open_form
+from anvil.js.window import document, history, location, window
+
 from ._logging import logger
 
 # re-initialise the state object which was overridden on load or this is a new session

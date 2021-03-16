@@ -1,9 +1,9 @@
+from collections import namedtuple as _namedtuple
+
 import anvil as _anvil
 
-from collections import namedtuple as _namedtuple
-from ._logging import logger
 from . import _navigation
-
+from ._logging import logger
 
 # to print route logging messages set routing.logger.debug = True above your main_router form
 logger.debug = False
