@@ -14,7 +14,7 @@ Usage
 Forms
 +++++
 
-In order for a form to act as a target of a menu link, it has to register a name with the navigation module using a decorator 
+In order for a form to act as a target of a menu link, it has to register a name with the navigation module using a decorator
 on its class definition. e.g. Assuming the module is installed as a dependency named 'Extras':
 
 .. code-block:: python
@@ -49,7 +49,7 @@ Menu
 
 
     class Main(MainTemplate):
-  
+
       def __init__(self, **properties):
         self.advanced_mode = False
         navigation.build_menu(self.menu_panel, menu)
@@ -62,9 +62,9 @@ Each item in the dict needs the 'text' and 'target' keys as a minimum. It may al
  * 'full_width' can be True or False to indicate whether the target form should be opened with 'full_width_row' or not.
  * 'routing' can be either 'classic' or 'hash' to indicate whether clicking the link should use Anvil's `add_component` function or hash routing to open the target form. Classic routing is the default if the key is not present in the menu dict.
  * 'visibility' can be a dict mapping an anvil event to either True or False to indicate whether the link should be made visible when that event is raised.
- 
+
  All other keys in the menu dict are passed to the Link constructor.
- 
+
  For example, to add icons to each of the examples above, a 'Contact' item that uses hash routing and a 'Settings' item that should only be visible when advanced mode is enabled:
 
 .. code-block:: python
@@ -92,12 +92,12 @@ Each item in the dict needs the 'text' and 'target' keys as a minimum. It may al
 
     @routing.main_router
     class Main(MainTemplate):
-  
+
       def __init__(self, **properties):
         self.advanced_mode = False
         navigation.build_menu(self.menu_panel, menu)
         self.init_components(**properties)
-   
+
       def form_show(self, **event_args):
         self.set_advanced_mode(False)
 
@@ -138,7 +138,7 @@ If you want to disable this feature, set the `with_title` argument to `False` wh
 .. code-block:: python
 
     class Main(MainTemplate):
-  
+
       def __init__(self, **properties):
         self.advanced_mode = False
         navigation.build_menu(self.menu_column_panel, menu, with_title=False)

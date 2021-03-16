@@ -61,8 +61,7 @@ def timed(func, logger=LOGGER, level=logging.INFO):
         finished_at = time()
         duration = f"{(finished_at - started_at):.2f}s"
         logger.log(
-            msg=f"{signature} completed({duration})",
-            level=level,
+            msg=f"{signature} completed({duration})", level=level,
         )
         return result
 

@@ -3,5 +3,5 @@ Modules
 
 .. toctree::
    :glob:
-   
+
    *
