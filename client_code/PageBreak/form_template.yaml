@@ -9,4 +9,5 @@ container:
 components: []
 is_package: true
 custom_component: true
-properties: []
+properties:
+- {name: margin_top, type: number, default_value: 0, default_binding_prop: true}
