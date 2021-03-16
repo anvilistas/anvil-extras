@@ -32,8 +32,8 @@ jobs:
         python -m black --check .
     - name: Check imports with isort
       run: |
-        python -m isort --check-only --recursive client_code
-        python -m isort --check-only --recursive server_code
+        python -m isort --check-only client_code
+        python -m isort --check-only server_code
     - name: Run test suite
       run: |
         python -m pytest
