@@ -6,10 +6,14 @@ repos:
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
   - repo: https://github.com/psf/black
-    rev: 19.10b0 # Replace by any tag/version: https://github.com/psf/black/tags
+    rev: 20.8b1 # Replace by any tag/version: https://github.com/psf/black/tags
     hooks:
       - id: black
+        args: # arguments to configure black
+          - --line-length=88
         language_version: python3 # Should be a command that runs python3.6+
+
+
   - repo: https://github.com/pycqa/isort
     rev: 5.6.3
     hooks:
