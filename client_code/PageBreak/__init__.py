@@ -22,13 +22,35 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-import anvil.server
-
+#
+# Based on the snippet at
+# https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5
+from .. import session
 from ._anvil_designer import PageBreakTemplate
 
 __version__ = "1.0.0"
 
+css = """
+<style>
+  .break-container {
+    border: 1px solid grey;
+  }
+  @media print {
+    .break-container {
+      border: none;
+    }
+  }
+</style>
+"""
+session.style_injector.inject(css)
+
 
 class PageBreak(PageBreakTemplate):
-    def __init__(self, **properties):
+    def __init__(self, margin_top, **properties):
+        self.html = f"""
+<div class="break-container" style="overflow: hidden;">
+  <div style="page-break-after:always;"/>
+  <div style="margin-top: {margin_top};"/>
+</div>
+"""
         self.init_components(**properties)
