@@ -30,6 +30,8 @@ from anvil.js.window import jQuery as _S
 
 from ._anvil_designer import PageBreakTemplate
 
+__version__ = "1.0.0"
+
 
 class PageBreak(PageBreakTemplate):
     def __init__(self, margin_top, **properties):
