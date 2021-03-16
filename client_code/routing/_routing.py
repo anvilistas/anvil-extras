@@ -1,4 +1,3 @@
-
 import anvil as _anvil
 
 from collections import namedtuple as _namedtuple
@@ -6,11 +5,12 @@ from ._logging import logger
 from . import _navigation
 
 
-
 # to print route logging messages set routing.logger.debug = True above your main_router form
 logger.debug = False
 
-_path = _namedtuple("_path", ["form", "url_pattern", "url_keys", "title", "f_w_r", "url_parts"])
+_path = _namedtuple(
+    "_path", ["form", "url_pattern", "url_keys", "title", "f_w_r", "url_parts"]
+)
 
 """private globals"""
 _paths = []  # List[path]
@@ -54,7 +54,14 @@ def main_router(Cls):
             # when this form is first loaded we 'navigate' based on the url
             self.on_navigation()  # called the first time the form is loaded to start routing...
 
-        def on_navigation(self, url_hash=None, url_pattern=None, url_dict=None, path=None, dynamic_vars=None):
+        def on_navigation(
+            self,
+            url_hash=None,
+            url_pattern=None,
+            url_dict=None,
+            path=None,
+            dynamic_vars=None,
+        ):
             # when there is navigation - back/forward navigation
             # or when the user changes the url_hash or when you call anvil.set_url_hash in code
 
@@ -83,7 +90,9 @@ def main_router(Cls):
                 try:
                     stop_unload = _current_form.before_unload()
                     if stop_unload:
-                        logger.print(f"stop unload called from {_current_form.__class__.__name__}")
+                        logger.print(
+                            f"stop unload called from {_current_form.__class__.__name__}"
+                        )
                         _navigation.stopUnload()
                         _on_navigation_stack_depth -= 1
                         return  # this will stop the navigation
@@ -105,14 +114,20 @@ def main_router(Cls):
                 # on_navigation in your main form will be called here
                 # in the example we change 'selected' role on links using this method
                 Cls.on_navigation(
-                    self, url_hash=url_hash, url_pattern=url_pattern, url_dict=url_dict, unload_form=_current_form
+                    self,
+                    url_hash=url_hash,
+                    url_pattern=url_pattern,
+                    url_dict=url_dict,
+                    unload_form=_current_form,
                 )
 
             try:
                 if url_hash not in _cache and path is None:
                     path, dynamic_vars = self.find_path(url_hash, url_pattern, url_dict)
             except KeyError:
-                logger.print(f"no route form with url_pattern={url_pattern} and url_keys={url_dict.keys()}")
+                logger.print(
+                    f"no route form with url_pattern={url_pattern} and url_keys={url_dict.keys()}"
+                )
                 if _error_form is not None:
                     load_error_form()
                 elif _anvil.get_open_form():
@@ -134,7 +149,9 @@ def main_router(Cls):
 
         def find_path(self, url_hash, url_pattern, url_dict):
             # this method is called whenever we have form to load from navigation that is not in the cache
-            given_url_parts = url_pattern.split("/")  # determine the individual portions
+            given_url_parts = url_pattern.split(
+                "/"
+            )  # determine the individual portions
             # of this deep link. N.B. this disallows using a '/' within the dynamic variable
             num_given_url_parts = len(given_url_parts)
             for path in _paths:
@@ -165,7 +182,11 @@ def main_router(Cls):
                 logger.print(f"loaded {_cache[url_hash].__class__.__name__} from cache")
                 _current_form = _cache[url_hash]
             elif path:
-                title = path.title if path.title is None else path.title.format(**url_dict, **dynamic_vars)
+                title = (
+                    path.title
+                    if path.title is None
+                    else path.title.format(**url_dict, **dynamic_vars)
+                )
                 _cache[url_hash] = path.form(
                     url_hash=url_hash,
                     url_pattern=url_pattern,
@@ -176,13 +197,19 @@ def main_router(Cls):
                     from_routing=True,
                     **_properties,
                 )
-                logger.print(f"loaded {_cache[url_hash].__class__.__name__}, added to cache")
+                logger.print(
+                    f"loaded {_cache[url_hash].__class__.__name__}, added to cache"
+                )
             else:
                 raise Exception("bad load_form called")
             if _current_form is _cache[url_hash]:
                 # this accounts for a slow form load and a super quick navigation change!
                 form = _cache[url_hash]
-                url_hash, url_pattern, url_dict = get_url_components()  # just incase they changed!
+                (
+                    url_hash,
+                    url_pattern,
+                    url_dict,
+                ) = get_url_components()  # just incase they changed!
                 form.url_hash = url_hash
                 form.url_pattern = url_pattern
                 form.url_dict = url_dict
@@ -210,11 +237,17 @@ class route:
 
     def __call__(self, Cls):
         if not isinstance(self.url_pattern, str):
-            raise TypeError(f"url_pattern must be type str not {type(self.url_pattern)} in {Cls.__name__}")
+            raise TypeError(
+                f"url_pattern must be type str not {type(self.url_pattern)} in {Cls.__name__}"
+            )
         if not (isinstance(self.url_keys, list) or isinstance(self.url_keys, tuple)):
-            raise TypeError(f"keys should be a list or tuple not {type(self.url_keys)} in {Cls.__name__}")
+            raise TypeError(
+                f"keys should be a list or tuple not {type(self.url_keys)} in {Cls.__name__}"
+            )
         if not (self.title is None or isinstance(self.title, str)):
-            raise TypeError(f"title must be type str or None not {type(self.title)} in {Cls.__name__}")
+            raise TypeError(
+                f"title must be type str or None not {type(self.title)} in {Cls.__name__}"
+            )
         if self.url_pattern and self.url_pattern[-1] == "/":
             self.url_pattern = self.url_pattern[:-1]
 
@@ -253,7 +286,9 @@ class route:
                     global _current_form
                     _current_form = self  # this is the form that should be displayed
 
-                if "Template" in str(Cls.__base__):  # then this was the original class Form(FormTemplate) Class
+                if "Template" in str(
+                    Cls.__base__
+                ):  # then this was the original class Form(FormTemplate) Class
                     Cls.__init__(self, **properties)
                     # prevents console logging 'Ignoring form constructor kwarg:' which is annoying
                 else:  # we have a multiple decorator so re-pass route kwargs
@@ -333,9 +368,12 @@ def get_url_components(url_hash=None):
         # this is the case when anvil converts the url hash to a dict automatically
         url_pattern = ""
         url_dict = {
-            k: (_anvil.http.url_decode(v) if v != "undefined" else "") for k, v in url_hash.items()
+            k: (_anvil.http.url_decode(v) if v != "undefined" else "")
+            for k, v in url_hash.items()
         }  # anvil.get_url_hash return 'undefined' for empty parameters
-        url_hash = "?" + "&".join(f"{key}={_anvil.http.url_encode(value)}" for key, value in url_dict.items())
+        url_hash = "?" + "&".join(
+            f"{key}={_anvil.http.url_encode(value)}" for key, value in url_dict.items()
+        )
     elif url_hash.find("?") == -1:  # then we have no parameters as part of the url
         url_pattern = url_hash
         url_dict = {}
@@ -378,12 +416,16 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
     gotcha: cannot be called from the init function of the the same form in cache
     because the form has not been added to the cache until it has loaded - try putthing it in the form show even instead
     """
-    url_hash = _process_url_arguments(url_hash, url_pattern=url_pattern, url_dict=url_dict)[0]
+    url_hash = _process_url_arguments(
+        url_hash, url_pattern=url_pattern, url_dict=url_dict
+    )[0]
     logger.print(f"removing {url_hash} from cache")
     if url_hash in _cache:
         del _cache[url_hash]
     else:
-        logger.print(f"*warning* {url_hash} was not found in cache - maybe the form was yet to load")
+        logger.print(
+            f"*warning* {url_hash} was not found in cache - maybe the form was yet to load"
+        )
 
 
 def add_to_cache(url_hash, form):
@@ -443,7 +485,9 @@ def set_url_hash(
         )
 
     ### process the url_arguments
-    url_hash, url_pattern, url_dict = _process_url_arguments(url_hash, url_pattern=url_pattern, url_dict=url_dict)
+    url_hash, url_pattern, url_dict = _process_url_arguments(
+        url_hash, url_pattern=url_pattern, url_dict=url_dict
+    )
 
     if url_hash == get_url_hash() and url_hash in _cache and _current_form is not None:
         return  # should not continue if url_hash is identical to the addressbar hash!
@@ -454,13 +498,19 @@ def set_url_hash(
         remove_from_cache(url_hash)
 
     if set_in_history and not replace_current_url:
-        logger.print(f"setting url_hash to: #{url_hash}, adding to top of history stack")
+        logger.print(
+            f"setting url_hash to: #{url_hash}, adding to top of history stack"
+        )
         _navigation.pushState("#" + url_hash)
     elif set_in_history and replace_current_url:
-        logger.print(f"setting url_hash to: #{url_hash}, replacing current_url, setting in history")
+        logger.print(
+            f"setting url_hash to: #{url_hash}, replacing current_url, setting in history"
+        )
         _navigation.replaceState("#" + url_hash)
     elif not set_in_history and replace_current_url:
-        logger.print(f"setting url_hash to: #{url_hash}, replacing current_url, NOT setting in history")
+        logger.print(
+            f"setting url_hash to: #{url_hash}, replacing current_url, NOT setting in history"
+        )
         _navigation.replaceUrlNotState("#" + url_hash)
 
     global _properties
@@ -469,7 +519,9 @@ def set_url_hash(
     if redirect:
         _main_router.on_navigation(url_hash, url_pattern, url_dict)
     elif set_in_history and _current_form:
-        _cache[url_hash] = _current_form  # no need to add to cache if not being set in history
+        _cache[
+            url_hash
+        ] = _current_form  # no need to add to cache if not being set in history
 
 
 def load_form(
@@ -498,8 +550,14 @@ def load_form(
     except:
         raise
 
-    dynamic_varnames = {i[1:-1] for i in path.url_pattern.split("/") if i.startswith("{") and i.endswith("}")}
-    dynamic_vars = {key: value for key, value in properties.items() if key in dynamic_varnames}
+    dynamic_varnames = {
+        i[1:-1]
+        for i in path.url_pattern.split("/")
+        if i.startswith("{") and i.endswith("}")
+    }
+    dynamic_vars = {
+        key: value for key, value in properties.items() if key in dynamic_varnames
+    }
     url_pattern = path.url_pattern.format(**dynamic_vars)  # expand dynamic variables
     url_dict = _get_url_dict(path.url_keys, form, **properties)
     url_hash = _get_url_hash(url_pattern, url_dict)
@@ -522,7 +580,9 @@ def load_form(
         )
         _navigation.replaceUrlNotState("#" + url_hash)
     else:
-        logger.print(f"loading form {form.__name__}, with url_hash: #{url_hash}, adding to top of history stack")
+        logger.print(
+            f"loading form {form.__name__}, with url_hash: #{url_hash}, adding to top of history stack"
+        )
         _navigation.pushState("#" + url_hash)
 
     if not load_from_cache:
@@ -592,19 +652,25 @@ def on_session_expired(reload_hash=True, allow_cancel=True):
 
 
 def _get_url_dict(url_keys, form, **properties):
-    url_dict = properties.get("url_dict")  # just in case the user decided to pass the url_dict as a kwarg...
+    url_dict = properties.get(
+        "url_dict"
+    )  # just in case the user decided to pass the url_dict as a kwarg...
     if (
         url_dict is None
     ):  # if a url dict is expected then either a url_dict shoud have been provided - or the url_keys should have been passed as kwargs
         url_dict = {key: _finditem(properties, key) for key in url_keys}
         for key, value in url_dict.items():
             if value == "NOT FOUND":
-                raise KeyError(f"{form.__name__} expected the key {key} to be passed to method form_load()")
+                raise KeyError(
+                    f"{form.__name__} expected the key {key} to be passed to method form_load()"
+                )
     return url_dict
 
 
 def _get_url_hash(url_pattern, url_dict):
-    url_params = "&".join(f"{key}={_anvil.http.url_encode(str(value))}" for key, value in url_dict.items())
+    url_params = "&".join(
+        f"{key}={_anvil.http.url_encode(str(value))}" for key, value in url_dict.items()
+    )
     url_params = "?" + url_params if url_params else ""
     return url_pattern + url_params
 
@@ -626,7 +692,9 @@ def _get_path(form, url_pattern, url_keys):
     paths_with_form = [path for path in _paths if path.form.__name__ == form.__name__]
     num_paths = len(paths_with_form)
     if not num_paths:
-        raise Exception(f"{form.__name__} is not a route form - use the route decorator")
+        raise Exception(
+            f"{form.__name__} is not a route form - use the route decorator"
+        )
     elif num_paths == 1:
         return paths_with_form[0]
     elif url_pattern is None:
@@ -637,7 +705,9 @@ def _get_path(form, url_pattern, url_keys):
         for path in paths_with_form:
             if path.url_pattern == url_pattern and set(url_keys) == set(path.url_keys):
                 return path
-        raise KeyError(f"{form.__name__} has no decorator with url_pattern={url_pattern} and url_keys={url_keys}")
+        raise KeyError(
+            f"{form.__name__} has no decorator with url_pattern={url_pattern} and url_keys={url_keys}"
+        )
 
 
 def _process_url_arguments(url_hash=None, *, url_pattern=None, url_dict=None):
@@ -645,13 +715,17 @@ def _process_url_arguments(url_hash=None, *, url_pattern=None, url_dict=None):
     check and set_up the url_hash, url_pattern and url_dict
     """
     if url_dict is not None and url_pattern is None:
-        raise TypeError("if you provide a url_dict you must provide a url_pattern as a keyword argument url_pattern=")
+        raise TypeError(
+            "if you provide a url_dict you must provide a url_pattern as a keyword argument url_pattern="
+        )
     if url_hash is None and url_pattern is None:
         url_hash = ""  # default behaviour should be an empty string
     elif url_hash is None:
         url_dict = {} if url_dict is None else url_dict
         url_hash = _get_url_hash(url_pattern, url_dict)
-    url_hash, url_pattern, url_dict = get_url_components(url_hash)  # will convert to a string
+    url_hash, url_pattern, url_dict = get_url_components(
+        url_hash
+    )  # will convert to a string
     return url_hash, url_pattern, url_dict
 
 
@@ -666,7 +740,9 @@ if __name__ == "__main__":
     _ = _anvil.Label()
     _.set_event_handler(
         "show",
-        lambda **e: _anvil.Notification("oops hashrouting is a dependency", timeout=None).show(),
+        lambda **e: _anvil.Notification(
+            "oops hashrouting is a dependency", timeout=None
+        ).show(),
     )
     _anvil.open_form(_)
 

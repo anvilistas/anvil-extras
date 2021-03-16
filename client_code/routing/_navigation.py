@@ -32,7 +32,9 @@ def onPopState(e):
     if on_navigation is not None:
         on_navigation()
     else:
-        logger.print("the open form is not using '@main_router' or has no 'on_navigation' method")
+        logger.print(
+            "the open form is not using '@main_router' or has no 'on_navigation' method"
+        )
 
 
 window.onpopstate = onPopState
