@@ -69,4 +69,3 @@ Notes:
   the module.
   * The order of the decorators matters. `anvil.server.callable` must come before either
   of the authorisation module decorators.
-

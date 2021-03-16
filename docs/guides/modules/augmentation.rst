@@ -17,13 +17,13 @@ Examples
     # equivalent to
     # augment.set_event_handler(self.link, 'mouseenter', self.link_hover)
     # augment.set_event_handler(self.link, 'mouseleave', self.link_hover)
-    # or 
+    # or
     # augment.set_event_handler(self.link, 'mouseenter mouseleave', self.link_hover)
 
     def link_hover(self, **event_args):
       if 'enter' in event_args['event_type']:
         self.link.text = 'hover'
-      else: 
+      else:
         self.link.text = 'hover_out'
 
     #================================================
@@ -41,7 +41,7 @@ need a trigger method?
 
 .. code-block:: python
 
-    # 'augment' the component by adding any event... 
+    # 'augment' the component by adding any event...
     augment.add_event(self.textbox, 'select')
     # augment.add_event(self.textbox, 'custom')
     # augment.add_event(self.textbox, '')

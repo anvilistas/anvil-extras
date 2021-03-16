@@ -61,9 +61,9 @@ url_keys:    ['id']            |   []          # list[str]   the keys you expect
 
 """
 Form DECORATORS
-@routing.main_router                                         ## above the MainForm that loads forms into it's content_panel. 
+@routing.main_router                                         ## above the MainForm that loads forms into it's content_panel.
 @routing.route(url_pattern=str, url_keys=[str], title=str)   ## defaults: url_pattern='', url_keys=[], title= #whatever is set in anvil's Titles and Logs
-@routing.error_form                                          ## optional  - this form will load for an incorrect url or by calling router.load_error_form() 
+@routing.error_form                                          ## optional  - this form will load for an incorrect url or by calling router.load_error_form()
 """
 
 
@@ -148,7 +148,6 @@ def main_router(Cls):
                     url_dict=url_dict,
                     unload_form=_current_form,
                 )
-
             try:
                 if url_hash not in _cache and path is None:
                     path, dynamic_vars = self.find_path(url_hash, url_pattern, url_dict)
@@ -161,8 +160,6 @@ def main_router(Cls):
                 elif _anvil.get_open_form():
                     # raising an exception before there is an open form stops anything loading
                     raise  # if you can't work out why your page won't load then take raise out of this if block...
-            except:
-                raise  # this was an unexpected error so raise it
             else:
                 self.content_panel.clear()  # clear the form now just incase we end up with a new to cache form that is slow to load later
                 self.load_form(
@@ -365,12 +362,12 @@ def error_form(Cls):
 
 
 """
-METHODS 
+METHODS
 
 routing.get_url_components()                          returns url_hash, url_pattern, url_dict
 routing.get_url_hash()                                returns url_hash as a string (different to anvil.get_url_hash() which could be a dict)
-routing.get_url_pattern()                             returns url_pattern 
-routing.get_url_dict()                                returns url_dict 
+routing.get_url_pattern()                             returns url_pattern
+routing.get_url_dict()                                returns url_dict
 
 routing.remove_from_cache(url_hash)
 routing.add_to_cache(url_hash, form)                  nb: the form should be initiated already like ArticleForm()
@@ -467,7 +464,7 @@ def add_to_cache(url_hash, form):
 
 def clear_cache():
     """clears the _cache"""
-    logger.print(f"clearing the cache")
+    logger.print("clearing the cache")
     global _cache
     _cache = {}
 
@@ -573,10 +570,8 @@ def load_form(
     load_form(ArticleForm, item=item)          #  where 'id' is a key in item...
     load_form(AritcleForm, id=3, item=item)    #  as above but this is quicker if item is a live_object_proxy as it prevents a server call
     """
-    try:
-        path = _get_path(form, url_pattern, url_keys)
-    except:
-        raise
+    path = _get_path(form, url_pattern, url_keys)
+    # could rais an exception
 
     dynamic_varnames = {
         i[1:-1]

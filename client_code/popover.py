@@ -148,7 +148,7 @@ def pop(self, behavior):
         popper_element.data("bs.popover").inState.click = not current
     try:
         popper_element.popover(behavior)
-    except:
+    except Exception:
         raise ValueError("unrecognized behavior: {}".format(behavior))
 
 
@@ -215,7 +215,7 @@ def _hide(popover_id, visible_popovers):
     # hack for click https://github.com/twbs/bootstrap/issues/16732
     try:
         popper.data("bs.popover").inState.click = False
-    except:
+    except Exception:
         pass
 
 

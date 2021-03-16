@@ -17,7 +17,7 @@ Features
 - `Publish/Subscribe Messaging <https://anvil-extras.readthedocs.io/en/latest/guides/messaging.html>`_
 - `Dynamic Menu Construction <https://anvil-extras.readthedocs.io/en/latest/guides/navigation.html>`_
 - `Role Based Authorisation <https://anvil-extras.readthedocs.io/en/latest/guides/authorisation.html>`_
-- `Augmented Events <https://anvil-extras.readthedocs.io/en/latest/guides/augmentation.html>`_ 
+- `Augmented Events <https://anvil-extras.readthedocs.io/en/latest/guides/augmentation.html>`_
 - `Popovers <https://anvil-extras.readthedocs.io/en/latest/guides/popover.html>`_
 - `Client and server side logging/timing utilities <https://anvil_extras.readthedocs.io/en/latest/guides/modules/utils.html>`_
 

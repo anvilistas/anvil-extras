@@ -41,7 +41,7 @@ class Indeterminate(IndeterminateTemplate):
 
 .anvil-role-indeterminate-progress-indicator-{self.uid}:before {{
   background-color: {track_colour}
- 
+
 }}
 """
         session.style_injector.inject(css)

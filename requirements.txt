@@ -1,2 +1,2 @@
-bump2version 
+bump2version
 pytest
