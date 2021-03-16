@@ -6,4 +6,4 @@ components: []
 is_package: true
 custom_component: true
 properties:
-- {name: margin_top, type: string, default_value: 0px, default_binding_prop: true}
+- {name: margin_top, type: number, default_value: 0, default_binding_prop: true}

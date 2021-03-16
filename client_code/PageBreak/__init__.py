@@ -25,32 +25,23 @@
 #
 # Based on the snippet at
 # https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5
-from .. import session
+import anvil
+from anvil.js.window import jQuery as _S
+
 from ._anvil_designer import PageBreakTemplate
-
-__version__ = "1.0.0"
-
-css = """
-<style>
-  .break-container {
-    border: 1px solid grey;
-  }
-  @media print {
-    .break-container {
-      border: none;
-    }
-  }
-</style>
-"""
-session.style_injector.inject(css)
 
 
 class PageBreak(PageBreakTemplate):
     def __init__(self, margin_top, **properties):
-        self.html = f"""
-<div class="break-container" style="overflow: hidden;">
-  <div style="page-break-after:always;"/>
-  <div style="margin-top: {margin_top};"/>
-</div>
-"""
+        self.margin_node = _S(anvil.js.get_dom_node(self)).find(".margin-element")
+        self.margin_top = margin_top
         self.init_components(**properties)
+
+    @property
+    def margin_top(self):
+        return self._margin_top
+
+    @margin_top.setter
+    def margin_top(self, value):
+        self.margin_node.css("margin-top", value)
+        self._margin_top = value
