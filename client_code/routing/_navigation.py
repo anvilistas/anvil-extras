@@ -5,6 +5,8 @@ from anvil.js.window import document, history, location, window
 
 from ._logging import logger
 
+__version__ = "1.0.0"
+
 # re-initialise the state object which was overridden on load or this is a new session
 state = history.state or {"url": location.hash, "pos": 0}
 history.replaceState(state, "", state["url"])

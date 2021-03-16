@@ -1,6 +1,8 @@
 from anvil.js.window import jQuery as _S
 from anvil.js.window import location
 
+__version__ = "1.0.0"
+
 modal = _S("#session-expired-modal")
 modal_button = _S("#session-expired-modal .modal-footer button")
 modal_close = _S("#session-expired-modal .modal-header button")

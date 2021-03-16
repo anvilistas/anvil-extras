@@ -5,6 +5,8 @@ import anvil as _anvil
 from . import _navigation
 from ._logging import logger
 
+__version__ = "1.0.0"
+
 # to print route logging messages set routing.logger.debug = True above your main_router form
 logger.debug = False
 

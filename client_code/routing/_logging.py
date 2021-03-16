@@ -1,3 +1,6 @@
+__version__ = "1.0.0"
+
+
 class Logger:
     def __init__(self, debug, msg=""):
         self.debug = debug
