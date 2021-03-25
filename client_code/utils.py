@@ -61,6 +61,7 @@ _dict_setitem = dict.__setitem__
 
 class BindingRefreshDict(dict):
     """A dict that calls refresh_data_bindings when its content changes"""
+
     def __setitem__(self, key, value):
         _dict_setitem(self, key, value)
         forms = getattr(self, "_forms", [])
