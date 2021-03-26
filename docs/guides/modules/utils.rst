@@ -51,3 +51,24 @@ On the server side, the decorator takes a `logging.Logger` instance as one of it
        ...
 
 The decorator also takes an optional `level` argument which must be one of the standard levels from the logging module. When no argument is passed, the default level is `logging.INFO`.
+
+Auto-Refresh
+------------
+Whenever you set a form's `item` attribute, the form's `refresh_data_bindings` method is called automatically.
+
+The `utils` module includes a decorator you can add to a form's class so that `refresh_data_bindings` is called whenever `item` changes at all.
+
+To use it, import the decorator and apply it to the class for a form:
+
+.. code-block:: python
+
+   from anvil_extras.utils import auto_refreshing
+   from ._anvil_designer import MyFormTemplate
+
+
+   @auto_refreshing
+   class MyForm(MyFormTemplate):
+       def __init__(self, **properties):
+           self.init_components(**properties)
+
+Now, the form has an `item` property which behaves like a dictionary. Whenever a value of that dictionary changes, the form's `refresh_data_bindings` method will be called.
