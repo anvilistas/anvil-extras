@@ -62,11 +62,18 @@ _dict_setitem = dict.__setitem__
 class BindingRefreshDict(dict):
     """A dict that calls refresh_data_bindings when its content changes"""
 
-    def __setitem__(self, key, value):
-        _dict_setitem(self, key, value)
+    def _refresh_data_bindings(self):
         forms = getattr(self, "_forms", [])
         for form in forms:
             form.refresh_data_bindings()
+
+    def __setitem__(self, key, value):
+        _dict_setitem(self, key, value)
+        self._refresh_data_bindings()
+
+    def update(self, *args, **kwargs):
+        super().update(*args, **kwargs)
+        self._refresh_data_bindings()
 
 
 def _item_override(cls):
