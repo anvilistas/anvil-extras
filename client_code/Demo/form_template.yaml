@@ -2,6 +2,13 @@ container:
   type: ColumnPanel
   properties: {col_widths: '{}'}
 components:
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: MessagePill, font_size: null, font: '', spacing_above: small, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_4
+  layout_properties: {grid_position: 'SGJRUD,FWDVZW'}
 - type: form:MessagePill
   properties: {level: info, message: MessagePill with level 'info'}
   name: message_pill_1
@@ -20,8 +27,8 @@ components:
   layout_properties: {grid_position: 'CNITUV,WYNUFR'}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: IndeterminateProgressBar, font_size: null, font: '', spacing_above: small,
-    icon_align: left, spacing_below: none, italic: false, background: '', bold: false,
+    text: IndeterminateProgressBar, font_size: null, font: '', spacing_above: large,
+    icon_align: left, spacing_below: none, italic: false, background: '', bold: true,
     underline: false, icon: ''}
   name: label_1
   layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
@@ -31,8 +38,8 @@ components:
   layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: ProgressBar, font_size: null, font: '', spacing_above: small, icon_align: left,
-    spacing_below: none, italic: false, background: '', bold: false, underline: false,
+    text: ProgressBar, font_size: null, font: '', spacing_above: large, icon_align: left,
+    spacing_below: none, italic: false, background: '', bold: true, underline: false,
     icon: ''}
   name: label_1_copy
   layout_properties:
@@ -42,6 +49,55 @@ components:
   properties: {track_colour: '#b3d4fc', indicator_colour: '#1976D2', progress: 0.5}
   name: progress_bar
   layout_properties: {grid_position: 'TUUBRI,CREBNE'}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Auto Refresh, font_size: null, font: '', spacing_above: large, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_3
+  layout_properties: {grid_position: 'YBVZRV,XCMOTC'}
+- type: FlowPanel
+  properties: {}
+  name: flow_panel_1
+  layout_properties: {grid_position: 'MBIOXI,WEKBGG'}
+  components:
+  - type: Button
+    properties: {role: null, align: center, tooltip: Rest counts, border: '', enabled: true,
+      foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+      icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
+      underline: false, icon: 'fa:refresh'}
+    name: reset_button
+    layout_properties: {grid_position: 'YBVZRV,XBXDIA'}
+    event_bindings: {click: reset_button_click}
+  - type: Button
+    properties: {role: null, align: center, tooltip: Decrease tally, border: '', enabled: true,
+      foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+      icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
+      underline: false, icon: 'fa:minus'}
+    name: minus_button
+    layout_properties: {grid_position: 'WYANSY,GEJTSR'}
+    event_bindings: {click: minus_button_click}
+  - type: Label
+    properties: {}
+    name: label_2
+    layout_properties: {}
+    data_bindings:
+    - {property: text, code: 'self.item[''tally'']'}
+  - type: Button
+    properties: {role: null, align: center, tooltip: Increase tally, border: '', enabled: true,
+      foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+      icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
+      underline: false, icon: 'fa:plus'}
+    name: plus_button
+    layout_properties: {}
+    event_bindings: {click: plus_button_click}
+  - type: Label
+    properties: {}
+    name: label_5
+    layout_properties: {grid_position: 'YBVZRV,HFMSBF'}
+    data_bindings:
+    - {property: text, code: 'f"These buttons have been clicked {self.item[''counter'']}
+        times"'}
 - type: Timer
   properties: {interval: 0.1}
   name: timer_1
