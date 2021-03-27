@@ -22,14 +22,17 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
+from ..utils import auto_refreshing
 from ._anvil_designer import DemoTemplate
 
 __version__ = "1.0.0"
 
 
+@auto_refreshing
 class Demo(DemoTemplate):
     def __init__(self, **properties):
         self.progress = 0
+        self.item = self.default_item = dict(tally=100, counter=0)
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
@@ -38,3 +41,14 @@ class Demo(DemoTemplate):
             self.progress += 0.01
         else:
             self.timer_1.interval = 0
+
+    def minus_button_click(self, **event_args):
+        self.item["tally"] -= 1
+        self.item["counter"] += 1
+
+    def plus_button_click(self, **event_args):
+        self.item["tally"] += 1
+        self.item["counter"] += 1
+
+    def reset_button_click(self, **event_args):
+        self.item = self.default_item
