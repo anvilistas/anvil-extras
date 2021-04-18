@@ -11,10 +11,8 @@ You will need to setup the Users and Data Table services in your app:
   * Ensure that you have added the 'Users' service to your app
   * In the 'Data Tables' service, add:
   	* a table named 'permissions' with a text column named 'name'
-	* a table named 'roles' with a text column named 'name' and a 'link to table'
-	column named 'permissions' that links to multiple rows of the permissions table
-	* a new 'link to table' column in the Users table named 'roles' that links
-	to multiple rows of the 'roles' table
+	* a table named 'roles' with a text column named 'name' and a 'link to table'column named 'permissions' that links to multiple rows of the permissions table
+	* a new 'link to table' column in the Users table named 'roles' that links to multiple rows of the 'roles' table
 
 Usage
 -----
@@ -64,8 +62,4 @@ You can pass either a single string or a list of strings to the decorator. The f
 will only be called if the logged in user has ALL the permissions listed.
 
 Notes:
-  * The import lines in the examples above assume you have installed the Extras ibrary as a
-  dependency. If you used direct inclusion, you will need to import from your own copy of
-  the module.
-  * The order of the decorators matters. `anvil.server.callable` must come before either
-  of the authorisation module decorators.
+* The order of the decorators matters. `anvil.server.callable` must come before either of the authorisation module decorators.
