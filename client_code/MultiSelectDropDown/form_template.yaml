@@ -1,0 +1,26 @@
+properties:
+- {name: align, type: string, default_value: left, default_binding_prop: true}
+- {name: items, type: 'text[]', default_value: null}
+- {name: placeholder, type: string, default_value: None Selected}
+- {name: enable_filtering, type: boolean, default_value: null}
+- {name: filter_placeholder, type: string, default_value: search}
+- {name: multiple, type: boolean, default_value: true}
+is_package: true
+events:
+- {name: change, default_event: true, description: when the selected values change}
+- {name: show, description: when the dropdown is shown}
+- {name: hide, description: when the dropdown is hidden}
+custom_component: true
+components: []
+container:
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js\"\
+      \ integrity=\"sha512-aFvi2oPv3NjnjQv1Y/hmKD7RNMendo4CZ2DwQqMWzoURKxcqAoktj0nNG4LU8m23+Ws9X5uVDD4OXLqpUVXD5Q==\"\
+      \ crossorigin=\"anonymous\"></script>\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css\"\
+      \ integrity=\"sha512-EvvoSMXERW4Pe9LjDN9XDzHd66p8Z49gcrB7LCUplh0GcEHiV816gXGwIhir6PJiwl0ew8GFM2QaIg2TW02B9A==\"\
+      \ crossorigin=\"anonymous\" />\n\n<select id=\"example-multiple-selected\" multiple=\"\
+      multiple\"/>\n<script>\n  $('#example-multiple-selected').multiselect({\n  \
+      \  nonSelectedText: 'Multi-Select Dropdown',\n  });\n  $('#example-multiple-selected').siblings('.btn-group').find('button').css('textAlign',\
+      \ 'left')\n  function foo(){}\n</script>"}
+  event_bindings: {show: form_show}
