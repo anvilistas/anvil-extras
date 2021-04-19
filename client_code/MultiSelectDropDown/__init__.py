@@ -29,6 +29,8 @@ from anvil.js.window import jQuery as _S
 from ..session import style_injector
 from ._anvil_designer import MultiSelectDropDownTemplate
 
+__version__ = "1.1.0"
+
 _loaded = False
 def _onload(e):
   global _loaded
