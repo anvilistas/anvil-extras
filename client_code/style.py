@@ -29,7 +29,7 @@ __version__ = "1.1.0"
 
 class Injector:
     def __init__(self):
-        self.injected = []
+        self.injected = set()
 
     def inject(self, css):
         hashed = hash(css)
@@ -37,4 +37,4 @@ class Injector:
             sheet = document.createElement("style")
             sheet.innerHTML = css
             document.body.appendChild(sheet)
-            self.injected.append(hashed)
+            self.injected.add(hashed)

@@ -26,6 +26,7 @@ import anvil.js as _js
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
+from ..session import style_injector
 from ._anvil_designer import MultiSelectDropDownTemplate
 
 _loaded = False
@@ -68,7 +69,7 @@ _add_script('''
 />
 ''')
 
-_add_script('''<style>
+style_injector.inject('''
 .anvil-container, .anvil-container div {
     overflow: visible;
 }
@@ -90,7 +91,7 @@ _add_script('''<style>
     background: #d3d3d3;
     color: black;
 }
-</style>''')
+''')
 
 
 defaults = {
