@@ -3,9 +3,9 @@ container:
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
     role: null, html: "<!--\nBased on the snippet at https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5\n\
       -->\n<div class=\"break-container\" style=\"overflow: hidden;\">\n  <div style=\"\
-      page-break-after:always;\"/>\n  <div style=\"margin-top: 0px;\"/>\n</div>\n\
-      \n<style>\n  .break-container {\n    border: 1px solid grey;\n  }\n  @media\
-      \ print {\n    .break-container {\n      border: none;\n    }\n  }\n</style>"}
+      page-break-after:always;\"/>\n  <div style=\"margin-top: 0px;\"/>\n</div>\n\n\
+      <style>\n  .break-container {\n    border: 1px solid grey;\n  }\n  @media print\
+      \ {\n    .break-container {\n      border: none;\n    }\n  }\n</style>"}
 components: []
 is_package: true
 custom_component: true

@@ -22,5 +22,5 @@ container:
       \ crossorigin=\"anonymous\" />\n\n<select id=\"example-multiple-selected\" multiple=\"\
       multiple\"/>\n<script>\n  $('#example-multiple-selected').multiselect({\n  \
       \  nonSelectedText: 'Multi-Select Dropdown',\n  });\n  $('#example-multiple-selected').siblings('.btn-group').find('button').css('textAlign',\
-      \ 'left')\n  function foo(){}\n</script>"}
+      \ 'left')\n</script>"}
   event_bindings: {show: form_show}

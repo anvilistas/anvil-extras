@@ -102,4 +102,23 @@ components:
   properties: {interval: 0.1}
   name: timer_1
   event_bindings: {tick: timer_1_tick}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Multi Select Dropdown, font_size: null, font: '', spacing_above: large,
+    icon_align: left, spacing_below: small, italic: false, background: '', bold: true,
+    underline: false, icon: ''}
+  name: label_3_copy
+  layout_properties:
+    col_widths: {}
+    grid_position: FIUEYU,YFELUZ
+- type: form:MultiSelectDropDown
+  properties:
+    align: left
+    items: [foo, bar, '---', eggs, spam]
+    placeholder: None Selected
+    enable_filtering: true
+    filter_placeholder: search
+    multiple: true
+  name: multi_select_drop_down_1
+  layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
 is_package: true
