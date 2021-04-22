@@ -36,15 +36,15 @@ That remote is currently named 'origin'. We will now rename it to something more
 * In your terminal, navigate to your 'anvil_extras' folder.
 * Rename the 'origin' remote to 'anvil' with the command:
 
-```
-git remote rename origin anvil
-```
+.. code-block::
+
+    git remote rename origin anvil
 
 * Add the github repository with the command:
 
-```
-git remote add github git@github.com:anvilistas/anvil-extras.git
-```
+.. code-block::
+
+    git remote add github git@github.com:anvilistas/anvil-extras.git
 
 Do the Upgrade
 --------------
@@ -52,13 +52,13 @@ To upgrade your app, we will now fetch the latest version from github to your lo
 
 * In your terminal, fetch the lastest code from github using the commands:
 
-```
-git fetch github
-git reset --hard github/main
-```
+.. code-block::
+
+    git fetch github
+    git reset --hard github/main
 
 * Finally, push those changes to your copy of the app at Anvil:
 
-```
-git push -f anvil
-```
+.. code-block::
+
+    git push -f anvil
