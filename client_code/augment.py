@@ -26,6 +26,7 @@
 import anvil as _anvil
 from anvil import Component as _Component
 from anvil import js as _js
+from anvil.js.window import Function as _Function
 from anvil.js.window import jQuery as _S
 
 __version__ = "1.1.0"
@@ -35,7 +36,6 @@ def add_event(component, event):
     """component: (instantiated) anvil component
     event: str - any jquery event string
     """
-    init(component)  # adds the trigger method to the component type
     if not isinstance(event, str):
         raise TypeError("event must be type str and not " + type(event))
     _add_event(component, event)
@@ -68,28 +68,31 @@ def set_event_handler(component, event, func):
     component.set_event_handler(event, func)
 
 
-def init(component):
-    """adds a trigger method to all components of the type passed"""
-    if isinstance(component, _Component):
-        component = type(component)
-    elif issubclass(component, _Component):
-        pass
-    else:
-        raise TypeError("expected a component not {}".format(type(component).__name__))
-    if hasattr(component, "trigger"):
-        return
-    else:
-        component.trigger = trigger
+_trigger_writeback = _Function(
+    "self",
+    """
+    self = PyDefUtils.unwrapOrRemapToPy(self);
+    const mapPropToWriteback = (p) => () => PyDefUtils.suspensionFromPromise(self._anvil.dataBindingWriteback(self, p.name));
+    const customPropsToWriteBack = (self._anvil.customComponentProperties || []).filter(p => p.allow_binding_writeback).map(mapPropToWriteback);
+    const builtinPropsToWriteBack = self._anvil.propTypes.filter(p => p.allowBindingWriteback).map(mapPropToWriteback);
+    return Sk.misceval.chain(Sk.builtin.none.none$, ...customPropsToWriteBack, ...builtinPropsToWriteBack);
+""",
+)
 
 
 def trigger(self, event):
     """trigger an event on a component, self is an anvil component, event is a component, event is a str or a dictionary
     if event is a dictionary it should include an event key e.g. {'event': 'keypress', 'which': 13}
     """
+    if event == "writeback":
+        return _trigger_writeback(self)
     if isinstance(event, dict):
         event = _S.Event(event["event"], event)
     event = "mouseenter mouseleave" if event == "hover" else event
     _get_jquery_for_component(self).trigger(event)
+
+
+_Component.trigger = trigger
 
 
 def _get_jquery_for_component(component):
@@ -101,14 +104,14 @@ def _get_jquery_for_component(component):
         return _S(_js.get_dom_node(component))
 
 
-def _add_event(component, event):
-    _js.call_js("_add_event", component, event)
-
-
-# the following is a bit of a hack so that an anvil component knows about its new event names
-_ = _js.window.document.createElement("script")
-_js.window.document.body.appendChild(_)
-_.textContent = "function _add_event(c, e) { PyDefUtils.unwrapOrRemapToPy(c)._anvil.eventTypes[e] = {name: e} }"
+_add_event = _Function(
+    "self",
+    "event",
+    """
+    self = PyDefUtils.unwrapOrRemapToPy(self);
+    self._anvil.eventTypes[event] = self._anvil.eventTypes[event] || {name: event};
+""",
+)
 
 
 if __name__ == "__main__":
