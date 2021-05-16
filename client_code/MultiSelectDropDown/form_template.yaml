@@ -1,10 +1,21 @@
 properties:
-- {name: align, type: string, default_value: left, default_binding_prop: true}
-- {name: items, type: 'text[]', default_value: null}
+- {name: align, type: string, default_value: left}
+- {name: items, type: 'text[]', default_value: null, description: 'If set at runtime
+    can use a list of tuples, (str, value) pairs. Or a list of dicts with keys: ''key'',
+    ''value'', ''icon'', ''title'', ''enabled'''}
 - {name: placeholder, type: string, default_value: None Selected}
 - {name: enable_filtering, type: boolean, default_value: null}
-- {name: filter_placeholder, type: string, default_value: search}
 - {name: multiple, type: boolean, default_value: true}
+- {name: enabled, type: boolean, default_value: true}
+- {name: visible, type: boolean, default_value: true}
+- {name: spacing_above, type: string, default_value: small}
+- {name: spacing_below, type: string, default_value: small}
+- name: selected
+  type: object
+  default_value: null
+  allow_binding_writeback: true
+  default_binding_prop: true
+  binding_writeback_events: [change]
 is_package: true
 events:
 - {name: change, default_event: true, description: when the selected values change}
@@ -15,12 +26,13 @@ components: []
 container:
   type: HtmlTemplate
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js\"\
-      \ integrity=\"sha512-aFvi2oPv3NjnjQv1Y/hmKD7RNMendo4CZ2DwQqMWzoURKxcqAoktj0nNG4LU8m23+Ws9X5uVDD4OXLqpUVXD5Q==\"\
-      \ crossorigin=\"anonymous\"></script>\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css\"\
-      \ integrity=\"sha512-EvvoSMXERW4Pe9LjDN9XDzHd66p8Z49gcrB7LCUplh0GcEHiV816gXGwIhir6PJiwl0ew8GFM2QaIg2TW02B9A==\"\
-      \ crossorigin=\"anonymous\" />\n\n<select id=\"example-multiple-selected\" multiple=\"\
-      multiple\"/>\n<script>\n  $('#example-multiple-selected').multiselect({\n  \
-      \  nonSelectedText: 'Multi-Select Dropdown',\n  });\n  $('#example-multiple-selected').siblings('.btn-group').find('button').css('textAlign',\
-      \ 'left')\n</script>"}
-  event_bindings: {show: form_show}
+    role: null, html: "<!-- Latest compiled and minified CSS -->\n<link rel=\"stylesheet\"\
+      \ href=\"https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css\"\
+      >\n\n<!-- Latest compiled and minified JavaScript -->\n<script src=\"https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js\"\
+      ></script>\n\n<select class=\"select-picker\" \n        multiple \n        data-container=\"\
+      body\"\n        data-icon-base=\"fa\"\n        data-tick-icon=\"fa-check\"\n\
+      \        data-show-subtext=\"true\"\n        data-selected-text-format=\"count\
+      \ > 3\"\n/>\n<script>\n  // To style only selects with the my-select class\n\
+      \  $.fn.selectpicker.Constructor.BootstrapVersion = '3';\n  $('.select-picker').selectpicker();\n\
+      \  //      data-live-search=\"true\"\n  \n</script>\n"}
+  event_bindings: {}

@@ -22,11 +22,12 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
+
 import anvil.js as _js
+from anvil import HtmlPanel as _HtmlPanel
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
-from ..session import style_injector
 from ._anvil_designer import MultiSelectDropDownTemplate
 
 __version__ = "1.1.0"
@@ -62,49 +63,22 @@ def _add_script(s):
 _add_script(
     """
 <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"
-    integrity="sha512-aFvi2oPv3NjnjQv1Y/hmKD7RNMendo4CZ2DwQqMWzoURKxcqAoktj0nNG4LU8m23+Ws9X5uVDD4OXLqpUVXD5Q=="
-    crossorigin="anonymous">
+  src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js">
 </script>
 """
 )
 
+
 _add_script(
     """
 <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css"
-    integrity="sha512-EvvoSMXERW4Pe9LjDN9XDzHd66p8Z49gcrB7LCUplh0GcEHiV816gXGwIhir6PJiwl0ew8GFM2QaIg2TW02B9A=="
-    crossorigin="anonymous"
-/>
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"
+>
 """
 )
 
-style_injector.inject(
-    """
-.anvil-container, .anvil-container div {
-    overflow: visible;
-}
-.multiselect-filter  i {
-    position: absolute;
-    padding: 0 5px;
-    margin-left: 2px;
-    top: 50%;
-    left: 0;
-    color: grey;
-    transform: translate3d(0, -50%, 0);
-    z-index: 3;
-}
-.multiselect-filter  input {
-    border-radius: 4px;
-    padding-left: 25px;
-}
-.multiselect-container.dropdown-menu>.active>a, .multiselect-container.dropdown-menu>.active>a:hover, .multiselect-container.dropdown-menu>.active>a:focus {
-    background: #d3d3d3;
-    color: black;
-}
-"""
-)
+_S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 
 
 defaults = {
@@ -112,14 +86,52 @@ defaults = {
     "placeholder": "None Selected",
     "number_displayed": 3,
     "filter_placeholder": "search",
-    "enable_filtering": False,
+    "enable_filtering": True,
     "multiple": True,
+    "enabled": True,
+    "spacing_below": "small",
+    "spacing_above": "small",
 }
+
+
+def component_property(internal, jquery, fn=None):
+    def getter(self):
+        return getattr(self, "_" + internal)
+
+    def setter(self, value):
+        setattr(self, "_" + internal, value)
+        value = value if fn is None else fn(value)
+        if value:
+            self._el.attr(jquery, value)
+        else:
+            self._el.attr(jquery, None)
+
+        if self._init:
+            self._el.selectpicker("refresh")
+            self._el.selectpicker("render")
+
+    return property(getter, setter, None, internal)
+
+
+def spacing_property(which):
+    def getter(self):
+        return getattr(self, "_spacing_" + which)
+
+    def setter(self, value):
+        self._dom_node.classList.remove(
+            f"anvil-spacing-{which}-{getattr(self, '_spacing_' + which, '')}"
+        )
+        self._dom_node.classList.add(f"anvil-spacing-{which}-{value}")
+        setattr(self, "_spacing_" + which, value)
+
+    return property(getter, setter, None, which)
 
 
 class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def __init__(self, **properties):
         # Set Form properties and Data Bindings.
+        self._init = False
+
         self._dom_node = _js.get_dom_node(self)
         self._el = _S(self._dom_node).find("select")
 
@@ -130,32 +142,28 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         # Any code you write here will run when the form opens.
         properties = defaults | properties
 
-        if not properties["multiple"]:
-            self._el.removeAttr("multiple")
-
-        self._el.multiselect(
-            {
-                "onChange": self.change,
-                "nonSelectedText": properties["placeholder"],
-                "enableCaseInsensitiveFiltering": properties["enable_filtering"],
-                "filterPlaceholder": properties["filter_placeholder"],
-                "numberDisplayed": properties["number_displayed"],
-            }
-        )
-
-        self._btn = self._el.siblings(".btn-group").find("button")
-        self._filter = properties["enable_filtering"]
-        self._el.ready(self._ready)
         self.init_components(**properties)
 
+        self._el.selectpicker()
+        self._el.on("changed.bs.select", self.change)
+        self._init = True
+
+    ##### PROPERTIES #####
     @property
     def align(self):
         return self._align
 
     @align.setter
     def align(self, value):
+        if value == "full":
+            text_align = None
+            width = "100%"
+        else:
+            text_align = value
+            width = None
+        self._dom_node.style.textAlign = text_align
+        self._el.attr("data-width", width)
         self._align = value
-        self._btn.css("textAlign", value)
 
     @property
     def items(self):
@@ -163,54 +171,74 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     @items.setter
     def items(self, value):
-        self._el.multiselect("dataprovider", self._clean_items(value))
+        selected = self.selected
+        self._el.children().remove()
+        self._el.append(self._clean_items(value))
         self._items = value
+        self.selected = selected
+        self._el.selectpicker("refresh")
+        self._el.selectpicker("render")
 
     @property
     def selected(self):
         return list(
-            map(lambda e: self._values[e.value], _S("option:selected", self._el))
+            map(
+                lambda e: self._values[e.value],
+                filter(lambda e: e.value != "", _S("option:selected", self._el)),
+            )
         )
 
     @selected.setter
     def selected(self, values):
         if not isinstance(values, (list, tuple)):
             values = [values]
-
         to_select = []
         for key, val in self._values.items():
             if val in values:
                 to_select.append(key)
+        self._el.selectpicker("val", to_select)
 
-        self._el.multiselect("deselectAll", False)
-        self._el.multiselect("select", to_select)
+    multiple = component_property("multiple", "multiple")
+    placeholder = component_property("placeholder", "title")
+    enable_filtering = component_property("enable_filtering", "data-live-search")
+    enabled = component_property("enabled", "disabled", lambda v: not v)
+
+    visible = _HtmlPanel.visible
+
+    spacing_above = spacing_property("above")
+    spacing_below = spacing_property("below")
 
     ##### EVENTS #####
     def change(self, *e):
         return self.raise_event("change")
 
     ##### PRIVATE METHODS #####
-    def _clean_dict_item(self, index, item):
-
+    def _clean_dict_item(self, item, index):
         sentinal = object()
 
+        # if they only set a key and not a value then use the key as the value
         value = item.get("value", sentinal)
         if value is sentinal:
             item["value"] = item.get("key")
 
-        def convert(old, new):
-            old = item.pop(old, sentinal)
-            if old is not sentinal:
-                item[new] = old
+        title = repr(item.get("title", ""))
+        icon = repr(item.get("icon", "")).replace(":", "-")
+        subtext = repr(item.get("subtext", ""))
+        disabled = not item.get("enabled", True)
 
-        convert("key", "label")
-        convert("tooltip", "title")
+        option = f"""<option {'disabled' if disabled else ''}
+                         {f'data-icon={icon}' if icon else ''}
+                         {f'data-subtext={subtext}' if subtext else ''}
+                         {f'title={title}' if title else ''}
+                         value={index}>
+                           {item.get('key')}
+                 </option>"""
 
-        return item
+        return option, item["value"]
 
     def _clean_items(self, items):
 
-        item_dict = []
+        options = []
         value_dict = {}
 
         for idx, val in enumerate(items):
@@ -218,10 +246,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
             if isinstance(val, str):
                 if val == "---":
-                    item_dict.append({"attributes": {"role": "divider"}})
+                    options.append("<option data-divider='true'/>")
                 else:
-                    item_dict.append({"label": val, "value": idx})
                     value_dict[idx] = val
+                    options.append(f"<option value={idx}>{val}</option>")
             elif isinstance(val, (tuple, list)):
                 key = val[0]
                 if not isinstance(key, str):
@@ -230,23 +258,13 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
                     )
                 if len(val) != 2:
                     raise ValueError(f"expectected a tuple of length 2 at index {idx}")
-                item_dict.append({"label": val[0], "value": idx})
                 value_dict[idx] = val[1]
+                options.append(f"<option value={idx}>{val[0]}</option>")
+
             elif isinstance(val, dict):
-                item = self._clean_dict_item(idx, val)
-                item["value"], value_dict[idx] = idx, item["value"]
-                item_dict.append(item)
+                option, value = self._clean_dict_item(val, idx)
+                value_dict[idx] = value
+                options.append(option)
 
         self._values = value_dict
-        return item_dict
-
-    def _ready(self, *e, **event_args):
-        """This method is called when the HTML panel is shown on the screen"""
-        if self._filter:
-            i = _document.createElement("i")
-            i.className = "fa fas fa-search"
-            input_group = self._dom_node.querySelector(
-                ".multiselect-filter .input-group"
-            )
-            input_group.replaceChild(i, input_group.firstElementChild)
-            input_group.removeChild(input_group.querySelector("span"))
+        return _S("\n".join(options))
