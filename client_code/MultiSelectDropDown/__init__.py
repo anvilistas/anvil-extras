@@ -56,9 +56,25 @@ def _add_script(s):
         s.setAttribute(attr.name, attr.value)
     s.textContent = dummy.textContent
     _document.head.appendChild(s)
+    if not s.get("src"):
+        return
     s.onload = s.onerror = _onload  # ignore errors
     _wait_for_load()
 
+
+_add_script(
+    """
+<script>
+  var orig_offset = jQuery.fn.offset
+  jQuery.fn.offset = function() {
+      if (!this[0].isConnected) {
+          return 0; // prevent warning in output
+      }
+      return orig_offset.call(this);
+  }
+</script >
+"""
+)
 
 _add_script(
     """
