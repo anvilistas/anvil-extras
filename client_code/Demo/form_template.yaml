@@ -123,4 +123,5 @@ components:
     visible: true
   name: multi_select_drop_down_1
   layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
+  event_bindings: {change: multi_select_drop_down_1_change}
 is_package: true
