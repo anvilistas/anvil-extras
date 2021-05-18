@@ -6,12 +6,13 @@ Properties
 ----------
 :align: String
 
-    "left", "right", "center" or "full"
+    ``"left"``, ``"right"``, ``"center"`` or ``"full"``
 
-:items: Object
+:items: Iterable of Strings, Tuples or Dicts
 
-    Can be use a list of stings or a list of tuples, (str, value) pairs. Or a list of dicts with keys: "key",
-    "value, "icon", "title", "enabled"
+    Strings and tuples as per Anvil's native dropdown component. If set to an iterable of dicts the keys for each item can include any of: ``"key"``,
+    ``"value"``, ``"icon"``, ``"title"``, ``"enabled"``.
+    To create a divider include ``"---"`` at the appropriate index.
 
 :placeholder: String
 
@@ -35,11 +36,11 @@ Properties
 
 :spacing_above: String
 
-    One of "none", "small", "medium", "large"
+    One of ``"none"``, ``"small"``, ``"medium"``, ``"large"``
 
 :spacing_below: String
 
-    One of "none", "small", "medium", "large"
+    One of "none"``, ``"small"``, ``"medium"``, ``"large"``
 
 :selected: Object
 
