@@ -119,6 +119,8 @@ components:
     enable_filtering: true
     filter_placeholder: search
     multiple: true
+    enabled: true
+    visible: true
   name: multi_select_drop_down_1
   layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
 is_package: true
