@@ -2,3 +2,4 @@
 *.pyo
 __pycache__
 .anvil-data
+.vscode
