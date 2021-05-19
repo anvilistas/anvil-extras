@@ -79,7 +79,7 @@ _add_script(
 _add_script(
     """
 <script
-  src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js">
+  src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js">
 </script>
 """
 )
@@ -89,7 +89,7 @@ _add_script(
     """
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"
 >
 """
 )
@@ -100,9 +100,7 @@ _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 defaults = {
     "align": "left",
     "placeholder": "None Selected",
-    "number_displayed": 3,
-    "filter_placeholder": "search",
-    "enable_filtering": True,
+    "enable_filtering": False,
     "multiple": True,
     "enabled": True,
     "spacing_below": "small",
