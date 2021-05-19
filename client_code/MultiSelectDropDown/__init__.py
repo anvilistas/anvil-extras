@@ -97,7 +97,7 @@ _add_script(
 _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 
 
-defaults = {
+_defaults = {
     "align": "left",
     "placeholder": "None Selected",
     "enable_filtering": False,
@@ -108,7 +108,7 @@ defaults = {
 }
 
 
-def component_property(internal, jquery, fn=None):
+def _component_property(internal, jquery, fn=None):
     def getter(self):
         return getattr(self, "_" + internal)
 
@@ -127,18 +127,18 @@ def component_property(internal, jquery, fn=None):
     return property(getter, setter, None, internal)
 
 
-def spacing_property(which):
+def _spacing_property(a_b):
     def getter(self):
-        return getattr(self, "_spacing_" + which)
+        return getattr(self, "_spacing_" + a_b)
 
     def setter(self, value):
         self._dom_node.classList.remove(
-            f"anvil-spacing-{which}-{getattr(self, '_spacing_' + which, '')}"
+            f"anvil-spacing-{a_b}-{getattr(self, '_spacing_' + a_b, '')}"
         )
-        self._dom_node.classList.add(f"anvil-spacing-{which}-{value}")
-        setattr(self, "_spacing_" + which, value)
+        self._dom_node.classList.add(f"anvil-spacing-{a_b}-{value}")
+        setattr(self, "_spacing_" + a_b, value)
 
-    return property(getter, setter, None, which)
+    return property(getter, setter, None, a_b)
 
 
 class MultiSelectDropDown(MultiSelectDropDownTemplate):
@@ -154,7 +154,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._values = {}
         # Any code you write here will run when the form opens.
-        properties = defaults | properties
+        properties = _defaults | properties
 
         self.init_components(**properties)
 
@@ -187,7 +187,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def items(self, value):
         selected = self.selected
         self._el.children().remove()
-        self._el.append(self._clean_items(value))
+        options, values = _clean_items(value)
+        self._el.append(options)
+        self._values = values
         self._items = value
         self.selected = selected
         self._el.selectpicker("refresh")
@@ -212,73 +214,82 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
                 to_select.append(key)
         self._el.selectpicker("val", to_select)
 
-    multiple = component_property("multiple", "multiple")
-    placeholder = component_property("placeholder", "title")
-    enable_filtering = component_property("enable_filtering", "data-live-search")
-    enabled = component_property("enabled", "disabled", lambda v: not v)
+    multiple = _component_property("multiple", "multiple")
+    placeholder = _component_property("placeholder", "title")
+    enable_filtering = _component_property("enable_filtering", "data-live-search")
+    enabled = _component_property("enabled", "disabled", lambda v: not v)
 
     visible = _HtmlPanel.visible
 
-    spacing_above = spacing_property("above")
-    spacing_below = spacing_property("below")
+    spacing_above = _spacing_property("above")
+    spacing_below = _spacing_property("below")
 
     ##### EVENTS #####
     def change(self, *e):
         return self.raise_event("change")
 
-    ##### PRIVATE METHODS #####
-    def _clean_dict_item(self, item, index):
-        sentinal = object()
 
-        # if they only set a key and not a value then use the key as the value
-        value = item.get("value", sentinal)
-        if value is sentinal:
-            item["value"] = item.get("key")
+##### PRIVATE Functions #####
 
-        title = repr(item.get("title", ""))
-        icon = repr(item.get("icon", "")).replace(":", "-")
-        subtext = repr(item.get("subtext", ""))
-        disabled = not item.get("enabled", True)
 
-        option = f"""<option {'disabled' if disabled else ''}
-                         {f'data-icon={icon}' if icon else ''}
-                         {f'data-subtext={subtext}' if subtext else ''}
-                         {f'title={title}' if title else ''}
-                         value={index}>
-                           {item.get('key')}
-                 </option>"""
+def _option_from_str(item: str, idx: str) -> tuple:
+    key = value = item
+    if item == "---":
+        return "<option data-divider='true'/>", object()  # dummy value
+    else:
+        return f"<option value={idx}>{key}</option>", value
 
-        return option, item["value"]
 
-    def _clean_items(self, items):
+def _option_from_tuple(item: tuple, idx: int) -> tuple:
+    key, value = item
+    if not isinstance(key, str):
+        raise TypeError(
+            f"expectected a tuple of the form str, value in items at idx {idx}"
+        )
+    return f"<option value={idx}>{key}</option>", value
 
-        options = []
-        value_dict = {}
 
-        for idx, val in enumerate(items):
-            idx = str(idx)
+def _option_from_dict(item: dict, idx: int) -> tuple:
+    sentinel = object()
 
-            if isinstance(val, str):
-                if val == "---":
-                    options.append("<option data-divider='true'/>")
-                else:
-                    value_dict[idx] = val
-                    options.append(f"<option value={idx}>{val}</option>")
-            elif isinstance(val, (tuple, list)):
-                key = val[0]
-                if not isinstance(key, str):
-                    raise TypeError(
-                        f"expectected a tuple of the form str, value in items at index {idx}"
-                    )
-                if len(val) != 2:
-                    raise ValueError(f"expectected a tuple of length 2 at index {idx}")
-                value_dict[idx] = val[1]
-                options.append(f"<option value={idx}>{val[0]}</option>")
+    # if they only set a key and not a value then use the key as the value
+    value = item.get("value", sentinel)
+    if value is sentinel:
+        value = item.get("key")
 
-            elif isinstance(val, dict):
-                option, value = self._clean_dict_item(val, idx)
-                value_dict[idx] = value
-                options.append(option)
+    title = repr(item.get("title", ""))
+    icon = repr(item.get("icon", "")).replace(":", "-")
+    subtext = repr(item.get("subtext", ""))
+    disabled = not item.get("enabled", True)
 
-        self._values = value_dict
-        return _S("\n".join(options))
+    option = f"""<option {'disabled' if disabled else ''}
+                        {f'data-icon={icon}' if icon else ''}
+                        {f'data-subtext={subtext}' if subtext else ''}
+                        {f'title={title}' if title else ''}
+                        value={idx}>
+                        {item.get('key')}
+                </option>"""
+
+    return option, value
+
+
+def _clean_items(items):
+    options = []
+    value_dict = {}
+
+    for idx, item in enumerate(items):
+
+        if isinstance(item, str):
+            option, value = _option_from_str(item, idx)
+        elif isinstance(item, (tuple, list)):
+            option, value = _option_from_tuple(item, idx)
+        elif isinstance(item, dict):
+            option, value = _option_from_dict(item, idx)
+        else:
+            raise TypeError(f"Invalid item at index {idx} (got type {type(item)})")
+
+        # use strings since the value from jquery is always a string
+        value_dict[str(idx)] = value
+        options.append(option)
+
+    return _S("\n".join(options)), value_dict
