@@ -2,3 +2,6 @@
 *.pyo
 __pycache__
 .anvil-data
+.vscode
+/venv/
+/build/*

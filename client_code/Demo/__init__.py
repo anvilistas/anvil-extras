@@ -52,3 +52,7 @@ class Demo(DemoTemplate):
 
     def reset_button_click(self, **event_args):
         self.item = self.default_item
+
+    def multi_select_drop_down_1_change(self, **event_args):
+        """This method is called when the selected values change"""
+        print(self.multi_select_drop_down_1.selected)

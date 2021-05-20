@@ -21,7 +21,7 @@ To upgrade to a new release of Anvil-Extras, you will need to create a local cop
 
 Clone the Repository
 --------------------
-* In your browser, navigate to your installed copy of the app within the Anvil IDE. 
+* In your browser, navigate to your installed copy of the app within the Anvil IDE.
 * From the App Menu (with the gear icon), select 'Version History...' and click the 'Clone with Git' button.
 * Copy the displayed command to you clipboard.
 * In your terminal, navigate to a folder where you would like to create your local copy
