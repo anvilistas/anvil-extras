@@ -124,4 +124,20 @@ components:
   name: multi_select_drop_down_1
   layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
   event_bindings: {change: multi_select_drop_down_1_change}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Quill Editor, font_size: null, font: '', spacing_above: large, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_3_copy_2
+  layout_properties:
+    col_widths: {}
+    grid_position: FBTNBP,PVGRIB
+- type: form:Quill
+  properties: {readonly: false, height: '150', placeholder: '', toolbar: true, enabled: true,
+    visible: true, auto_expand: true, content: null, spacing_above: small, spacing_below: small,
+    theme: snow}
+  name: quill
+  layout_properties: {grid_position: 'GXFTEY,RBCOJQ'}
+  event_bindings: {text_change: quill_text_change}
 is_package: true
