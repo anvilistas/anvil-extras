@@ -134,9 +134,9 @@ components:
     col_widths: {}
     grid_position: FBTNBP,PVGRIB
 - type: form:Quill
-  properties: {readonly: false, height: '150', placeholder: '', toolbar: true, enabled: true,
-    visible: true, auto_expand: true, content: null, spacing_above: small, spacing_below: small,
-    theme: snow}
+  properties: {readonly: false, height: '150', placeholder: hi there, toolbar: true,
+    enabled: true, visible: true, auto_expand: true, content: '', spacing_above: small,
+    spacing_below: small, theme: snow}
   name: quill
   layout_properties: {grid_position: 'GXFTEY,RBCOJQ'}
   event_bindings: {text_change: quill_text_change}
