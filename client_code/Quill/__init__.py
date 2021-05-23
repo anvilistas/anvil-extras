@@ -82,6 +82,7 @@ class Quill(QuillTemplate):
                 "theme": properties["theme"],
                 "placeholder": properties["placeholder"],
                 "readOnly": properties["readonly"],
+                "bounds": self._dom_node,
             },
         )
 
