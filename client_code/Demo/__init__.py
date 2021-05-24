@@ -56,3 +56,7 @@ class Demo(DemoTemplate):
     def multi_select_drop_down_1_change(self, **event_args):
         """This method is called when the selected values change"""
         print(self.multi_select_drop_down_1.selected)
+
+    def quill_text_change(self, **event_args):
+        """This method is called when the quill text changes"""
+        print(self.quill.get_text())
