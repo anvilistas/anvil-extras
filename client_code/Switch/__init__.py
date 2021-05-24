@@ -28,7 +28,7 @@ from anvil.js import get_dom_node as _get_dom_node
 
 from .. import session
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 primary = app.theme_colors.get("Primary 500", "#2196F3")
 
