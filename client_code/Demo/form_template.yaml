@@ -104,6 +104,21 @@ components:
   event_bindings: {tick: timer_1_tick}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Switch Component, font_size: null, font: '', spacing_above: large, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_3_copy_3
+  layout_properties:
+    col_widths: {}
+    grid_position: RDPMGN,GEQMNU
+- type: form:Switch
+  properties: {tooltip: '', enabled: true, foreground: null, visible: true, text: switch,
+    font_size: 18, spacing_above: small, checked_color: '', spacing_below: small,
+    background: '', checked: true}
+  name: switch_1
+  layout_properties: {grid_position: 'TZXJWF,LRWHLE', width: 84}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
     text: Multi Select Dropdown, font_size: null, font: '', spacing_above: large,
     icon_align: left, spacing_below: small, italic: false, background: '', bold: true,
     underline: false, icon: ''}

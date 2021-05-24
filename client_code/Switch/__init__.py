@@ -22,95 +22,104 @@
 # SOFTWARE.
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
+
+from anvil import CheckBox, app
+from anvil.js import get_dom_node as _get_dom_node
+
 from .. import session
-from ._anvil_designer import SwitchTemplate
 
 __version__ = "1.0.0"
 
+primary = app.theme_colors.get("Primary 500", "#2196F3")
+
 css = """
-.anvil-role-switch {
-   position: relative;
-   width: 1.8em;
+.anvil-switch label {
+  padding: 0 !important;
 }
 
-.anvil-role-switch input { 
+.anvil-switch .checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.anvil-switch input {
   opacity: 0;
   height: 0;
+  margin-top: 0 !important;
 }
 
-.anvil-role-switch span {
-   position: relative;
-   display: block !important;
-   font-size: ineherit;
+.anvil-switch span {
+  position: relative;
+  line-height: 1;
+  display: flex !important;
+  align-items: center;
 }
 
-.anvil-role-switch span::before {
-   content: "";
-   position: absolute;
-   cursor: pointer;
-   top: 0.1em;
-   bottom: 0;
-   left: -1em;
-   width: 1.8em;
-   height: 1em;
-   background-color: #ccc;
-   -webkit-transition: .4s;
-   transition: .4s;
+.anvil-switch span::before {
+  content: "";
+  display: inline-block;
+  width: 1.8em;
+  height: 1em;
+  background-color: #ccc;
+  -webkit-transition: background-color.4s;
+  transition: background-color 0.4s;
+  margin-right: 10px;
 }
 
-.anvil-role-switch span::after {
-   position: absolute;
-   cursor: pointer;
-   content: "";
-   height: .8em;
-   width: .8em;
-   left: -.88em;
-   top: .2em;
-   bottom: 0;
-   background-color: white;
-   -webkit-transition: .4s;
-   transition: .4s;
+.anvil-switch span::after {
+  position: absolute;
+  content: "";
+  height: 0.8em;
+  width: 0.8em;
+  background-color: white;
+  -webkit-transition: transform 0.4s;
+  transition: transform 0.4s;
+  margin: 0.1em;
+}
+.anvil-switch input:checked + span::after {
+  -webkit-transform: translateX(0.8em);
+  -ms-transform: translateX(0.8em);
+  transform: translateX(0.8em);
 }
 
-.anvil-role-switch input:checked + span::after {
- -webkit-transform: translateX(.8em);
- -ms-transform: translateX(.8em);
- transform: translateX(.8em);
+.anvil-switch span::after {
+  border-radius: 50%;
+}
+.anvil-switch span::before {
+  border-radius: 0.5em;
+}
+.anvil-switch input:checked + span::before {
+  background-color: var(--color);
+}
+.anvil-switch input:focus + span::before {
+  box-shadow: 0 0 1px var(--color);
 }
 
-.anvil-role-switch span::after {
- border-radius: 50%;
+.anvil-switch[disabled] label {
+  cursor: not-allowed;
 }
-.anvil-role-switch span::before {
- border-radius: .5em;
+.anvil-switch[disabled] input:checked + span::before {
+  opacity: .7;
 }
+
 """
 session.style_injector.inject(css)
 
 
-class Switch(SwitchTemplate):
-    def __init__(self, checked_colour, **properties):
-        self.uid = session.get_uid()
-        self._checked = False
-        css = f"""
-.anvil-role-switch-{self.uid} input:checked + span::before {{
- background-color: {checked_colour};
-}}
-
-.anvil-role-switch-{self.uid} input:focus + span::before {{
- box-shadow: 0 0 1px {checked_colour};
-}}
-"""
-        session.style_injector.inject(css)
-        self.check_box.role = ["switch", f"switch-{self.uid}"]
-        self.init_components(**properties)
+class Switch(CheckBox):
+    def __init__(self, checked_color=primary, **properties):
+        self._dom_node = _get_dom_node(self)
+        self._dom_node.classList.add("anvil-switch")
+        self.checked_color = checked_color or primary
 
     @property
-    def checked(self):
-        return self._checked
+    def checked_color(self):
+        return self._checked_color
 
-    @checked.setter
-    def checked(self, value):
-        self._checked = value
-        self.refresh_data_bindings()
-        self.raise_event("changed")
+    @checked_color.setter
+    def checked_color(self, value):
+        self._checked_color = value
+        dom_node = _get_dom_node(self)
+        if value and value.startswith("theme:"):
+            value = app.theme_colors.get(value.replace("theme:", ""), primary)
+        dom_node.style.setProperty("--color", value)
