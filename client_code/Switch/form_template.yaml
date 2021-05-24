@@ -1,15 +1,15 @@
 properties:
 - {name: checked, type: boolean, default_value: false, default_binding_prop: true}
 - {name: checked_color, type: color, default_value: null}
-- {name: text, type: string, default_value: '', group: text}
+- {name: text, type: string, default_value: ''}
 - {name: visible, type: boolean, default_value: true}
 - {name: enabled, type: boolean, default_value: true}
-- {name: foreground, type: color, default_value: null, group: text}
-- {name: background, type: color, default_value: null, group: text}
-- {name: tooltip, type: string, default_value: '', group: tooltip}
-- {name: spacing_above, type: string, default_value: small, group: layout}
-- {name: spacing_below, type: string, default_value: small, group: layout}
-- {name: font_size, type: number, default_value: 18, group: text}
+- {name: foreground, type: color, default_value: null}
+- {name: background, type: color, default_value: null}
+- {name: tooltip, type: string, default_value: ''}
+- {name: spacing_above, type: string, default_value: small}
+- {name: spacing_below, type: string, default_value: small}
+- {name: font_size, type: number, default_value: 18}
 is_package: true
 events:
 - {name: change, default_event: true, description: when this switch is checked or unchecked}
