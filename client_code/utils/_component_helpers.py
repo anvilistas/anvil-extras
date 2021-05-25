@@ -14,7 +14,7 @@
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 _loaded = False
 

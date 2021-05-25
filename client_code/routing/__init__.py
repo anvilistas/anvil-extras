@@ -23,6 +23,6 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 from ._routing import *

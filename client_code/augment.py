@@ -29,7 +29,7 @@ from anvil import js as _js
 from anvil.js.window import Function as _Function
 from anvil.js.window import jQuery as _S
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 
 def add_event(component, event):
