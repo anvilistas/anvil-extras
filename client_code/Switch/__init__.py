@@ -4,7 +4,7 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
+# of this software and associated _documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
@@ -25,6 +25,7 @@
 
 from anvil import CheckBox, app
 from anvil.js import get_dom_node as _get_dom_node
+from anvil.js.window import document as _document
 
 from .. import session
 
@@ -33,73 +34,92 @@ __version__ = "1.2.0"
 primary = app.theme_colors.get("Primary 500", "#2196F3")
 
 css = """
-.anvil-switch label {
-  padding: 0 !important;
+.switch,
+.switch * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.anvil-switch .checkbox {
-  display: flex;
-  align-items: center;
+.switch label {
+    cursor: pointer;
 }
 
-.anvil-switch input {
-  opacity: 0;
-  height: 0;
-  margin-top: 0 !important;
+.switch label input[type=checkbox] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: rgba(var(--color), .5);
+}
+.switch label input[type=checkbox]:checked+.lever:after,
+.switch label input[type=checkbox]:checked+.lever:before {
+    left: 18px;
+}
+.switch label input[type=checkbox]:checked+.lever:after {
+    background-color: rgb(var(--color));
 }
 
-.anvil-switch span {
-  position: relative;
-  line-height: 1;
-  display: flex !important;
-  align-items: center;
+.switch label .lever {
+    content: "";
+    display: inline-block;
+    position: relative;
+    width: 36px;
+    height: 14px;
+    background-color: rgba(0,0,0,0.38);
+    border-radius: 15px;
+    margin-right: 10px;
+    -webkit-transition: background 0.3s ease;
+    transition: background 0.3s ease;
+    vertical-align: middle;
+    margin: 0 16px;
+}
+.switch label .lever:after,
+.switch label .lever:before {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    left: 0;
+    top: -3px;
+    -webkit-transition: left 0.3s ease, background 0.3s ease, -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
+    transition: left 0.3s ease, background 0.3s ease, -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
+    transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease, transform 0.1s ease;
+    transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease, transform 0.1s ease, -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
+}
+.switch label .lever:before {
+    background-color: rgb(var(--color), 0.15);
+}
+.switch label .lever:after {
+    background-color: #F1F1F1;
+    -webkit-box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0 rgba(0,0,0,0.14),0px 1px 5px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0 rgba(0,0,0,0.14),0px 1px 5px 0 rgba(0,0,0,0.12);
+}
+input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before,
+input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::before {
+    -webkit-transform: scale(2.4);
+    transform: scale(2.4);
+    background-color: rgb(var(--color), 0.15);
+}
+input[type=checkbox]:not(:disabled) ~ .lever:active:before,
+input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::before {
+    -webkit-transform: scale(2.4);
+    transform: scale(2.4);
+    background-color: rgba(0,0,0,0.08);
 }
 
-.anvil-switch span::before {
-  content: "";
-  display: inline-block;
-  width: 1.8em;
-  height: 1em;
-  background-color: #ccc;
-  -webkit-transition: background-color.4s;
-  transition: background-color 0.4s;
-  margin-right: 10px;
+.switch input[type=checkbox][disabled]+.lever {
+    cursor: default;
+    background-color: rgba(0,0,0,0.12);
 }
-
-.anvil-switch span::after {
-  position: absolute;
-  content: "";
-  height: 0.8em;
-  width: 0.8em;
-  background-color: white;
-  -webkit-transition: transform 0.4s;
-  transition: transform 0.4s;
-  margin: 0.1em;
-}
-.anvil-switch input:checked + span::after {
-  -webkit-transform: translateX(0.8em);
-  -ms-transform: translateX(0.8em);
-  transform: translateX(0.8em);
-}
-
-.anvil-switch span::after {
-  border-radius: 50%;
-}
-.anvil-switch span::before {
-  border-radius: 0.5em;
-}
-.anvil-switch input:checked + span::before {
-  background-color: var(--color);
-}
-.anvil-switch input:focus + span::before {
-  box-shadow: 0 0 1px var(--color);
-}
-
-.anvil-switch[disabled] label {
-  cursor: not-allowed;
-}
-.anvil-switch[disabled] input:checked + span::before {
-  opacity: .7;
+.switch label input[type=checkbox][disabled]+.lever:after,
+.switch label input[type=checkbox][disabled]:checked+.lever:after {
+    background-color: #949494;
 }
 
 """
@@ -107,9 +127,26 @@ session.style_injector.inject(css)
 
 
 class Switch(CheckBox):
-    def __init__(self, checked_color=primary, **properties):
-        self._dom_node = _get_dom_node(self)
-        self._dom_node.classList.add("anvil-switch")
+    def __init__(self, checked_color=primary, text_pre="", text_post="", **properties):
+        dom_node = self._dom_node = _get_dom_node(self)
+        dom_node.querySelector(".checkbox").classList.add("switch")
+
+        span = dom_node.querySelector("span")
+        span.classList.add("lever")
+        span.removeAttribute("style")
+
+        input = dom_node.querySelector("input")
+        input.removeAttribute("style")
+        input.style.marginTop = 0
+
+        label = dom_node.querySelector("label")
+        label.style.padding = "7px 0"
+
+        self._textnode_pre = _document.createTextNode(text_pre)
+        self._textnode_post = _document.createTextNode(text_post)
+        label.prepend(self._textnode_pre)
+        label.append(self._textnode_post)
+
         self.checked_color = checked_color or primary
 
     @property
@@ -122,4 +159,25 @@ class Switch(CheckBox):
         dom_node = _get_dom_node(self)
         if value and value.startswith("theme:"):
             value = app.theme_colors.get(value.replace("theme:", ""), primary)
+        if value.startswith("#"):
+            value = value[1:]
+            value = ",".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
         dom_node.style.setProperty("--color", value)
+
+    @property
+    def text_pre(self):
+        return self._textnode_pre.textContent
+
+    @text_pre.setter
+    def text_pre(self, value):
+        self._textnode_pre.textContent = value
+
+    @property
+    def text_post(self):
+        return self._textnode_post.textContent
+
+    @text_post.setter
+    def text_post(self, value):
+        self._textnode_post.textContent = value
+
+    text = text_post  # override the CheckBox property
