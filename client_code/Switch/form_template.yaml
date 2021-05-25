@@ -1,0 +1,64 @@
+properties:
+- {name: checked, type: boolean, default_value: false, default_binding_prop: true}
+- {name: checked_color, type: color, default_value: null}
+- {name: text, type: string, default_value: ''}
+- {name: visible, type: boolean, default_value: true}
+- {name: enabled, type: boolean, default_value: true}
+- {name: foreground, type: color, default_value: null}
+- {name: background, type: color, default_value: null}
+- {name: tooltip, type: string, default_value: ''}
+- {name: spacing_above, type: string, default_value: small}
+- {name: spacing_below, type: string, default_value: small}
+- {name: font_size, type: number, default_value: 18}
+is_package: true
+events:
+- {name: change, default_event: true, description: when this switch is checked or unchecked}
+- {name: show, description: when this switch is shown}
+- {name: hide, description: when this switch is hidden}
+custom_component: true
+components:
+- type: CheckBox
+  properties: {role: switch, align: left, tooltip: '', border: '', enabled: true,
+    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+    spacing_below: small, italic: false, background: '', bold: false, checked: true,
+    underline: false}
+  name: check_box_1
+  layout_properties: {slot: default}
+  event_bindings: {change: check_box_1_change}
+container:
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: switch, html: "<div class=\"anvil-extras-switch\"></div>\n\n<script>\n$(()\
+      \ => {\n    if (typeof window.anvilSwitchStyle === \"undefined\") {\n      \
+      \  const s = document.createElement(\"style\");\n        s.innerHTML = `.anvil-switch\
+      \ label{padding:0 !important}.anvil-switch .checkbox{display:flex;align-items:center}.anvil-switch\
+      \ input{opacity:0;height:0;margin-top:0 !important}.anvil-switch span{position:relative;line-height:1;display:flex\
+      \ !important;align-items:center}.anvil-switch span::before{content:\"\";display:inline-block;width:1.8em;height:1em;background-color:#ccc;-webkit-transition:background-color.4s;transition:background-color\
+      \ 0.4s;margin-right:10px}.anvil-switch span::after{position:absolute;content:\"\
+      \";height:0.8em;width:0.8em;background-color:white;-webkit-transition:transform\
+      \ 0.4s;transition:transform 0.4s;margin:0.1em}.anvil-switch input:checked +\
+      \ span::after{-webkit-transform:translateX(0.8em);-ms-transform:translateX(0.8em);transform:translateX(0.8em)}.anvil-switch\
+      \ span::after{border-radius:50%}.anvil-switch span::before{border-radius:0.5em}.anvil-switch\
+      \ input:checked + span::before{background-color:var(--color)}.anvil-switch input:focus\
+      \ + span::before{box-shadow:0 0 1px var(--color)}.anvil-switch[disabled] label{cursor:not-allowed}.anvil-switch[disabled]\
+      \ input:checked + span::before{opacity:0.7}`;\n        document.body.appendChild(s);\n\
+      \        window.anvilSwitchStyle = true;\n    }\n    for (element of document.querySelectorAll(\"\
+      .anvil-extras-switch\")) {\n        const parent = element.parentElement;\n\
+      \        parent.removeChild(element);\n        parent.style.width = \"100%\"\
+      ;\n        const pyComponent = $(parent).data(\"anvilPyComponent\");\n     \
+      \   const cb = pyComponent._anvil.components[0].component;\n        cb._anvil.domNode.classList.add(\"\
+      anvil-switch\");\n        cb._anvil.domNode.style.setProperty(\"--color\", window.anvilThemeColors[\"\
+      Primary 500\"] || \"#2196F3\");\n\n        const props = pyComponent._anvil.customPropVals\
+      \ || {};\n        const copyProps = { ...props };\n\n        const setProp =\
+      \ (propName, v) => {\n            try {\n                cb._anvil.setProp(propName,\
+      \ Sk.ffi.toPy(v));\n            } catch {\n                if (v && v.startsWith(\"\
+      theme:\")) {\n                    v = window.anvilThemeColors[v.replace(\"theme:\"\
+      , \"\")];\n                }\n                cb._anvil.domNode.style.setProperty(\n\
+      \                    \"--color\",\n                    v || window.anvilThemeColors[\"\
+      Primary 500\"] || \"#2196F3\"\n                );\n            }\n        };\n\
+      \n        for (let propName in copyProps) {\n            setProp(propName, copyProps[propName]);\n\
+      \            Object.defineProperty(props, propName, {\n                get()\
+      \ {\n                    return copyProps[propName];\n                },\n \
+      \               set(v) {\n                    copyProps[propName] = v;\n   \
+      \                 setProp(propName, copyProps[propName]);\n                },\n\
+      \            });\n        }\n    }\n});\n</script>\n"}
