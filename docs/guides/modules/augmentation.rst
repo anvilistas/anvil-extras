@@ -41,11 +41,6 @@ need a trigger method?
 
 .. code-block:: python
 
-    # 'augment' the component by adding any event...
-    augment.add_event(self.textbox, 'select')
-    # augment.add_event(self.textbox, 'custom')
-    # augment.add_event(self.textbox, '')
-
     def button_click(self, **event_args):
       self.textbox.trigger('select')
 
@@ -79,3 +74,17 @@ you can prevent default behaviour of an event by returning a value in the event 
         # prevent the standard enter new line behaviour
         # prevent default
         return True
+
+
+DataGrid pagination_click
+----------------
+
+Importing the augment module gives DataGrid's a ``pagination_click`` event
+
+.. code-block:: python
+
+    self.data_grid.set_event_handler('pagination_click', self.pagination_click)
+
+    def pagination_click(self, **event_args):
+        button = event_args["button"] # 'first', 'last', 'previous', 'next'
+        print(button, "was clicked")
