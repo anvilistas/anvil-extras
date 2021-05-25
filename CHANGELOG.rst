@@ -1,6 +1,9 @@
 Unreleased Changes
 ------------------
 
+v1.2.0 25-May-2021
+------------------
+
 * `component.trigger('writeback') <https://github.com/anvilistas/anvil-extras/pull/47>`_
 * `MultiSelectDropDown component <https://github.com/anvilistas/anvil-extras/pull/44>`_
 * `@wait_for_writeback decorator <https://github.com/anvilistas/anvil-extras/pull/50>`_
