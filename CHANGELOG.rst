@@ -1,5 +1,6 @@
 Unreleased Changes
 ------------------
+* `Include pagination_click event in augment module <https://github.com/anvilistas/anvil-extras/pull/55>`_
 
 v1.2.0 25-May-2021
 ------------------
