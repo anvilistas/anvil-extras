@@ -1,35 +1,22 @@
-# MIT License
+# SPDX-License-Identifier: MIT
 #
 # Copyright (c) 2021 The Anvil Extras project team members listed at
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
 # This software is published at https://github.com/anvilistas/anvil-extras
+
+from functools import partial as _partial
 
 import anvil as _anvil
 from anvil import Component as _Component
+from anvil import DataGrid as _DataGrid
 from anvil import js as _js
 from anvil.js.window import Function as _Function
 from anvil.js.window import jQuery as _S
 
 __version__ = "1.2.0"
+
+__all__ = ["add_event", "set_event_handler", "trigger"]
 
 
 def add_event(component, event):
@@ -112,6 +99,52 @@ _add_event = _Function(
     self._anvil.eventTypes[event] = self._anvil.eventTypes[event] || {name: event};
 """,
 )
+
+
+old_data_grid_event_handler = _DataGrid.set_event_handler
+
+
+def datagrid_set_event_handler(self, event, handler):
+    if event == "pagination_click":
+        _set_pagination_handlers(self, handler)
+    else:
+        old_data_grid_event_handler.set_event_handler(self, event, handler)
+
+
+_DataGrid.set_event_handler = datagrid_set_event_handler
+
+
+def _prevent_disabled(js_event):
+    if js_event.currentTarget.classList.contains("disabled"):
+        js_event.stopPropagation()
+
+
+def _wrap_js_event(handler):
+    def wrapper(e):
+        handler()
+
+    return wrapper
+
+
+def _set_pagination_handlers(data_grid, handler):
+    grid_dom = _js.get_dom_node(data_grid)
+    for name in ["first", "last", "previous", "next"]:
+        btn = grid_dom.querySelector(f".{name}-page")
+        # use True so that we capture this event before the anvil click event
+        btn.addEventListener("click", _prevent_disabled, True)
+        btn.addEventListener(
+            "click",
+            _wrap_js_event(
+                _partial(
+                    handler,
+                    sender=data_grid,
+                    button=name,
+                    event_name="pagination_click",
+                )
+            ),
+        )
+        # note we don't tidy this up - we should probably call removeEventListener
+        # but this will be called from code and is unlikely that the user will call this function twice
 
 
 if __name__ == "__main__":

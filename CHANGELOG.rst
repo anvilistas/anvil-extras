@@ -1,6 +1,7 @@
 Unreleased Changes
 ------------------
 * `Update styling of switch component <https://github.com/anvilistas/anvil-extras/pull/56>`_
+* `Include pagination_click event in augment module <https://github.com/anvilistas/anvil-extras/pull/55>`_
 
 v1.2.0 25-May-2021
 ------------------
