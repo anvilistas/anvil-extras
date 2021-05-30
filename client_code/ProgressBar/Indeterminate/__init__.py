@@ -19,7 +19,7 @@ class Indeterminate(IndeterminateTemplate):
     def __init__(self, track_colour, indicator_colour, **properties):
         dom_node = get_dom_node(self)
         dom_node.style.setProperty("background-color", indicator_colour)
-        
+
         self.uid = session.get_uid()
         css = f"""
 .anvil-role-indeterminate-progress-indicator-{self.uid}:before {{
