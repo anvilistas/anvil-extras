@@ -4,8 +4,7 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-from anvil.js.window import document
-
+from anvil.js import get_dom_node
 from anvil_extras import ProgressBar, session
 
 from ._anvil_designer import DeterminateTemplate
@@ -17,22 +16,9 @@ session.style_injector.inject(ProgressBar.css)
 
 class Determinate(DeterminateTemplate):
     def __init__(self, track_colour, indicator_colour, **properties):
-        self.uid = session.get_uid()
-        css = f"""
-:root {{
-  --progress-{self.uid}: 50%;
-}}
-
-.anvil-role-progress-indicator-{self.uid} {{
-  width: var(--progress-{self.uid});
-}}
-        """
-        session.style_injector.inject(css)
+        self.indicator_dom_node = get_dom_node(self.indicator_panel)
         self.role = "progress-track"
-        self.indicator_panel.role = [
-            "progress-indicator",
-            f"progress-indicator-{self.uid}",
-        ]
+        self.indicator_panel.role = "progress-indicator"
         self.background = track_colour
         self.indicator_panel.background = indicator_colour
         self.init_components(**properties)
@@ -44,4 +30,4 @@ class Determinate(DeterminateTemplate):
     @progress.setter
     def progress(self, value):
         self._progress = value
-        document.body.style.setProperty(f"--progress-{self.uid}", f"{value:%}")
+        self.indicator_dom_node.style.setProperty("width", f"{value:%}")

@@ -5,6 +5,8 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil_extras import ProgressBar, session
+from anvil.js import get_dom_node
+from anvil.js.window import document
 
 from ._anvil_designer import IndeterminateTemplate
 
@@ -15,15 +17,13 @@ session.style_injector.inject(ProgressBar.css)
 
 class Indeterminate(IndeterminateTemplate):
     def __init__(self, track_colour, indicator_colour, **properties):
+        dom_node = get_dom_node(self)
+        dom_node.style.setProperty("background-color", indicator_colour)
+        
         self.uid = session.get_uid()
         css = f"""
-.anvil-role-indeterminate-progress-indicator-{self.uid} {{
-  background-colour: {indicator_colour}
-}}
-
 .anvil-role-indeterminate-progress-indicator-{self.uid}:before {{
   background-color: {track_colour}
-
 }}
 """
         session.style_injector.inject(css)
