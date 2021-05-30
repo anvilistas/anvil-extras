@@ -4,9 +4,10 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-from anvil_extras import ProgressBar, session
 from anvil.js import get_dom_node
 from anvil.js.window import document
+
+from anvil_extras import ProgressBar, session
 
 from ._anvil_designer import IndeterminateTemplate
 
