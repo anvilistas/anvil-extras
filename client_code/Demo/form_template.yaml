@@ -157,6 +157,7 @@ components:
   layout_properties:
     col_widths: {}
     grid_position: XFUXGM,KNTPBT
+  event_bindings: {text_change: quill_text_change}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
     text: Slider Component, font_size: null, font: '', spacing_above: large, icon_align: left,
@@ -177,7 +178,7 @@ components:
     col_widths: {}
     grid_position: SUVLYR,ZJPVFX
   data_bindings:
-  - {property: formatted_values, code: 'self.item[''values'']', writeback: true}
+  - {property: values, code: 'self.item[''values'']', writeback: true}
   event_bindings: {change: slider_change, slide: slider_slide}
 - type: TextBox
   properties: {}
