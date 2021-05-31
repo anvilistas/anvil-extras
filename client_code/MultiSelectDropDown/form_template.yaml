@@ -1,21 +1,22 @@
 properties:
-- {name: align, type: string, default_value: left}
+- {name: align, type: string, default_value: left, group: text, important: true}
 - {name: items, type: 'text[]', default_value: null, description: 'If set at runtime
     can use a list of tuples, (str, value) pairs. Or a list of dicts with keys: ''key'',
-    ''value'', ''icon'', ''title'', ''enabled'''}
-- {name: placeholder, type: string, default_value: None Selected}
-- {name: enable_filtering, type: boolean, default_value: null}
-- {name: multiple, type: boolean, default_value: true}
-- {name: enabled, type: boolean, default_value: true}
-- {name: visible, type: boolean, default_value: true}
-- {name: spacing_above, type: string, default_value: small}
-- {name: spacing_below, type: string, default_value: small}
+    ''value'', ''icon'', ''title'', ''enabled''', important: true}
+- {name: placeholder, type: string, default_value: None Selected, important: false}
+- {name: enable_filtering, type: boolean, default_value: null, group: interaction, important: true}
+- {name: multiple, type: boolean, default_value: true, group: interaction, important: true}
+- {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true}
+- {name: spacing_above, type: string, default_value: small, group: layout, important: false}
+- {name: spacing_below, type: string, default_value: small, group: layout, important: false}
 - name: selected
   type: object
   default_value: null
   allow_binding_writeback: true
   default_binding_prop: true
   binding_writeback_events: [change]
+  important: true
 is_package: true
 events:
 - {name: change, default_event: true, description: when the selected values change}
