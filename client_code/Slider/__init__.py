@@ -1,3 +1,10 @@
+# SPDX-License-Identifier: MIT
+#
+# Copyright (c) 2021 The Anvil Extras project team members listed at
+# https://github.com/anvilistas/anvil-extras/graphs/contributors
+#
+# This software is published at https://github.com/anvilistas/anvil-extras
+
 from anvil import HtmlPanel as _HtmlPanel
 from anvil import *
 from anvil.js import get_dom_node as _get_dom_node
