@@ -10,7 +10,7 @@ from anvil.js import get_dom_node
 
 from . import style
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 characters = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 style_injector = style.Injector()
