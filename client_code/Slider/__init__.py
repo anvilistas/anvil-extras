@@ -12,7 +12,6 @@ __version__ = "1.2.0"
 _add_script(
     '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.css"></link>'
 )
-## todo - work out where we can safely remove the overflow visible property
 _add_script(
     """
 <style>
@@ -87,7 +86,7 @@ except AttributeError:
         return s[: len(s) - len(suffix)] if s.endswith(suffix) else s
 
 
-def _get_formatter(formatspec):
+def _get_formatter(formatspec: str) -> dict:
     """
     Expecting a format spec e.g. '.2f'
     Or a simple string '£{:.2f}'
@@ -100,18 +99,20 @@ def _get_formatter(formatspec):
     suffix = "" if last == -1 else formatspec[last + 1 :]
     type = formatspec[len(formatspec) - 1] if last == -1 else formatspec[last - 1]
 
-    def to_format(f, *args):
+    def to_format(f: float, *args) -> str:
+        # Used in javascript world so expects extra args
         try:
             return format(f, formatspec) if first == -1 else formatspec.format(f)
         except Exception:
             return f  # better just to return what was passed to us
 
-    # this will raise the error if we have an invalid spec
+    # this will raise an error if we have an invalid spec
     format(1.1, formatspec) if first == -1 else formatspec.format(1.1)
 
-    def from_format(s, *args):
+    def from_format(s: str, *args) -> float:
+        # Used in javascript world so expects extra args
         if not isinstance(s, str):
-            raise RuntimeError(f"got an unexpected value for handle, (got {s})")
+            raise TypeError(f"got an unexpected value for handle, (got {s})")
         s = (
             _removesuffix(_removeprefix(s, prefix), suffix)
             .strip()
@@ -129,6 +130,7 @@ def _get_formatter(formatspec):
             f = f / 100
         return f
 
+    # noUiSlider requires a format like {from: (float) => str, to: (str) => float}
     return {"from": from_format, "to": to_format, "format_spec": formatspec}
 
 
@@ -159,7 +161,8 @@ def _min_max_prop(prop):
 def _pips_prop(prop):
     def setter(self, value):
         self._props[prop] = value
-        pips = self.make_pips()
+        pips = self._make_pips()
+        self._toggle_has_pips(pips)
         self._slider.updateOptions({"pips": pips})
 
     return property(_prop_getter(prop), setter)
@@ -223,6 +226,7 @@ class Slider(SliderTemplate):
         props["format"] = _get_formatter(props["format"] or ".2f")
 
         pips = self._make_pips()
+        self._toggle_has_pips(pips)
         try:
             self._slider = _Slider.create(self._slider_node, props | {"pips": pips})
         except Exception as e:
@@ -242,8 +246,8 @@ class Slider(SliderTemplate):
                     "visible",
                     "spacing_above",
                     "spacing_below",
-                    "formatted_values",
                     "formatted_value",
+                    "formatted_values",
                     "value",
                     "values",
                 )
@@ -254,10 +258,10 @@ class Slider(SliderTemplate):
     ###### VALUE PROPERTIES ######
     @property
     def _convert(self):
-        f = self._props["format"]
+        f = self._props["format"]["from"]
 
-        def convert(x, *args):
-            res = f["from"](x)
+        def convert(x: str) -> float:
+            res = f(x)
             return x if res is False else res
 
         return convert
@@ -306,14 +310,15 @@ class Slider(SliderTemplate):
     pips_density = _pips_prop("pips_density")
     pips_stepped = _pips_prop("pips_stepped")
 
+    def _toggle_has_pips(self, pips):
+        self._dom_node.classList.toggle("has-pips", bool(pips))
+
     def _make_pips(self):
         props = self._props
         pips = props["pips"]
         if not pips:
-            self._dom_node.classList.toggle("has-pips", False)
             return None
         elif pips is True:
-            self._dom_node.classList.toggle("has-pips", True)
             return {
                 "format": props["format"],
                 "mode": props["pips_mode"],
@@ -322,7 +327,6 @@ class Slider(SliderTemplate):
                 "stepped": props["pips_stepped"],
             }
         elif isinstance(pips, dict):
-            self._dom_node.classList.toggle("has-pips", True)
             return pips
         else:
             raise TypeError(f"pips should be a bool or a dict, got {type(pips)}")

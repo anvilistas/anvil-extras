@@ -72,3 +72,4 @@ class Demo(DemoTemplate):
     def slider_textbox_enter(self, **event_args):
         """This method is called when the user presses Enter in this text box"""
         self.slider.values = self.text_box_left.text, self.text_box_right.text
+        self.set_text_boxes()
