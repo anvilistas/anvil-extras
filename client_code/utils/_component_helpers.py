@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+from anvil import app as _app
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
@@ -52,3 +53,15 @@ def _spacing_property(a_b):
         setattr(self, "_spacing_" + a_b, value)
 
     return property(getter, setter, None, a_b)
+
+
+_primary = _app.theme_colors.get("Primary 500", "#2196F3")
+
+
+def _get_color(value):
+    if not value:
+        return _primary
+    elif value.startswith("theme:"):
+        return _app.theme_colors.get(value.replace("theme:", ""), _primary)
+    else:
+        return value

@@ -10,11 +10,19 @@ from ._anvil_designer import DemoTemplate
 __version__ = "1.2.0"
 
 
+#### AUTO REFRESING - the item property updates components
 @auto_refreshing
 class Demo(DemoTemplate):
     def __init__(self, **properties):
+        self.init_custom_slider_formatter()
+
         self.progress = 0
-        self.item = self.default_item = dict(tally=100, counter=0)
+        self.item = self.default_item = dict(
+            tally=100,
+            counter=0,
+            values=self.slider.start,
+            agree=self.slider_agree.formatted_value,
+        )
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
@@ -35,10 +43,85 @@ class Demo(DemoTemplate):
     def reset_button_click(self, **event_args):
         self.item = self.default_item
 
+    ###### MULTI SELECT ######
     def multi_select_drop_down_1_change(self, **event_args):
         """This method is called when the selected values change"""
         print(self.multi_select_drop_down_1.selected)
 
+    ###### QUILL ######
     def quill_text_change(self, **event_args):
         """This method is called when the quill text changes"""
         print(self.quill.get_text())
+
+    ###### SLIDER ######
+    def set_text_boxes(self):
+        self.text_box_left.text, self.text_box_right.text = self.slider.formatted_values
+
+    def slider_button_reset_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider.reset()
+
+    def slider_change(self, handle, **event_args):
+        """This method is called when the slider has finished sliding"""
+        print(
+            f"change\nhandle={handle} | value={self.slider.values[handle]} | formatted={self.slider.formatted_values[handle]}"
+        )
+
+    def slider_slide(self, handle, **event_args):
+        """This method is called when the slider is sliding or dragging"""
+        self.set_text_boxes()
+        print(
+            f"slide\nhandle={handle} | value={self.slider.values[handle]} | formatted={self.slider.formatted_values[handle]}"
+        )
+
+    def slider_textbox_enter(self, **event_args):
+        """This method is called when the user presses Enter in this text box"""
+        self.slider.values = self.text_box_left.text, self.text_box_right.text
+        self.set_text_boxes()
+
+    ###### SLIDER WITH CUSTOM FORMATTER
+    def init_custom_slider_formatter(self):
+        num_to_desc = {
+            1: "strongly disagree",
+            2: "disagree",
+            3: "neutral",
+            4: "agree",
+            5: "strongly agree",
+        }
+
+        desc_to_num = {
+            "strongly disagree": 1,
+            "disagree": 2,
+            "neutral": 3,
+            "agree": 4,
+            "strongly agree": 5,
+        }
+
+        self.slider_agree.format = {
+            "to": lambda num: num_to_desc[num],
+            "from": lambda desc: desc_to_num[desc],
+        }
+
+    def slider_agree_change(self, handle, **event_args):
+        """This method is called when the slider has finished sliding"""
+        print(self.slider_agree.formatted_value, self.slider_agree.value)
+
+    def slider_down_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider_agree.value = self.slider_agree.value - 1
+        self.update_item_agree()
+
+    def slider_reset_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider_agree.reset()
+        self.update_item_agree()
+
+    def slider_up_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider_agree.value = self.slider_agree.value + 1
+        self.update_item_agree()
+
+    def update_item_agree(self):
+        """This method is called when the slider values are updated from code"""
+        self.item["agree"] = self.slider_agree.formatted_value
+        print(self.slider_agree.formatted_value, self.slider_agree.value)
