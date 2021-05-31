@@ -12,7 +12,7 @@ Features
 
 - `User interface components <https://anvil-extras.readthedocs.io/en/latest/guides/components/index.html>`_
 
-  .. image:: images/meatballs
+  .. image:: images/message_pill.png
   .. image:: images/progress_bars.gif
   .. image:: images/auto_refresh.gif
   .. image:: images/switch.gif
