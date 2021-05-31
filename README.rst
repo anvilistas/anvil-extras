@@ -12,7 +12,13 @@ Features
 
 - `User interface components <https://anvil-extras.readthedocs.io/en/latest/guides/components/index.html>`_
 
-  .. image:: images/extras_demo.gif
+  .. image:: images/meatballs
+  .. image:: images/progress_bars.gif
+  .. image:: images/auto_refresh.gif
+  .. image:: images/switch.gif
+  .. image:: images/multi_select.gif
+  .. image:: images/quill.gif
+  .. image:: images/sliders.gif
 
 - `Publish/Subscribe Messaging <https://anvil-extras.readthedocs.io/en/latest/guides/modules/messaging.html>`_
 - `Dynamic Menu Construction <https://anvil-extras.readthedocs.io/en/latest/guides/modules/navigation.html>`_
