@@ -208,6 +208,53 @@ components:
   data_bindings:
   - {property: text, code: 'self.slider.formatted_values[1]', writeback: true}
   event_bindings: {pressed_enter: slider_textbox_enter}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Slider Component - with custom pips - see code, font_size: null, font: '',
+    spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '',
+    bold: true, underline: false, icon: ''}
+  name: label_4_copy_2
+  layout_properties:
+    col_widths: {}
+    grid_position: VGOMRT,ISPGIW
+- type: form:Slider
+  properties: {pips_mode: count, min: 1, tooltips: null, margin: null, pips_stepped: true,
+    pips: true, pips_values: '5', max: 5, padding: '', enabled: true, pips_density: -1,
+    limit: null, animate: true, visible: true, connect: lower, start: '3', behaviour: tap,
+    spacing_above: small, spacing_below: small, color: null, format: .0f, step: 1}
+  name: slider_agree
+  layout_properties: {grid_position: 'GJXJSN,BPVKWE'}
+  event_bindings: {change: slider_agree_change}
+  data_bindings:
+  - {property: formatted_value, code: 'self.item[''agree'']', writeback: true}
+- type: Button
+  properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+    icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
+    underline: false, icon: 'fa:minus'}
+  name: slider_down
+  layout_properties:
+    col_widths: {}
+    grid_position: SKFJND,QWVXHQ
+  event_bindings: {click: slider_down_click}
+- type: Button
+  properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+    icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
+    underline: false, icon: 'fa:refresh'}
+  name: slider_reset
+  layout_properties: {grid_position: 'SKFJND,GTGWKT'}
+  event_bindings: {click: slider_reset_click}
+- type: Button
+  properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
+    icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
+    underline: false, icon: 'fa:plus'}
+  name: slider_up
+  layout_properties:
+    col_widths: {}
+    grid_position: SKFJND,KWGACE
+  event_bindings: {click: slider_up_click}
 - type: Spacer
   properties: {height: 277}
   name: spacer_1_copy_3

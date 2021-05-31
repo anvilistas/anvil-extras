@@ -92,11 +92,30 @@ except AttributeError:
         return s[: len(s) - len(suffix)] if s.endswith(suffix) else s
 
 
+def _wrap_formatter(formatter):
+    fto = formatter["to"]
+    ffrom = formatter["from"]
+
+    def wrap_to(f: float, *args) -> str:
+        return fto(f)
+
+    def wrap_from(s: str, *args) -> float:
+        if not isinstance(s, str):
+            raise TypeError(f"got an unexpected value for handle, (got {s})")
+        if s.isnumeric():
+            return float(s)
+        return ffrom(s)
+
+    return {"to": wrap_to, "from": wrap_from}
+
+
 def _get_formatter(formatspec: str) -> dict:
     """
     Expecting a format spec e.g. '.2f'
     Or a simple string '£{:.2f}'
     """
+    if isinstance(formatspec, dict):
+        return _wrap_formatter(formatspec)
     if not isinstance(formatspec, str):
         raise TypeError("expected property format to be of type str")
     first = formatspec.find("{")
@@ -146,8 +165,13 @@ def _prop_getter(prop, fget=None):
 
 def _slider_prop(prop, fset=None, fget=None):
     def setter(self, value):
-        self._props[prop] = value if fset is None else fset(value)
-        self._slider.updateOptions({prop: value})
+        value = value if fset is None else fset(value)
+        self._props[prop] = value
+        if prop == "format":
+            pips = self._make_pips()
+            self._slider.updateOptions({prop: value, "pips": pips})
+        else:
+            self._slider.updateOptions({prop: value})
 
     return property(_prop_getter(prop, fget), setter)
 
@@ -243,23 +267,14 @@ class Slider(SliderTemplate):
         self._slider.on("change", lambda a, h, *e: self.raise_event("change", handle=h))
 
         ###### PROPS TO INIT ######
-        self.init_components(
-            **{
-                prop: props[prop]
-                for prop in (
-                    "color",
-                    "enabled",
-                    "visible",
-                    "spacing_above",
-                    "spacing_below",
-                    "formatted_value",
-                    "formatted_values",
-                    "value",
-                    "values",
-                )
-                if props[prop] is not None
-            }
-        )
+        always = {p: props[p] for p in ("color", "spacing_above", "spacing_below")}
+        if_true = {
+            p: props[p]
+            for p in ("formatted_value", "formatted_values", "value", "values")
+            if props[p] is not None
+        }
+        if_false = {p: props[p] for p in ("enabled", "visible") if not props[p]}
+        self.init_components(**always, **if_false, **if_true)
 
     ###### VALUE PROPERTIES ######
     @property

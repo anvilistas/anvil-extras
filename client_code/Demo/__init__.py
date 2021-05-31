@@ -10,12 +10,18 @@ from ._anvil_designer import DemoTemplate
 __version__ = "1.2.0"
 
 
+#### AUTO REFRESING - the item property updates components
 @auto_refreshing
 class Demo(DemoTemplate):
     def __init__(self, **properties):
+        self.init_custom_slider_formatter()
+
         self.progress = 0
         self.item = self.default_item = dict(
-            tally=100, counter=0, values=self.slider.start
+            tally=100,
+            counter=0,
+            values=self.slider.start,
+            agree=self.slider_agree.formatted_value,
         )
         self.init_components(**properties)
 
@@ -73,3 +79,50 @@ class Demo(DemoTemplate):
         """This method is called when the user presses Enter in this text box"""
         self.slider.values = self.text_box_left.text, self.text_box_right.text
         self.set_text_boxes()
+
+    ###### SLIDER WITH CUSTOM FORMATTER
+    def init_custom_slider_formatter(self):
+        num_to_desc = {
+            1: "strongly disagree",
+            2: "disagree",
+            3: "neutral",
+            4: "agree",
+            5: "strongly agree",
+        }
+
+        desc_to_num = {
+            "strongly disagree": 1,
+            "disagree": 2,
+            "neutral": 3,
+            "agree": 4,
+            "strongly agree": 5,
+        }
+
+        self.slider_agree.format = {
+            "to": lambda num: num_to_desc[num],
+            "from": lambda desc: desc_to_num[desc],
+        }
+
+    def slider_agree_change(self, handle, **event_args):
+        """This method is called when the slider has finished sliding"""
+        print(self.slider_agree.formatted_value, self.slider_agree.value)
+
+    def slider_down_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider_agree.value = self.slider_agree.value - 1
+        self.update_item_agree()
+
+    def slider_reset_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider_agree.reset()
+        self.update_item_agree()
+
+    def slider_up_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        self.slider_agree.value = self.slider_agree.value + 1
+        self.update_item_agree()
+
+    def update_item_agree(self):
+        """This method is called when the slider values are updated from code"""
+        self.item["agree"] = self.slider_agree.formatted_value
+        print(self.slider_agree.formatted_value, self.slider_agree.value)
