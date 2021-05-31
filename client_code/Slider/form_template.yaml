@@ -150,7 +150,7 @@ container:
       anvilPyComponent\");\n        const props = py._anvil.customPropVals;\n\n  \
       \      if (!slider.firstElementChild && props) {\n            // we've not been\
       \ here before\n            container.classList.add(\"anvil-slider-container\"\
-      );\n            const copyProps = { ...props };\n            console.log(props);\n\
+      );\n            const copyProps = { ...props };\n\
       \            for (let propName in copyProps) {\n                Object.defineProperty(props,\
       \ propName, {\n                    get() {\n                        return copyProps[propName];\n\
       \                    },\n                    set(v) {\n                    \
