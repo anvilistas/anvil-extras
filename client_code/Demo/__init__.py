@@ -21,7 +21,7 @@ class Demo(DemoTemplate):
             tally=100,
             counter=0,
             values=self.slider.start,
-            agree=self.slider_agree.formatted_value,
+            agree=self.slider_agree.value,
         )
         self.init_components(**properties)
 
@@ -82,33 +82,32 @@ class Demo(DemoTemplate):
     ###### SLIDER WITH CUSTOM FORMATTER
     def init_custom_slider_formatter(self):
         num_to_desc = {
-            1: "strongly disagree",
-            2: "disagree",
-            3: "neutral",
-            4: "agree",
+            -5: "strongly disagree",
+            -2.5: "disagree",
+            0: "neutral",
+            2.5: "agree",
             5: "strongly agree",
         }
 
-        desc_to_num = {
-            "strongly disagree": 1,
-            "disagree": 2,
-            "neutral": 3,
-            "agree": 4,
-            "strongly agree": 5,
-        }
+        desc_to_num = {v: k for k, v in num_to_desc.items()}
 
         self.slider_agree.format = {
-            "to": lambda num: num_to_desc[num],
+            # to should return a str
+            "to": lambda num: num_to_desc.get(num, str(num)),
+            # from should return a number - if it fails then an attempt will be made to convert the str to float
             "from": lambda desc: desc_to_num[desc],
         }
 
+        ### it's also possible to provide a custom formatter to tooltips - only to is required
+        self.slider_agree.tooltips = {"to": lambda num: format(num, ".0f")}
+
     def slider_agree_change(self, handle, **event_args):
         """This method is called when the slider has finished sliding"""
-        print(self.slider_agree.formatted_value, self.slider_agree.value)
+        print("slider changed - value:", self.slider_agree.value)
 
     def slider_down_click(self, **event_args):
         """This method is called when the button is clicked"""
-        self.slider_agree.value = self.slider_agree.value - 1
+        self.slider_agree.value -= 1
         self.update_item_agree()
 
     def slider_reset_click(self, **event_args):
@@ -118,10 +117,10 @@ class Demo(DemoTemplate):
 
     def slider_up_click(self, **event_args):
         """This method is called when the button is clicked"""
-        self.slider_agree.value = self.slider_agree.value + 1
+        self.slider_agree.value += 1
         self.update_item_agree()
 
     def update_item_agree(self):
         """This method is called when the slider values are updated from code"""
-        self.item["agree"] = self.slider_agree.formatted_value
-        print(self.slider_agree.formatted_value, self.slider_agree.value)
+        self.item["agree"] = self.slider_agree.value
+        print("slider set - value:", self.slider_agree.value)

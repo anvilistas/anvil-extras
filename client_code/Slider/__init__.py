@@ -97,16 +97,30 @@ def _wrap_formatter(formatter):
     ffrom = formatter["from"]
 
     def wrap_to(f: float, *args) -> str:
-        return fto(f)
+        s = fto(f)
+        if not isinstance(s, str):
+            raise TypeError(
+                f"Custom formatter returned {type(s).__name__} (expected str)"
+            )
+        return s
 
     def wrap_from(s: str, *args) -> float:
+        #### This function is called from javascript so accept *args
         if not isinstance(s, str):
-            raise TypeError(f"got an unexpected value for handle, (got {s})")
-        if s.isnumeric():
-            return float(s)
-        return ffrom(s)
+            raise TypeError(
+                f"got an unexpected value when trying to assign a value to the slider, (got {s})"
+            )
+        try:
+            return ffrom(s)
+        except Exception as e:
+            try:
+                # we may have just been give a number so do the obvious thing
+                res = float(s)
+                return int(res) if res.is_integer() else res
+            except Exception:
+                raise RuntimeError(f"your custom formatter raised an exception: {e!r}")
 
-    return {"to": wrap_to, "from": wrap_from}
+    return {"to": wrap_to, "from": wrap_from, "format_spec": formatter}
 
 
 def _get_formatter(formatspec: str) -> dict:
@@ -137,7 +151,9 @@ def _get_formatter(formatspec: str) -> dict:
     def from_format(s: str, *args) -> float:
         # Used in javascript world so expects extra args
         if not isinstance(s, str):
-            raise TypeError(f"got an unexpected value for handle, (got {s})")
+            raise TypeError(
+                f"got an unexpected value when trying to assign a value to the slider, (got {s})"
+            )
         s = (
             _removesuffix(_removeprefix(s, prefix), suffix)
             .strip()
@@ -153,7 +169,7 @@ def _get_formatter(formatspec: str) -> dict:
             return False
         if has_percent:
             f = f / 100
-        return f
+        return int(f) if f.is_integer() else f
 
     # noUiSlider requires a format like {from: (float) => str, to: (str) => float}
     return {"from": from_format, "to": to_format, "format_spec": formatspec}
