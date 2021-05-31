@@ -10,6 +10,7 @@ from anvil import *
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window as _window
 
+from .. import session
 from ..utils._component_helpers import _add_script, _get_color, _spacing_property
 from ._anvil_designer import SliderTemplate
 
@@ -19,9 +20,8 @@ __version__ = "1.2.0"
 _add_script(
     '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.css"></link>'
 )
-_add_script(
+session.style_injector.inject(
     """
-<style>
 .anvil-slider-container {
   padding: 10px 0;
 }
@@ -34,7 +34,6 @@ _add_script(
 .noUi-connect {
   background: var(--primary);
 }
-
 .noUi-horizontal .noUi-handle {
     width: 34px;
     height: 34px;
@@ -45,7 +44,7 @@ _add_script(
 .noUi-handle::before, .noUi-handle::after {
     content: none
 }
-</style>"""
+"""
 )
 
 _add_script(
