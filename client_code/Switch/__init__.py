@@ -10,6 +10,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 
 from .. import session
+from ..utils._component_helpers import _get_color
 
 __version__ = "1.2.0"
 
@@ -138,13 +139,11 @@ class Switch(CheckBox):
     @checked_color.setter
     def checked_color(self, value):
         self._checked_color = value
-        dom_node = _get_dom_node(self)
-        if value and value.startswith("theme:"):
-            value = app.theme_colors.get(value.replace("theme:", ""), primary)
+        value = _get_color(value)
         if value.startswith("#"):
             value = value[1:]
             value = ",".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
-        dom_node.style.setProperty("--color", value)
+        self._dom_node.style.setProperty("--color", value)
 
     @property
     def text_pre(self):
