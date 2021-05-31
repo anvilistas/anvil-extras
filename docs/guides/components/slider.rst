@@ -37,7 +37,11 @@ Properties
 :format:
 
     Provide a format for the values. This can either be a string to call with .format or a format spec.
-    e.g. "{:.2f}" or just ".2f". See python''s format string syntax for more options.
+    e.g. ``"{:.2f}"`` or just ``".2f"``. See python''s format string syntax for more options.
+
+    For a mapping of values to descriptions, e.g. ``{1: 'strongly disagree', 2: 'agree', ...}`` use a custom formatter.
+    This is a dictionary object with ``'to'`` and ``'from'`` as keys and can be set at runtime.
+    The ``'to'`` function takes a float or int and returns a str. The ``'from'`` takes a str and returns a float or int. See the anvil-extras Demo for an example.
 
 
 :value: number
