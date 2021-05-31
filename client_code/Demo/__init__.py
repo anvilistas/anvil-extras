@@ -60,7 +60,6 @@ class Demo(DemoTemplate):
     def slider_button_reset_click(self, **event_args):
         """This method is called when the button is clicked"""
         self.slider.reset()
-        self.slider.behaviour = "drag"
 
     def slider_change(self, handle, **event_args):
         """This method is called when the slider has finished sliding"""
