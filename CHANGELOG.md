@@ -1,3 +1,9 @@
+
+# Unreleased Changes
+
+## New Features
+* Tabs Component
+  https://github.com/anvilistas/anvil-extras/pull/64
 # v1.3.1 31-May-2021
 * Improved slider formatting
   https://github.com/anvilistas/anvil-extras/pull/61
