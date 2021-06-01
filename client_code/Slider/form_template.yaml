@@ -1,5 +1,6 @@
 properties:
-- {name: start, type: string, default_value: '20', description: The start option sets the number of handles and corresponding start positions. Use a single value or comma separated values. One for each slider. Other properties with lists must usually match the number of sliders, important: true}
+- {name: start, type: string, default_value: '20', description: The start option sets the number of handles and corresponding start positions. Use a single value or comma separated values. One for each slider. Other properties with lists must usually match the number of sliders,
+  important: true}
 - {name: connect, type: string, default_value: 'True, False', description: 'The connect
     option can be used to control the bar between the handles or the edges of the
     slider.  When using one handle, set the value to either ''upper'' or ''lower''.  For
@@ -7,48 +8,59 @@ properties:
     gap.', important: true}
 - {name: margin, type: string, default_value: null, description: 'When using two handles,
     the minimum distance between the handles can be set using the margin option. The
-    margin value is relative to the value set in ''range''.', group: multi handle, important: false}
+    margin value is relative to the value set in ''range''.', group: multi handle,
+  important: false}
 - {name: limit, type: string, default_value: null, description: 'The limit option
     is the opposite of the margin option, limiting the maximum distance between two
     handles', group: multi handle, important: false}
-- {name: padding, type: string, default_value: '', description: Padding limits how close to the slider edges handles can be., group: multi handle, important: false}
+- {name: padding, type: string, default_value: '', description: Padding limits how close to the slider edges handles can be.,
+  group: multi handle, important: false}
 - {name: step, type: number, default_value: null, description: 'By default, the slider
     slides fluently. In order to make the handles jump between intervals, the step
     option can be used.', important: false}
-- {name: tooltips, type: boolean, default_value: null, description: Adds tooltips to the sliders. Uses the same formatting as the format property, group: appearance, important: false}
-- {name: animate, type: boolean, default_value: true, description: Set the animate option to False to prevent the slider from animating to a new value with when setting values in code, group: interaction, important: false}
-- {name: min, type: number, default_value: 0, description: lower bound,  important: true}
+- {name: tooltips, type: boolean, default_value: null, description: Adds tooltips to the sliders. Uses the same formatting as the format property,
+  group: appearance, important: false}
+- {name: animate, type: boolean, default_value: true, description: Set the animate option to False to prevent the slider from animating to a new value with when setting values in code,
+  group: interaction, important: false}
+- {name: min, type: number, default_value: 0, description: lower bound, important: true}
 - {name: max, type: number, default_value: 100, description: upper bound, important: true}
 - {name: range, type: object, default_value: null, description: 'An object with ''min'',
-    ''max'' as keys. For additional options see noUiSlider for examples', group: range, important: false}
+    ''max'' as keys. For additional options see noUiSlider for examples', group: range,
+  important: false}
 - {name: behaviour, type: string, default_value: tap, description: 'This option accepts
-    a "-" separated list of "drag", "tap", "fixed", "snap", "unconstrained" or "none"', group: interaction, important: false}
+    a "-" separated list of "drag", "tap", "fixed", "snap", "unconstrained" or "none"',
+  group: interaction, important: false}
 - {name: color, type: color, default_value: null, group: appearance, important: false}
-- {name: visible, type: boolean, default_value: true,  group: appearance, important: true}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true}
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
 - {name: spacing_above, type: string, default_value: small, group: layout, important: false}
 - {name: spacing_below, type: string, default_value: small, group: layout, important: false}
-- {name: pips, type: boolean, default_value: false, description: Sets whether the slider has pips (ticks), group: pips, important: false}
+- {name: pips, type: boolean, default_value: false, description: Sets whether the slider has pips (ticks),
+  group: pips, important: false}
 - {name: pips_mode, type: string, default_value: '', description: '''range'', ''steps'',
     ''positions'', ''count'', ''values''', group: pips, important: false}
 - {name: pips_density, type: number, default_value: null, description: 'Controls how
     many pips are placed. With the default value of 1, there is one pip per percent.
     For a value of 2, a pip is placed for every 2 percent. A value of zero will place
-    more than one pip per percentage. A value of -1 will remove all intermediate pips.', group: pips, important: false}
-- {name: pips_values, type: string, default_value: '', description: a list of values. Interpreted differently depending on the mode, group: pips, important: false}
-- {name: pips_stepped, type: boolean, default_value: true, description: the stepped option can be set to true to match the pips to the slider steps, group: pips, important: false}
+    more than one pip per percentage. A value of -1 will remove all intermediate pips.',
+  group: pips, important: false}
+- {name: pips_values, type: string, default_value: '', description: a list of values. Interpreted differently depending on the mode,
+  group: pips, important: false}
+- {name: pips_stepped, type: boolean, default_value: true, description: the stepped option can be set to true to match the pips to the slider steps,
+  group: pips, important: false}
 - {name: format, type: string, default_value: .2f, description: 'Provide a format
     for the values. This can either be a string to call with .format or a format spec.
-    e.g. "{:.2f}" or just ".2f". See python''s format string syntax for more options.', group: appearance, important: false}
-- name: value
-  type: object
+    e.g. "{:.2f}" or just ".2f". See python''s format string syntax for more options.',
+  group: appearance, important: false}
+- binding_writeback_events: [x-writeback, change]
   default_value: null
-  description: returns the value of the first handle. This can only be set after initialization or with a databinding.
-  allow_binding_writeback: true
-  binding_writeback_events: [x-writeback, change]
-  default_binding_prop: true
   group: values
   important: false
+  name: value
+  default_binding_prop: true
+  type: object
+  allow_binding_writeback: true
+  description: returns the value of the first handle. This can only be set after initialization or with a databinding.
 - name: values
   type: object
   default_value: null
@@ -158,9 +170,9 @@ container:
       anvilPyComponent\");\n        const props = py._anvil.customPropVals;\n\n  \
       \      if (!slider.firstElementChild && props) {\n            // we've not been\
       \ here before\n            container.classList.add(\"anvil-slider-container\"\
-      );\n            const copyProps = { ...props };\n\
-      \            for (let propName in copyProps) {\n                Object.defineProperty(props,\
-      \ propName, {\n                    get() {\n                        return copyProps[propName];\n\
+      );\n            const copyProps = { ...props };\n            for (let propName\
+      \ in copyProps) {\n                Object.defineProperty(props, propName, {\n\
+      \                    get() {\n                        return copyProps[propName];\n\
       \                    },\n                    set(v) {\n                    \
       \    copyProps[propName] = v;\n                        try {\n             \
       \               updateDesignSlider(container, slider, copyProps);\n        \

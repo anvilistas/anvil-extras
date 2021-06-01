@@ -1,15 +1,20 @@
 properties:
-- {name: enabled, type: boolean, default_value: true, default_binding_prop: true, group: interaction, important: true}
-- {name: visible, type: boolean, default_value: true, default_binding_prop: false, group: appearance, important: true}
+- {name: enabled, type: boolean, default_value: true, default_binding_prop: true,
+  group: interaction, important: true}
+- {name: visible, type: boolean, default_value: true, default_binding_prop: false,
+  group: appearance, important: true}
 - {name: height, type: string, default_value: '150', default_binding_prop: false,
-  description: If auto_expand is set to True this will be the min_height. otherwise it'll be the fixed height, group: height, important: false}
+  description: If auto_expand is set to True this will be the min_height. otherwise it'll be the fixed height,
+  group: height, important: false}
 - {name: auto_expand, type: boolean, default_value: true, default_binding_prop: false,
   description: If set to True the height becomes the starting height, important: false}
 - {name: readonly, type: boolean, default_value: false, default_binding_prop: false,
   description: Similar to enabled but cannot be updated, group: interaction, important: false}
 - {name: toolbar, type: boolean, default_value: true, default_binding_prop: false,
-  description: This must be set in the constructor and cannot be updated, group: interaction, important: true}
-- {name: theme, type: string, default_value: snow, default_binding_prop: false, description: snow or bubble - check quill for the difference - cannot be updated once set, group: appearance, important: false}
+  description: This must be set in the constructor and cannot be updated, group: interaction,
+  important: true}
+- {name: theme, type: string, default_value: snow, default_binding_prop: false, description: snow or bubble - check quill for the difference - cannot be updated once set,
+  group: appearance, important: false}
 - {name: placeholder, type: string, default_value: '', default_binding_prop: false,
   description: The text to display when there is not content, important: false}
 - {name: content, type: string, default_binding_prop: false, description: A json-able object you can store as simple object in a data table cell. Use get_contents to interact with the quill delta object directly.,

@@ -4,7 +4,8 @@ properties:
     can use a list of tuples, (str, value) pairs. Or a list of dicts with keys: ''key'',
     ''value'', ''icon'', ''title'', ''enabled''', important: true}
 - {name: placeholder, type: string, default_value: None Selected, important: false}
-- {name: enable_filtering, type: boolean, default_value: null, group: interaction, important: true}
+- {name: enable_filtering, type: boolean, default_value: null, group: interaction,
+  important: true}
 - {name: multiple, type: boolean, default_value: true, group: interaction, important: true}
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}

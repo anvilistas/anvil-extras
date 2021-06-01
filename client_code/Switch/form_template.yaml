@@ -1,5 +1,6 @@
 properties:
-- {name: checked, type: boolean, default_value: false, default_binding_prop: true, important: true}
+- {name: checked, type: boolean, default_value: false, default_binding_prop: true,
+  important: true}
 - {name: checked_color, type: color, default_value: null, group: appearance, important: false}
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
 - {name: foreground, type: color, default_value: null, group: appearance, important: false}
