@@ -15,6 +15,7 @@ Features
   .. image:: images/message_pill.png
   .. image:: images/progress_bars.gif
   .. image:: images/auto_refresh.gif
+  .. image:: images/tabs.gif
   .. image:: images/switch.gif
   .. image:: images/multi_select.gif
   .. image:: images/quill.gif
