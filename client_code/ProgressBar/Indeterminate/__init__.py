@@ -8,6 +8,7 @@ from anvil.js import get_dom_node
 from anvil.js.window import document
 
 from anvil_extras import ProgressBar, session
+from anvil_extras.utils._component_helpers import _get_dom_node_id
 
 from ._anvil_designer import IndeterminateTemplate
 
@@ -21,7 +22,7 @@ class Indeterminate(IndeterminateTemplate):
         dom_node = get_dom_node(self)
         dom_node.style.setProperty("background-color", indicator_colour)
 
-        indicator_id = session.get_dom_node_id(self.indicator_panel)
+        indicator_id = _get_dom_node_id(self.indicator_panel)
         css = f"""
 #{indicator_id}:before {{
   background-color: {track_colour}

@@ -4,14 +4,37 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
+import random
 
 from anvil import app as _app
+from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
 __version__ = "1.3.1"
 
 _loaded = False
+_characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+
+class StyleInjector:
+    def __init__(self):
+        self.injected = set()
+
+    def inject(self, css):
+        hashed = hash(css)
+        if hashed not in self.injected:
+            sheet = _document.createElement("style")
+            sheet.innerHTML = css
+            _document.body.appendChild(sheet)
+            self.injected.add(hashed)
+
+
+def _get_dom_node_id(component):
+    node = _get_dom_node(component)
+    if not node.id:
+        node.id = "".join([random.choice(_characters) for _ in range(8)])
+    return node.id
 
 
 def _onload(e):

@@ -4,20 +4,8 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-import random
-
-from anvil.js import get_dom_node
-
-from . import style
+from .utils._component_helpers import StyleInjector
 
 __version__ = "1.3.1"
-characters = "abcdefghijklmnopqrstuvwxyz0123456789"
 
-style_injector = style.Injector()
-
-
-def get_dom_node_id(component):
-    node = get_dom_node(component)
-    if not node.id:
-        node.id = "".join([random.choice(characters) for _ in range(8)])
-    return node.id
+style_injector = StyleInjector()
