@@ -65,3 +65,17 @@ def _get_color(value):
         return _app.theme_colors.get(value.replace("theme:", ""), _primary)
     else:
         return value
+
+
+def _get_rgb(value):
+    value = _get_color(value)
+    if value.startswith("#"):
+        value = value[1:]
+        value = ",".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
+    elif value.startswith("rgb") and value.endswith(")"):
+        value = value[value.find("("), -1]
+    else:
+        raise ValueError(
+            f"expected a hex value, theme color or rgb value, not, {value}"
+        )
+    return value

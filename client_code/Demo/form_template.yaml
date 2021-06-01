@@ -104,6 +104,47 @@ components:
   event_bindings: {tick: timer_1_tick}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Tabs Component, font_size: null, font: '', spacing_above: large, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_3_copy_4
+  layout_properties:
+    col_widths: {}
+    grid_position: XYBAWW,UZLMNM
+- type: form:Tabs
+  properties:
+    role: ''
+    align: left
+    tab_titles: [Tab 1, Tab 2, Tab 3]
+    active_tab_index: 0
+    foreground: '#2196F3'
+    visible: true
+    font_size: ''
+    font: ''
+    spacing_above: none
+    spacing_below: none
+    italic: false
+    background: ''
+    bold: false
+  name: tabs_1
+  layout_properties: {grid_position: 'ADKQXK,NWEGOM'}
+  event_bindings: {tab_click: tabs_1_tab_click}
+- type: ColumnPanel
+  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true,
+    wrap_on: mobile, col_spacing: medium, spacing_above: none, col_widths: '{}', spacing_below: small,
+    background: ''}
+  name: tabs_panel
+  layout_properties: {grid_position: 'ZNFPXX,RTVBWV'}
+  components:
+  - type: Label
+    properties: {role: null, align: center, tooltip: '', border: '', foreground: '',
+      visible: true, text: Tab 1 is visible, font_size: 18, font: '', spacing_above: large,
+      icon_align: left, spacing_below: large, italic: false, background: '', bold: false,
+      underline: false, icon: ''}
+    name: tabs_label
+    layout_properties: {grid_position: 'BXXKLU,CAESOP'}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
     text: Switch Component, font_size: null, font: '', spacing_above: large, icon_align: left,
     spacing_below: small, italic: false, background: '', bold: true, underline: false,
     icon: ''}
