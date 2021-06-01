@@ -124,3 +124,7 @@ class Demo(DemoTemplate):
         """This method is called when the slider values are updated from code"""
         self.item["agree"] = self.slider_agree.value
         print("slider set - value:", self.slider_agree.value)
+
+    def tabs_1_tab_click(self, tab_index, tab_title, **event_args):
+        """This method is called when a tab is clicked"""
+        self.tabs_label.text = f"{tab_title} is visible"

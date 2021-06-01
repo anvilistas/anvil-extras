@@ -10,7 +10,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 
 from .. import session
-from ..utils._component_helpers import _get_color
+from ..utils._component_helpers import _get_rgb
 
 __version__ = "1.3.1"
 
@@ -139,11 +139,7 @@ class Switch(CheckBox):
     @checked_color.setter
     def checked_color(self, value):
         self._checked_color = value
-        value = _get_color(value)
-        if value.startswith("#"):
-            value = value[1:]
-            value = ",".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
-        self._dom_node.style.setProperty("--color", value)
+        self._dom_node.style.setProperty("--color", _get_rgb(value))
 
     @property
     def text_pre(self):

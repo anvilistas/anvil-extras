@@ -1,0 +1,114 @@
+properties:
+- {name: background, type: color, default_value: null, group: appearance, important: false}
+- {name: foreground, type: color, default_value: null, description: This should be a hex value or a theme color,
+  group: appearance, important: false}
+- name: tab_titles
+  type: text[]
+  default_value: [Tab 1, Tab 2, Tab 3]
+  description: Each line should be a new tab title
+  important: true
+- {name: active_tab_index, type: number, default_value: 0, default_binding_prop: true,
+  description: The current active tab, important: false}
+- {name: role, type: string, default_value: null, description: This component works well with the card role. Place a card below or above the tabs component,
+  group: appearance, important: true}
+- {name: align, type: string, default_value: left, description: align tab text left center or right,
+  group: text, important: false}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true}
+- {name: spacing_above, type: string, default_value: none, group: layout, important: false}
+- {name: spacing_below, type: string, default_value: none, group: layout, important: false}
+- {name: bold, type: boolean, default_value: null, group: text, important: false}
+- {name: font_size, type: string, default_value: null, group: text, important: false}
+- {name: italic, type: boolean, default_value: null, group: text, important: false}
+- {name: font, type: string, default_value: '', group: text, important: false}
+is_package: true
+events:
+- name: tab_click
+  default_event: true
+  description: when a tab is clicked
+  parameters:
+  - {name: tab_index}
+  - {name: tab_title}
+- {name: show, description: when the tabs are shown}
+- {name: hide, description: when the tabs are hidden}
+custom_component: true
+components:
+- type: Link
+  properties: {}
+  name: link_1
+  layout_properties: {slot: default}
+- type: Link
+  properties: {}
+  name: link_2
+  layout_properties: {slot: default}
+container:
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: "<ul class=\"tabs\">\n  <li class=\"tab\" anvil-slot-repeat=\"\
+      default\"></li>\n  <li class=\"indicator\"></li>\n</ul>\n<script>\nwindow.anvilExtras\
+      \ || (window.anvilExtras = {});\nanvilExtras.Tabs || (anvilExtras.Tabs = {});\n\
+      \nif (typeof anvilExtras.toRgb === \"undefined\") {\n    anvilExtras.toRgb =\
+      \ function _colorToRGB(v) {\n        if (v && v.startsWith(\"theme:\")) {\n\
+      \            v = window.anvilThemeColors[v.replace(\"theme:\", \"\")];\n   \
+      \     }\n        v = v || window.anvilThemeColors[\"Primary 500\"] || \"#2196F3\"\
+      ;\n        const bigint = parseInt(v.slice(1), 16);\n        v = [(bigint >>\
+      \ 16) & 255, (bigint >> 8) & 255, bigint & 255].join(\",\");\n        return\
+      \ v;\n    };\n}\n\nif (typeof anvilExtras.Tabs.css === \"undefined\") {\n  \
+      \  const style = document.createElement(\"style\");\n    style.innerHTML = `.tabs{position:relative;overflow-x:auto;overflow-y:hidden;height:48px;width:100%;background-color:var(--background,\
+      \ inherit);margin:0 auto;white-space:nowrap;padding:0;display:flex}\n\t\t\t\t\
+      \t\t.tabs .tab{flex-grow:1;display:inline-block;text-align:center;line-height:48px;height:48px;padding:0;margin:0;text-transform:uppercase}\n\
+      \t\t\t\t\t\t.tabs .tab a{color:rgba(var(--color),0.7);display:block;width:100%;height:100%;padding:0\
+      \ 24px;font-size:14px;text-overflow:ellipsis;overflow:hidden;-webkit-transition:color\
+      \ 0.28s ease, background-color 0.28s ease;transition:color 0.28s ease, background-color\
+      \ 0.28s ease}\n\t\t\t\t\t\t.tabs .tab a:focus,.tabs .tab a:focus.active{background-color:rgb(var(--color),\
+      \ 0.2);outline:none}\n\t\t\t\t\t\t.tabs .tab a.active,.tabs .tab a:hover{background-color:transparent;color:rgb(var(--color))}\n\
+      \t\t\t\t\t\t.tabs .indicator{position:absolute;bottom:0;height:3px;background-color:rgb(var(--color),\
+      \ 0.4);will-change:left, right}`;\n    document.body.appendChild(style);\n \
+      \   anvilExtras.Tabs.css = true;\n}\n\nif (typeof anvilExtras.Tabs.update ===\
+      \ \"undefined\") {\n    anvilExtras.Tabs.update = (container, tabs, props) =>\
+      \ {\n        console.log(props);\n        props || (props = { tab_titles: [\"\
+      Tab 1\", \"Tab 2\"], active_tab_index: 0, visible: true, align: \"left\" });\n\
+      \        while (tabs.firstElementChild) {\n            tabs.removeChild(tabs.firstElementChild);\n\
+      \        }\n        let active;\n        props.tab_titles.forEach((title, i)\
+      \ => {\n            const li = document.createElement(\"li\");\n           \
+      \ li.className = \"tab\";\n            const a = document.createElement(\"a\"\
+      );\n            a.style.cssText = `\n\t\t\tfont-weight:${props.bold ? \"bold\"\
+      \ : \"\"};\n\t\t\ttext-align: ${props.align};\n\t\t\tfont-size: ${props.font_size\
+      \ ? props.font_size + \"px\" : \"\"};\n\t\t\tfont-family:${props.font || \"\"\
+      };\n\t\t\tfont-style: ${props.italic ? \"italic\" : \"\"};\n\t\t\t`;\n     \
+      \       a.textContent = title;\n            li.appendChild(a);\n           \
+      \ tabs.appendChild(li);\n            if (i === props.active_tab_index) {\n \
+      \               a.className = \"active\";\n                active = li;\n  \
+      \          }\n        });\n        const indicator = document.createElement(\"\
+      li\");\n        tabs.appendChild(indicator);\n        indicator.className =\
+      \ \"indicator\";\n        indicator.style.left = active.offsetLeft + \"px\"\
+      ;\n        indicator.style.right = tabs.offsetWidth - active.offsetLeft - active.offsetWidth\
+      \ + \"px\";\n\n        let color = props.foreground;\n        color = anvilExtras.toRgb(color);\n\
+      \        tabs.style.setProperty(\"--color\", color);\n        let bg = props.background;\n\
+      \        if (bg && bg.startsWith(\"theme:\")) {\n            bg = window.anvilThemeColors[bg.replace(\"\
+      theme:\", \"\")] || \"\";\n        }\n        tabs.style.setProperty(\"--background\"\
+      , bg);\n\n        const stale_spacing = [...container.classList].filter((x)\
+      \ => x.startsWith(\"anvil-spacing-\"));\n        container.classList.remove(...stale_spacing);\n\
+      \        container.classList.add(\n            \"anvil-spacing-above-\" + props.spacing_above,\n\
+      \            \"anvil-spacing-below-\" + props.spacing_below\n        );\n  \
+      \      const stale_role = [...container.classList].filter((x) => x.startsWith(\"\
+      anvil-role-\"));\n        container.classList.remove(...stale_role);\n     \
+      \   props.role && container.classList.add(\"anvil-role-\" + props.role);\n \
+      \       container.classList.toggle(\"visible-false\", !props.visible);\n   \
+      \ };\n}\n\nif (typeof anvilExtras.Tabs.add === \"undefined\") {\n    anvilExtras.Tabs.add\
+      \ = () => {\n        for (let tabs of document.querySelectorAll(\".anvil-container\
+      \ .tabs\")) {\n            const container = tabs.parentElement;\n         \
+      \   if (container.classList.contains(\"anvil-extras-tabs\")) {\n           \
+      \   \treturn;\n            }\n            container.classList.add(\"anvil-extras-tabs\"\
+      );\n            container.style.paddingTop = 0;\n            container.style.paddingBottom\
+      \ = 0;\n            const py = $(container).data(\"anvilPyComponent\");\n  \
+      \          const props = py._anvil.customPropVals;\n            if (props) {\n\
+      \                const copyProps = { ...props };\n                for (let propName\
+      \ in copyProps) {\n                    Object.defineProperty(props, propName,\
+      \ {\n                        get() {\n                            return copyProps[propName];\n\
+      \                        },\n                        set(v) {\n            \
+      \                copyProps[propName] = v;\n                            try {\n\
+      \                                anvilExtras.Tabs.update(container, tabs, copyProps);\n\
+      \                            } catch {}\n                            return\
+      \ true;\n                        },\n                    });\n             \
+      \   }\n            }\n            anvilExtras.Tabs.update(container, tabs, props);\n\
+      \        }\n    };\n}\n\n$(() => anvilExtras.Tabs.add());\n\n</script>"}
