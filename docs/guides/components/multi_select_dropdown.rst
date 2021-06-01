@@ -40,7 +40,7 @@ Properties
 
 :spacing_below: String
 
-    One of "none"``, ``"small"``, ``"medium"``, ``"large"``
+    One of ``"none"``, ``"small"``, ``"medium"``, ``"large"``
 
 :selected: Object
 
