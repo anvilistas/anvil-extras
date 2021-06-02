@@ -24,7 +24,7 @@ components:
 - type: CheckBox
   properties: {role: switch, align: left, tooltip: '', border: '', enabled: true,
     foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-    spacing_below: small, italic: false, background: '', bold: false, checked: false,
+    spacing_below: small, italic: false, background: '', bold: false, checked: true,
     underline: false}
   name: check_box_1
   layout_properties: {slot: default}

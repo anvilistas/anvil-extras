@@ -92,8 +92,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         # remove all the script tags before they load into the dom
 
         self._values = {}
-        # Any code you write here will run when the form opens.
+        # Any code you write here will run when the form opens
         properties = _defaults | properties
+        properties["items"] = properties["items"] or []
 
         self.init_components(**properties)
 
@@ -154,6 +155,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._el.selectpicker("val", to_select)
 
     multiple = _component_property("multiple", "multiple")
+    # the placeholder is not dynamic - this seems to be a bug in the javascript library
     placeholder = _component_property("placeholder", "title")
     enable_filtering = _component_property("enable_filtering", "data-live-search")
     enabled = _component_property("enabled", "disabled", lambda v: not v)
