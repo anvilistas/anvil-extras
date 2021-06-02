@@ -103,85 +103,12 @@ components: []
 container:
   type: HtmlTemplate
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: "<div class=\"anvil-slider anvil-measure-this\" anvil-slot></div>\n\
-      \n<style>\n.anvil-container-overflow, .anvil-panel-col {\n  overflow: visible;\n\
-      }\n.anvil-slider-container {\n  padding: 10px 0;\n  min-height: 50px;\n}\n.anvil-slider-container.has-pips\
-      \ {\n padding-bottom: 40px;\n}\n.noUi-connect {\n  background: var(--primary);\n\
-      }\n.noUi-horizontal .noUi-handle {\n    width: 34px;\n    height: 34px;\n  \
-      \  right: -17px;\n    top: -10px;\n    border-radius: 50%;\n}\n.noUi-handle::before,\
-      \ .noUi-handle::after {\n    content: none\n}\n\n</style>\n\n<script>\nfunction\
-      \ _parse(val, force_list = false) {\n    if (typeof val !== \"string\") {\n\
-      \        return val;\n    }\n    val = val.toLowerCase().trim();\n    if (!val)\
-      \ return force_list ? [] : null;\n    try {\n        return JSON.parse((force_list\
-      \ || val.includes(\",\")) && val[0] !== \"[\" ? `[${val}]` : val);\n    } catch\
-      \ {\n        return force_list ? [] : val;\n    }\n}\n\nfunction _get_formatter(formatspec)\
-      \ {\n    const first = formatspec.indexOf(\"{\");\n    const last = formatspec.indexOf(\"\
-      }\");\n    const prefix = first === -1 ? \"\" : formatspec.slice(0, first);\n\
-      \    const suffix = last === -1 ? \"\" : formatspec.slice(last + 1);\n    const\
-      \ type = formatspec[last - 1] === \"%\" ? \"%\" : null;\n\n    formatspec =\
-      \ Sk.ffi.toPy(formatspec);\n    const format = formatspec.tp$getattr(Sk.ffi.toPy(\"\
-      format\"));\n\n    const do_to = (f) => {\n        f = Sk.ffi.toPy(f);\n   \
-      \     return first === -1 ? Sk.builtin.format(f, formatspec) : format.tp$call([f]);\n\
-      \    };\n\n    try {\n        do_to(1.1);\n    } catch (e) {\n        throw\
-      \ new Error(e.toString());\n    }\n\n    return {\n        to: (f) => {\n  \
-      \          try {\n                return do_to(f);\n            } catch {\n\
-      \                return f;\n            }\n        },\n        from: (s) =>\
-      \ {\n            if (s.startsWith(prefix)) {\n                s = s.slice(prefix.length);\n\
-      \            }\n            if (s.endsWith(suffix)) {\n                s = s.slice(0,\
-      \ s.length - suffix.length);\n            }\n            const has_percent =\
-      \ type === \"%\" && s.endsWith(\"%\");\n            s = s.trim().replace(/[,_]/g,\
-      \ \"\");\n            let f = parseFloat(s);\n            if (has_percent) {\n\
-      \                f = f / 100;\n            }\n            return f;\n      \
-      \  },\n    };\n}\n\nfunction updateDesignSlider(container, slider, _props) {\n\
-      \    try {\n        _props || (_props = { start: [20, 80], connect: true, min:\
-      \ 0, max: 100, visible: true, enabled: true });\n        const props = { ..._props\
-      \ };\n\n        for (let prop of [\"start\", \"connect\", \"margin\", \"padding\"\
-      , \"limit\", \"pips_values\"]) {\n            props[prop] = _parse(props[prop],\
-      \ prop === \"pips_values\");\n        }\n        props.range = { min: props.min,\
-      \ max: props.max };\n        props.format = _get_formatter(props.format || \"\
-      .2f\");\n\n        if (props.pips) {\n            props.pips = {\n         \
-      \       format: props[\"format\"],\n                mode: props[\"pips_mode\"\
-      ],\n                values: props[\"pips_values\"],\n                density:\
-      \ props[\"pips_density\"],\n                stepped: props[\"pips_stepped\"\
-      ],\n            };\n        }\n\n        container.classList.toggle(\"has-pips\"\
-      , !!props.pips);\n        slider.noUiSlider?.destroy();\n        if (slider.firstElementChild)\
-      \ {\n            slider.removeChild(slider.firstElementChild);\n        }\n\
-      \        let color = props.color;\n        if (color && color.startsWith(\"\
-      theme:\")) {\n            color = window.anvilThemeColors[color.replace(\"theme:\"\
-      , \"\")];\n        }\n        color = color || window.anvilThemeColors[\"Primary\
-      \ 500\"] || \"#2196F3\";\n        container.style.setProperty(\"--primary\"\
-      , color);\n\n        const stale_spacing = [...container.classList].filter((x)\
-      \ => x.startsWith(\"anvil-spacing-\"));\n        container.classList.remove(...stale_spacing);\n\
-      \        container.classList.add(\n            \"anvil-spacing-above-\" + props.spacing_above,\n\
-      \            \"anvil-spacing-below-\" + props.spacing_below\n        );\n  \
-      \      container.classList.toggle(\"visible-false\", !props.visible);\n    \
-      \    props.enabled ? slider.removeAttribute(\"disabled\") : slider.setAttribute(\"\
-      disabled\", true);\n        noUiSlider.create(slider, props);\n    } catch (e)\
-      \ {\n        slider.noUiSlider?.destroy();\n        if (slider.firstElementChild)\
-      \ {\n            slider.removeChild(slider.firstElementChild);\n        }\n\
-      \        const invalidComponent = $(`<div class='invalid-component'>\n     \
-      \     <i class=\"glyphicon glyphicon-remove\"></i>\n          <div class=\"\
-      err\">${e.message.replaceAll(\"noUiSlider\", \"Slider\")}</div></div>`);\n \
-      \       slider.appendChild(invalidComponent[0]);\n    }\n}\n\nfunction addSlider()\
-      \ {\n    for (let slider of document.querySelectorAll(\".anvil-slider\")) {\n\
-      \        const container = slider.parentElement;\n        if (container.classList.contains(\"\
-      anvil-slider-container\")) {\n            return; // we've already set the property\
-      \ getters and setters so exit early\n        }\n        const py = $(container).data(\"\
-      anvilPyComponent\");\n        const props = py._anvil.customPropVals;\n\n  \
-      \      if (!slider.firstElementChild && props) {\n            // we've not been\
-      \ here before\n            container.classList.add(\"anvil-slider-container\"\
-      );\n            const copyProps = { ...props };\n            for (let propName\
-      \ in copyProps) {\n                Object.defineProperty(props, propName, {\n\
-      \                    get() {\n                        return copyProps[propName];\n\
-      \                    },\n                    set(v) {\n                    \
-      \    copyProps[propName] = v;\n                        try {\n             \
-      \               updateDesignSlider(container, slider, copyProps);\n        \
-      \                } catch {}\n                        return true;\n        \
-      \            },\n                });\n            }\n        }\n\n        updateDesignSlider(container,\
-      \ slider, props);\n    }\n}\n\n$(() => {\n    if (typeof noUiSlider === \"undefined\"\
-      ) {\n        let l = document.createElement(\"link\");\n        l.href = \"\
-      https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.css\";\n    \
-      \    l.rel = \"stylesheet\";\n        document.head.appendChild(l);\n\n    \
-      \    let s = document.createElement(\"script\");\n        s.src = \"https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.js\"\
-      ;\n        document.body.appendChild(s);\n        s.onload = addSlider;\n  \
-      \  } else {\n        addSlider();\n    }\n});\n\n</script>"}
+    role: null, html: '<div class="anvil-slider anvil-measure-this" anvil-slot></div>
+
+      <script type="module">
+
+      import {DesignerSlider} from "./_/theme/designer.js";
+
+      DesignerSlider.init();
+
+      </script>'}
