@@ -18,7 +18,7 @@ __version__ = "1.3.1"
 
 
 _add_script(
-    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.css"></link>'
+    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.min.css"></link>'
 )
 session.style_injector.inject(
     """
@@ -48,7 +48,7 @@ session.style_injector.inject(
 )
 
 _add_script(
-    '<script crossorigin src="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.js"></script>'
+    '<script src="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.min.js"></script>'
 )
 _Slider = _window.noUiSlider
 

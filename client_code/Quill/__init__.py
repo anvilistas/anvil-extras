@@ -21,7 +21,7 @@ _add_script('<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet
 _add_script('<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">')
 
 # <!-- Main Quill library -->
-_add_script('<script src="//cdn.quilljs.com/1.3.6/quill.js" crossorigin></script>')
+_add_script('<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>')
 _Quill = _window.Quill
 
 
