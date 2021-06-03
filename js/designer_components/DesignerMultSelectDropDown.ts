@@ -1,4 +1,4 @@
-import { DesignerComponent } from "./DesignerComponent";
+import { DesignerComponent } from "./DesignerComponent.ts";
 export class DesignerMultiSelectDropDown extends DesignerComponent {
     static defaults = {
         placeholder: "None Selected",
@@ -10,19 +10,19 @@ export class DesignerMultiSelectDropDown extends DesignerComponent {
     static links = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"];
     static script = "https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js";
     static postLoad() {
-        // @ts-ignore
+        // deno-lint-ignore
         $.fn.selectpicker.Constructor.BootstrapVersion = "3";
     }
     static init() {
         super.init(".select-picker");
     }
     picker: JQuery;
-    constructor(domNode, pyComponent, select) {
+    constructor(domNode: HTMLElement, pyComponent: any, select: HTMLElement) {
         super(domNode, pyComponent, select);
         this.picker = $(select);
         this.picker.selectpicker();
     }
-    update(this: any, props, propName) {
+    update(this: any, props: any, propName: string) {
         if (propName && !(propName in this.constructor.defaults)) {
             return;
         }

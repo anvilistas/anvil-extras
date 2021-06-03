@@ -1,4 +1,4 @@
-import { DesignerComponent } from "./DesignerComponent.js";
+import { DesignerComponent } from "./DesignerComponent.ts";
 
 export class DesignerTabs extends DesignerComponent {
     static defaults = { tab_titles: ["Tab 1", "Tab 2"], active_tab_index: 0, visible: true, align: "left" };
@@ -16,6 +16,7 @@ export class DesignerTabs extends DesignerComponent {
 
     tabs: HTMLDivElement;
 
+    // deno-lint-ignore
     constructor(domNode: HTMLElement, pyComponent: any, el: HTMLDivElement) {
         super(domNode, pyComponent, el);
         this.tabs = el;

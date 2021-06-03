@@ -1,13 +1,13 @@
-import { DesignerComponent } from "./DesignerComponent";
-import _noUiSlider, { API } from "nouislider";
+import { DesignerComponent } from "./DesignerComponent.ts";
 
+//deno-lint-ignore
+declare var noUiSlider: any;
+
+//deno-lint-ignore
 declare var Sk: any;
-
 export interface Slider extends HTMLElement {
-    noUiSlider: API;
+    noUiSlider: any;
 }
-
-declare var noUiSlider: typeof _noUiSlider;
 
 interface Formatter {
     to: (value: number) => string | number;
@@ -38,16 +38,16 @@ export class DesignerSlider extends DesignerComponent {
         this.slider = slider;
     }
 
-    parse(val: any, force_list = false) {
+    parse(val: any, forceList = false) {
         if (typeof val !== "string") {
             return val;
         }
         val = val.toLowerCase().trim();
-        if (!val) return force_list ? [] : null;
+        if (!val) return forceList ? [] : null;
         try {
-            return JSON.parse((force_list || val.includes(",")) && val[0] !== "[" ? `[${val}]` : val);
+            return JSON.parse((forceList || val.includes(",")) && val[0] !== "[" ? `[${val}]` : val);
         } catch {
-            return force_list ? [] : val;
+            return forceList ? [] : val;
         }
     }
     getFormatter(formatspec: string): Formatter {
@@ -60,13 +60,13 @@ export class DesignerSlider extends DesignerComponent {
         const pyformatspec = Sk.ffi.toPy(formatspec) as any;
         const format = pyformatspec.tp$getattr(Sk.ffi.toPy("format"));
 
-        const do_to = (f: number): any => {
+        const doTo = (f: number): any => {
             const pyNum = Sk.ffi.toPy(f);
             return first === -1 ? Sk.builtin.format(pyNum, pyformatspec) : format.tp$call([pyNum]);
         };
 
         try {
-            do_to(1.1);
+            doTo(1.1);
         } catch (e: any) {
             throw new Error(e.toString());
         }
@@ -74,7 +74,7 @@ export class DesignerSlider extends DesignerComponent {
         return {
             to: (f: number): string | number => {
                 try {
-                    return do_to(f);
+                    return doTo(f);
                 } catch {
                     return f;
                 }
@@ -86,10 +86,10 @@ export class DesignerSlider extends DesignerComponent {
                 if (s.endsWith(suffix)) {
                     s = s.slice(0, s.length - suffix.length);
                 }
-                const has_percent = type === "%" && s.endsWith("%");
+                const hasPercent = type === "%" && s.endsWith("%");
                 s = s.trim().replace(/[,_]/g, "");
                 let f = parseFloat(s);
-                if (has_percent) {
+                if (hasPercent) {
                     f = f / 100;
                 }
                 return f;
@@ -98,7 +98,7 @@ export class DesignerSlider extends DesignerComponent {
     }
     update(props: any) {
         try {
-            for (let prop of ["start", "connect", "margin", "padding", "limit", "pips_values"]) {
+            for (const prop of ["start", "connect", "margin", "padding", "limit", "pips_values"]) {
                 props[prop] = this.parse(props[prop], prop === "pips_values");
             }
             props.range = { min: props.min, max: props.max };

@@ -1,6 +1,6 @@
-import { DesignerComponent } from "./DesignerComponent";
-import { default as _Quill } from "quill";
-declare var Quill: typeof _Quill;
+import { DesignerComponent } from "./DesignerComponent.ts";
+
+declare var Quill: any;
 export class DesignerQuill extends DesignerComponent {
     static defaults = {
         auto_expand: true,
@@ -19,7 +19,7 @@ export class DesignerQuill extends DesignerComponent {
         super.init(".quill-editor");
     }
     editor: HTMLElement;
-    constructor(domNode, pyComponent, editor) {
+    constructor(domNode: HTMLElement, pyComponent: any, editor: HTMLElement) {
         super(domNode, pyComponent, editor);
         this.editor = editor;
     }

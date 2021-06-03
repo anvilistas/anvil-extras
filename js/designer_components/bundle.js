@@ -2,8 +2,8 @@
 var DesignerComponent = class {
   static postLoad() {
   }
-  constructor(container, pyComponent, el) {
-    this.domNode = container;
+  constructor(domNode, pyComponent, el) {
+    this.domNode = domNode;
     this.pyComponent = pyComponent;
     this.el = el;
   }
@@ -228,17 +228,17 @@ var DesignerSlider = class extends DesignerComponent {
     super(domNode, pyComponent, slider);
     this.slider = slider;
   }
-  parse(val, force_list = false) {
+  parse(val, forceList = false) {
     if (typeof val !== "string") {
       return val;
     }
     val = val.toLowerCase().trim();
     if (!val)
-      return force_list ? [] : null;
+      return forceList ? [] : null;
     try {
-      return JSON.parse((force_list || val.includes(",")) && val[0] !== "[" ? `[${val}]` : val);
+      return JSON.parse((forceList || val.includes(",")) && val[0] !== "[" ? `[${val}]` : val);
     } catch {
-      return force_list ? [] : val;
+      return forceList ? [] : val;
     }
   }
   getFormatter(formatspec) {
@@ -249,19 +249,19 @@ var DesignerSlider = class extends DesignerComponent {
     const type = formatspec[last - 1] === "%" ? "%" : null;
     const pyformatspec = Sk.ffi.toPy(formatspec);
     const format = pyformatspec.tp$getattr(Sk.ffi.toPy("format"));
-    const do_to = (f) => {
+    const doTo = (f) => {
       const pyNum = Sk.ffi.toPy(f);
       return first === -1 ? Sk.builtin.format(pyNum, pyformatspec) : format.tp$call([pyNum]);
     };
     try {
-      do_to(1.1);
+      doTo(1.1);
     } catch (e) {
       throw new Error(e.toString());
     }
     return {
       to: (f) => {
         try {
-          return do_to(f);
+          return doTo(f);
         } catch {
           return f;
         }
@@ -273,10 +273,10 @@ var DesignerSlider = class extends DesignerComponent {
         if (s.endsWith(suffix)) {
           s = s.slice(0, s.length - suffix.length);
         }
-        const has_percent = type === "%" && s.endsWith("%");
+        const hasPercent = type === "%" && s.endsWith("%");
         s = s.trim().replace(/[,_]/g, "");
         let f = parseFloat(s);
-        if (has_percent) {
+        if (hasPercent) {
           f = f / 100;
         }
         return f;
@@ -285,7 +285,7 @@ var DesignerSlider = class extends DesignerComponent {
   }
   update(props) {
     try {
-      for (let prop of ["start", "connect", "margin", "padding", "limit", "pips_values"]) {
+      for (const prop of ["start", "connect", "margin", "padding", "limit", "pips_values"]) {
         props[prop] = this.parse(props[prop], prop === "pips_values");
       }
       props.range = {min: props.min, max: props.max};

@@ -1,10 +1,12 @@
+
+
 export class DesignerComponent {
     static css = "";
     static links: string[] = [];
-    static script: string = "";
-    static loaded: boolean = false;
-    static loading: boolean = false;
-    static defaults: any = {};
+    static script = "";
+    static loaded = false;
+    static loading = false;
+    static defaults: { [keys: string]: any} = {};
     static initializing: boolean = false;
     static postLoad(): void {}
 
@@ -12,8 +14,8 @@ export class DesignerComponent {
     pyComponent: any;
     el: HTMLElement;
 
-    constructor(container: HTMLElement, pyComponent: any, el: HTMLElement) {
-        this.domNode = container;
+    constructor(domNode: HTMLElement, pyComponent: any, el: HTMLElement) {
+        this.domNode = domNode;
         this.pyComponent = pyComponent;
         this.el = el;
     }
@@ -75,7 +77,7 @@ export class DesignerComponent {
         }
     }
 
-    makeGetSets(props: object) {
+    makeGetSets(props: { [keys: string]: any}): void {
         const copyProps = { ...props };
         const self = this;
         for (let propName in copyProps) {
@@ -96,11 +98,11 @@ export class DesignerComponent {
         }
     }
 
-    update(props: object, propName?: string, val?: any) {}
+    update(props: object, propName?: string, val?: any): void {}
 
-    setProp(propName: string, val: any) {}
+    setProp(propName: string, val: any): void {}
 
-    updateSpacing({ spacing_above, spacing_below }) {
+    updateSpacing({ spacing_above , spacing_below }: { spacing_above: string, spacing_below: string, [keys: string]: any}): void {
         const stale_spacing = Array.prototype.filter.call(this.domNode.classList, (x: string) =>
             x.startsWith("anvil-spacing-")
         );
@@ -109,17 +111,17 @@ export class DesignerComponent {
         spacing_below && this.domNode.classList.add(("anvil-spacing-above-" + spacing_below) as string);
     }
 
-    updateRole({ role }) {
+    updateRole({ role }: { role: string, [keys: string]: any}) {
         const stale_role = Array.prototype.filter.call(this.domNode.classList, (x) => x.startsWith("anvil-role-"));
         this.domNode.classList.remove(...stale_role);
         role && this.domNode.classList.add("anvil-role-" + role);
     }
 
-    updateVisible({ visible }) {
+    updateVisible({ visible }: { visible: boolean, [keys: string]: any}) {
         this.domNode.classList.toggle("visible-false", !visible);
     }
 
-    getColor(color?: string, _default?: string | boolean) {
+    getColor(color?: string, _default?: string | boolean): string | undefined {
         if (color && color.startsWith("theme:")) {
             //@ts-ignore
             color = window.anvilThemeColors[color.replace("theme:", "")] || "";
@@ -145,7 +147,7 @@ export class DesignerComponent {
         return color;
     }
 
-    clearElement(el: Element) {
+    clearElement(el: HTMLElement) {
         while (el.firstElementChild) {
             el.removeChild(el.firstElementChild);
         }

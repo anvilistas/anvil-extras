@@ -1,4 +1,5 @@
-import { DesignerComponent } from "./DesignerComponent";
+import { DesignerComponent } from "./DesignerComponent.ts";
+//deno-lint-ignore
 declare var Sk: any;
 export class DesignerSwitch extends DesignerComponent {
     static css = `
