@@ -45,5 +45,5 @@ container:
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
     role: null, html: "<ul class=\"tabs\">\n  <li class=\"tab\" anvil-slot-repeat=\"\
       default\"></li>\n  <li class=\"indicator\"></li>\n</ul>\n<script type=\"module\"\
-      >\nimport {DesignerTabs} from \"./_/theme/designer.js\";\nDesignerTabs.init();\n\
+      >\nimport {DesignerTabs} from \"https://deno.land/x/anvil_extras@dev-1/js/designer_components/bundle.min.js\";\nDesignerTabs.init();\n\
       </script>\n\n\n"}
