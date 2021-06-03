@@ -5,3 +5,4 @@ __pycache__
 .vscode
 /venv/
 /build/*
+/node_modules/
