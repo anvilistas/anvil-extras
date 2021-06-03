@@ -5,37 +5,42 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil.js.window import Function as _F
+from anvil.js.window import eval as _eval
 
 __version__ = "1.3.1"
 
 from time import time
 
-js_uuid4, js_uuid_parse = _F(
-    """
-return new Promise(resolve => {
-    window.anvilExtrasResolve = resolve;
-    const s = document.createElement('script');
-    s.type = "module";
-    s.textContent = `
-        import { v4, parse } from 'https://jspm.dev/uuid@8.3.2';
-        window.anvilExtrasResolve([v4, parse]);
-    `
-    document.body.appendChild(s);
-  });
-"""
-)()
+_js_uuid = _eval("import('https://jspm.dev/uuid@8.3.2');")
+_v4, _parse, _validate = _js_uuid.v4, _js_uuid.parse, _js_uuid.validate
 
 
 class UUID(str):
+    def __init__(self, val):
+        if not _validate(val):
+            raise ValueError("badly formed hexadecimal UUID string")
+
     def __repr__(self):
         return "UUID('" + self + "')"
 
     @property
     def bytes(self):
-        return js_uuid_parse(self)
+        return _parse(self)
 
 
 def uuid4():
     """returns a uuid"""
-    return UUID(js_uuid4())
+    return UUID(_v4())
+
+
+if __name__ == "__main__":
+    x = uuid4()
+    print(repr(x))
+    print(x)
+    print(x.bytes)
+    try:
+        UUID("foo")
+    except ValueError as e:
+        print(f"Succesfully raised - {e!r}")
+    else:
+        print("Value Error Not Raised")
