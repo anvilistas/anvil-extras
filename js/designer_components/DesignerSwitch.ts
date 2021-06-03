@@ -1,6 +1,5 @@
-import { Sk } from "./designer";
 import { DesignerComponent } from "./DesignerComponent";
-
+declare var Sk: any;
 export class DesignerSwitch extends DesignerComponent {
     static css = `
 .switch,.switch *{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}

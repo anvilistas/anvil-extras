@@ -1,4 +1,4 @@
-import { DesignerComponent } from "./DesignerComponent";
+import { DesignerComponent } from "./DesignerComponent.js";
 
 export class DesignerTabs extends DesignerComponent {
     static defaults = { tab_titles: ["Tab 1", "Tab 2"], active_tab_index: 0, visible: true, align: "left" };

@@ -1,5 +1,13 @@
-import { noUiSlider, Sk, Slider } from "./designer";
 import { DesignerComponent } from "./DesignerComponent";
+import _noUiSlider, { API } from "nouislider";
+
+declare var Sk: any;
+
+export interface Slider extends HTMLElement {
+    noUiSlider: API;
+}
+
+declare var noUiSlider: typeof _noUiSlider;
 
 interface Formatter {
     to: (value: number) => string | number;
