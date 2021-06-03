@@ -105,6 +105,6 @@ container:
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
     role: null, html: '<div class="anvil-slider anvil-measure-this" anvil-slot></div>
       <script type="module">
-      import {DesignerSlider} from "https://deno.land/x/anvil_extras@dev-1/js/designer_components/bundle.min.js";
+      import {DesignerSlider} from "https://deno.land/x/anvil_extras@dev-1.1/js/designer_components/bundle.min.js";
       DesignerSlider.init();
       </script>'}

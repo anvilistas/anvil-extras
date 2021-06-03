@@ -368,7 +368,7 @@ var DesignerSwitch = class extends DesignerComponent {
       this.cb._anvil.setProp(propName, Sk.ffi.toPy(v));
     } catch (e) {
       if (propName === "checked_color") {
-        this.cbNode.style.setProperty("--r", this.getColorRGB(v, true));
+        this.cbNode.style.setProperty("--color", this.getColorRGB(v, true));
       } else if (propName === "text_pre") {
         this.textNodePre.textContent = v;
       } else {
