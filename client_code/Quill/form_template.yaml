@@ -33,13 +33,8 @@ container:
   type: HtmlTemplate
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
     role: null, html: '<div class="quill-editor" style="min-height:150px;"></div>
-
       <script type="module">
-
       import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-1/js/designer_components/bundle.min.js";
-
       DesignerQuill.init();
-
       </script>
-
       '}
