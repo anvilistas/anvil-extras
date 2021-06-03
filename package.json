@@ -2,8 +2,10 @@
   "devDependencies": {
     "@types/bootstrap-select": "^1.13.1",
     "@types/jquery": "^3.5.5",
-    "@types/nouislider": "^15.0.0",
     "@types/quill": "^2.0.8",
     "nouislider": "^15.1.1"
+  },
+  "dependencies": {
+    "esbuild": "^0.12.5"
   }
 }

@@ -1,5 +1,4 @@
 import { DesignerComponent } from "./DesignerComponent";
-
 export class DesignerMultiSelectDropDown extends DesignerComponent {
     static defaults = {
         placeholder: "None Selected",

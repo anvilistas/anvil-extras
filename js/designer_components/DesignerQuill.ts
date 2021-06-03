@@ -1,7 +1,6 @@
-// import { Quill } from "quill";
-import { Quill } from "./designer";
 import { DesignerComponent } from "./DesignerComponent";
-
+import { default as _Quill } from "quill";
+declare var Quill: typeof _Quill;
 export class DesignerQuill extends DesignerComponent {
     static defaults = {
         auto_expand: true,
