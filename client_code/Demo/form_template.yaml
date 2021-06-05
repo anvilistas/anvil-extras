@@ -297,6 +297,27 @@ components:
     col_widths: {}
     grid_position: SKFJND,KWGACE
   event_bindings: {click: slider_up_click}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Tags, font_size: null, font: '', spacing_above: large, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_3_copy_5
+  layout_properties:
+    col_widths: {}
+    grid_position: VFWOQD,VIUOBZ
+- type: form:Tags
+  properties:
+    tags: ['']
+    placeholder: +Tag
+    spacing_below: small
+    spacing_above: small
+    visible: true
+  name: tags_1
+  layout_properties: {grid_position: 'IUMFRJ,JDAZZP'}
+  event_bindings: {tags_changed: tags_1_tags_changed}
+  data_bindings:
+  - {property: tags, code: 'self.item[''tags'']', writeback: true}
 - type: Spacer
   properties: {height: 277}
   name: spacer_1_copy_3

@@ -1,0 +1,40 @@
+properties:
+- name: tags
+  type: object
+  default_value: null
+  default_binding_prop: true
+  allow_binding_writeback: true
+  binding_writeback_events: [tags_changed]
+  description: Set to a list of strings
+- {name: placeholder, type: string, default_value: +Tag, important: false}
+- {name: spacing_below, type: string, default_value: small, group: layout, important: false}
+- {name: spacing_above, type: string, default_value: small, group: layout, important: false}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true}
+is_package: true
+events:
+- {name: tags_changed, default_event: true, description: when a tag is added or removed}
+- name: tag_added
+  description: when a tag is added
+  parameters:
+  - {name: tag, description: the tag that was added}
+- name: tag_removed
+  description: when a tag is removed
+  parameters:
+  - {name: tag}
+- {name: show, description: when the component is shown}
+- {name: hide, description: when the component is hidden}
+custom_component: true
+components:
+- type: TextBox
+  properties: {role: null, align: left, hide_text: false, tooltip: '', placeholder: +Tag,
+    border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null,
+    font: '', spacing_above: none, type: text, spacing_below: small, italic: false,
+    background: '', bold: false, underline: false}
+  name: tag_input
+  layout_properties: {}
+  event_bindings: {pressed_enter: _tag_input_pressed_enter, focus: _tag_input_focus,
+    lost_focus: _tag_input_lost_focus}
+container:
+  type: FlowPanel
+  properties: {role: null, spacing: small, align: left, tooltip: '', border: '', foreground: '',
+    visible: true, spacing_above: small, spacing_below: small, background: ''}
