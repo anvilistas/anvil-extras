@@ -1,15 +1,16 @@
 properties:
 - name: chips
-  type: object
+  type: text[]
   default_value: null
-  default_binding_prop: true
   allow_binding_writeback: true
   binding_writeback_events: [chips_changed]
   description: Set to a list of strings
-- {name: placeholder, type: string, default_value: +Tag, important: false}
+  default_binding_prop: true
 - {name: spacing_below, type: string, default_value: small, group: layout, important: false}
 - {name: spacing_above, type: string, default_value: small, group: layout, important: false}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
+- {name: primary_placeholder, type: string, default_value: Enter a Tag, description: placeholder when there are no chips}
+- {name: secondary_placeholder, type: string, default_value: +Tag, description: placeholder when there are chips}
 is_package: true
 events:
 - {name: chips_changed, default_event: true, description: when a chip is added or removed}
@@ -25,6 +26,10 @@ events:
 - {name: hide, description: when the component is hidden}
 custom_component: true
 components:
+- type: form:Chip
+  properties: {text: chip, icon: null, close_icon: true, background: null, foreground: null}
+  name: temp_chip
+  layout_properties: {}
 - type: TextBox
   properties: {role: null, align: left, hide_text: false, tooltip: '', placeholder: +Tag,
     border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null,
@@ -35,6 +40,20 @@ components:
   event_bindings: {pressed_enter: _chip_input_pressed_enter, focus: _chip_input_focus,
     lost_focus: _chip_input_lost_focus}
 container:
-  type: FlowPanel
-  properties: {role: null, spacing: small, align: left, tooltip: '', border: '', foreground: '',
-    visible: true, spacing_above: small, spacing_below: small, background: ''}
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: '<div class="chips-input-placeholder"></div>
+
+      <div class="chip-slot" anvil-slot-repeat="chips"></div>
+
+
+
+      <script type="module">
+
+      import {DesignerChipsInput} from "./_/theme/new_file.js";
+
+      DesignerChipsInput.init();
+
+      </script>
+
+      '}
