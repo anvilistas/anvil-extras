@@ -22,7 +22,7 @@ class Demo(DemoTemplate):
             counter=0,
             values=self.slider.start,
             agree=self.slider_agree.value,
-            tags=["a", "b", "c"],
+            chips=["a", "b", "c"],
         )
         self.init_components(**properties)
 
@@ -130,6 +130,6 @@ class Demo(DemoTemplate):
         """This method is called when a tab is clicked"""
         self.tabs_label.text = f"{tab_title} is visible"
 
-    def tags_1_tags_changed(self, **event_args):
-        """This method is called when a tag is added or removed"""
-        print(self.item["tags"])
+    def chips_1_chips_changed(self, **event_args):
+        """This method is called when a chip is added or removed"""
+        print(self.item["chips"])
