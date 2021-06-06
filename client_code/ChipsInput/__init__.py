@@ -42,7 +42,7 @@ _style_injector.inject(
 _defaults = {
     "primary_placeholder": "",
     "secondary_placeholder": "",
-    "tags": [],
+    "chips": [],
     "visible": True,
     "spacing_above": "small",
     "spacing_below": "small",
