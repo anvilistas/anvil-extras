@@ -133,19 +133,3 @@ class Demo(DemoTemplate):
     def chips_1_chips_changed(self, **event_args):
         """This method is called when a chip is added or removed"""
         print(self.item["chips"])
-
-    def chip_3_close_click(self, **event_args):
-      print('hi')
-
-    def chip_5_click(self, **event_args):
-      print('lo')
-
-    def chip_5_focus(self, **event_args):
-      print('i have focus')
-
-    def chip_5_lost_focus(self, **event_args):
-      print('blurred')
-
-
-
-
