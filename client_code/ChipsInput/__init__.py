@@ -67,20 +67,6 @@ class ChipsInput(ChipsInputTemplate):
         properties = _defaults | properties
         self.init_components(**properties)
 
-    def _chip_input_pressed_enter(self, **event_args):
-        """This method is called when the user presses Enter in this text box"""
-        chip_text = self.chip_input.text
-        if chip_text and chip_text not in self._chips:
-            chip = Chip(text=chip_text, spacing_above="none", spacing_below="none")
-            self.add_component(chip, slot="chips")
-            chip.set_event_handler("close_click", self._chip_close_click)
-            self._chips.append(chip_text)
-            self.chip_input.text = ""
-            self._reset_placeholder()
-
-            self.raise_event("chips_changed")
-            self.raise_event("chip_added", chip=chip_text)
-
     @property
     def primary_placeholder(self):
         return self._placeholder_0
@@ -102,11 +88,6 @@ class ChipsInput(ChipsInputTemplate):
         if len(self._chips):
             self.chip_input.placeholder = value
             self._placeholder = value
-
-    def _reset_placeholder(self):
-        new_placeholder = self._placeholder_1 if self._chips else self._placeholder_0
-        if new_placeholder != self._placeholder:
-            self.chip_input.placeholder = self._placeholder = new_placeholder
 
     @property
     def chips(self):
@@ -137,12 +118,19 @@ class ChipsInput(ChipsInputTemplate):
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
 
+    ###### PRIVATE METHODS AND PROPS ######
+
     @property
     def _last_chip(self):
-        """throws an error if we have no chips so must when used must be wrapped in try/except"""
+        """throws an error if we have no chips, when used must be wrapped in try/except"""
         components = self.get_components()
         components.remove(self.chip_input)
         return components[-1]
+
+    def _reset_placeholder(self):
+        new_placeholder = self._placeholder_1 if self._chips else self._placeholder_0
+        if new_placeholder != self._placeholder:
+            self.chip_input.placeholder = self._placeholder = new_placeholder
 
     def _reset_deleting(self, val):
         try:
@@ -151,8 +139,22 @@ class ChipsInput(ChipsInputTemplate):
         except IndexError:
             pass
 
-    def _chip_input_key_down(self, js_event):
+    def _chip_input_pressed_enter(self, **event_args):
         """This method is called when the user presses Enter in this text box"""
+        chip_text = self.chip_input.text
+        if chip_text and chip_text not in self._chips:
+            chip = Chip(text=chip_text, spacing_above="none", spacing_below="none")
+            self.add_component(chip, slot="chips")
+            chip.set_event_handler("close_click", self._chip_close_click)
+            self._chips.append(chip_text)
+            self.chip_input.text = ""
+            self._reset_placeholder()
+
+            self.raise_event("chips_changed")
+            self.raise_event("chip_added", chip=chip_text)
+
+    def _chip_input_key_down(self, js_event):
+        """This method is called when on the user key down in this text box"""
         try:
             if not self.chip_input.text and js_event.key == "Backspace":
                 if not self._deleting:
