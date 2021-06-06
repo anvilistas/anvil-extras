@@ -107,7 +107,7 @@ container:
 
       <script type="module">
 
-      import {DesignerSlider} from "https://deno.land/x/anvil_extras@dev-1/js/designer_components/bundle.min.js";
+      import {DesignerSlider} from "https://deno.land/x/anvil_extras@dev-1.2.1/js/designer_components/bundle.min.js";
 
       DesignerSlider.init();
 

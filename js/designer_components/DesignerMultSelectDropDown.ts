@@ -34,4 +34,8 @@ export class DesignerMultiSelectDropDown extends DesignerComponent {
         this.picker.selectpicker("refresh");
         this.picker.selectpicker("render");
     }
+
+    get [Symbol.toStringTag]() {
+        return "MultiSelectDropDown";
+    }
 }
