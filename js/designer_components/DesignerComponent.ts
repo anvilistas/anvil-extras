@@ -68,7 +68,13 @@ export class DesignerComponent {
             container.classList.add(className);
 
             const pyComponent = $(container).data("anvilPyComponent");
-            const props = pyComponent._anvil.customPropVals;
+            let props;
+            try {
+                props = pyComponent._anvil.customPropVals;
+            } catch (e) {
+                  console.error(e);
+                return;
+            }
             const self = new this(container, pyComponent, el);
             if (props) {
                 self.makeGetSets(props);
@@ -81,7 +87,7 @@ export class DesignerComponent {
         const copyProps = { ...props };
         const self = this;
         for (let propName in copyProps) {
-            this.setProp(propName, props[propName]);
+            this.setProp(propName, props[propName], copyProps);
             Object.defineProperty(props, propName, {
                 get() {
                     return copyProps[propName];
@@ -89,7 +95,7 @@ export class DesignerComponent {
                 set(v) {
                     copyProps[propName] = v;
                     try {
-                        self.setProp(propName, v);
+                        self.setProp(propName, v, copyProps);
                         self.update({ ...copyProps }, propName, v);
                     } catch {}
                     return true;
@@ -100,7 +106,7 @@ export class DesignerComponent {
 
     update(props: object, propName?: string, val?: any): void {}
 
-    setProp(propName: string, val: any): void {}
+    setProp(propName: string, val: any, props: any): void {}
 
     updateSpacing({ spacing_above , spacing_below }: { spacing_above: string, spacing_below: string, [keys: string]: any}): void {
         const stale_spacing = Array.prototype.filter.call(this.domNode.classList, (x: string) =>

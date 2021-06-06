@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil import FlowPanel as _HtmlPanel
+from anvil import HtmlPanel as _HtmlPanel
 from anvil.js import get_dom_node as _get_dom_node
 
 from ..Chip import Chip
@@ -28,25 +28,26 @@ _style_injector.inject(
     min-width: 50px;
 }
 .anvil-extras-chips-input{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  border-bottom: 1px solid;
-  align-items: center;
-  padding-bottom: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid;
+    align-items: center;
+    padding-bottom: 4px;
 }
 
 """
 )
 
 _defaults = {
-  "primary_placeholder": "",
-  "secondary_placeholder": "",
-  "tags": [],
-  "visible": True,
-  "spacing_above": "small",
-  "spacing_below": "small",
+    "primary_placeholder": "",
+    "secondary_placeholder": "",
+    "tags": [],
+    "visible": True,
+    "spacing_above": "small",
+    "spacing_below": "small",
 }
+
 
 class ChipsInput(ChipsInputTemplate):
     def __init__(self, **properties):
@@ -59,10 +60,10 @@ class ChipsInput(ChipsInputTemplate):
 
         dom_node = self._dom_node = _get_dom_node(self)
         dom_node.classList.add("anvil-extras-chips-input")
-        dom_node.querySelector(".chips-input-placeholder").remove();
-        dom_node.querySelector("script").remove();
+        dom_node.querySelector(".chips-input-placeholder").remove()
+        dom_node.querySelector("script").remove()
         self.temp_chip.remove_from_parent()
-        
+
         properties = _defaults | properties
         self.init_components(**properties)
 
@@ -72,7 +73,7 @@ class ChipsInput(ChipsInputTemplate):
         if chip_text and chip_text not in self._chips:
             chip = Chip(text=chip_text, spacing_above="none", spacing_below="none")
             self.add_component(chip, slot="chips")
-            chip.set_event_handler('close_click', self._chip_close_click)
+            chip.set_event_handler("close_click", self._chip_close_click)
             self._chips.append(chip_text)
             self.chip_input.text = ""
             self._reset_placeholder()
@@ -88,9 +89,8 @@ class ChipsInput(ChipsInputTemplate):
     def primary_placeholder(self, value):
         self._placeholder_0 = value
         if not len(self._chips):
-          self.chip_input.placeholder = value
-          self._placeholder = value
-          
+            self.chip_input.placeholder = value
+            self._placeholder = value
 
     @property
     def secondary_placeholder(self):
@@ -100,15 +100,14 @@ class ChipsInput(ChipsInputTemplate):
     def secondary_placeholder(self, value):
         self._placeholder_1 = value
         if len(self._chips):
-          self.chip_input.placeholder = value
-          self._placeholder = value
-    
-    
+            self.chip_input.placeholder = value
+            self._placeholder = value
+
     def _reset_placeholder(self):
         new_placeholder = self._placeholder_1 if self._chips else self._placeholder_0
         if new_placeholder != self._placeholder:
-          self.chip_input.placeholder = self._placeholder = new_placeholder
-        
+            self.chip_input.placeholder = self._placeholder = new_placeholder
+
     @property
     def chips(self):
         # make sure chips is immutable
@@ -121,19 +120,19 @@ class ChipsInput(ChipsInputTemplate):
             return
         self._chips = []
         self.clear(slot="chips")
-      
+
         seen = set()
         for chip_text in value:
             if chip_text in seen or not chip_text:
                 continue
             chip = Chip(text=chip_text, spacing_above="none", spacing_below="none")
             self.add_component(chip, slot="chips")
-            chip.set_event_handler('close_click', self._chip_close_click)
+            chip.set_event_handler("close_click", self._chip_close_click)
             self._chips.append(chip_text)
             seen.add(chip_text)
 
         self._reset_placeholder()
-        
+
     visible = _HtmlPanel.visible
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
@@ -164,12 +163,12 @@ class ChipsInput(ChipsInputTemplate):
                 chip_text = _last_chip.text
                 _last_chip.remove_from_parent()
                 self._reset_placeholder()
-                
+
                 self.raise_event("chips_changed")
                 self.raise_event("chip_removed", chip=chip_text)
-                
-                self._set_focus(self._last_chip, True)            
-                
+
+                self._set_focus(self._last_chip, True)
+
             elif self._deleting:
                 self._reset_deleting(False)
                 if js_event.key == "Tab":
@@ -185,7 +184,7 @@ class ChipsInput(ChipsInputTemplate):
         """This method is called when the TextBox loses focus"""
         self._dom_node.style.borderBottom = "1px solid"
         self._reset_deleting(False)
-        
+
     def _chip_close_click(self, sender, **event_args):
         chips = self._chips
         chip_text = sender.text
@@ -199,7 +198,3 @@ class ChipsInput(ChipsInputTemplate):
         chip.background = _primary if val else ""
         chip.chip_label.foreground = "#fff" if val else ""
         chip.close_link.foreground = "#fff" if val else ""
-        
-        
-
-
