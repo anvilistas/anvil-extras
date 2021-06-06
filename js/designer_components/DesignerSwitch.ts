@@ -47,7 +47,7 @@ input[type=checkbox]:not(:disabled) ~ .lever:active:before,input[type=checkbox]:
         this.textNodePost = textNodePost;
     }
 
-    setProp(propName: string, v: any) {
+    setProp(propName: string, v: any, props: any) {
         try {
             this.cb._anvil.setProp(propName, Sk.ffi.toPy(v));
         } catch (e) {
