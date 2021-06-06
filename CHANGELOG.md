@@ -6,6 +6,8 @@
   https://github.com/anvilistas/anvil-extras/pull/64
 * uuid4 in the browser
   https://github.com/anvilistas/anvil-extras/pull/67
+* Chip Component and ChipsInput Component
+  https://github.com/anvilistas/anvil-extras/pull/68
 
 ## Changes
 * Improved dynamic designer support for Switch, MultiSelectDropDown, Tabs, Quill and Slider
