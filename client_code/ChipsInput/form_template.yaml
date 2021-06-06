@@ -50,7 +50,7 @@ container:
 
       <script type="module">
 
-      import {DesignerChipsInput} from "./_/theme/new_file.js";
+      import {DesignerChipsInput} from "https://deno.land/x/anvil_extras@dev-1.2/js/designer_components/bundle.min.js";
 
       DesignerChipsInput.init();
 
