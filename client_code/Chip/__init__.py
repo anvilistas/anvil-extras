@@ -12,7 +12,7 @@ from ..session import style_injector as _style_injector
 from ..utils._component_helpers import _spacing_property
 from ._anvil_designer import ChipTemplate
 
-__version__ = "1.3.1"
+__version__ = "1.4.0"
 
 _style_injector.inject(
     """.anvil-extras-chip{

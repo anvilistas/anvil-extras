@@ -7,7 +7,7 @@
 from ..utils import auto_refreshing
 from ._anvil_designer import DemoTemplate
 
-__version__ = "1.3.1"
+__version__ = "1.4.0"
 
 
 #### AUTO REFRESING - the item property updates components
