@@ -1,0 +1,28 @@
+container:
+  type: TextBox
+  properties: {}
+  event_bindings: {show: _on_show, hide: _on_hide}
+is_package: true
+custom_component: true
+properties:
+- {name: suggestions, type: 'text[]', default_value: null}
+- {name: placeholder, type: string, default_value: ''}
+- name: text
+  type: string
+  default_value: ''
+  allow_binding_writeback: true
+  default_binding_prop: true
+  binding_writeback_events: [suggestion_clicked]
+  group: text
+  important: true
+- {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true}
+- {name: spacing_above, type: string, default_value: small, group: layout, important: false}
+- {name: spacing_below, type: string, default_value: small, group: layout, important: false}
+- {name: suggest_if_empty, type: boolean, default_value: false}
+events:
+- {name: change}
+- {name: suggestion_clicked}
+- {name: pressed_enter, default_event: true}
+- {name: focus}
+- {name: lost_focus}
