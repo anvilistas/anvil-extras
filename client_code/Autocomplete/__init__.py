@@ -25,6 +25,7 @@ _style_injector.inject(
     padding: 0 !important;
 }
 .anvil-role-autocomplete {
+    position: absolute;
     transform: scaleX(1) scaleY(1);
     opacity: 1;
     transform-origin: 0px 0px;
@@ -49,7 +50,6 @@ _style_injector.inject(
 .anvil-role-autocomplete a:hover, .anvil-role-autocomplete a.anvil-role-active {
     background-color: #eee;
 }
-
 """
 )
 
@@ -72,7 +72,6 @@ class Autocomplete(AutocompleteTemplate):
             visible=False,
         )
         self._lp_node = _get_dom_node(self._lp)
-        self._lp_node.style.position = "absolute"
 
         dom_node = self._dom_node = _get_dom_node(self)
         # use capture for keydown so we can get the event before anvil does
@@ -81,9 +80,10 @@ class Autocomplete(AutocompleteTemplate):
         dom_node.addEventListener("focus", self._on_focus)
         dom_node.addEventListener("blur", self._on_blur)
 
-        # keep the same function so that we can remove it from the _window resize event
+        # ensure the same method is passed to $(window).off('resize')
         self._reset_position = self._reset_position
 
+    ###### PRIVATE METHODS ######
     def _populate(self):
         prev_active = self._active
         self._reset_autocomplete()
@@ -139,18 +139,17 @@ class Autocomplete(AutocompleteTemplate):
     def _set_text(self, sender=None, *e, **e_args):
         if sender is not None:
             self.text = sender.text
-            self._reset_autocomplete(True)
+            self._reset_autocomplete()
             self.raise_event("suggestion_clicked")
         elif self._active is not None:
             self.text = self._active.text
-            self._reset_autocomplete(True)
+            self._reset_autocomplete()
 
-    def _reset_autocomplete(self, hide=False):
+    def _reset_autocomplete(self):
         if self._active is not None:
             self._active.role = None
         self._active = None
-        if hide:
-            self._lp.visible = False
+        self._lp.visible = False
         self._active_nodes = []
         self._active_index = -1
         self._lp_node.scrollTop = 0
@@ -163,7 +162,7 @@ class Autocomplete(AutocompleteTemplate):
         lp_node.style.top = f"{box.bottom - body.top + 5}px"
         lp_node.style.width = f"{box.width}px"
 
-    ###### JS EVENTS ######
+    ###### INTERNAL EVENTS ######
     def _on_keydown(self, e):
         key = e.key
         if key in ("ArrowDown", "ArrowUp"):
@@ -207,7 +206,7 @@ class Autocomplete(AutocompleteTemplate):
 
     def _on_blur(self, e):
         """This method is called when the TextBox loses focus"""
-        self._reset_autocomplete(True)
+        self._reset_autocomplete()
 
     def _on_show(self, **e_args):
         """This method is called when the TextBox is shown on the screen"""
