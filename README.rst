@@ -20,6 +20,8 @@ Features
   .. image:: images/multi_select.gif
   .. image:: images/quill.gif
   .. image:: images/sliders.gif
+  .. image:: images/chips.gif
+  .. image:: images/autocomplete.gif
 
 - `Publish/Subscribe Messaging <https://anvil-extras.readthedocs.io/en/latest/guides/modules/messaging.html>`_
 - `Dynamic Menu Construction <https://anvil-extras.readthedocs.io/en/latest/guides/modules/navigation.html>`_

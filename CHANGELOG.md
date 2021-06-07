@@ -1,5 +1,4 @@
-
-# Unreleased Changes
+# v1.4 07-June-2021
 
 ## New Features
 * Tabs Component
@@ -8,6 +7,8 @@
   https://github.com/anvilistas/anvil-extras/pull/67
 * Chip Component and ChipsInput Component
   https://github.com/anvilistas/anvil-extras/pull/68
+* AutoComplete Component
+  https://github.com/anvilistas/anvil-extras/pull/70
 
 ## Changes
 * Improved dynamic designer support for Switch, MultiSelectDropDown, Tabs, Quill and Slider
