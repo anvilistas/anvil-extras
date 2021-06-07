@@ -23,6 +23,7 @@ class Demo(DemoTemplate):
             values=self.slider.start,
             agree=self.slider_agree.value,
             chips=["a", "b", "c"],
+            text="",
         )
         self.init_components(**properties)
 
@@ -133,3 +134,6 @@ class Demo(DemoTemplate):
     def chips_1_chips_changed(self, **event_args):
         """This method is called when a chip is added or removed"""
         print(self.item["chips"])
+
+    def autocomplete_event(self, event_name, **event_args):
+        print(event_name, self.item["text"])

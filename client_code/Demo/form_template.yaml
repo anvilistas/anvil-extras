@@ -202,6 +202,34 @@ components:
   event_bindings: {text_change: quill_text_change}
 - type: Label
   properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Autocomplete Component, font_size: null, font: '', spacing_above: large,
+    icon_align: left, spacing_below: small, italic: false, background: '', bold: true,
+    underline: false, icon: ''}
+  name: label_4_copy_3
+  layout_properties:
+    col_widths: {}
+    grid_position: WJJWDU,YMUSBV
+- type: form:Autocomplete
+  properties:
+    suggestions: [Anvil, AT&T, Adobe, Airbnb, Alphabet, Amazon, Apple, Broadcom, Charter Communications,
+      Cisco, Comcast, Facebook, IBM, Intel, Intuit, Mastercard, Microsoft, Netflix,
+      Nvidia, Oracle, PayPal, Qualcomm, Salesforce, ServiceNow, Square, T-Mobile US,
+      Texas Instruments, Verizon, Visa, Zoom]
+    placeholder: ''
+    text: ''
+    enabled: true
+    visible: true
+    spacing_above: small
+    spacing_below: small
+    suggest_if_empty: true
+  name: autocomplete_1
+  layout_properties: {grid_position: 'YVFANF,BPSWYI'}
+  event_bindings: {pressed_enter: autocomplete_event, lost_focus: autocomplete_event,
+    focus: autocomplete_event, suggestion_clicked: autocomplete_event}
+  data_bindings:
+  - {property: text, code: 'self.item[''text'']', writeback: true}
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
     text: Slider Component, font_size: null, font: '', spacing_above: large, icon_align: left,
     spacing_below: small, italic: false, background: '', bold: true, underline: false,
     icon: ''}
