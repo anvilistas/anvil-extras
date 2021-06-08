@@ -3,12 +3,7 @@ import { DesignerComponent } from "./DesignerComponent.ts";
 export class DesignerTabs extends DesignerComponent {
     static defaults = { tab_titles: ["Tab 1", "Tab 2"], active_tab_index: 0, visible: true, align: "left" };
 
-    static css = `.tabs{position:relative;overflow-x:auto;overflow-y:hidden;height:48px;width:100%;background-color:var(--background, inherit);margin:0 auto;white-space:nowrap;padding:0;display:flex}
-.tabs .tab{flex-grow:1;display:inline-block;text-align:center;line-height:48px;height:48px;padding:0;margin:0;text-transform:uppercase}
-.tabs .tab a{color:rgba(var(--color),0.7);display:block;width:100%;height:100%;padding:0 24px;font-size:14px;text-overflow:ellipsis;overflow:hidden;-webkit-transition:color 0.28s ease, background-color 0.28s ease;transition:color 0.28s ease, background-color 0.28s ease}
-.tabs .tab a:focus,.tabs .tab a:focus.active{background-color:rgb(var(--color), 0.2);outline:none}
-.tabs .tab a.active,.tabs .tab a:hover{background-color:transparent;color:rgb(var(--color))}
-.tabs .indicator{position:absolute;bottom:0;height:3px;background-color:rgb(var(--color), 0.4);will-change:left, right}`;
+    static css = `.anvil-extras-tabs.anvil-role-card{border-bottom-left-radius:0;border-bottom-right-radius:0;margin-bottom:-1px}.tabs{position:relative;overflow-x:auto;overflow-y:hidden;height:48px;width:100%;background-color:var(--background, inherit);margin:0 auto;white-space:nowrap;padding:0;display:flex;z-index:1}.tabs .tab{flex-grow:1;display:inline-block;text-align:center;line-height:48px;height:48px;padding:0;margin:0;text-transform:uppercase}.tabs .tab a{color:rgba(var(--color),0.7);display:block;width:100%;height:100%;padding:0 24px;font-size:14px;text-overflow:ellipsis;overflow:hidden;-webkit-transition:color 0.28s ease, background-color 0.28s ease;transition:color 0.28s ease, background-color 0.28s ease}.tabs .tab a:focus,.tabs .tab a:focus.active{background-color:rgb(var(--color), 0.2);outline:none}.tabs .tab a.active,.tabs .tab a:hover{background-color:transparent;color:rgb(var(--color))}.tabs .indicator{position:absolute;bottom:0;height:3px;background-color:rgb(var(--color), 0.4);will-change:left, right}`;
 
     static init() {
         super.init(".anvil-container .tabs", "anvil-extras-designer");

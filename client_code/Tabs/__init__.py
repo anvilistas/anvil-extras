@@ -19,6 +19,11 @@ __version__ = "1.4.0"
 
 session.style_injector.inject(
     """
+.anvil-extras-tabs.anvil-role-card {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-bottom: -1px;
+}
 .tabs {
     position: relative;
     overflow-x: auto;
@@ -30,6 +35,7 @@ session.style_injector.inject(
     white-space: nowrap;
     padding: 0;
     display: flex;
+    z-index: 1;
 }
 .tabs .tab {
     flex-grow: 1;
@@ -104,8 +110,7 @@ class Tabs(TabsTemplate):
     def __init__(self, **properties):
         #### set up dom nodes
         dom_node = self._dom_node = anvil.js.get_dom_node(self)
-        dom_node.style.paddingTop = 0
-        dom_node.style.paddingBottom = 0
+        dom_node.style.padding = "0"
         dom_node.classList.add("anvil-extras-tabs")
 
         self._tabs_node = dom_node.querySelector(".tabs")
