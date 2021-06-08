@@ -32,11 +32,8 @@ Features
 
 Installation
 ------------
-Clone the libary to your account and add it as a dependency to your app.
-
-   .. image:: https://anvil.works/img/forum/copy-app.png
-      :height: 40px
-      :target: https://anvil.works/build#clone:C6ZZPAPN4YYF5NVJ=UGGCKFPRVZ7ELJH6RRZTHV6Y
+Add the library as a third party dependency to your app using app id C6ZZPAPN4YYF5NVJ.
+Full instructions can be found in the `Docs <https://anvil-extras.readthedocs.io/en/latest/guides/installation.html>`_
 
 Contributing
 ------------
