@@ -11,3 +11,6 @@ Anvil-Extras is intended to be used as a dependency for other Anvil applications
 For the published version, the dependency will be automatically updated as new versions are released.
 On the development version, the update will occur whenever we merge new changes into the library's code base.
 
+Whilst we wouldn't intentionally merge broken code into the development version, you should
+consider it unstable and not suitable for production use.
+
