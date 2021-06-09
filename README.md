@@ -15,29 +15,20 @@ Full instructions can be found in the [Docs](https://anvil-extras.readthedocs.io
 
 ## Features
 
+#### Components
 
+| | | | |
+|-|:----:|-|:----:|
+| Pill Message | <img src="images/message_pill.png" alt="message pill" width="300"/> | Progress Bars | <img src="images/progress_bars.gif" alt="progress_bars" width="300"/> |
+| Auto Refreshing | <img alt="auto refreshing" src="/images/auto_refresh.gif" width="300"/> | Tabs | <img alt="tabs" src="images/tabs.gif" width="300"/> | Switch | <img alt="switch" src="images/switch.gif" width="300"/> |
+| Multi Select Dropdown | <img alt="multi select" src="images/multi_select.gif" width="300"/> | Quill Editor | <img alt="quill" src="images/quill.gif" width="300"/> |
+| Sliders | <img alt="sliders" src="images/sliders.gif" width="300"/> | Chips | <img alt="chips" src="images/chips.gif" width="300"/> |
+| Autocomplete | <img alt="auto complete" src="images/autocomplete.gif" width="300"/> | | |
 
-<details>
-  <summary>Componenents</summary>
-
-| | |
-|-|----|
-| Pill Message | ![message_pill](docs/images/message_pill.png) |
-| Progress Bars | ![progress bars](images/progress_bars.gif) |
-| Auto Refreshing | ![auto refreshing](images/auto_refresh.gif) |
-| Tabs | ![tabs](images/tabs.gif) |
-| Switch | ![switch](images/switch.gif) |
-| Multi Select Dropdown | ![multi select](images/multi_select.gif) |
-| Quill Editor | ![quill](images/quill.gif) |
-| Sliders | ![sliders](images/sliders.gif) |
-| Chips | ![chips](images/chips.gif) |
-| Autocomplete | ![auto complete](images/autocomplete.gif) |
-
-</details>
 
 <br>
 
-**Modules**
+#### Modules
 
 - [Publish/Subscribe Messaging](https://anvil-extras.readthedocs.io/en/latest/guides/modules/messaging.html)
 - [Dynamic Menu Construction](https://anvil-extras.readthedocs.io/en/latest/guides/modules/navigation.html)
