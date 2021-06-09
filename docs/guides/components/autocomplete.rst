@@ -18,4 +18,4 @@ Events
 
 :suggestion_clicked:
 
-    When a suggestion is clicked. If a suggestion is selected with enter the ``presssed_enter`` event fires instead.
+    When a suggestion is clicked. If a suggestion is selected with enter the ``pressed_enter`` event fires instead.
