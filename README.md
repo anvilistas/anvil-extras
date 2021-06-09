@@ -19,7 +19,7 @@ Full instructions can be found in the [Docs](https://anvil-extras.readthedocs.io
 
 | | | | |
 |-|:----:|-|:----:|
-| Pill Message | <img src="images/message_pill.png" alt="message pill" width="300"/> | Progress Bars | <img src="images/progress_bars.gif" alt="progress_bars" width="300"/> |
+| Message Pill | <img src="images/message_pill.png" alt="message pill" width="300"/> | Progress Bars | <img src="images/progress_bars.gif" alt="progress_bars" width="300"/> |
 | Auto Refreshing | <img alt="auto refreshing" src="/images/auto_refresh.gif" width="300"/> | Tabs | <img alt="tabs" src="images/tabs.gif" width="300"/> | Switch | <img alt="switch" src="images/switch.gif" width="300"/> |
 | Multi Select Dropdown | <img alt="multi select" src="images/multi_select.gif" width="300"/> | Quill Editor | <img alt="quill" src="images/quill.gif" width="300"/> |
 | Sliders | <img alt="sliders" src="images/sliders.gif" width="300"/> | Chips | <img alt="chips" src="images/chips.gif" width="300"/> |
