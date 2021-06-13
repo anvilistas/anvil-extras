@@ -1,3 +1,8 @@
+# Unreleased
+
+## Changes
+* Quill editor supports a toolbar and theme set at runtime.
+  https://github.com/anvilistas/anvil-extras/pull/80
 # v1.4 07-June-2021
 
 ## New Features
