@@ -40,30 +40,76 @@ _defaults = {
 }
 
 
+def _quill_init_prop(propname):
+    def getter(self):
+        return self._props[propname]
+
+    def setter(self, val):
+        self._props[propname] = val
+        self._init_quill()
+
+    return property(getter, setter)
+
+
 class Quill(QuillTemplate):
     _quill = None  # otherwise we get a recursion error from __getattr__
 
     def __init__(self, **properties):
         # Set Form properties and Data Bindings.
-        dom_node = self._dom_node = _get_dom_node(self)
-        self._rt = None
-        ## remove html that was used for the designer - prevents script tags loading
-        while dom_node.firstElementChild:
-            dom_node.removeChild(dom_node.firstElementChild)
+        self._dom_node = _get_dom_node(self)
         self._spacer = _Spacer()
         self._el = _get_dom_node(self._spacer)
+        self._quill = None
+        self._rt = None
+        self._min_height = None
+
+        def click_guard(e):
+            q = self._quill
+            if not q.hasFocus():
+                q.focus()
+                q.setSelection(len(q.getText()))
+
+        self._el.addEventListener("click", click_guard)
+
+        self._props = props = _defaults | properties
+        props_to_init = {
+            key: props[key]
+            for key in (
+                "height",
+                "content",
+                "auto_expand",
+                "spacing_above",
+                "spacing_below",
+            )
+        }
+        init_if_false = {
+            key: props[key] for key in ("enabled", "visible") if not props[key]
+        }
+        self._init_quill()
+        self.init_components(**props_to_init, **init_if_false)
+
+    @staticmethod
+    def _clear_elements(el):
+        while el.firstElementChild:
+            el.removeChild(el.firstElementChild)
+
+    def _init_quill(self):
+        html = self.get_html()
+
+        self._spacer.remove_from_parent()
+        self._clear_elements(self._dom_node)
+        self._clear_elements(self._el)
         self.add_component(self._spacer)
 
-        properties = _defaults | properties
-
         # these properties have to be set for initialization and cannot be changed
+        # If they are changed at runtime we need to create a new quill object
         q = self._quill = _Quill(
             self._el,
             {
-                "modules": {"toolbar": properties["toolbar"]},
-                "theme": properties["theme"],
-                "placeholder": properties["placeholder"],
-                "readOnly": properties["readonly"],
+                "modules": {"toolbar": self._props["toolbar"]},
+                "theme": self._props["theme"],
+                "placeholder": self._props["placeholder"],
+                "readOnly": self._props["readonly"],
                 "bounds": self._dom_node,
             },
         )
@@ -82,14 +128,8 @@ class Quill(QuillTemplate):
             ),
         )
 
-        def click_guard(e):
-            if not q.hasFocus():
-                q.focus()
-                q.setSelection(len(q.getText()))
-
-        self._el.addEventListener("click", click_guard)
-        # Any code you write here will run when the form opens.
-        self.init_components(**properties)
+        if html:
+            self.set_html(html)
 
     def __getattr__(self, name):
         init, *rest = name.split("_")
@@ -99,12 +139,12 @@ class Quill(QuillTemplate):
     #### Properties ####
     @property
     def enabled(self):
-        return self._enabled
+        return self._props["enabled"]
 
     @enabled.setter
     def enabled(self, value):
         self._quill.enable(bool(value))
-        self._enabled = value
+        self._props["enabled"] = value
 
     @property
     def content(self):
@@ -120,19 +160,20 @@ class Quill(QuillTemplate):
 
     @property
     def auto_expand(self):
-        return self._auto_expand
+        return self._props["auto_expand"]
 
     @auto_expand.setter
     def auto_expand(self, value):
-        self._auto_expand = value
+        self._props["auto_expand"] = value
         self._spacer.height = "auto" if value else self._min_height
 
     @property
     def height(self):
-        return self._min_height
+        return self._props["height"]
 
     @height.setter
     def height(self, value):
+        self._props["height"] = value
         if isinstance(value, (int, float)) or value.isdigit():
             value = f"{value}px"
         self._el.style.minHeight = value
@@ -141,6 +182,12 @@ class Quill(QuillTemplate):
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
+
+    #### QUILL INIT PROPS ####
+    toolbar = _quill_init_prop("toolbar")
+    readonly = _quill_init_prop("readonly")
+    theme = _quill_init_prop("theme")
+    placeholder = _quill_init_prop("placeholder")
 
     #### ANVIL METHODS ####
     def get_markdown(self):
@@ -153,7 +200,7 @@ class Quill(QuillTemplate):
         """convert the contents of the quill object to html which can be used
         as the content to a RichText editor in 'restricted_html' format
         Can also be used as a classmethod by calling it with a simple object Quill.to_html(content)"""
-        return self._quill.root.innerHTML
+        return self._quill and self._quill.root.innerHTML
 
     def set_html(self, html):
         """set the content to html. This method sanitizes the html
@@ -161,4 +208,4 @@ class Quill(QuillTemplate):
         self._rt = self._rt or _RT(visible=False, format="restricted_html")
         self._rt.content = html
         html = _get_dom_node(self._rt).innerHTML
-        self._quill.clipboard.dangerouslyPasteHTML(html)
+        self._quill.root.innerHTML = html
