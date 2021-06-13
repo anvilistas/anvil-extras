@@ -33,7 +33,7 @@ Properties
 
 :readonly: Boolean
 
-    Check the Quill docs. This property cannot be updated after the Quill editor has been instantiated.
+    Check the Quill docs.
 
 :spacing_above: String
 
@@ -45,12 +45,11 @@ Properties
 
 :theme: String
 
-    Quill supports ``"snow"`` or ``"bubble"`` theme. (Cannot be updated after instantiation).
+    Quill supports ``"snow"`` or ``"bubble"`` theme.
 
 :toolbar: Boolean or Object
 
-    Check the Quill docs. This property cannot be updated after the Quill editor has been instantiated.
-    If you want to use an Object you should construct the Quill instance in code.
+    Check the Quill docs. If you want to use an Object you can set this at runtime. See quill docs for examples.
 
 :visible: Boolean
 
