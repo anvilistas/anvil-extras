@@ -1,4 +1,5 @@
 [![Documentation Status](https://readthedocs.org/projects/anvil-extras/badge/)](https://anvil-extras.readthedocs.io/en/latest/)
+[![Gitter](https://badges.gitter.im/anvilistas/community.svg)](https://gitter.im/anvilistas/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Anvil Extras
 
