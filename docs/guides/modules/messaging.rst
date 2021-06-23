@@ -24,7 +24,7 @@ with the following content:
 
 .. code-block:: python
 
-    from .messaging import Publisher
+    from anvil_extras.messaging import Publisher
 
     publisher = Publisher()
 
@@ -99,7 +99,7 @@ You can change this default behaviour when you first create your publisher insta
 
 .. code-block:: python
 
-    from .messaging import Publisher
+    from anvil_extras.messaging import Publisher
     publisher = Publisher(with_logging=False)
     )
 
