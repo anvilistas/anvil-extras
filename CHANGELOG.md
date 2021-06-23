@@ -3,6 +3,8 @@
 ## Changes
 * Quill editor supports a toolbar and theme set at runtime.
   https://github.com/anvilistas/anvil-extras/pull/80
+* Fixed the publisher.unsubscribe method in the Messaging module, making it functional
+  https://github.com/anvilistas/anvil-extras/pull/92
 # v1.4 07-June-2021
 
 ## New Features
