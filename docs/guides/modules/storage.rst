@@ -1,5 +1,5 @@
 :mod:`storage` --- wrapper around window.Storage
-=====================================================
+================================================
 
 
 Introduction
@@ -45,11 +45,8 @@ Change the theme at startup
 
 
 
-local_storage and session_storage objects
------------------------------------------
-
-.. object:: session_storage
-    session_storage is a dictionary like object.
+local_storage
+-------------
 
 .. object:: local_storage
 
