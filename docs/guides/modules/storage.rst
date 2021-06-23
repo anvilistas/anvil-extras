@@ -1,19 +1,18 @@
-:mod:`storage` --- wrapper around window.Storage
-================================================
-
+Storage
+=======
 
 Introduction
 ------------
-Browsers have a localStorage and a sessionStorage object.
-The browser localStorage object persists between browser sessions, where the sessionStorage object does not.
+Browsers have a ``localStorage`` object that can store data between browser sessions
 
-The :object:`local_storage` object provides a convenient dictionary like wrapper around the javacript localStorage object.
-Similary the :object:`session_storage` provides a wrapper around the sessionStorage object.
+The anvil_extras :mod:`storage` module provides :const:`local_storage` object, which is a
+convenient dictionary like wrapper around the native browser ``localStorage`` object.
 
+The :attr:`local_storage` object can store data that persists accross browser sessions and is also available offline.
+It could be used to create an entirely offline todo app, or to store simple data across sessions.
 
-The :object:`local_storage` object is also available offline and may be convenient for storing data.
-For example - it could be used to create an entirely offline todo app, or to store simple data across sessions.
-
+(Browsers also have a ``sessionStorage`` object, and an equivalent :const:`session_storage`
+object is also available in the :mod:`storage` module.)
 
 Usage
 -----
@@ -22,6 +21,7 @@ Store user preference
 +++++++++++++++++++++
 
 .. code-block:: python
+
     from anvil_extras.storage import local_storage
 
     class UserPreferences(UserPreferencesTemplate):
@@ -36,6 +36,7 @@ Change the theme at startup
 +++++++++++++++++++++++++++
 
 .. code-block:: python
+
     ## inside a startup module
     from anvil_extras.storage import local_storage
 
@@ -45,8 +46,8 @@ Change the theme at startup
 
 
 
-local_storage
--------------
+API
+---
 
 .. object:: local_storage
 
@@ -54,16 +55,16 @@ local_storage
 
    .. describe:: list(local_storage)
 
-      Return a list of all the keys used in :object:`local_storage`.
+      Return a list of all the keys used in :attr:`local_storage`.
 
    .. describe:: len(local_storage)
 
-      Return the number of items in :object:`local_storage`.
+      Return the number of items in :attr:`local_storage`.
 
    .. describe:: local_storage[key]
 
-      Return the item of :object:`local_storage` with key *key*.  Raises a :exc:`KeyError` if *key* is
-      not in :object:`local_storage`. Raises a :exc:`TypeError` if *key* is not a string.
+      Return the item of :attr:`local_storage` with key *key*.  Raises a :exc:`KeyError` if *key* is
+      not in :attr:`local_storage`. Raises a :exc:`TypeError` if *key* is not a string.
 
    .. describe:: local_storage[key] = value
 
@@ -71,11 +72,11 @@ local_storage
 
    .. describe:: del local_storage[key]
 
-      Remove ``local_storage[key]`` from :object:`local_storage`. :exc:`KeyError` raised is NOT raised if the key is not in :object:`local_storage`.
+      Remove ``local_storage[key]`` from :attr:`local_storage`.
 
    .. describe:: key in local_storage
 
-      Return ``True`` if :object:`local_storage` has a key *key*, else ``False``.
+      Return ``True`` if :attr:`local_storage` has a key *key*, else ``False``.
 
    .. describe:: iter(local_storage)
 
@@ -84,25 +85,25 @@ local_storage
 
    .. method:: clear()
 
-      Remove all items from the dictionary.
+      Remove all items from the :attr:`local storage`.
 
    .. method:: get(key[, default])
 
-      Return the value for *key* if *key* is in :object:`local_storage`, else *default*.
+      Return the value for *key* if *key* is in :attr:`local_storage`, else *default*.
       If *default* is not given, it defaults to ``None``, so that this method
       never raises a :exc:`KeyError`.
 
    .. method:: items()
 
-      Return a map iterator of :object:`local_storage`'s (``[key, value]`` pairs).
+      Return a map iterator of :attr:`local_storage`'s ``(key, value)`` pairs.
 
    .. method:: keys()
 
-      Return a map iterator of the dictionary's keys.
+      Return a map iterator of :attr:`local storage`'s keys.
 
    .. method:: pop(key[, default])
 
-      If *key* is in :object:`local_storage`, remove it and return its value, else return
+      If *key* is in :attr:`local_storage`, remove it and return its value, else return
       *default*.  If *default* is not given, it defaults to ``None``, so that this method
       never raises a :exc:`KeyError`.
 
@@ -112,14 +113,14 @@ local_storage
 
    .. method:: update([other])
 
-      Update the :object:`local_storage` with the key/value pairs from *other*, overwriting
+      Update the :attr:`local_storage` with the key/value pairs from *other*, overwriting
       existing keys.  Return ``None``.
 
       :meth:`update` accepts either a dictionary object or an iterable of
       key/value pairs (as tuples or other iterables of length two).  If keyword
-      arguments are specified, :object:`local_storage` is then updated with those
-      key/value pairs: ``d.update(red=1, blue=2)``.
+      arguments are specified, :attr:`local_storage` is then updated with those
+      key/value pairs: ``local_storage.update(red=1, blue=2)``.
 
    .. method:: values()
 
-      Return a map iterator of :object:`local_storage`'s values.
+      Return a map iterator of :attr:`local_storage`'s values.
