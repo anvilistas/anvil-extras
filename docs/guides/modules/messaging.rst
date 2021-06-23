@@ -24,7 +24,7 @@ with the following content:
 
 .. code-block:: python
 
-    from .messaging import Publisher
+    from anvil_extras.messaging import Publisher
 
     publisher = Publisher()
 
@@ -77,7 +77,7 @@ world' messages:
             self.init_components(**properties)
 
         def general_messages_handler(self, message):
-            if message.title = "Hello world":
+            if message.title == "Hello world":
                 print(message.title)
 
 You can unsubscribe from a channel using the publisher's `unsubscribe` method.
@@ -99,7 +99,7 @@ You can change this default behaviour when you first create your publisher insta
 
 .. code-block:: python
 
-    from .messaging import Publisher
+    from anvil_extras.messaging import Publisher
     publisher = Publisher(with_logging=False)
     )
 
