@@ -1,5 +1,9 @@
 # Unreleased
 
+## New Features
+* `local_storage` - wrapper around the browser localStorage object
+  https://github.com/anvilistas/anvil-extras/pull/93
+
 ## Changes
 * Quill editor supports a toolbar and theme set at runtime.
   https://github.com/anvilistas/anvil-extras/pull/80
