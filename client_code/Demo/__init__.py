@@ -17,7 +17,7 @@ class Demo(DemoTemplate):
         self.init_custom_slider_formatter()
 
         self.progress = 0
-        self.item = self.default_item = dict(
+        self.default_item = dict(
             tally=100,
             counter=0,
             values=self.slider.start,
@@ -25,6 +25,7 @@ class Demo(DemoTemplate):
             chips=["a", "b", "c"],
             text="",
         )
+        self.item = self.default_item.copy()
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
@@ -43,7 +44,7 @@ class Demo(DemoTemplate):
         self.item["counter"] += 1
 
     def reset_button_click(self, **event_args):
-        self.item = self.default_item
+        self.item = self.default_item.copy()
 
     ###### MULTI SELECT ######
     def multi_select_drop_down_1_change(self, **event_args):
