@@ -51,7 +51,7 @@ class Publisher:
             with_logging = self.with_logging
         if channel in self.subscribers:
             self.subscribers[channel] = [
-                s for s in self.subscribers[channel] if s.subscriber == subscriber
+                s for s in self.subscribers[channel] if s.subscriber != subscriber
             ]
         if with_logging:
             print(f"Removed subscriber from {channel} channel")
