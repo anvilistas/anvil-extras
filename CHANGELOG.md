@@ -9,6 +9,11 @@
   https://github.com/anvilistas/anvil-extras/pull/80
 * Fixed the publisher.unsubscribe method in the Messaging module, making it functional
   https://github.com/anvilistas/anvil-extras/pull/92
+
+## Bug Fixes
+* Autocompleter focus method doesn't trigger autocomplete suggestions
+  https://github.com/anvilistas/anvil-extras/issues/94
+
 # v1.4 07-June-2021
 
 ## New Features

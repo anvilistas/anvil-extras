@@ -77,7 +77,7 @@ class Autocomplete(AutocompleteTemplate):
         # use capture for keydown so we can get the event before anvil does
         dom_node.addEventListener("keydown", self._on_keydown, True)
         dom_node.addEventListener("input", self._on_input)
-        dom_node.addEventListener("focus", self._on_focus)
+        dom_node.addEventListener("focus", self._on_focus, True)
         dom_node.addEventListener("blur", self._on_blur)
 
         # ensure the same method is passed to $(window).off('resize')
