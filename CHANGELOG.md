@@ -13,6 +13,8 @@
 ## Bug Fixes
 * Autocompleter focus method doesn't trigger autocomplete suggestions
   https://github.com/anvilistas/anvil-extras/issues/94
+* Improve error reporting when passing an invalid content object to a popover
+  https://github.com/anvilistas/anvil-extras/issues/90
 
 # v1.4 07-June-2021
 

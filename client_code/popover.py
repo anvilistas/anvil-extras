@@ -45,10 +45,16 @@ def popover(
 
     if the content is a form then the form will have an attribute self.popper added
     """
-    html = not isinstance(content, str)
-    if html:
+    if isinstance(content, str):
+        html = False
+    elif isinstance(content, _anvil.Component):
+        html = True
         content.popper = self  # add the popper to the content form
         content = _anvil.js.get_dom_node(content)  # get the dom node
+    else:
+        raise TypeError(
+            f"content to a popover should be either a str or anvil Component, not {type(content).__name__}"
+        )
 
     max_width = _default_max_width if max_width is None else max_width
 
