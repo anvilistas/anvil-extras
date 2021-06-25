@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/pull/80
 * Fixed the publisher.unsubscribe method in the Messaging module, making it functional
   https://github.com/anvilistas/anvil-extras/pull/92
+* Fix indeterminate progress bar not always displaying
+  https://github.com/anvilistas/anvil-extras/issues/95
 
 ## Bug Fixes
 * Autocompleter focus method doesn't trigger autocomplete suggestions

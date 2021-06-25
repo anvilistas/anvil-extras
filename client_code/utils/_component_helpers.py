@@ -14,7 +14,7 @@ from anvil.js.window import jQuery as _S
 __version__ = "1.4.0"
 
 _loaded = False
-_characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+_characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 class StyleInjector:
