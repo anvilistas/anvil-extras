@@ -46,6 +46,12 @@ def open_form(form_name, full_width=False):
     get_open_form().content_panel.clear()
     get_open_form().content_panel.add_component(form, full_width_row=full_width)
 
+    
+def emulate_link_click(target):
+    """Emulate clicking a menu link"""
+    matching_links = [link for link in _links if link.tag.target == target]
+    matching_links[0].raise_event('click')
+    
 
 def _default_link_click(**event_args):
     """A handler for navigation link click events
