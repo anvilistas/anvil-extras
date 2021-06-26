@@ -17,7 +17,7 @@ class Demo(DemoTemplate):
         self.init_custom_slider_formatter()
 
         self.progress = 0
-        self.item = self.default_item = dict(
+        self.default_item = dict(
             tally=100,
             counter=0,
             values=self.slider.start,
@@ -25,6 +25,7 @@ class Demo(DemoTemplate):
             chips=["a", "b", "c"],
             text="",
         )
+        self.item = self.default_item
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
