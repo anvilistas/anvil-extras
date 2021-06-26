@@ -25,7 +25,7 @@ class Demo(DemoTemplate):
             chips=["a", "b", "c"],
             text="",
         )
-        self.item = self.default_item.copy()
+        self.item = self.default_item
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
@@ -44,7 +44,7 @@ class Demo(DemoTemplate):
         self.item["counter"] += 1
 
     def reset_button_click(self, **event_args):
-        self.item = self.default_item.copy()
+        self.item = self.default_item
 
     ###### MULTI SELECT ######
     def multi_select_drop_down_1_change(self, **event_args):
