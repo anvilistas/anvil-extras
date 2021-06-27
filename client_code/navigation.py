@@ -49,8 +49,12 @@ def open_form(form_name, full_width=False):
 
 def go_to(target):
     """Emulate clicking a menu link"""
-    matching_links = [link for link in _links if link.tag.target == target]
-    matching_links[0].raise_event("click")
+    for link in _links:
+        if link.tag.target == target:
+            break
+    else:  # no break
+        raise KeyError("No menu link matching that target")
+    link.raise_event("click")
 
 
 def _default_link_click(**event_args):
