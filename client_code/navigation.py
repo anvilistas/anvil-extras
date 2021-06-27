@@ -39,7 +39,7 @@ def get_form(name, *args, **kwargs):
     try:
         return _forms[name]["class"](*args, **kwargs)
     except KeyError:
-        raise KeyError("No form registered under that name")
+        raise KeyError("No form registered under name: " + str(name))
 
 
 def open_form(form_name, full_width=False):
@@ -56,7 +56,7 @@ def go_to(target):
         if link.tag.target == target:
             break
     else:  # no break
-        raise KeyError("No menu link matching that target")
+        raise ValueError("No menu link matching target: " + str(target))
     link.raise_event("click")
 
 
