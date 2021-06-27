@@ -36,7 +36,10 @@ class register:
 
 def get_form(name, *args, **kwargs):
     """Create an instance of a registered form."""
-    return _forms[name]["class"](*args, **kwargs)
+    try:
+        return _forms[name]["class"](*args, **kwargs)
+    except KeyError:
+        raise KeyError("No form registered under that name")
 
 
 def open_form(form_name, full_width=False):
