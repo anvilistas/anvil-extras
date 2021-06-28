@@ -7,16 +7,18 @@
 ## Changes
 * Quill editor supports a toolbar and theme set at runtime.
   https://github.com/anvilistas/anvil-extras/pull/80
-* Fixed the publisher.unsubscribe method in the Messaging module, making it functional
-  https://github.com/anvilistas/anvil-extras/pull/92
-* Fix indeterminate progress bar not always displaying
-  https://github.com/anvilistas/anvil-extras/issues/95
+* Add navigation.go_to function, improved navigation error messages
+  https://github.com/anvilistas/anvil-extras/pull/99
 
 ## Bug Fixes
 * Autocompleter focus method doesn't trigger autocomplete suggestions
   https://github.com/anvilistas/anvil-extras/issues/94
 * Improve error reporting when passing an invalid content object to a popover
   https://github.com/anvilistas/anvil-extras/issues/90
+* Fixed the publisher.unsubscribe method in the Messaging module, making it functional
+  https://github.com/anvilistas/anvil-extras/pull/92
+* Fix indeterminate progress bar not always displaying
+  https://github.com/anvilistas/anvil-extras/issues/95
 
 # v1.4 07-June-2021
 

@@ -36,7 +36,10 @@ class register:
 
 def get_form(name, *args, **kwargs):
     """Create an instance of a registered form."""
-    return _forms[name]["class"](*args, **kwargs)
+    try:
+        return _forms[name]["class"](*args, **kwargs)
+    except KeyError:
+        raise KeyError(f"No form registered under name: {name}")
 
 
 def open_form(form_name, full_width=False):
@@ -45,6 +48,16 @@ def open_form(form_name, full_width=False):
     _title_label.text = _forms[form_name]["title"]
     get_open_form().content_panel.clear()
     get_open_form().content_panel.add_component(form, full_width_row=full_width)
+
+
+def go_to(target):
+    """Emulate clicking a menu link"""
+    for link in _links:
+        if link.tag.target == target:
+            break
+    else:  # no break
+        raise ValueError(f"No menu link matching target: {target}")
+    link.raise_event("click")
 
 
 def _default_link_click(**event_args):
@@ -103,7 +116,7 @@ def navigation_link(
     target=None,
     on_click=None,
     visibility=None,
-    **kwargs
+    **kwargs,
 ):
     """Create a link instance
 
