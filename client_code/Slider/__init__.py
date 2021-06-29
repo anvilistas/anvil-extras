@@ -14,7 +14,7 @@ from .. import session
 from ..utils._component_helpers import _add_script, _get_color, _spacing_property
 from ._anvil_designer import SliderTemplate
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 
 
 _add_script(

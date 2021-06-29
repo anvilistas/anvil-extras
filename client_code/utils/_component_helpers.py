@@ -11,7 +11,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 
 _loaded = False
 _characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

@@ -12,7 +12,7 @@ from anvil_extras.utils._component_helpers import _get_dom_node_id
 
 from ._anvil_designer import IndeterminateTemplate
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 
 session.style_injector.inject(ProgressBar.css)
 
