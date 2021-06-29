@@ -1,4 +1,4 @@
-# Unreleased
+# v1.5.0 29-Jun-2021
 
 ## New Features
 * `local_storage` - wrapper around the browser localStorage object
