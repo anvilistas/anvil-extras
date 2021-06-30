@@ -71,7 +71,7 @@ Each item in the dict needs the 'text' and 'target' keys as a minimum. It may al
 
     from ._anvil_designer import MainTemplate
     from anvil import *
-    from Navigation import navigation
+    from anvil_extras import navigation
     from HashRouting import routing
 
     menu = [
