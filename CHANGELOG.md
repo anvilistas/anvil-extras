@@ -1,3 +1,11 @@
+
+# Unreleased
+
+## Bug Fixes
+* Autocompleter suggestions on mobile
+  https://github.com/anvilistas/anvil-extras/issues/103
+
+
 # v1.5.0 29-Jun-2021
 
 ## New Features

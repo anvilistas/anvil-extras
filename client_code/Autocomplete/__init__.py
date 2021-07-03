@@ -131,7 +131,6 @@ class Autocomplete(AutocompleteTemplate):
         link.tag = l_node.querySelector("div")
         # this stops the lost_focus event firing when a suggestion is clicked
         l_node.addEventListener("mousedown", lambda e: e.preventDefault())
-        l_node.addEventListener("touchstart", lambda e: e.preventDefault())
 
         self._nodes[text] = link
         return link
