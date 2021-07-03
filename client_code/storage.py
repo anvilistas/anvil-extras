@@ -61,9 +61,7 @@ class Storage:
         return self._mangle_key(key) in self._store
 
     def __repr__(self):
-        pairs = ""
-        for key, val in self.items():
-            pairs += f"{key!r}: {val!r}"
+        pairs = ", ".join(f"{key!r}: {val!r}" for key, val in self.items())
         return f"Storage({{{pairs}}})"
 
     def __iter__(self):
