@@ -9,7 +9,7 @@ import json as _json
 
 from anvil.js import window as _window
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 __all__ = ["local_storage", "session_storage"]
 
 _prefix = "anvil_storage_"
