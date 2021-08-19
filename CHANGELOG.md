@@ -1,3 +1,9 @@
+# Unreleased
+
+## New Features
+* `augment` - `add_event_handler()` method added. `original_event` passed as an `event_arg`.
+  https://github.com/anvilistas/anvil-extras/pull/109
+
 # v1.5.1 05-Jul-2021
 
 ## Bug Fixes

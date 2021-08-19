@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+from functools import cache as _cache
 from functools import partial as _partial
 
 import anvil as _anvil
@@ -16,10 +17,15 @@ from anvil.js.window import jQuery as _S
 
 __version__ = "1.5.1"
 
-__all__ = ["add_event", "set_event_handler", "trigger"]
+__all__ = ["add_event", "add_event_handler", "set_event_handler", "trigger"]
+
+_Callable = type(lambda: None)
 
 
-def add_event(component, event):
+# use cache so we don't add the same event to the component multiple times
+# we only need to add the event once and use anvil architecture to raise the event
+@_cache
+def add_event(component: _Component, event: str) -> None:
     """component: (instantiated) anvil component
     event: str - any jquery event string
     """
@@ -28,7 +34,7 @@ def add_event(component, event):
     _add_event(component, event)
 
     def handler(e):
-        event_args = {"event_type": e.type}
+        event_args = {"event_type": e.type, "original_event": e}
         if event.startswith("key"):
             event_args |= {
                 "key": e.key,
@@ -42,17 +48,19 @@ def add_event(component, event):
             e.preventDefault()
 
     js_event_name = "mouseenter mouseleave" if event == "hover" else event
-    _get_jquery_for_component(component).off(js_event_name)
     _get_jquery_for_component(component).on(js_event_name, handler)
 
 
-def set_event_handler(component, event, func):
-    """component: (instantiated) anvil compoent
-    event: str - any jquery event string
-    func: function to handle the event
-    """
+def set_event_handler(component: _Component, event: str, func: _Callable) -> None:
+    """uses anvil's set_event_handler for any jquery event"""
     add_event(component, event)
     component.set_event_handler(event, func)
+
+
+def add_event_handler(component: _Component, event: str, func: _Callable) -> None:
+    """uses anvil's add_event_handler for any jquery event"""
+    add_event(component, event)
+    component.add_event_handler(event, func)
 
 
 _trigger_writeback = _Function(
@@ -67,7 +75,7 @@ _trigger_writeback = _Function(
 )
 
 
-def trigger(self, event):
+def trigger(self: _Component, event: str):
     """trigger an event on a component, self is an anvil component, event is a component, event is a str or a dictionary
     if event is a dictionary it should include an event key e.g. {'event': 'keypress', 'which': 13}
     """
