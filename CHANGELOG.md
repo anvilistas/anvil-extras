@@ -1,8 +1,12 @@
-# Unreleased
+# v1.5.2 23-Aug-2021
 
 ## New Features
 * `augment` - `add_event_handler()` method added. `original_event` passed as an `event_arg`.
   https://github.com/anvilistas/anvil-extras/pull/109
+
+## Bug Fixes
+* Add missing support for binding writeback on the Switch component
+  https://github.com/anvilistas/anvil-extras/pull/111
 
 # v1.5.1 05-Jul-2021
 
