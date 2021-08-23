@@ -12,7 +12,7 @@ from anvil.js.window import document as _document
 from .. import session
 from ..utils._component_helpers import _get_rgb
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 primary = app.theme_colors.get("Primary 500", "#2196F3")
 

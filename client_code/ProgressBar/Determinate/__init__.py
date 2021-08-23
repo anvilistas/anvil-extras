@@ -10,7 +10,7 @@ from anvil_extras import ProgressBar, session
 
 from ._anvil_designer import DeterminateTemplate
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 session.style_injector.inject(ProgressBar.css)
 

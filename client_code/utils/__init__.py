@@ -7,7 +7,7 @@
 
 from functools import cache
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 
 def __dir__():

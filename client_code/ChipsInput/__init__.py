@@ -13,7 +13,7 @@ from ..session import style_injector as _style_injector
 from ..utils._component_helpers import _get_color, _spacing_property
 from ._anvil_designer import ChipsInputTemplate
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 _primary = _get_color(None)
 
