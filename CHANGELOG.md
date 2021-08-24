@@ -1,3 +1,9 @@
+# Unreleased
+
+## Updates
+* Slider Component - bump javascript dependency and refactor. No changes to the component's public API.
+  https://github.com/anvilistas/anvil-extras/pull/112
+
 # v1.5.2 23-Aug-2021
 
 ## New Features
