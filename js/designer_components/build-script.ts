@@ -1,6 +1,6 @@
 import * as esbuild from "https://deno.land/x/esbuild@v0.11.10/mod.js";
 // import * as esbuild from "esbuild";
-// deno run -A build-script.js
+// deno run -A build-script.ts
 
 let result = await esbuild.build({
     entryPoints: ["index.ts"],

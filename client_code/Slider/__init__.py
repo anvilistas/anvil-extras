@@ -18,7 +18,7 @@ __version__ = "1.5.2"
 
 
 _add_script(
-    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.min.css"></link>'
+    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.min.css"></link>'
 )
 session.style_injector.inject(
     """
@@ -48,7 +48,7 @@ session.style_injector.inject(
 )
 
 _add_script(
-    '<script src="https://cdn.jsdelivr.net/npm/nouislider@15.1.1/dist/nouislider.min.js"></script>'
+    '<script src="https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.min.js"></script>'
 )
 _Slider = _window.noUiSlider
 
@@ -293,24 +293,14 @@ class Slider(SliderTemplate):
         self.init_components(**always, **if_false, **if_true)
 
     ###### VALUE PROPERTIES ######
-    @property
-    def _convert(self):
-        f = self._props["format"]["from"]
-
-        def convert(x: str) -> float:
-            res = f(x)
-            return x if res is False else res
-
-        return convert
-
     def _value_setter(self, val):
         self._slider.set(val)
 
     def _value(self):
-        return self._convert(_from_list(self._slider.get()))
+        return _from_list(self._slider.get(True))
 
     def _values(self):
-        return list(map(self._convert, _as_list(self._slider.get())))
+        return _as_list(self._slider.get(True))
 
     def _formatted_value(self):
         return _from_list(self._slider.get())
