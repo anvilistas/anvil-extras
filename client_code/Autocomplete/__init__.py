@@ -108,6 +108,9 @@ class Autocomplete(AutocompleteTemplate):
 
         nodes = filter(None, map(get_node_with_emph, self.suggestions))
         for node in nodes:
+            if node.parent is not None:
+                print(f"Warning: you have duplicate suggestions - ignoring {node.text}")
+                continue
             self._lp.add_component(node)
             self._active_nodes.append(node)
 
