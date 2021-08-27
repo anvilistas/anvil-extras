@@ -1,5 +1,9 @@
 # Unreleased
 
+## Bug Fixes
+* Autocomplete - can now be used inside an alert
+  https://github.com/anvilistas/anvil-extras/pull/114
+
 ## Updates
 * Slider Component - bump javascript dependency and refactor. No changes to the component's public API.
   https://github.com/anvilistas/anvil-extras/pull/112
