@@ -35,7 +35,7 @@ _style_injector.inject(
     transition: all 100ms ease;
     background-color: #fff;
     border-radius: 2px;
-    z-index: 2;
+    z-index: 3001;
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
 }
 .anvil-role-autocomplete.visible-false {
