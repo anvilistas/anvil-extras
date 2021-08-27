@@ -3,6 +3,8 @@
 ## Updates
 * Slider Component - bump javascript dependency and refactor. No changes to the component's public API.
   https://github.com/anvilistas/anvil-extras/pull/112
+* Autocomple - duplicate suggestions are ignored and a warning is printed
+  https://github.com/anvilistas/anvil-extras/pull/116
 
 # v1.5.2 23-Aug-2021
 
