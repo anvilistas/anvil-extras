@@ -1,5 +1,8 @@
 # Unreleased
 
+## New Features
+* Quill - dynamically add custom modules
+  https://github.com/anvilistas/anvil-extras/pull/117
 ## Bug Fixes
 * Autocomplete - can now be used inside an alert
   https://github.com/anvilistas/anvil-extras/pull/114

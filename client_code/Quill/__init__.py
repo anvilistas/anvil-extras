@@ -21,7 +21,9 @@ _add_script('<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet
 _add_script('<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">')
 
 # <!-- Main Quill library -->
-_add_script('<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>')
+if _window.get("Quill") is None:
+    # support including Quill in the native libraries for easier module imports
+    _add_script('<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>')
 _Quill = _window.Quill
 
 
@@ -30,6 +32,7 @@ _defaults = {
     "content": None,
     "enabled": True,
     "height": 150,
+    "modules": None,
     "placeholder": None,
     "readonly": False,
     "spacing_above": "small",
@@ -106,7 +109,8 @@ class Quill(QuillTemplate):
         q = self._quill = _Quill(
             self._el,
             {
-                "modules": {"toolbar": self._props["toolbar"]},
+                "modules": {"toolbar": self._props["toolbar"]}
+                | (self._props["modules"] or {}),
                 "theme": self._props["theme"],
                 "placeholder": self._props["placeholder"],
                 "readOnly": self._props["readonly"],
@@ -188,6 +192,7 @@ class Quill(QuillTemplate):
     readonly = _quill_init_prop("readonly")
     theme = _quill_init_prop("theme")
     placeholder = _quill_init_prop("placeholder")
+    modules = _quill_init_prop("modules")
 
     #### ANVIL METHODS ####
     def get_markdown(self):
