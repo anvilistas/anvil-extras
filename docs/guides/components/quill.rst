@@ -27,6 +27,10 @@ Properties
 
     With auto_expand this becomes the starting height. Without auto_expand this becomes the fixed height.
 
+:modules: Object
+
+    Additional modules can be set at runtime. See Quill docs for examples. If a toolbar option is defined in modules this will override the toolbar property.
+
 :placeholder: String
 
     Placeholder when there is no text

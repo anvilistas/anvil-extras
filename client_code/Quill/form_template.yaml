@@ -11,8 +11,10 @@ properties:
 - {name: readonly, type: boolean, default_value: false, default_binding_prop: false,
   description: Similar to enabled but cannot be updated, group: interaction, important: false}
 - {name: toolbar, type: boolean, default_value: true, default_binding_prop: false,
-  description: This must be set in the constructor and cannot be updated, group: interaction,
-  important: true}
+  description: This can be set at runtime for different tooolbar configurations, important: false}
+- {name: modules, type: object, default_value: null, default_binding_prop: false,
+  description: This can be set at runtime and must include all modules. The toolbar can be set separately,
+  important: false}
 - {name: theme, type: string, default_value: snow, default_binding_prop: false, description: snow or bubble - check quill for the difference - cannot be updated once set,
   group: appearance, important: false}
 - {name: placeholder, type: string, default_value: '', default_binding_prop: false,
