@@ -9,8 +9,8 @@
 # for more information visit the w3 bootstrap popover page
 # https://www.w3schools.com/bootstrap4/bootstrap_ref_js_popover.asp
 #
-# or the bootstrap popover page for v 3.3.7
-# https://bootstrapdocs.com/v3.3.6/docs/javascript/#popovers
+# or the bootstrap popover page for v 3.4.1
+# https://getbootstrap.com/docs/3.4/javascript/#popovers
 #
 
 from random import choice as _random_choice
