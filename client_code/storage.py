@@ -97,6 +97,17 @@ class Storage:
         finally:
             del self[key]
 
+    def clear(self):
+        """clear all items from local storage"""
+        for key in self._filter_store():
+            self._store.removeItem(key)
+
+    def update(self, other, **kws):
+        """update the local storage item with key/value pairs from other"""
+        other = dict(other, **kws)
+        for key, value in other.items():
+            self[key] = value
+
 
 local_storage = Storage(_window.get("localStorage"))
 session_storage = Storage(_window.get("sessionStorage"))
@@ -122,3 +133,9 @@ if __name__ == "__main__":
     print(local_storage["x"] == x)
     print(local_storage.get("x") == x)
     print(local_storage.pop("x") == x)
+    local_storage["foo"] = None
+    local_storage["eggs"] = None
+    local_storage.update({"foo": "bar"}, eggs="spam", x=1)
+    print(len(list(local_storage.keys())) == 3, local_storage["eggs"] == "spam")
+    local_storage.clear()
+    print(len(list(local_storage.keys())) == 0)
