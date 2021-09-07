@@ -18,6 +18,8 @@
   https://github.com/anvilistas/anvil-extras/pull/116
 * Popover - documentation added and clone link updated. The example now imports `anvil_extras`
   https://github.com/anvilistas/anvil-extras/pull/121
+* storage - use dictionary alternative when storage is not available, printing a warning
+  https://github.com/anvilistas/anvil-extras/pull/129
 
 # v1.5.2 23-Aug-2021
 
