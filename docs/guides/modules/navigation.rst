@@ -101,7 +101,7 @@ Each item in the dict needs the 'text' and 'target' keys as a minimum. It may al
       def form_show(self, **event_args):
         self.set_advanced_mode(False)
 
-Note - since this example includes hash routing, it also requires a  decorator from the [Hash Routing App](https://github.com/s-cork/HashRouting) on the Main class.
+Note - since this example includes hash routing, it also requires a decorator from the `Hash Routing App <https://github.com/s-cork/HashRouting>`_ on the Main class.
 
 Startup
 +++++++
