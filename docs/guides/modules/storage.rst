@@ -11,6 +11,13 @@ convenient dictionary like wrapper around the native browser ``localStorage`` ob
 The :attr:`local_storage` object can store data that persists accross browser sessions and is also available offline.
 It could be used to create an entirely offline todo app, or to store simple data across sessions.
 
+If access to the browser ``localStorage`` object is denied, :const:`local_storage` will
+function as expected during the current session, but it will not be stored between browser
+sessions, with a warning printed to the console indicating as much. Access may
+be denied, for instance, if browser settings block third-party/cross-site cookies and the
+app is being run within an 'iframe' (such as when clicking the "Run" button to test an
+Anvil app in development mode).
+
 (Browsers also have a ``sessionStorage`` object, and an equivalent :const:`session_storage`
 object is also available in the :mod:`storage` module.)
 

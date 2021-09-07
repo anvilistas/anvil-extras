@@ -109,8 +109,16 @@ class Storage:
             self[key] = value
 
 
-local_storage = Storage(_window.get("localStorage"))
-session_storage = Storage(_window.get("sessionStorage"))
+try:
+    local_storage = Storage(_window.get("localStorage"))
+    session_storage = Storage(_window.get("sessionStorage"))
+except ExternalError:  # noqa
+    print(
+        "Warning: Access to storage denied, likely due to browser permissions."
+        + " Using dictionary alternative which will not persist between browser sessions."
+    )
+    local_storage = {}
+    session_storage = {}
 
 
 if __name__ == "__main__":
