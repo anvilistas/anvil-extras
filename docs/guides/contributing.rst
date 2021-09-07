@@ -6,8 +6,6 @@ Issues
 ------
 Please open an `Issue <https://github.com/anvilistas/anvil-extras/issues>`_ and describe the contribution you'd like to make before submitting any code. This prevents duplication of effort and makes reviewing the eventual PR much easier for the maintainers.
 
-If you could start the name of the branch you work on with the number of the issue you create, that would be very helpful as github will automatically link the two together.
-
 Commits
 -------
 Please try to use commit messages that give a meaningful history for anyone using git's log features. Try to use messages that complete the sentence, "This commit will..." There is some excellent guidance on the subject from `Chris Beams <https://chris.beams.io/posts/git-commit/>`_
