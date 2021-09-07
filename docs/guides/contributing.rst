@@ -32,7 +32,12 @@ Use the `Black formatter <https://github.com/ambv/black>`_ to format all code an
 
 Add the licence text and copyright statement to the top of your code.
 
-Ensure that there is a line with the current version number towards the top of your code .
+Ensure that there is a line with the current version number towards the top of your code.
+
+This can be automated by using `pre-commit <https://pre-commit.com/>`_.
+To use ``pre-commit``, first install ``pre-commit`` with pip and then run ``pre-commit install`` inside your local ``anvil-extras`` repository.
+All commits thereafter will be adjusted according to the above ``anvil-extras`` python requirements.
+
 
 Documentation
 -------------
