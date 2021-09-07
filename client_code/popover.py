@@ -9,8 +9,8 @@
 # for more information visit the w3 bootstrap popover page
 # https://www.w3schools.com/bootstrap4/bootstrap_ref_js_popover.asp
 #
-# or the bootstrap popover page for v 3.3.7
-# https://bootstrapdocs.com/v3.3.6/docs/javascript/#popovers
+# or the bootstrap popover page for v 3.4.1
+# https://getbootstrap.com/docs/3.4/javascript/#popovers
 #
 
 from random import choice as _random_choice
@@ -53,7 +53,9 @@ def popover(
         content = _anvil.js.get_dom_node(content)  # get the dom node
     else:
         raise TypeError(
-            f"content to a popover should be either a str or anvil Component, not {type(content).__name__}"
+            "content to a popover should be either a str or anvil Component, not {}".format(
+                type(content).__name__
+            )
         )
 
     max_width = _default_max_width if max_width is None else max_width
@@ -89,6 +91,7 @@ def popover(
             "html": html,
             "template": _template.format(popper_id, max_width),
             "container": "body",
+            "sanitize": False,
         }
     )
 

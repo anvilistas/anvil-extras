@@ -6,6 +6,8 @@
 ## Bug Fixes
 * Autocomplete - can now be used inside an alert
   https://github.com/anvilistas/anvil-extras/pull/114
+* Popover - fix stickyhover
+  https://github.com/anvilistas/anvil-extras/pull/121
 * storage - update and clear were missing from the documented api
   https://github.com/anvilistas/anvil-extras/pull/125
 
@@ -14,6 +16,8 @@
   https://github.com/anvilistas/anvil-extras/pull/112
 * Autocomple - duplicate suggestions are ignored and a warning is printed
   https://github.com/anvilistas/anvil-extras/pull/116
+* Popover - documentation added and clone link updated. The example now imports `anvil_extras`
+  https://github.com/anvilistas/anvil-extras/pull/121
 
 # v1.5.2 23-Aug-2021
 
