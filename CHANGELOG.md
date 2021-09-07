@@ -8,6 +8,8 @@
   https://github.com/anvilistas/anvil-extras/pull/114
 * Popover - fix stickyhover
   https://github.com/anvilistas/anvil-extras/pull/121
+* storage - update and clear were missing from the documented api
+  https://github.com/anvilistas/anvil-extras/pull/125
 
 ## Updates
 * Slider Component - bump javascript dependency and refactor. No changes to the component's public API.
