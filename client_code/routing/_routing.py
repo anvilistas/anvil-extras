@@ -13,6 +13,7 @@ from collections import namedtuple as _namedtuple
 import anvil as _anvil
 
 from . import _navigation
+from ._alert import handle_alert_unload as _handle_alert_unload
 from ._logging import logger
 
 # to print route logging messages set routing.logger.debug = True above your main_router form
@@ -86,6 +87,11 @@ def main_router(Cls):
                     "**WARNING**  \nurl_hash redirected too many times without a form load, getting out\ntry setting redirect=False"
                 )
                 return  # could change this to a raise
+
+            if _handle_alert_unload():
+                logger.print("unload prevented by active alert")
+                return
+
             _on_navigation_stack_depth += 1
 
             if getattr(_current_form, "before_unload", None):
@@ -106,8 +112,6 @@ def main_router(Cls):
                         _navigation.stopUnload()
                         _on_navigation_stack_depth -= 1
                         return  # this will stop the navigation
-                except Exception as e:
-                    raise e
                 finally:
                     _navigation.setUnloadPopStateBehaviour(False)
 

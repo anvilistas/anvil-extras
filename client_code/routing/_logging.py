@@ -9,15 +9,17 @@ __version__ = "1.5.2"
 
 
 class Logger:
-    def __init__(self, debug, msg=""):
+    def __init__(self, debug, msg="", save=False):
         self.debug = debug
         self.msg = msg
+        self.save = save
         self._log = [(msg,)]
 
     def print(self, *args, **kwargs):
         if self.debug:
             print(self.msg, *args, **kwargs) if self.msg else print(*args, **kwargs)
-        self._log.append(args)
+        if self.save:
+            self._log.append(args)
 
     def show_log(self):
         log_rows = [" ".join(str(arg) for arg in args) for args in self._log]
