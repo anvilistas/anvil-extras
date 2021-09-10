@@ -7,6 +7,7 @@
 
 import json as _json
 
+from anvil import app
 from anvil.js import window as _window
 
 __version__ = "1.5.2"
@@ -112,13 +113,20 @@ class Storage:
 try:
     local_storage = Storage(_window.get("localStorage"))
     session_storage = Storage(_window.get("sessionStorage"))
-except ExternalError:  # noqa
-    print(
-        "Warning: Access to storage denied, likely due to browser permissions."
-        + " Using dictionary alternative which will not persist between browser sessions."
-    )
-    local_storage = {}
-    session_storage = {}
+except Exception as err:
+    if repr(err).startswith("External") and "debug" in app.environment["tags"]:
+        print(
+            "Warning: Access to storage denied, likely due to browser permissions. "
+            "Dictionary alternatives, which will not persist between browser "
+            "sessions, are being substituted for 'local_storage' and "
+            "'session_storage'. The following error will be raised if this occurs "
+            "outside Anvil's 'debug' mode:"
+        )
+        print(repr(RuntimeError(err)))
+        local_storage = {}
+        session_storage = {}
+    else:
+        raise (RuntimeError(err))
 
 
 if __name__ == "__main__":
