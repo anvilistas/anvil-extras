@@ -22,7 +22,7 @@ class StorageWrapper:
         self._driver = driver
         self._name = name
 
-    def is_supported(self):
+    def is_available(self):
         """check if the store object is available and accessible."""
         # in some browsers localStorageWrapper might not be available
         if not self._store.supports(self._driver):
@@ -130,19 +130,60 @@ _add_script(
 _forage = _window.localforage
 _forage.dropInstance()
 
+
+def _failed(*args):
+    # see what happens when we try to access the storage object
+    msg = "browser storage object is not available - see documentation."
+    try:
+        _window.get("localStorage")
+
+        def check_db(res, rej):
+            req = _window.get("indexedDB").open("anvil_extras")
+            req.onerror = lambda e: rej(req.error.toString())
+            req.onsuccess = lambda r: res(None)
+
+        _window.Function("callback", "return new Promise(callback)")(check_db)
+    except Exception as e:
+        msg += f"\nWhen trying to access the storage object got - {e}"
+    raise RuntimeError(msg)
+
+
+_forage.defineDriver(
+    {
+        "_driver": "failDriver",
+        "_initStorage": lambda options: None,
+        "clear": _failed,
+        "getItem": _failed,
+        "iterate": _failed,
+        "key": _failed,
+        "keys": _failed,
+        "length": _failed,
+        "removeItem": _failed,
+        "setItem": _failed,
+    }
+)
+
 _indexed_db_wrapper = _forage.createInstance(
-    {"name": "anvil_extras", "storeName": "default", "driver": _forage.INDEXEDDB}
+    {
+        "name": "anvil_extras",
+        "storeName": "default",
+        "driver": [_forage.INDEXEDDB, "failDriver"],
+    }
 )
 indexed_db = StorageWrapper(_indexed_db_wrapper, _forage.INDEXEDDB, "default")
 
 _local_store_wrapper = _forage.createInstance(
-    {"name": "anvil_extras", "storeName": "default", "driver": _forage.LOCALSTORAGE}
+    {
+        "name": "anvil_extras",
+        "storeName": "default",
+        "driver": [_forage.LOCALSTORAGE, "failDriver"],
+    }
 )
 local_storage = StorageWrapper(_local_store_wrapper, _forage.LOCALSTORAGE, "default")
 
 driver_names = {
     _forage.INDEXEDDB: "IndexedDBWrapper",
-    _forage.LOCALSTORAGE: "LocalStorageWrapperWrapper",
+    _forage.LOCALSTORAGE: "LocalStorageWrapper",
 }
 
 
