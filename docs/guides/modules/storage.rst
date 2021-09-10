@@ -3,16 +3,20 @@ Storage
 
 Introduction
 ------------
-Browsers have a ``localStorage`` object that can store data between browser sessions
+Browsers have various ways to store data. ``localStorage`` and ``indexedDB`` are two such storage mechanisms that are particularly useful for storing data offline.
 
-The anvil_extras :mod:`storage` module provides :const:`local_storage` object, which is a
-convenient dictionary like wrapper around the native browser ``localStorage`` object.
+The anvil_extras :mod:`storage` module provides both a :attr:`local_storage` object and a :attr:`indexed_db` object, which are
+convenient dictionary like wrappers around the native browser objects.
 
-The :attr:`local_storage` object can store data that persists accross browser sessions and is also available offline.
-It could be used to create an entirely offline todo app, or to store simple data across sessions.
+The :attr:`local_storage` and :attr:`indexed_db` objects can store data that persists accross browser sessions and are also available offline.
+It could be used to create an entirely offline todo app, or to store data across sessions.
 
-(Browsers also have a ``sessionStorage`` object, and an equivalent :const:`session_storage`
-object is also available in the :mod:`storage` module.)
+
+Which to chose?
++++++++++++++++
+If you have small amounts of data which can be converted to JSON then use the :attr:`local_storage` object.
+If you have more data which can be converted to JSON (and also ``bytes`` objects) - use :attr:`indexed_db`.
+
 
 Usage
 -----
@@ -49,39 +53,49 @@ Change the theme at startup
 API
 ---
 
-.. object:: local_storage
+.. class:: StorageWrapper()
 
-   local_storage is a dictionary like object.
+   both :attr:`indexed_db` and :attr:`local_storage` are instances of a dictionary like :class:`StorageWrapper` class.
 
-   .. describe:: list(local_storage)
+   .. describe:: is_supported()
 
-      Return a list of all the keys used in :attr:`local_storage`.
+      Check if the storage object is supported. Returns a ``boolean``.
 
-   .. describe:: len(local_storage)
+   .. describe:: get_store(name)
 
-      Return the number of items in :attr:`local_storage`.
+      Get or create a ``storage`` object. e.g. ``todo_store = indexed_db.get_store('todos')``. This will create a new storeage object inside the browser's ``IndexedDB``.
+      The :attr:`indexed_db` object is equivalent to ``indexed_db.get_store('default')``. To explore this further, open up devtools and find ``IndexedDB`` in the Application tab.
 
-   .. describe:: local_storage[key]
+   .. describe:: list(store)
 
-      Return the item of :attr:`local_storage` with key *key*.  Raises a :exc:`KeyError` if *key* is
-      not in :attr:`local_storage`. Raises a :exc:`TypeError` if *key* is not a string.
+      Return a list of all the keys used in the *store*.
 
-   .. describe:: local_storage[key] = value
+   .. describe:: len(store)
 
-      Set ``local_storage[key]`` to *value*. The *value* must be a json compatible object.
+      Return the number of items in *store*.
 
-   .. describe:: del local_storage[key]
+   .. describe:: store[key]
 
-      Remove ``local_storage[key]`` from :attr:`local_storage`.
+      Return the item of *store* with key *key*.  Raises a :exc:`KeyError` if *key* is
+      not in *store*. Raises a :exc:`TypeError` if *key* is not a string.
 
-   .. describe:: key in local_storage
+   .. describe:: store[key] = value
 
-      Return ``True`` if :attr:`local_storage` has a key *key*, else ``False``.
+      Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored correctly. e.g. a ``datetime`` object.
+      If storing ``bytes`` objects it is best to use the :attr:`indexed_db` store.
 
-   .. describe:: iter(local_storage)
+   .. describe:: del store[key]
 
-      Return an iterator over the keys of the dictionary.  This is a shortcut
-      for ``iter(local_storage.keys())``.
+      Remove ``store[key]`` from *store*.
+
+   .. describe:: key in store
+
+      Return ``True`` if *store* has a key *key*, else ``False``.
+
+   .. describe:: iter(store)
+
+      Return an iterator over the keys of the *store*.  This is a shortcut
+      for ``iter(store.keys())``.
 
    .. method:: clear()
 
@@ -89,13 +103,13 @@ API
 
    .. method:: get(key[, default])
 
-      Return the value for *key* if *key* is in :attr:`local_storage`, else *default*.
+      Return the value for *key* if *key* is in *store*, else *default*.
       If *default* is not given, it defaults to ``None``, so that this method
       never raises a :exc:`KeyError`.
 
    .. method:: items()
 
-      Return a map iterator of :attr:`local_storage`'s ``(key, value)`` pairs.
+      Return a map iterator of *store*'s ``(key, value)`` pairs.
 
    .. method:: keys()
 
@@ -103,24 +117,24 @@ API
 
    .. method:: pop(key[, default])
 
-      If *key* is in :attr:`local_storage`, remove it and return its value, else return
+      If *key* is in *store*, remove it and return its value, else return
       *default*.  If *default* is not given, it defaults to ``None``, so that this method
       never raises a :exc:`KeyError`.
 
    .. method:: put(key, value)
 
-      Equivalent to ``local_storage[key] = value``.
+      Equivalent to ``store[key] = value``.
 
    .. method:: update([other])
 
-      Update the :attr:`local_storage` with the key/value pairs from *other*, overwriting
+      Update the *store* with the key/value pairs from *other*, overwriting
       existing keys.  Return ``None``.
 
       :meth:`update` accepts either a dictionary object or an iterable of
       key/value pairs (as tuples or other iterables of length two).  If keyword
-      arguments are specified, :attr:`local_storage` is then updated with those
-      key/value pairs: ``local_storage.update(red=1, blue=2)``.
+      arguments are specified, *store* is then updated with those
+      key/value pairs: ``store.update(red=1, blue=2)``.
 
    .. method:: values()
 
-      Return a map iterator of :attr:`local_storage`'s values.
+      Return a map iterator of *store*'s values.

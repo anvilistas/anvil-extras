@@ -5,79 +5,65 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-import json as _json
-
 from anvil.js import window as _window
 
+from utils._component_helpers import _add_script
+
 __version__ = "1.5.2"
-__all__ = ["local_storage", "session_storage"]
+__all__ = ["local_storage", "indexed_db"]
 
-_prefix = "anvil_storage_"
-_prefix_len = len(_prefix)
+toPy = _window.Sk.ffi.toPy
+# we don't want to return proxy objects from the store so use the toPy implementation
 
 
-class Storage:
-    def __init__(self, store):
+class StorageWrapper:
+    def __init__(self, store, driver, name):
         self._store = store
+        self._driver = driver
+        self._name = name
 
-    def _check_store(self):
-        # in some browsers localStorage might not be available
+    def is_supported(self):
+        # in some browsers localStorageWrapper might not be available
         # we don't throw the error until we try to access the store
-        if self._store is None:
-            raise RuntimeError("browser storage is not available")
-
-    def _mangle_key(self, key):
-        # we mangle the names so that we avoid conflicts
-        self._check_store()
-        if not isinstance(key, str):
-            raise TypeError("storage keys must be strings")
-        return key if key.startswith(_prefix) else _prefix + key
-
-    def _filter_store(self):
-        return filter(lambda key: key.startswith(_prefix), self._store.keys())
-
-    def _map_store(self, predicate):
-        self._check_store()
-        return map(predicate, self._filter_store())
+        return self._store.supports(self._driver)
 
     def __getitem__(self, key):
-        ret = self._store.getItem(self._mangle_key(key))
-        if ret is None:
-            raise KeyError(key)
-        return _json.loads(ret)
+        if key in self._store.keys():
+            return toPy(self._store.getItem(key))
+        raise KeyError(key)
 
     def __setitem__(self, key, val):
-        key = self._mangle_key(key)
-        try:
-            val = _json.dumps(val)
-        except Exception as e:
-            raise type(e)(f"There was a problem converting the value into json: {e}")
         self._store.setItem(key, val)
 
     def __delitem__(self, key):
-        self._store.removeItem(self._mangle_key(key))
+        # we can't block here so do a Promise hack
+        _window.Promise(lambda res, rej: self._store.removeItem(key))
+        return None
 
     def __contains__(self, key):
-        return self._mangle_key(key) in self._store
+        return key in self._store.keys()
 
     def __repr__(self):
-        pairs = ", ".join(f"{key!r}: {val!r}" for key, val in self.items())
-        return f"Storage({{{pairs}}})"
+        # we can't print the items like a dictionary since we get a SuspensionError here
+        return f"<{driver_names[self._driver]} for {self._name!r} store>"
 
     def __iter__(self):
         return self.keys()
 
+    def __len__(self):
+        return self._store.length()
+
     def keys(self):
         """returns the keys for local storage as an iterator"""
-        return self._map_store(lambda key: key[_prefix_len:])
+        return self._store.keys()
 
     def items(self):
         """returns the items for local storage as an iterator"""
-        return self._map_store(lambda key: (key[_prefix_len:], self.__getitem__(key)))
+        return ((key, toPy(self._store.getItem(key))) for key in self._store.keys())
 
     def values(self):
         """returns the values for local storage as an iterator"""
-        return self._map_store(lambda key: self.__getitem__(key))
+        return (toPy(self._store.getItem(key)) for key in self._store.keys())
 
     def put(self, key, value):
         """put a key value pair into local storage"""
@@ -86,7 +72,7 @@ class Storage:
     def get(self, key, default=None):
         """get a value from local storage, returns the default value if the key is not in local storage"""
         try:
-            return self.__getitem__(key)
+            return self[key]
         except KeyError:
             return default
 
@@ -99,8 +85,7 @@ class Storage:
 
     def clear(self):
         """clear all items from local storage"""
-        for key in self._filter_store():
-            self._store.removeItem(key)
+        self._store.clear()
 
     def update(self, other, **kws):
         """update the local storage item with key/value pairs from other"""
@@ -108,34 +93,80 @@ class Storage:
         for key, value in other.items():
             self[key] = value
 
+    def __eq__(self, other):
+        if not isinstance(other, StorageWrapper):
+            return NotImplemented
+        return self._driver == other._driver and self._name == other._name
 
-local_storage = Storage(_window.get("localStorage"))
-session_storage = Storage(_window.get("sessionStorage"))
+    def get_store(self, name):
+        """
+        Create a new storage object. Inside either local_storage or indexed_db.
+        e.g. todo_store = indexed_db.get_store('todos')
+        message_store = indexed_db.get_store('messages')
+        """
+        return StorageWrapper(
+            self._store.createInstance(
+                {"storeName": name, "driver": self._driver, "name": "anvil_extras"}
+            ),
+            self._driver,
+            name,
+        )
+
+
+_add_script(
+    """
+<script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+"""
+)
+
+_forage = _window.localforage
+_forage.dropInstance()
+
+_indexed_db_wrapper = _forage.createInstance(
+    {"name": "anvil_extras", "storeName": "default", "driver": _forage.INDEXEDDB}
+)
+indexed_db = StorageWrapper(_indexed_db_wrapper, _forage.INDEXEDDB, "default")
+
+_local_store_wrapper = _forage.createInstance(
+    {"name": "anvil_extras", "storeName": "default", "driver": _forage.LOCALSTORAGE}
+)
+local_storage = StorageWrapper(_local_store_wrapper, _forage.LOCALSTORAGE, "default")
+
+driver_names = {
+    _forage.INDEXEDDB: "IndexedDBWrapper",
+    _forage.LOCALSTORAGE: "LocalStorageWrapperWrapper",
+}
+
+
+def __getattr__(name):
+    if name == "session_storage":
+        raise Exception("deprecated - session_storage is no longer supported")
+    raise AttributeError(name)
 
 
 if __name__ == "__main__":
-    print(local_storage)
-    for k, v in local_storage.items():
-        print(k, v)
-    local_storage["foo"] = "bar"
-    print(local_storage["foo"])
-    del local_storage["foo"]
-    print(local_storage.get("foo"))
-    try:
-        local_storage["foo"]
-    except KeyError as e:
-        print(repr(e))
-    local_storage.put("foo", 1)
-    print(local_storage.pop("foo"))
-    x = {"abc": 123}
-    local_storage["x"] = x
-    print("x" in local_storage)
-    print(local_storage["x"] == x)
-    print(local_storage.get("x") == x)
-    print(local_storage.pop("x") == x)
-    local_storage["foo"] = None
-    local_storage["eggs"] = None
-    local_storage.update({"foo": "bar"}, eggs="spam", x=1)
-    print(len(list(local_storage.keys())) == 3, local_storage["eggs"] == "spam")
-    local_storage.clear()
-    print(len(list(local_storage.keys())) == 0)
+    for db in local_storage, indexed_db:
+        print(db)
+        db["foo"] = "bar"
+        print(db["foo"])
+        del db["foo"]
+        print(db.get("foo", "sentinel"))
+        try:
+            db["foo"]
+        except KeyError as e:
+            print(repr(e))
+        db.put("foo", 1)
+        print(db.pop("foo"))
+        x = [{"a": "b"}, "foo"]
+        db["x"] = x
+        print(db["x"])
+        print(db["x"] == x)
+        print(db.get("x") == x)
+        print(db.pop("x") == x)
+        db["foo"] = None
+        db["eggs"] = None
+        db.update({"foo": "bar"}, eggs="spam", x=1)
+        print(len(list(db.keys())) == 3, db["eggs"] == "spam")
+        db.clear()
+        print(len(list(db.keys())) == 0)
+        print("==========")
