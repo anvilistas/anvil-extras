@@ -189,11 +189,16 @@ def main_router(Cls):
                 logger.print(f"loaded {_cache[url_hash].__class__.__name__} from cache")
                 _current_form = _cache[url_hash]
             elif path:
-                title = (
-                    path.title
-                    if path.title is None
-                    else path.title.format(**url_dict, **dynamic_vars)
-                )
+                try:
+                    title = (
+                        path.title
+                        if path.title is None
+                        else path.title.format(**url_dict, **dynamic_vars)
+                    )
+                except Exception:
+                    raise ValueError(
+                        "Error generating the page title. Please check the title argument in the decorator."
+                    )
                 _cache[url_hash] = path.form(
                     url_hash=url_hash,
                     url_pattern=url_pattern,

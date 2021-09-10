@@ -13,4 +13,3 @@ On the development version, the update will occur whenever we merge new changes 
 
 Whilst we wouldn't intentionally merge broken code into the development version, you should
 consider it unstable and not suitable for production use.
-

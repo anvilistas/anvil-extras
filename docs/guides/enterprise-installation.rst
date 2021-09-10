@@ -1,7 +1,7 @@
 Installation on Anvil Enterprise
 ============
 
-Enterprise installations of Anvil are entirely separate from the cloud version by design, so you won't be able to depend on the public version of anvil-extras directly. 
+Enterprise installations of Anvil are entirely separate from the cloud version by design, so you won't be able to depend on the public version of anvil-extras directly.
 Instead, create an app on your Enterprise installation called Anvil Extras, then:
 
 
