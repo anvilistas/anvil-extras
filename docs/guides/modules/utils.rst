@@ -71,7 +71,7 @@ To use it, import the decorator and apply it to the class for a form:
        def __init__(self, **properties):
            self.init_components(**properties)
 
-Now, the form has an ``item`` property which behaves like a dictionary. Whenever a value of that dictionary changes, the form's ``refresh_data_bindings`` method will be called. 
+Now, the form has an ``item`` property which behaves like a dictionary. Whenever a value of that dictionary changes, the form's ``refresh_data_bindings`` method will be called.
 
 Note: The ``item`` property will no longer reference the same object. Rather, in the following example, it is as though auto-refresh adds the ``item = dict(item)`` line:
 
@@ -79,11 +79,11 @@ Note: The ``item`` property will no longer reference the same object. Rather, in
 
    other_item = {"x": 1}
    item = other_item
-   
+
    item = dict(item)
    item["x"] = 2
 
-As in the above code, with auto-refresh, ``item`` is changed but ``other_item`` is not. 
+As in the above code, with auto-refresh, ``item`` is changed but ``other_item`` is not.
 
 
 Wait for writeback
