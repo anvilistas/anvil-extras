@@ -195,8 +195,10 @@ def main_router(Cls):
                         if path.title is None
                         else path.title.format(**url_dict, **dynamic_vars)
                     )
-                except Exception as e:
-                    raise ValueError(f'Error generating the page title. Please check the title argument in the decorator.')
+                except Exception:
+                    raise ValueError(
+                        "Error generating the page title. Please check the title argument in the decorator."
+                    )
                 _cache[url_hash] = path.form(
                     url_hash=url_hash,
                     url_pattern=url_pattern,
