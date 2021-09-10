@@ -3,8 +3,13 @@
 ## New Features
 * Quill - dynamically add custom modules
   https://github.com/anvilistas/anvil-extras/pull/117
-* routing - routing.alert wraps anvil.alert to ensure dismissible alerts are closed on navigation
+* routing - adjusts the behaviour of anvil.alert to ensure dismissible alerts are closed on navigation. And navigation prevented for non-dismissible alerts.
   https://github.com/anvilistas/anvil-extras/pull/132
+* `storage.indexed_db` - Now supports the browser's `IndexedDB` with a dictionary like api
+  https://github.com/anvilistas/anvil-extras/pull/135
+* storage - additional store objects can be created inside the browsers `localStorage` or `IndexedDB`. e.g. `todo_store = indexed_db.get_store('todos')`
+  Each store object behaves like a dictionary object.
+  https://github.com/anvilistas/anvil-extras/pull/135
 ## Bug Fixes
 * Autocomplete - can now be used inside an alert
   https://github.com/anvilistas/anvil-extras/pull/114
@@ -14,6 +19,10 @@
   https://github.com/anvilistas/anvil-extras/pull/125
 * PageBreak - fix margin_top property and make it optional
   https://github.com/anvilistas/anvil-extras/pull/137
+
+## Deprecated
+* storage.session_storage was deprecated. Use local_storage instead
+  https://github.com/anvilistas/anvil-extras/pull/135
 
 ## Updates
 * Slider Component - bump javascript dependency and refactor. No changes to the component's public API.
