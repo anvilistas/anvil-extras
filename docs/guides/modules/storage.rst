@@ -60,7 +60,7 @@ API
 
    both :attr:`indexed_db` and :attr:`local_storage` are instances of a dictionary like :class:`StorageWrapper` class.
 
-   .. describe:: is_supported()
+   .. describe:: is_available()
 
       Check if the storage object is supported. Returns a ``boolean``.
 
