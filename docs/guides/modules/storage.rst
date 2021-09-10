@@ -11,6 +11,9 @@ convenient dictionary like wrappers around the native browser objects.
 The :attr:`local_storage` and :attr:`indexed_db` objects can store data that persists accross browser sessions and are also available offline.
 It could be used to create an entirely offline todo app, or to store data across sessions.
 
+Note that when working in the IDE the app is running in an IFrame and the ``storage`` objects may not be available. This can be fixed by changing your browser settings.
+Turning the shields down in Brave or making sure not to block third party cookies in Chrome should fix this.
+
 
 Which to chose?
 +++++++++++++++
@@ -63,7 +66,7 @@ API
 
    .. describe:: get_store(name)
 
-      Get or create a ``storage`` object. e.g. ``todo_store = indexed_db.get_store('todos')``. This will create a new storeage object inside the browser's ``IndexedDB``.
+      Get or create a ``storage`` object. e.g. ``todo_store = indexed_db.get_store('todos')``. This will create a new storage object inside the browser's ``IndexedDB``.
       The :attr:`indexed_db` object is equivalent to ``indexed_db.get_store('default')``. To explore this further, open up devtools and find ``IndexedDB`` in the Application tab.
 
    .. describe:: list(store)
@@ -81,7 +84,7 @@ API
 
    .. describe:: store[key] = value
 
-      Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored correctly. e.g. a ``datetime`` object.
+      Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored incorrectly. e.g. a ``datetime`` object.
       If storing ``bytes`` objects it is best to use the :attr:`indexed_db` store.
 
    .. describe:: del store[key]

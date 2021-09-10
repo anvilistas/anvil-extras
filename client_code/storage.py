@@ -23,9 +23,17 @@ class StorageWrapper:
         self._name = name
 
     def is_supported(self):
+        """check if the store object is available and accessible."""
         # in some browsers localStorageWrapper might not be available
-        # we don't throw the error until we try to access the store
-        return self._store.supports(self._driver)
+        if not self._store.supports(self._driver):
+            # we cn't rely on this method - it's just for browser support
+            return False
+        try:
+            self._store.length()
+            # call a method in the store to activate the store
+            return True
+        except Exception:
+            return False
 
     def __getitem__(self, key):
         if key in self._store.keys():
