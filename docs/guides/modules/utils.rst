@@ -87,7 +87,7 @@ As in the above code, with auto-refresh, ``item`` is changed but ``other_item`` 
 
 
 Wait for writeback
-------------
+------------------
 Using ``wait_for_writeback`` as a decorator prevents a function executing before any queued writebacks have completed.
 
 This is particularly useful if you have a form with text fields. Race condidtions can occur between a text field writing back to an item and a click event that uses the item.

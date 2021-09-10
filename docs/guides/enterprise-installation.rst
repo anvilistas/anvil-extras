@@ -1,5 +1,5 @@
 Installation on Anvil Enterprise
-============
+================================
 
 Enterprise installations of Anvil are entirely separate from the cloud version by design, so you won't be able to depend on the public version of anvil-extras directly.
 Instead, create an app on your Enterprise installation called Anvil Extras, then:
@@ -33,7 +33,7 @@ That remote is currently named 'origin'. We will now rename it to something more
     git remote add github git@github.com:anvilistas/anvil-extras.git
 
 Update your local app
---------------
+---------------------
 To update your app, we will now fetch the latest version from github to your local copy and push it from there to Anvil.
 
 * In your terminal, fetch the lastest code from github using the commands:

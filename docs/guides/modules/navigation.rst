@@ -145,7 +145,7 @@ If you want to disable this feature, set the `with_title` argument to `False` wh
         self.init_components(**properties)
 
 Navigate with Code
-+++++++++++
+++++++++++++++++++
 You can emulate clicking a menu link using the go_to function, which takes a 'target' key as its only parameter, e.g.
 
 .. code-block:: python
