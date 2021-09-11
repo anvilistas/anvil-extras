@@ -24,8 +24,8 @@ def handle_alert_unload() -> bool:
         return False
     elif not data.isShown:
         return False
-    elif data.options and data.options.backdrop is True:
-        # bootstrap alerts have a backdrop option of True when dismissible
+    elif data.options and data.options.backdrop != "static":
+        # bootstrap alerts have a backdrom of static when not dismissible
         alert_modal.modal("hide")
         return False
     _navigation.stopUnload()
