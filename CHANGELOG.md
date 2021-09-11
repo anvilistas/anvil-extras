@@ -10,6 +10,8 @@
   https://github.com/anvilistas/anvil-extras/pull/121
 * storage - update and clear were missing from the documented api
   https://github.com/anvilistas/anvil-extras/pull/125
+* PageBreak - fix margin_top property and make it optional
+  https://github.com/anvilistas/anvil-extras/pull/137
 
 ## Updates
 * Slider Component - bump javascript dependency and refactor. No changes to the component's public API.
