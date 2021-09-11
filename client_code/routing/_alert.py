@@ -11,7 +11,7 @@ from anvil.js.window import jQuery as _S
 
 from . import _navigation
 
-modal = _S("#alert-modal")
+alert_modal = _S("#alert-modal")
 
 
 def handle_alert_unload() -> bool:
@@ -19,13 +19,14 @@ def handle_alert_unload() -> bool:
     if there is an active alert which is not dismissible then navigation is prevented
     return value indicates whether this function took control of the on_navigation
     """
-    data = modal.data("bs.modal")
+    data = alert_modal.data("bs.modal")
     if data is None:
         return False
     elif not data.isShown:
         return False
     elif data.options and data.options.backdrop is True:
         # bootstrap alerts have a backdrop option of True when dismissible
+        alert_modal.modal("hide")
         return False
     _navigation.stopUnload()
     return True
