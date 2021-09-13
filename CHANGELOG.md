@@ -3,6 +3,8 @@
 ## New Features
 * Quill - dynamically add custom modules
   https://github.com/anvilistas/anvil-extras/pull/117
+* routing - routing.alert wraps anvil.alert to ensure dismissible alerts are closed on navigation
+  https://github.com/anvilistas/anvil-extras/pull/132
 ## Bug Fixes
 * Autocomplete - can now be used inside an alert
   https://github.com/anvilistas/anvil-extras/pull/114
