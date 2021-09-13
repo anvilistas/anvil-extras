@@ -13,7 +13,7 @@ __version__ = "1.5.2"
 
 
 class PageBreak(PageBreakTemplate):
-    def __init__(self, margin_top, **properties):
+    def __init__(self, margin_top=0, **properties):
         self.margin_node = _S(anvil.js.get_dom_node(self)).find(".margin-element")
         self.margin_top = margin_top
         self.init_components(**properties)
