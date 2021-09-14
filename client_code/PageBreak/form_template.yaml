@@ -4,11 +4,11 @@ container:
     role: null, html: "<!--\nBased on the snippet at https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5\n\
       -->\n<div class=\"break-container\" style=\"overflow: hidden;\">\n  <div style=\"\
       page-break-after:always;\"/>\n  <div class=\"margin-element\" style=\"margin-top:\
-      \ 0px;\"/>\n</div>\n\n<style>\n  .break-container {\n    border: 1px solid grey;\n\
-      \  }\n  @media print {\n    .break-container {\n      border: none;\n    }\n\
-      \  }\n</style>"}
+      \ 0px;\"/>\n</div>\n\n<style>\n  @media print {\n    .break-container {\n  \
+      \    border: none;\n    }\n  }\n</style>"}
 components: []
 is_package: true
 custom_component: true
 properties:
 - {name: margin_top, type: number, default_value: 0, default_binding_prop: true, description: Use to adjust whitespace at the top of each page in the generated pdf. This is an optional property and defaults to 0. Can be positive or negative. Negative numbers will reduce whitespace in the generated pdf.}
+- {name: border, type: string, default_value: 1px solid gray, description: Use to set the style in the form. Useful when the PDF has many grey horizontal lines and the default border style would be confusing. Has no effect on the printed PDF.}
