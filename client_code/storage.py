@@ -12,8 +12,29 @@ from utils._component_helpers import _add_script
 __version__ = "1.5.2"
 __all__ = ["local_storage", "indexed_db"]
 
-toPy = _window.Sk.ffi.toPy
-# we don't want to return proxy objects from the store so use the toPy implementation
+
+_Proxy = type(_window)
+_Object = _window.Object
+
+
+def to_py(obj):
+    """converts simple proxy objects (and nested simple proxy objects) as dictionaries"""
+    if isinstance(obj, list):
+        ret = []
+        for item in obj:
+            ret.append(to_py(item))
+        return ret
+    elif type(obj) is _Proxy and obj.__class__ == _Object:
+        # Then we're a simple proxy object
+        # keys are strings so only to_py the values
+        ret = {}
+        # use _Object.keys to avoid possible name conflict
+        for key in _Object.keys(obj):
+            ret[key] = to_py(obj[key])
+        return ret
+    else:
+        # we're either bytes, str, ints, floats, None, bool
+        return obj
 
 
 class StorageWrapper:
@@ -37,7 +58,7 @@ class StorageWrapper:
 
     def __getitem__(self, key):
         if key in self._store.keys():
-            return toPy(self._store.getItem(key))
+            return to_py(self._store.getItem(key))
         raise KeyError(key)
 
     def __setitem__(self, key, val):
@@ -67,11 +88,11 @@ class StorageWrapper:
 
     def items(self):
         """returns the items for local storage as an iterator"""
-        return ((key, toPy(self._store.getItem(key))) for key in self._store.keys())
+        return ((key, to_py(self._store.getItem(key))) for key in self._store.keys())
 
     def values(self):
         """returns the values for local storage as an iterator"""
-        return (toPy(self._store.getItem(key)) for key in self._store.keys())
+        return (to_py(self._store.getItem(key)) for key in self._store.keys())
 
     def put(self, key, value):
         """put a key value pair into local storage"""
