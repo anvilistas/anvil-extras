@@ -124,7 +124,7 @@ API
       *default*.  If *default* is not given, it defaults to ``None``, so that this method
       never raises a :exc:`KeyError`.
 
-   .. method:: put(key, value)
+   .. method:: store(key, value)
 
       Equivalent to ``store[key] = value``.
 

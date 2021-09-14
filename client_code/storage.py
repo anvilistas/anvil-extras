@@ -97,9 +97,11 @@ class StorageWrapper:
         """returns the values for local storage as an iterator"""
         return (_deserialize(self._store.getItem(key)) for key in self._store.keys())
 
-    def put(self, key, value):
+    def store(self, key, value):
         """put a key value pair into local storage"""
         self[key] = value
+
+    put = store  # backward compatibility
 
     def get(self, key, default=None):
         """get a value from local storage, returns the default value if the key is not in local storage"""
