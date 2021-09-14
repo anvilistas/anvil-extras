@@ -12,6 +12,15 @@ from utils._component_helpers import _add_script
 __version__ = "1.5.2"
 __all__ = ["local_storage", "indexed_db"]
 
+_add_script(
+    """
+<script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+"""
+)
+
+_forage = _window.localforage
+_forage.dropInstance()
+
 
 _Proxy = type(_window)
 _Object = _window.Object
@@ -40,10 +49,35 @@ def _deserialize(obj):
 
 class StorageWrapper:
     _driver = None
+    _stores = None
 
-    def __init__(self, store, name):
-        self._store = store
-        self._name = name
+    def __new__(cls, store_name):
+        if cls._driver is None:
+            raise NotImplementedError(
+                "StorageWrapper cannot be initiated without a valid _driver"
+            )
+        if not isinstance(store_name, str):
+            raise TypeError(
+                f"store_name should be a str, (got {store_name.__class__.__name__})"
+            )
+        known_stores = cls._stores
+        if known_stores is None:
+            # initialize the _stores cache
+            known_stores = cls._stores = {}
+        elif store_name in known_stores:
+            return known_stores[store_name]
+
+        store = object.__new__(cls)
+        store._store = _forage.createInstance(
+            {
+                "storeName": store_name,
+                "driver": [cls._driver, f"fail{cls._driver}"],
+                "name": "anvil_extras",
+            }
+        )
+        store._name = store_name
+        known_stores[store_name] = store
+        return store
 
     def is_available(self):
         """check if the store object is available and accessible."""
@@ -85,33 +119,33 @@ class StorageWrapper:
         return self._store.length()
 
     def keys(self):
-        """returns the keys for local storage as an iterator"""
+        """returns the keys for the store as an iterator"""
         return self._store.keys()
 
     def items(self):
-        """returns the items for local storage as an iterator"""
+        """returns the items for the store as an iterator"""
         return (
             (key, _deserialize(self._store.getItem(key))) for key in self._store.keys()
         )
 
     def values(self):
-        """returns the values for local storage as an iterator"""
+        """returns the values for the store as an iterator"""
         return (_deserialize(self._store.getItem(key)) for key in self._store.keys())
 
-    def store(self, key, value):
-        """put a key value pair into local storage"""
+    def store(self, key: str, value):
+        """store a key value pair in the store"""
         self[key] = value
 
     put = store  # backward compatibility
 
-    def get(self, key, default=None):
-        """get a value from local storage, returns the default value if the key is not in local storage"""
+    def get(self, key: str, default=None):
+        """get a value from the store, returns the default value if the key is not in the store"""
         try:
             return self[key]
         except KeyError:
             return default
 
-    def pop(self, key, default=None):
+    def pop(self, key: str, default=None):
         """remove specified key and return the corresponding value.\n\nIf key is not found, default is returned"""
         try:
             return self.get(key, default)
@@ -119,80 +153,76 @@ class StorageWrapper:
             del self[key]
 
     def clear(self):
-        """clear all items from local storage"""
+        """clear all items from the store"""
         self._store.clear()
 
     def update(self, other, **kws):
-        """update the local storage item with key/value pairs from other"""
+        """update the store item with key/value pairs from other"""
         other = dict(other, **kws)
         for key, value in other.items():
             self[key] = value
 
-    def __eq__(self, other):
-        if not isinstance(other, StorageWrapper):
-            return NotImplemented
-        return self._driver == other._driver and self._name == other._name
-
     @classmethod
     def create_store(cls, store_name: str):
         """
-        Create a new storage object. Inside the browser's IndexedDB or localStorage.
+        Create a new storage object inside the browser's IndexedDB or localStorage.
         e.g. todo_store = indexed_db.create_store('todos')
         message_store = indexed_db.create_store('messages')
         """
-        return cls(
-            _forage.createInstance(
-                {
-                    "storeName": store_name,
-                    "driver": [cls._driver, "failDriver"],
-                    "name": "anvil_extras",
-                }
-            ),
-            store_name,
-        )
+        return cls(store_name)
 
 
-_add_script(
-    """
-<script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
-"""
-)
+# The following defines a forage driver whose job is to
+# try to access the appropriate browser store,
+# catch the exception and the throw a nicer exception
+def _fail_access(fn):
+    def _do_fail(*args):
+        # see what happens when we try to access the storage object
+        msg = "Browser storage object is not available."
+        try:
+            fn()
+        except Exception as e:
+            msg += f"\nWhen trying to access the storage object got - {e}"
+        raise RuntimeError(msg)
 
-_forage = _window.localforage
-_forage.dropInstance()
-
-
-def _failed(*args):
-    # see what happens when we try to access the storage object
-    msg = "browser storage object is not available - see documentation."
-    try:
-        _window.get("localStorage")
-
-        def check_db(res, rej):
-            req = _window.get("indexedDB").open("anvil_extras")
-            req.onerror = lambda e: rej(req.error.toString())
-            req.onsuccess = lambda r: res(None)
-
-        _window.Function("callback", "return new Promise(callback)")(check_db)
-    except Exception as e:
-        msg += f"\nWhen trying to access the storage object got - {e}"
-    raise RuntimeError(msg)
+    return _do_fail
 
 
-_forage.defineDriver(
-    {
-        "_driver": "failDriver",
-        "_initStorage": lambda options: None,
-        "clear": _failed,
-        "getItem": _failed,
-        "iterate": _failed,
-        "key": _failed,
-        "keys": _failed,
-        "length": _failed,
-        "removeItem": _failed,
-        "setItem": _failed,
-    }
-)
+def _fail_db(*args):
+    def check__(res, rej):
+        req = _window.get("indexedDB").open("anvil_extras")
+        req.onerror = lambda e: rej(req.error.toString())
+        req.onsuccess = lambda r: res(None)
+
+    # this is asyncronous so use the Promise api
+    _window.Function("callback", "return new Promise(callback)")(check__)
+
+
+def _fail_ls(*args):
+    _window.get("localStorage")
+
+
+def _defineFailDriver(driver: str):
+    fail_fn = _fail_db if driver == _forage.INDEXEDDB else _fail_ls
+    fail_callback = _fail_access(fail_fn)
+    _forage.defineDriver(
+        {
+            "_driver": f"fail{driver}",
+            "_initStorage": lambda options: None,
+            "clear": fail_callback,
+            "getItem": fail_callback,
+            "iterate": fail_callback,
+            "key": fail_callback,
+            "keys": fail_callback,
+            "length": fail_callback,
+            "removeItem": fail_callback,
+            "setItem": fail_callback,
+        }
+    )
+
+
+_defineFailDriver(_forage.INDEXEDDB)
+_defineFailDriver(_forage.LOCALSTORAGE)
 
 
 class IndexedDBWrapper(StorageWrapper):
@@ -216,28 +246,28 @@ def __getattr__(name):
 
 
 if __name__ == "__main__":
-    for db in local_storage, indexed_db:
-        print(db)
-        db["foo"] = "bar"
-        print(db["foo"])
-        del db["foo"]
-        print(db.get("foo", "sentinel"))
+    for _ in local_storage, indexed_db:
+        print(_)
+        _["foo"] = "bar"
+        print(_["foo"])
+        del _["foo"]
+        print(_.get("foo", "sentinel"))
         try:
-            db["foo"]
+            _["foo"]
         except KeyError as e:
             print(repr(e))
-        db.put("foo", 1)
-        print(db.pop("foo"))
+        _.put("foo", 1)
+        print(_.pop("foo"))
         x = [{"a": "b"}, "foo"]
-        db["x"] = x
-        print(db["x"])
-        print(db["x"] == x)
-        print(db.get("x") == x)
-        print(db.pop("x") == x)
-        db["foo"] = None
-        db["eggs"] = None
-        db.update({"foo": "bar"}, eggs="spam", x=1)
-        print(len(list(db.keys())) == 3, db["eggs"] == "spam")
-        db.clear()
-        print(len(list(db.keys())) == 0)
+        _["x"] = x
+        print(_["x"])
+        print(_["x"] == x)
+        print(_.get("x") == x)
+        print(_.pop("x") == x)
+        _["foo"] = None
+        _["eggs"] = None
+        _.update({"foo": "bar"}, eggs="spam", x=1)
+        print(len(list(_.keys())) == 3, _["eggs"] == "spam")
+        _.clear()
+        print(len(list(_.keys())) == 0)
         print("==========")
