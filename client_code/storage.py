@@ -39,9 +39,10 @@ def _deserialize(obj):
 
 
 class StorageWrapper:
-    def __init__(self, store, driver, name):
+    _driver = None
+
+    def __init__(self, store, name):
         self._store = store
-        self._driver = driver
         self._name = name
 
     def is_available(self):
@@ -75,7 +76,7 @@ class StorageWrapper:
 
     def __repr__(self):
         # we can't print the items like a dictionary since we get a SuspensionError here
-        return f"<{driver_names[self._driver]} for {self._name!r} store>"
+        return f"<{self.__class__.__name__} for {self._name!r} store>"
 
     def __iter__(self):
         return self.keys()
@@ -132,18 +133,22 @@ class StorageWrapper:
             return NotImplemented
         return self._driver == other._driver and self._name == other._name
 
-    def get_store(self, name):
+    @classmethod
+    def create_store(cls, store_name: str):
         """
-        Create a new storage object. Inside either local_storage or indexed_db.
-        e.g. todo_store = indexed_db.get_store('todos')
-        message_store = indexed_db.get_store('messages')
+        Create a new storage object. Inside the browser's IndexedDB or localStorage.
+        e.g. todo_store = indexed_db.create_store('todos')
+        message_store = indexed_db.create_store('messages')
         """
-        return StorageWrapper(
-            self._store.createInstance(
-                {"storeName": name, "driver": self._driver, "name": "anvil_extras"}
+        return cls(
+            _forage.createInstance(
+                {
+                    "storeName": store_name,
+                    "driver": [cls._driver, "failDriver"],
+                    "name": "anvil_extras",
+                }
             ),
-            self._driver,
-            name,
+            store_name,
         )
 
 
@@ -189,28 +194,19 @@ _forage.defineDriver(
     }
 )
 
-_indexed_db_wrapper = _forage.createInstance(
-    {
-        "name": "anvil_extras",
-        "storeName": "default",
-        "driver": [_forage.INDEXEDDB, "failDriver"],
-    }
-)
-indexed_db = StorageWrapper(_indexed_db_wrapper, _forage.INDEXEDDB, "default")
 
-_local_store_wrapper = _forage.createInstance(
-    {
-        "name": "anvil_extras",
-        "storeName": "default",
-        "driver": [_forage.LOCALSTORAGE, "failDriver"],
-    }
-)
-local_storage = StorageWrapper(_local_store_wrapper, _forage.LOCALSTORAGE, "default")
+class IndexedDBWrapper(StorageWrapper):
+    _driver = _forage.INDEXEDDB
 
-driver_names = {
-    _forage.INDEXEDDB: "IndexedDBWrapper",
-    _forage.LOCALSTORAGE: "LocalStorageWrapper",
-}
+
+indexed_db = IndexedDBWrapper.create_store("default")
+
+
+class LocalStorageWrapper(StorageWrapper):
+    _driver = _forage.LOCALSTORAGE
+
+
+local_storage = LocalStorageWrapper.create_store("default")
 
 
 def __getattr__(name):

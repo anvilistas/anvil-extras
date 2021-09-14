@@ -64,10 +64,10 @@ API
 
       Check if the storage object is supported. Returns a ``boolean``.
 
-   .. describe:: get_store(name)
+   .. describe:: create_store(name)
 
-      Get or create a ``storage`` object. e.g. ``todo_store = indexed_db.get_store('todos')``. This will create a new storage object inside the browser's ``IndexedDB``.
-      The :attr:`indexed_db` object is equivalent to ``indexed_db.get_store('default')``. To explore this further, open up devtools and find ``IndexedDB`` in the Application tab.
+      Get or create a ``storage`` object. e.g. ``todo_store = indexed_db.create_store('todos')``. This will create a new storage object inside the browser's ``IndexedDB``.
+      The :attr:`indexed_db` object is equivalent to ``indexed_db.create_store('default')``. To explore this further, open up devtools and find ``IndexedDB`` in the Application tab.
 
    .. describe:: list(store)
 
