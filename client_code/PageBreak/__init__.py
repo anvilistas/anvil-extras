@@ -14,8 +14,9 @@ __version__ = "1.5.2"
 
 class PageBreak(PageBreakTemplate):
     def __init__(self, margin_top=0, border="1px solid grey", **properties):
-        self.margin_node = _S(anvil.js.get_dom_node(self)).find(".margin-element")
-        self.break_container = _S(anvil.js.get_dom_node(self)).find(".break-container")
+        dom_node = _S(anvil.js.get_dom_node(self))
+        self.margin_node = dom_node.find(".margin-element")
+        self.break_container = dom_node.find(".break-container")
 
         self.margin_top = margin_top
         self.border = border

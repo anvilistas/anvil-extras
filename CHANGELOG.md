@@ -20,6 +20,8 @@
   https://github.com/anvilistas/anvil-extras/pull/116
 * Popover - documentation added and clone link updated. The example now imports `anvil_extras`
   https://github.com/anvilistas/anvil-extras/pull/121
+* PageBreak - `border` property and documentation added. Fixed illegal HTML
+  https://github.com/anvilistas/anvil-extras/pull/139
 
 # v1.5.2 23-Aug-2021
 
