@@ -176,7 +176,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 def _option_from_str(item: str, idx: str) -> tuple:
     key = value = item
     if item == "---":
-        return "<option data-divider='true'/>", object()  # dummy value
+        return "<option data-divider='true'></option>", object()  # dummy value
     else:
         return f"<option value={idx}>{key}</option>", value
 
