@@ -3,26 +3,27 @@ Storage
 
 Introduction
 ------------
-Browsers have various ways to store data. ``localStorage`` and ``indexedDB`` are two such storage mechanisms that are particularly useful for storing data offline.
+Browsers have various mechanisms to store data. ``localStorage`` and ``IndexedDB`` are two such mechanisms. These are particularly useful for storing data offline.
 
-The anvil_extras :mod:`storage` module provides both a :attr:`local_storage` object and a :attr:`indexed_db` object, which are
-convenient dictionary like wrappers around the native browser objects.
+The anvil_extras :mod:`storage` module provides wrappers around both these storage mechanisms in a convenient dictionary like API.
 
-The :attr:`local_storage` and :attr:`indexed_db` objects can store data that persists accross browser sessions and are also available offline.
-It could be used to create an entirely offline todo app, or to store data across sessions.
+In order to store data you'll need a store object. You can import the default store objects :attr:`local_storage` or :attr:`indexed_db`.
+Alternatively create your own store object using the classmethod ``create_store(store_name)``.
 
-Note that when working in the IDE the app is running in an IFrame and the ``storage`` objects may not be available. This can be fixed by changing your browser settings.
-Turning the shields down in Brave or making sure not to block third party cookies in Chrome should fix this.
+*NB: when working in the IDE the app is running in an IFrame and the storage objects may not be available. This can be fixed by changing your browser settings.
+Turning the shields down in Brave or making sure not to block third party cookies in Chrome should fix this.*
 
 
 Which to chose?
 +++++++++++++++
-If you have small amounts of data which can be converted to JSON then use the :attr:`local_storage` object.
-If you have more data which can be converted to JSON (and also ``bytes`` objects) - use :attr:`indexed_db`.
+| If you have small amounts of data which can be converted to JSON - use :attr:`local_storage`.
+| If you have more data which can be converted to JSON (also ``bytes``) - use :attr:`indexed_db`.
+
+*NB: Datetime objects cannot be stored. You'll need to serialize and deserialize these - consider converting datetimes to timestamps (and dates to ordinals).*
 
 
-Usage
------
+Usage Examples
+--------------
 
 Store user preference
 +++++++++++++++++++++
@@ -52,92 +53,125 @@ Change the theme at startup
         ...
 
 
+Create an offline todo app
+++++++++++++++++++++++++++
+
+.. code-block:: python
+
+    from anvil_extras.storage import indexed_db
+    from anvil_extras.uuid import uuid4
+
+    todo_store = indexed_db.create_store('todos')
+    # create_store() is a classmethod that takes a store_name
+    # it will create another store object inside the browsers IndexedDB
+    # or return the store object if it already exists
+    # the todo_store acts as dictionary like object
+
+    class TodoPage(TodoPageTemplate):
+        def __init__(self, **properties):
+            self.init_components(**properties)
+            self.todo_panel.items = list(todo_store.values())
+
+        def save_todo_btn_click(self, **event_args):
+            if not self.todo_input.text:
+                return
+            id = str(uuid4())
+            todo = {"id": id, "todo": self.todo_input.text, "completed": False}
+            todo_store[id] = todo
+            self.todo_panel.items = self.todo_panel.items + [todo]
+            self.todo_input.text = ""
+
+
 
 API
 ---
 
 .. class:: StorageWrapper()
+           IndexedDBWrapper()
+           LocalStorageWrapper()
 
-   both :attr:`indexed_db` and :attr:`local_storage` are instances of a dictionary like :class:`StorageWrapper` class.
+    both :attr:`indexed_db` and :attr:`local_storage` are instances of the dictionary like classes :class:`IndexedDBWrapper` and :class:`LocalStorageWrapper` respectively.
 
-   .. describe:: is_available()
+    .. classmethod:: create_store(name)
 
-      Check if the storage object is supported. Returns a ``boolean``.
+        Create a store object. e.g. ``todo_store = indexed_db.create_store('todos')``. This will create a new store inside the browser's ``IndexedDB`` and return an :class:`IndexedDBWrapper` instance.
+        The :attr:`indexed_db` object is equivalent to ``indexed_db.create_store('default')``. To explore this further, open up devtools and find ``IndexedDB`` in the Application tab.
+        Since :attr:`create_store` is a classmethod you can also do ``todo_store = IndexedDBWrapper.create_store('todos')``.
 
-   .. describe:: create_store(name)
+    .. describe:: is_available()
 
-      Get or create a ``storage`` object. e.g. ``todo_store = indexed_db.create_store('todos')``. This will create a new storage object inside the browser's ``IndexedDB``.
-      The :attr:`indexed_db` object is equivalent to ``indexed_db.create_store('default')``. To explore this further, open up devtools and find ``IndexedDB`` in the Application tab.
+        Check if the storage object is supported. Returns a ``boolean``.
 
-   .. describe:: list(store)
 
-      Return a list of all the keys used in the *store*.
+    .. describe:: list(store)
 
-   .. describe:: len(store)
+        Return a list of all the keys used in the *store*.
 
-      Return the number of items in *store*.
+    .. describe:: len(store)
 
-   .. describe:: store[key]
+        Return the number of items in *store*.
 
-      Return the item of *store* with key *key*.  Raises a :exc:`KeyError` if *key* is
-      not in *store*. Raises a :exc:`TypeError` if *key* is not a string.
+    .. describe:: store[key]
 
-   .. describe:: store[key] = value
+        Return the value of *store* with key *key*.  Raises a :exc:`KeyError` if *key* is
+        not in *store*.
 
-      Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored incorrectly. e.g. a ``datetime`` object.
-      If storing ``bytes`` objects it is best to use the :attr:`indexed_db` store.
+    .. describe:: store[key] = value
 
-   .. describe:: del store[key]
+        Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored incorrectly. e.g. a ``datetime`` object.
+        If storing ``bytes`` objects it is best to use the :attr:`indexed_db` store.
 
-      Remove ``store[key]`` from *store*.
+    .. describe:: del store[key]
 
-   .. describe:: key in store
+        Remove ``store[key]`` from *store*.
 
-      Return ``True`` if *store* has a key *key*, else ``False``.
+    .. describe:: key in store
 
-   .. describe:: iter(store)
+        Return ``True`` if *store* has a key *key*, else ``False``.
 
-      Return an iterator over the keys of the *store*.  This is a shortcut
-      for ``iter(store.keys())``.
+    .. describe:: iter(store)
 
-   .. method:: clear()
+        Return an iterator over the keys of the *store*.  This is a shortcut
+        for ``iter(store.keys())``.
 
-      Remove all items from the :attr:`local storage`.
+    .. method:: clear()
 
-   .. method:: get(key[, default])
+        Remove all items from the *store*.
 
-      Return the value for *key* if *key* is in *store*, else *default*.
-      If *default* is not given, it defaults to ``None``, so that this method
-      never raises a :exc:`KeyError`.
+    .. method:: get(key[, default])
 
-   .. method:: items()
+        Return the value for *key* if *key* is in *store*, else *default*.
+        If *default* is not given, it defaults to ``None``, so that this method
+        never raises a :exc:`KeyError`.
 
-      Return a map iterator of *store*'s ``(key, value)`` pairs.
+    .. method:: items()
 
-   .. method:: keys()
+        Return an iterator of the *store*'s ``(key, value)`` pairs.
 
-      Return a map iterator of :attr:`local storage`'s keys.
+    .. method:: keys()
 
-   .. method:: pop(key[, default])
+        Return an iterator of the *store*'s keys.
 
-      If *key* is in *store*, remove it and return its value, else return
-      *default*.  If *default* is not given, it defaults to ``None``, so that this method
-      never raises a :exc:`KeyError`.
+    .. method:: pop(key[, default])
 
-   .. method:: store(key, value)
+        If *key* is in *store*, remove it and return its value, else return
+        *default*.  If *default* is not given, it defaults to ``None``, so that this method
+        never raises a :exc:`KeyError`.
 
-      Equivalent to ``store[key] = value``.
+    .. method:: store(key, value)
 
-   .. method:: update([other])
+        Equivalent to ``store[key] = value``.
 
-      Update the *store* with the key/value pairs from *other*, overwriting
-      existing keys.  Return ``None``.
+    .. method:: update([other])
 
-      :meth:`update` accepts either a dictionary object or an iterable of
-      key/value pairs (as tuples or other iterables of length two).  If keyword
-      arguments are specified, *store* is then updated with those
-      key/value pairs: ``store.update(red=1, blue=2)``.
+        Update the *store* with the key/value pairs from *other*, overwriting
+        existing keys.  Return ``None``.
 
-   .. method:: values()
+        :meth:`update` accepts either a dictionary object or an iterable of
+        key/value pairs (as tuples or other iterables of length two).  If keyword
+        arguments are specified, *store* is then updated with those
+        key/value pairs: ``store.update(red=1, blue=2)``.
 
-      Return a map iterator of *store*'s values.
+    .. method:: values()
+
+        Return an iterator of the *store*'s values.
