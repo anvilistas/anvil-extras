@@ -10,6 +10,8 @@
 * storage - additional store objects can be created inside the browsers `localStorage` or `IndexedDB`. e.g. `todo_store = indexed_db.get_store('todos')`
   Each store object behaves like a dictionary object.
   https://github.com/anvilistas/anvil-extras/pull/135
+* PageBreak - `border` property added and documentation updated.
+  https://github.com/anvilistas/anvil-extras/pull/139
 ## Bug Fixes
 * Autocomplete - can now be used inside an alert
   https://github.com/anvilistas/anvil-extras/pull/114
@@ -19,6 +21,9 @@
   https://github.com/anvilistas/anvil-extras/pull/125
 * PageBreak - fix margin_top property and make it optional
   https://github.com/anvilistas/anvil-extras/pull/137
+* PageBreak and Multi-select - fix illegal HTML
+  https://github.com/anvilistas/anvil-extras/pull/139
+
 
 ## Deprecated
 * storage.session_storage was deprecated. Use local_storage instead
@@ -31,8 +36,7 @@
   https://github.com/anvilistas/anvil-extras/pull/116
 * Popover - documentation added and clone link updated. The example now imports `anvil_extras`
   https://github.com/anvilistas/anvil-extras/pull/121
-* PageBreak - `border` property and documentation added. Fixed illegal HTML
-  https://github.com/anvilistas/anvil-extras/pull/139
+
 
 # v1.5.2 23-Aug-2021
 
