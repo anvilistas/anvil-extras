@@ -17,6 +17,7 @@ from random import choice as _random_choice
 from string import ascii_letters as _letters
 
 import anvil as _anvil
+import anvil.js
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 from anvil.js.window import window as _window
@@ -65,6 +66,47 @@ def popover(
 
     popper_id = _get_random_string(5)
     popper_element = _get_jquery_popper_element(self)
+
+    has_popover = popper_element.data("bs.popover") is not None
+    if has_popover and self._in_transition:
+        # we've been created and we're part way through a transition
+        # wait for it to finish
+        anvil.js.await_promise(self._in_transition)
+    if has_popover:
+        # clean up our previous event handlers
+        popper_element.off("show.bs.popover")
+        popper_element.off("shown.bs.popover")
+        popper_element.off("hide.bs.popover")
+        popper_element.off("hidden.bs.popover")
+
+    # transition is either None or a promise
+    self._in_transition = None
+
+    def resolve_shown(resolve, _reject):
+        def f(e):
+            resolve(None)
+            self._in_transition = None
+            popper_element.off("shown.bs.popover", f)
+
+        popper_element.on("shown.bs.popover", f)
+
+    def show_in_transition(e):
+        self._in_transition = _window.Promise(resolve_shown)
+
+    popper_element.on("show.bs.popover", show_in_transition)
+
+    def resolve_hidden(resolve, _reject):
+        def f(e):
+            resolve(None)
+            self._in_transition = None
+            popper_element.off("hidden.bs.popover", f)
+
+        popper_element.on("hidden.bs.popover", f)
+
+    def hide_in_transition(e):
+        self._in_transition = _window.Promise(resolve_hidden)
+
+    popper_element.on("hide.bs.popover", hide_in_transition)
 
     if trigger == "stickyhover":
         trigger = "manual"
@@ -122,6 +164,8 @@ def pop(self, behavior):
     is_visible: same as shown
     """
     popper_element = _get_jquery_popper_element(self)
+    if self._in_transition is not None:
+        anvil.js.await_promise(self._in_transition)
     if behavior == "shown" or behavior == "is_visible":
         return _is_visible(popper_element)
     elif behavior == "update":
