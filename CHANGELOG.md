@@ -1,4 +1,4 @@
-# Unreleased
+# v1.6.0 17-Sep-2021
 
 ## New Features
 * Quill - dynamically add custom modules
@@ -12,6 +12,7 @@
   https://github.com/anvilistas/anvil-extras/pull/135
 * PageBreak - `border` property added and documentation updated.
   https://github.com/anvilistas/anvil-extras/pull/139
+
 ## Bug Fixes
 * Autocomplete - can now be used inside an alert
   https://github.com/anvilistas/anvil-extras/pull/114
@@ -26,7 +27,6 @@
 * Popover - remove the requirement for delays in show/hide/destroy transitions
   https://github.com/anvilistas/anvil-extras/pull/146
 
-
 ## Deprecated
 * storage.session_storage was deprecated. Use local_storage instead
   https://github.com/anvilistas/anvil-extras/pull/135
@@ -38,7 +38,6 @@
   https://github.com/anvilistas/anvil-extras/pull/116
 * Popover - documentation added and clone link updated. The example now imports `anvil_extras`
   https://github.com/anvilistas/anvil-extras/pull/121
-
 
 # v1.5.2 23-Aug-2021
 
