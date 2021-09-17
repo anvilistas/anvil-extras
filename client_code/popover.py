@@ -110,14 +110,19 @@ def popover(
 
     if trigger == "stickyhover":
         trigger = "manual"
+        from time import sleep
+
+        def sticky_leave(e):
+            sleep(0.1)  # small delay to allow the mouse to move to the element
+            if not _S("[popover_id={}]:hover".format(popper_id)):
+                pop(self, "hide")
+
         popper_element.on(
             "mouseenter",
             lambda e: None if pop(self, "is_visible") else pop(self, "show"),
         ).on(
             "mouseleave",
-            lambda e: None
-            if _S("[popover_id={}]:hover".format(popper_id))
-            else pop(self, "hide"),
+            sticky_leave,
         )
         _set_sticky_hover()
         _sticky_popovers.add(popper_id)
