@@ -23,6 +23,8 @@
   https://github.com/anvilistas/anvil-extras/pull/137
 * PageBreak and Multi-select - fix illegal HTML
   https://github.com/anvilistas/anvil-extras/pull/139
+* Popover - remove the requirement for delays in show/hide/destroy transitions
+  https://github.com/anvilistas/anvil-extras/pull/146
 
 
 ## Deprecated
