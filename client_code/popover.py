@@ -22,7 +22,7 @@ from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 from anvil.js.window import window as _window
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 
 def popover(

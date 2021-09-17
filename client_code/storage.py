@@ -10,7 +10,7 @@ from anvil.js import window as _window
 
 from utils._component_helpers import _add_script
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 __all__ = ["local_storage", "indexed_db"]
 
 _add_script(

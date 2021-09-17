@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 
 class Logger:

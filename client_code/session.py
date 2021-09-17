@@ -6,6 +6,6 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from .utils._component_helpers import StyleInjector
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 style_injector = StyleInjector()

@@ -14,7 +14,7 @@ from anvil.js import window as _window
 from ..utils._component_helpers import _add_script, _spacing_property
 from ._anvil_designer import QuillTemplate
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 # <!-- Theme included stylesheets -->
 _add_script('<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">')

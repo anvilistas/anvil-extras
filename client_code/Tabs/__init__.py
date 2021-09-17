@@ -15,7 +15,7 @@ from .. import session
 from ..utils._component_helpers import _get_color, _get_rgb, _spacing_property
 from ._anvil_designer import TabsTemplate
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 session.style_injector.inject(
     """

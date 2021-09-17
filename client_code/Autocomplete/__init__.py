@@ -16,7 +16,7 @@ from anvil.js.window import window as _window
 from ..session import style_injector as _style_injector
 from ._anvil_designer import AutocompleteTemplate
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 
 _style_injector.inject(

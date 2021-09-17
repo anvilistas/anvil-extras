@@ -7,7 +7,7 @@
 
 from anvil.js.window import eval as _eval
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 _js_uuid = _eval("import('https://jspm.dev/uuid@8.3.2');")
 _v4, _parse, _validate = _js_uuid.v4, _js_uuid.parse, _js_uuid.validate

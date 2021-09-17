@@ -13,7 +13,7 @@ from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
-__version__ = "1.5.2"
+__version__ = "1.6.0"
 
 _characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
