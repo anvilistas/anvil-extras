@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+import anvil.js
 from anvil.js import window as _window
 
 from utils._component_helpers import _add_script
@@ -189,13 +190,13 @@ def _fail_access(fn):
 
 
 def _fail_db(*args):
-    def check__(res, rej):
-        req = _window.get("indexedDB").open("anvil_extras")
+    def check_db(res, rej):
+        req = _window.indexedDB.open("anvil_extras")
         req.onerror = lambda e: rej(req.error.toString())
         req.onsuccess = lambda r: res(None)
 
     # this is asyncronous so use the Promise api
-    _window.Function("callback", "return new Promise(callback)")(check__)
+    anvil.js.await_promise(_window.Promise(check_db))
 
 
 def _fail_ls(*args):

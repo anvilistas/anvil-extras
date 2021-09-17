@@ -6,14 +6,15 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 import random
 
+import anvil.js
 from anvil import app as _app
 from anvil.js import get_dom_node as _get_dom_node
+from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
 __version__ = "1.5.2"
 
-_loaded = False
 _characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
@@ -37,20 +38,6 @@ def _get_dom_node_id(component):
     return node.id
 
 
-def _onload(e):
-    global _loaded
-    _loaded = True
-
-
-def _wait_for_load(interval=0.005):
-    global _loaded
-    while not _loaded:
-        from time import sleep
-
-        sleep(interval)
-    _loaded = False
-
-
 def _add_script(s):
     dummy = _S(s)[0]  # let jquery pass the tag
     s = _document.createElement(dummy.tagName)
@@ -60,8 +47,13 @@ def _add_script(s):
     _document.head.appendChild(s)
     if not s.get("src"):
         return
-    s.onload = s.onerror = _onload  # ignore errors
-    _wait_for_load()
+
+    def _wait_for_load(res, rej):
+        s.onload = res
+        s.onerror = rej
+
+    p = _Promise(_wait_for_load)
+    anvil.js.await_promise(p)
 
 
 def _spacing_property(a_b):
