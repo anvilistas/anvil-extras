@@ -46,11 +46,13 @@ def popover(
 
     if the content is a form then the form will have an attribute self.popper added
     """
+    component = None
     if isinstance(content, str):
         html = False
     elif isinstance(content, _anvil.Component):
         html = True
         content.popper = self  # add the popper to the content form
+        component = content
         content = _anvil.js.get_dom_node(content)  # get the dom node
     else:
         raise TypeError(
@@ -81,6 +83,12 @@ def popover(
 
     # transition is either None or a promise
     self._in_transition = None
+    fake_container = _anvil.Container()
+    if component is not None:
+        # we add the component to a Container component
+        # this doesn't really add it to the dom
+        # it just allows us to use anvil's underlying show hide architecture
+        fake_container.add_component(component)
 
     def resolve_shown(resolve, _reject):
         def f(e):
@@ -91,6 +99,9 @@ def popover(
         popper_element.on("shown.bs.popover", f)
 
     def show_in_transition(e):
+        open_form = _anvil.get_open_form()
+        if open_form is not None and fake_container.parent is None:
+            open_form.add_component(fake_container)
         self._in_transition = _window.Promise(resolve_shown)
 
     popper_element.on("show.bs.popover", show_in_transition)
@@ -99,6 +110,7 @@ def popover(
         def f(e):
             resolve(None)
             self._in_transition = None
+            fake_container.remove_from_parent()
             popper_element.off("hidden.bs.popover", f)
 
         popper_element.on("hidden.bs.popover", f)
