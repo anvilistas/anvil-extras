@@ -17,7 +17,7 @@ Introduction
 Popovers are already included with anvil since anvil `ships with bootstrap <https://anvil.works/docs/client/javascript#already-included-javascript>`_.
 
 This module provides a python wrapper around `bootstrap popovers <https://getbootstrap.com/docs/3.4/javascript/#popovers>`_.
-When the ``popover`` module is imported Links and Buttons get two additional methods - ``pop`` and ``popover``.
+When the ``popover`` module is imported, all anvil components get two additional methods - ``pop`` and ``popover``.
 
 
 Usage
@@ -51,11 +51,11 @@ API
 
 .. method:: popover(self, content, title='', placement='right', trigger='click', animation=True, delay={"show": 100, "hide": 100}, max_width=None, auto_dismiss=True)
 
-    popover is a method that can be used with any ``Button`` or ``Link``.
+    popover is a method that can be used with any anvil component. Commonly used on ``Button``s and ``Link``s.
 
     .. describe:: self
 
-        the ``Button`` or ``Link`` used. No need to worry about this argument when using popover as a method e.g. ``self.button_1.popover(content='example text')``
+        the component used. No need to worry about this argument when using popover as a method e.g. ``self.button_1.popover(content='example text')``
 
     .. describe:: content
 
@@ -88,26 +88,29 @@ API
 
     .. describe:: auto_dismiss
 
-        when clicking outside a popover the popover will be closed. Setting this flag to ``False`` overrides that behaviour.
+        When clicking outside a popover the popover will be closed. Setting this flag to ``False`` overrides that behaviour.
+        Note that popovers will always be dismissed when the page is scrolled. This prevents popovers from appearing in weird places on the page.
 
 
 .. method:: pop(self, behaviour)
 
-    pop is a method that can be used with any ``Button`` or ``Link`` that has a ``popover``
+    pop is a method that can be used with any component that has a ``popover``
 
     .. describe:: self
 
-        the ``Button`` or ``Link`` used. No need to worry about this argument when using ``self.button_1.pop('show')``
+        the component used. No need to worry about this argument when using ``self.button_1.pop('show')``
 
     .. describe:: behaviour
 
-        ``'show'``, ``'hide'``, ``'toggle'``, ``'destroy'``. Also includes ``'shown'`` and ``'is_visible'`` which return a ``boolean``.
+        ``'show'``, ``'hide'``, ``'toggle'``, ``'destroy'``. Also includes ``'shown'`` and ``'is_visible'``, which return a ``boolean``.
+        ``'update'`` will update the popover's position. This is useful when a popover's height changes dynamically.
 
 
 
 .. function:: dismiss_on_outside_click(dismiss=True)
 
     by default if you click outside of a popover the popover will close. This behaviour can be overridden globally by calling this function. It can also be set per popover using the ``auto_dismiss`` argument.
+    Note that popovers will always be dismissed when the page is scrolled. This prevents popovers from appearing in weird places on the page.
 
 .. function:: set_default_max_width(width)
 
