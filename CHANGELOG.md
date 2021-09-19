@@ -1,3 +1,10 @@
+# Unreleased
+
+## Bug Fixes
+* MultiSelectDropdown - Hides menu when component is removed from the page
+  https://github.com/anvilistas/anvil-extras/pull/149
+
+
 # v1.6.0 17-Sep-2021
 
 ## New Features
