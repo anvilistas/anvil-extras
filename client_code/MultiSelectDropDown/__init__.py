@@ -100,6 +100,19 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
+
+        self._menu_visible = False
+
+        def shown(*e):
+            self._menu_visible = True
+
+        self._el.on("shown.bs.select", shown)
+
+        def hidden(*e):
+            self._menu_visible = False
+
+        self._el.on("hidden.bs.select", hidden)
+
         self._init = True
 
     ##### PROPERTIES #####
@@ -168,6 +181,11 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     ##### EVENTS #####
     def change(self, *e):
         return self.raise_event("change")
+
+    def _form_hide(self, **event_args):
+        """This method is called when the HTML panel is removed from the screen"""
+        if self._menu_shown:
+            self._el.selectpicker("toggle")
 
 
 ##### PRIVATE Functions #####
