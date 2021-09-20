@@ -14,11 +14,14 @@
 #
 
 import anvil as _anvil
+from anvil.js import window as _window
+from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
-from anvil.js.window import window as _window
 
 __version__ = "1.6.0"
+
+__all__ = ["popover", "pop", "dismiss_on_outside_click", "set_default_max_width"]
 
 
 def popover(
@@ -55,32 +58,29 @@ def popover(
         msg = "content to a popover should be either a str or anvil Component, not {}"
         raise TypeError(msg.format(type_name))
 
-    if getattr(self, "_in_transition", None):
-        # we've been created and we're part way through a transition
-        # hopefully the transition is destroy!
-        _anvil.js.await_promise(self._in_transition)
-
     popper_element = _get_jquery_popper_element(self)
+    # We could be in the middle of a 'destroy'
+    _wait_for_transition(popper_element)
 
     if _has_popover(popper_element):
-        # we could instead destroy this for the user if we wanted.
         print("Warning: creating a popover on a componet which already has a popover.")
         print("Destroy the popover before creating a new one.")
+        # return here since adding a new popover has no effect
         return
 
     popper_id = _get_next_id()
     max_width = _default_max_width if max_width is None else max_width
 
-    # can effect the title of the popover so temporarily set it to ''
-    tooltip = getattr(self, "tooltip", None)
-    if tooltip:
-        self.tooltip = ""
-
-    _add_transition_behaviour(self, component, popper_element, popper_id)
+    _add_transition_behaviour(component, popper_element, popper_id)
 
     if trigger == "stickyhover":
         trigger = "manual"
         _add_sticky_behaviour(self, popper_element, popper_id)
+
+    # can effect the title of the popover so temporarily set it to ''
+    tooltip = getattr(self, "tooltip", None)
+    if tooltip:
+        self.tooltip = ""
 
     popper_element.popover(
         {
@@ -102,8 +102,14 @@ def popover(
         # otherwise the tooltip doesn't work for Buttons
         popper_element.attr("title", tooltip)
 
-    popper_element.addClass("anvil-popover").attr("popover_id", popper_id).data(
-        "ae.autoDismiss", bool(auto_dismiss)
+    popper_element.addClass("anvil-popover")
+    popper_element.attr("popover_id", popper_id)
+    popper_element.data(
+        "ae.popover",
+        {
+            "autoDismiss": bool(auto_dismiss),
+            "inTransition": None,
+        },
     )
 
 
@@ -117,33 +123,14 @@ def pop(self, behavior):
     is_visible: same as shown
     """
     popper_element = _get_jquery_popper_element(self)
-    if getattr(self, "_in_transition", None) is not None:
-        _anvil.js.await_promise(self._in_transition)
+    _wait_for_transition(popper_element)
 
     if behavior == "shown" or behavior == "is_visible":
         return _is_visible(popper_element)
     elif behavior == "update":
         return _update_positions()
 
-    if not _has_popover(popper_element):
-        # we don't need to do anything
-        # we could raise an Exception
-        # but maybe someone wants to always detroy a popover before creating one
-        return
-
-    if behavior == "hide":
-        popper_element.data("bs.popover").inState.click = False
-        # see bug https://github.com/twbs/bootstrap/issues/16732
-    elif behavior == "show":
-        popper_element.data("bs.popover").inState.click = True
-    elif behavior == "toggle":
-        current = popper_element.data("bs.popover").inState.click
-        popper_element.data("bs.popover").inState.click = not current
-
-    try:
-        popper_element.popover(behavior)
-    except Exception:
-        raise ValueError("unrecognized behavior: {}".format(behavior))
+    _popper_execute(popper_element, behavior)
 
 
 # this is the default behavior
@@ -179,15 +166,26 @@ def _get_next_id():
     return str(_popper_count)
 
 
-def _add_transition_behaviour(self, component, popper_element, popper_id):
+def _get_data(popper_element, attr, default=None):
+    data = popper_element.data("ae.popover")
+    if data is not None:
+        return data.get(attr, default)
+    return default
+
+
+def _set_data(popper_element, attr, value):
+    data = popper_element.data("ae.popover")
+    if data is not None:
+        data[attr] = value
+
+
+def _add_transition_behaviour(component, popper_element, popper_id):
     # clean up our previous event handlers
-    popper_element.off("show.bs.popover")
-    popper_element.off("shown.bs.popover")
-    popper_element.off("hide.bs.popover")
-    popper_element.off("hidden.bs.popover")
+    popper_element.off(
+        "show.bs.popover shown.bs.popover hide.bs.popover hidden.bs.popover"
+    )
 
     # transition is either None or a promise
-    self._in_transition = None
     fake_container = _anvil.Container()
     if component is not None:
         # we add the component to a Container component
@@ -197,14 +195,14 @@ def _add_transition_behaviour(self, component, popper_element, popper_id):
 
     def resolve_shown(resolve, _reject):
         def f(e):
-            self._in_transition = None
+            _set_data(popper_element, "inTransition", None)
             popper_element.off("shown.bs.popover", f)
             resolve(None)
 
         popper_element.on("shown.bs.popover", f)
 
     def show_in_transition(e):
-        self._in_transition = _window.Promise(resolve_shown)
+        _set_data(popper_element, "inTransition", _Promise(resolve_shown))
         _visible_popovers[popper_id] = popper_element
         open_form = _anvil.get_open_form()
         if open_form is not None and fake_container.parent is None:
@@ -215,7 +213,7 @@ def _add_transition_behaviour(self, component, popper_element, popper_id):
     def resolve_hidden(resolve, _reject):
         def f(e):
             _visible_popovers.pop(popper_id, None)
-            self._in_transition = None
+            _set_data(popper_element, "inTransition", None)
             fake_container.remove_from_parent()
             popper_element.off("hidden.bs.popover", f)
             resolve(None)
@@ -223,9 +221,15 @@ def _add_transition_behaviour(self, component, popper_element, popper_id):
         popper_element.on("hidden.bs.popover", f)
 
     def hide_in_transition(e):
-        self._in_transition = _window.Promise(resolve_hidden)
+        _set_data(popper_element, "inTransition", _Promise(resolve_hidden))
 
     popper_element.on("hide.bs.popover", hide_in_transition)
+
+
+def _wait_for_transition(popper_element):
+    transition = _get_data(popper_element, "inTransition")
+    if transition is not None:
+        _anvil.js.await_promise(transition)
 
 
 _sticky_popovers = set()
@@ -256,9 +260,7 @@ def _sticky_leave(e):
     ):
         popper_element = _visible_popovers.get(popover_id)
     if popper_element is not None:
-        popper_element.data("bs.popover").inState.click = False
-        # see bug https://github.com/twbs/bootstrap/issues/16732
-        popper_element.popover("hide")
+        _popper_execute(popper_element, "hide")
 
 
 def _set_sticky_hover():
@@ -267,6 +269,9 @@ def _set_sticky_hover():
 
 
 def _update_positions(*args):
+    if _scrolling:
+        # not sure why this fires on scroll but it does on chrome
+        return
     _S(".popover").addClass("PopNoTransition").popover("show").removeClass(
         "PopNoTransition"
     )
@@ -275,20 +280,50 @@ def _update_positions(*args):
 _window.addEventListener("resize", _update_positions)
 
 
-def _hide(popper_element):
-    # hack for click https://github.com/twbs/bootstrap/issues/16732
-    if _has_popover(popper_element):
+_scrolling = False
+
+
+def _hide_on_scroll(*e):
+    global _scrolling
+    if _scrolling or not _visible_popovers:
+        return
+
+    _scrolling = True
+
+    def do_hide(*args):
+        global _scrolling
+        transitions = []
+        try:
+            for popper_element in _visible_popovers.copy().values():
+                _popper_execute(popper_element, "hide")
+                transitions.append(_get_data(popper_element, "inTransition"))
+            _anvil.js.await_promise(_Promise.all(transitions))
+        finally:
+            _scrolling = False
+
+    _window.requestAnimationFrame(do_hide)
+
+
+_window.addEventListener("scroll", _hide_on_scroll, True)
+
+
+def _popper_execute(popper_element, behavior: str):
+    # see bug https://github.com/twbs/bootstrap/issues/16732
+    if behavior not in ("hide", "show", "toggle", "destroy"):
+        raise ValueError("unrecognized behavior: {}".format(behavior))
+
+    if not _has_popover(popper_element):
+        return
+
+    if behavior == "hide":
         popper_element.data("bs.popover").inState.click = False
-        popper_element.popover("hide")
+    elif behavior == "show":
+        popper_element.data("bs.popover").inState.click = True
+    elif behavior == "toggle":
+        current = popper_element.data("bs.popover").inState.click
+        popper_element.data("bs.popover").inState.click = not current
 
-
-def _hide_all(e):
-    # use copy since the dict changes size during iteration
-    for popper_element in _visible_popovers.copy().values():
-        _hide(popper_element)
-
-
-_window.addEventListener("scroll", _hide_all, True)
+    popper_element.popover(behavior)
 
 
 def _is_visible(popper_element):
@@ -318,10 +353,8 @@ def _hide_popovers_on_outside_click(e):
     for popover_id, popper_element in _visible_popovers.copy().items():
         if nearest_id == popover_id:
             continue
-        elif not popper_element.data("ae.autoDismiss"):
-            continue
-        else:
-            _hide(popper_element)
+        if _get_data(popper_element, "autoDismiss", True):
+            _popper_execute(popper_element, "hide")
 
 
 # make this the default behaviour
