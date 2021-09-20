@@ -3,7 +3,8 @@
 ## Bug Fixes
 * MultiSelectDropdown - Hides menu when component is removed from the page
   https://github.com/anvilistas/anvil-extras/pull/149
-
+* Popover - content's show and hide events will be triggered when the popover shows and hides
+  https://github.com/anvilistas/anvil-extras/pull/150
 
 # v1.6.0 17-Sep-2021
 
