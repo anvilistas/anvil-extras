@@ -5,11 +5,11 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil.js.window import eval as _eval
+import anvil.js
 
 __version__ = "1.6.0"
 
-_js_uuid = _eval("import('https://jspm.dev/uuid@8.3.2');")
+_js_uuid = anvil.js.import_from("https://jspm.dev/uuid@8.3.2")
 _v4, _parse, _validate = _js_uuid.v4, _js_uuid.parse, _js_uuid.validate
 
 

@@ -5,17 +5,14 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
-from anvil import *
-from anvil.js import get_dom_node as _get_dom_node
-from anvil.js import window as _window
 
 from .. import session
 from ..utils._component_helpers import _add_script, _get_color, _spacing_property
 from ._anvil_designer import SliderTemplate
 
 __version__ = "1.6.0"
-
 
 _add_script(
     '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.min.css"></link>'
@@ -47,10 +44,7 @@ session.style_injector.inject(
 """
 )
 
-_add_script(
-    '<script src="https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.min.js"></script>'
-)
-_Slider = _window.noUiSlider
+_Slider = anvil.js.import_from("https://cdn.skypack.dev/nouislider@15.4.0").default
 
 
 import json
@@ -247,7 +241,7 @@ _defaults = {
 class Slider(SliderTemplate):
     def __init__(self, **properties):
         # Any code you write here will run when the form opens.
-        dom_node = self._dom_node = _get_dom_node(self)
+        dom_node = self._dom_node = anvil.js.get_dom_node(self)
         dom_node.classList.add("anvil-slider-container")
 
         self._slider_node = dom_node.querySelector(".anvil-slider")
