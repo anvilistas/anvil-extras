@@ -8,18 +8,12 @@
 import anvil.js
 from anvil.js import window as _window
 
-from utils._component_helpers import _add_script
-
 __version__ = "1.6.0"
 __all__ = ["local_storage", "indexed_db"]
 
-_add_script(
-    """
-<script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
-"""
-)
+_ForageModule = anvil.js.import_from("https://cdn.skypack.dev/localforage@1.10.0")
 
-_forage = _window.localforage
+_forage = _ForageModule.default
 _forage.dropInstance()
 
 
