@@ -51,7 +51,7 @@ API
 
 .. method:: popover(self, content, title='', placement='right', trigger='click', animation=True, delay={"show": 100, "hide": 100}, max_width=None, auto_dismiss=True)
 
-    popover is a method that can be used with any anvil component. Commonly used on ``Button``s and ``Link``s.
+    popover is a method that can be used with any anvil component. Commonly used on ``Button`` and ``Link`` components.
 
     .. describe:: self
 
