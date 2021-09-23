@@ -1,5 +1,5 @@
 MultiSelectDropdown
-============
+===================
 A multi select dropdown component with optional search bar
 
 Properties
@@ -10,8 +10,25 @@ Properties
 
 :items: Iterable of Strings, Tuples or Dicts
 
-    Strings and tuples as per Anvil's native dropdown component. If set to an iterable of dicts the keys for each item can include any of: ``"key"``,
-    ``"value"``, ``"icon"``, ``"title"``, ``"enabled"``.
+    Strings and tuples as per Anvil's native dropdown component. More control can be added by setting the items to a list of dictionaries.
+    e.g.
+
+    .. code-block:: python
+
+        self.multi_select_drop_down.items = [
+            {"key": "1st": "value": 1, "subtext": "pick me"},
+            {"key": "2nd": "value": 2, "enabled": False},
+            "---",
+            {"key": "item 3": "value": 3, "title": "3rd times a charm"},
+        ]
+
+    The ``"key"`` property is what is displayed in the dropdown.
+    The ``value`` property is what is returned from the ``selected_values``.
+    The remainder of the properties are optional.
+    ``"enabled"`` determines if the option is enabled or not - defaults to ``True``.
+    ``"title"`` determines what is displayed in the selected box - if not set it will use the value from ``"key"``.
+    ``"subtext"`` adds subtext to the dropdown display.
+
     To create a divider include ``"---"`` at the appropriate index.
 
 :placeholder: String
