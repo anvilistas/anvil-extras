@@ -20,6 +20,10 @@ properties:
 - {name: spacing_above, type: string, default_value: small, group: layout, important: false}
 - {name: spacing_below, type: string, default_value: small, group: layout, important: false}
 - {name: suggest_if_empty, type: boolean, default_value: false}
+- {name: foreground, type: color, default_value: '', default_binding_prop: false,
+  group: appearance, important: false, description: Only applies changes to the TextBox}
+- {name: background, type: color, default_value: '', default_binding_prop: false,
+  description: Only applies changes to the TextBox, group: appearance, important: false}
 events:
 - {name: change}
 - {name: suggestion_clicked}
