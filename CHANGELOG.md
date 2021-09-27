@@ -5,6 +5,8 @@
   https://github.com/anvilistas/anvil-extras/pull/149
 * Popover - content's show and hide events will be triggered when the popover shows and hides
   https://github.com/anvilistas/anvil-extras/pull/150
+* Autocomplete - Add missing TextBox properties to design view
+  https://github.com/anvilistas/anvil-extras/pull/160
 
 # v1.6.0 17-Sep-2021
 
