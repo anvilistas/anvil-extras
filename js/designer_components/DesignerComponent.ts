@@ -1,25 +1,68 @@
 
 
+interface Window {
+    $: any;
+    Sk: any;
+}
+
+/**
+ * To create a designer class that supports dynamically updating the design view
+ * subclass from DesignerComponent
+ * override some static methods/attributes
+ * override either update or setProp
+ */
 export class DesignerComponent {
+    /** the css will be injected into the design view. This will match any injected css in your python code */
     static css = "";
+
+    /** If using external links for css override links (see DesignerQuill.ts for example) */
     static links: string[] = [];
+
+    /** If using an external CDN to include a script tag override the script attribute */
     static script = "";
-    static loaded = false;
-    static loading = false;
+    private static loaded = false;
+    private static loading = false;
+
+    /** I'm not sure if this is still necessary. Merged with the initial props from anvil */
     static defaults: { [keys: string]: any} = {};
-    static initializing: boolean = false;
+    private static initializing: boolean = false;
+
+    /** Override this method if you need to do something after script tags have finished executing */
     static postLoad(): void {}
 
-    domNode: HTMLElement;
-    pyComponent: any;
-    el: HTMLElement;
 
-    constructor(domNode: HTMLElement, pyComponent: any, el: HTMLElement) {
+    /**
+     *
+     * @param domNode The HTMLPanel dom node for this eleemnt
+     * @param pyComponent the python HTMLPanel in Javascript (it is a Skulpt object)
+     * @param el The first element child dom node of the HTMLpanel
+     *
+     * You can override the constructor method to add instance attributes
+     * based on the paramaters above
+     * If you override remember to call super(domNode, pyComponent, el)
+     */
+    constructor(public domNode: HTMLElement, public pyComponent: any, public el: HTMLElement) {
         this.domNode = domNode;
         this.pyComponent = pyComponent;
         this.el = el;
     }
 
+    /**
+     *
+     * @param selector The selector should be a class (or other selector) that identifies an immediate child of the HTMLPanel
+     * @param className optional - this is primarily used to prevent calling this method multiple times on the same HTMLPanel element.
+     * The className will be added to the HTMLPanel at runtime.
+     *  used when you want your HTMLPanel to have a class that matches your injected css.
+     *
+     * e.g.
+     * ```ts
+     * static init() {
+     *     // .chip-placeholder is an immediate child of the HTMLPanel
+     *     // anvil-extras-chips is a class added to the HTMLPanel at runtime
+     *     super.init(".chip-placeholder", "anvil-extras-chip");
+     * }
+     * ```
+     */
     static init(selector: string, className: string = "anvil-extras-designer") {
         const doInit = () => {
             this.loading = true;
@@ -59,7 +102,7 @@ export class DesignerComponent {
         }
     }
 
-    static setup(selector: string, className: string) {
+    private static setup(selector: string, className: string) {
         for (let el of document.querySelectorAll<HTMLElement>(selector)) {
             const container = el.parentElement;
             if (container.classList.contains(className)) {
@@ -83,7 +126,7 @@ export class DesignerComponent {
         }
     }
 
-    makeGetSets(props: { [keys: string]: any}): void {
+    private makeGetSets(props: { [keys: string]: any}): void {
         const copyProps = { ...props };
         const self = this;
         for (let propName in copyProps) {
@@ -104,11 +147,29 @@ export class DesignerComponent {
         }
     }
 
-    update(props: object, propName?: string, val?: any): void {}
+    /**
+     * @param {{[propName: string]: any}} props These will be all the current props
+     * @param {string?} propName The prop currently being updated (will be undefined on the initial call)
+     * @param {any?} val the value the prop will take - will be undefined on the first call
+     *
+     * either override update or setProp but not both
+     * typically use update when you don't mind changing the whole element when a prop changes
+     * see DesignerQuill.ts
+     */
+    public update(props: object, propName?: string, val?: any): void {}
 
-    setProp(propName: string, val: any, props: any): void {}
+    /**
+     * @param propName the name of the prop being updated
+     * @param val the value the prop will take
+     * @param props All the current props
+     *
+     * either override update or setProp but not both
+     * typically used in a switch case block - see DesignerChips.ts
+     */
+    public setProp(propName: string, val: any, props: any): void {}
 
-    updateSpacing({ spacing_above , spacing_below }: { spacing_above: string, spacing_below: string, [keys: string]: any}): void {
+    /** helper method for updating the spacing */
+    public updateSpacing({ spacing_above , spacing_below }: { spacing_above: string, spacing_below: string, [keys: string]: any}): void {
         const stale_spacing = Array.prototype.filter.call(this.domNode.classList, (x: string) =>
             x.startsWith("anvil-spacing-")
         );
@@ -117,17 +178,20 @@ export class DesignerComponent {
         spacing_below && this.domNode.classList.add(("anvil-spacing-above-" + spacing_below) as string);
     }
 
-    updateRole({ role }: { role: string, [keys: string]: any}) {
+    /** helper method to update the role property when it changes */
+    public updateRole({ role }: { role: string, [keys: string]: any}) {
         const stale_role = Array.prototype.filter.call(this.domNode.classList, (x) => x.startsWith("anvil-role-"));
         this.domNode.classList.remove(...stale_role);
         role && this.domNode.classList.add("anvil-role-" + role);
     }
 
-    updateVisible({ visible }: { visible: boolean, [keys: string]: any}) {
+    /** helper method to update the visible property when it changes */
+    public updateVisible({ visible }: { visible: boolean, [keys: string]: any}) {
         this.domNode.classList.toggle("visible-false", !visible);
     }
 
-    getColor(color?: string, _default?: string | boolean): string | undefined {
+    /** helper method */
+    public getColor(color?: string, _default?: string | boolean): string | undefined {
         if (color && color.startsWith("theme:")) {
             //@ts-ignore
             color = window.anvilThemeColors[color.replace("theme:", "")] || "";
@@ -142,7 +206,8 @@ export class DesignerComponent {
         return color;
     }
 
-    getColorRGB(color?: string, _default?: string | boolean) {
+    /** helper method */
+    public getColorRGB(color?: string, _default?: string | boolean) {
         color = this.getColor(color, _default);
         if (color && color.startsWith("#")) {
             const bigint = parseInt(color.slice(1), 16);
@@ -153,11 +218,14 @@ export class DesignerComponent {
         return color;
     }
 
-    clearElement(el: HTMLElement) {
+    /** helper method for clearing a domnode that will be reinstantiated during an update */
+    public clearElement(el: HTMLElement) {
         while (el.firstElementChild) {
             el.removeChild(el.firstElementChild);
         }
     }
+
+    /** useful for debugging */
     get [Symbol.toStringTag]() {
         return "Designer Component";
     }
