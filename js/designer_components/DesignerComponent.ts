@@ -23,11 +23,14 @@ export class DesignerComponent {
     private static loaded = false;
     private static loading = false;
 
-    /** I'm not sure if this is still necessary. Merged with the initial props from anvil */
-    static defaults: { [keys: string]: any} = {};
+    /**
+     * defaults are used when the component is in its own design view
+     * i.e. it's not being used as a custom component
+     */
+    static defaults: { [keys: string]: any} | null = null;
     private static initializing: boolean = false;
 
-    /** Override this method if you need to do something after script tags have finished executing */
+    /** Override this method if you need to do something after script tags have finished loading */
     static postLoad(): void {}
 
 
@@ -52,7 +55,7 @@ export class DesignerComponent {
      * @param selector The selector should be a class (or other selector) that identifies an immediate child of the HTMLPanel
      * @param className optional - this is primarily used to prevent calling this method multiple times on the same HTMLPanel element.
      * The className will be added to the HTMLPanel at runtime.
-     *  used when you want your HTMLPanel to have a class that matches your injected css.
+     * Use when you want your HTMLPanel to have a class that matches your injected css.
      *
      * e.g.
      * ```ts
@@ -120,15 +123,25 @@ export class DesignerComponent {
             }
             const self = new this(container, pyComponent, el);
             if (props) {
+                // we are a custom component
                 self.makeGetSets(props);
+            } else if (this.defaults) {
+                // we're in our own design view
+                // i.e. we're not being used as a custom component
+                // call update()/setProp() using the defaults if they were provided
+                self.update({ ...this.defaults });
+                for (let [propName, propVal] of Object.entries(this.defaults)) {
+                    self.setProp(propName, propVal, this.defaults);
+                }
             }
-            self.update({ ...(props || this.defaults) });
         }
     }
 
+    /** this is where the magic happens. We've intercepted the anvil props object and now we create getters/setters */
     private makeGetSets(props: { [keys: string]: any}): void {
         const copyProps = { ...props };
         const self = this;
+        this.update({ ...copyProps });
         for (let propName in copyProps) {
             this.setProp(propName, props[propName], copyProps);
             Object.defineProperty(props, propName, {
