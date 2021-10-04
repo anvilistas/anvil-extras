@@ -9,15 +9,14 @@ from anvil import HtmlPanel as _HtmlPanel
 from anvil.js import get_dom_node as _get_dom_node
 
 from ..Chip import Chip
-from ..session import style_injector as _style_injector
-from ..utils._component_helpers import _get_color, _spacing_property
+from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import ChipsInputTemplate
 
 __version__ = "1.6.0"
 
 _primary = _get_color(None)
 
-_style_injector.inject(
+_html_injector.css(
     """
 .anvil-extras-chips-input input {
     box-shadow: none !important;

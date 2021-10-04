@@ -10,42 +10,31 @@ from anvil import HtmlPanel as _HtmlPanel
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
-from ..utils._component_helpers import _add_script, _spacing_property
+from ..utils._component_helpers import _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
 
 __version__ = "1.6.0"
 
-_add_script(
+_html_injector.script(
     """
-<script>
-  var orig_offset = jQuery.fn.offset
-  jQuery.fn.offset = function() {
-      if (!this[0].isConnected) {
-          return 0; // prevent warning in output
-      }
-      return orig_offset.call(this);
-  }
-</script >
-"""
-)
-
-_add_script(
-    """
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js">
-</script>
+var orig_offset = jQuery.fn.offset
+jQuery.fn.offset = function() {
+    if (!this[0].isConnected) {
+        return 0; // prevent warning in output
+    }
+    return orig_offset.call(this);
+}
 """
 )
 
 
-_add_script(
-    """
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"
->
-"""
-)
+bs_select_version = "1.13.18"
+prefix = "https://cdn.jsdelivr.net/npm/bootstrap-select@"
+suffix = "/dist/js/bootstrap-select.min"
+
+_html_injector.cdn(f"{prefix}{bs_select_version}{suffix}.js")
+_html_injector.cdn(f"{prefix}{bs_select_version}{suffix}.css")
+
 
 _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 

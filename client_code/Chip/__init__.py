@@ -8,13 +8,12 @@
 from anvil import HtmlPanel as _HtmlPanel
 from anvil.js import get_dom_node as _get_dom_node
 
-from ..session import style_injector as _style_injector
-from ..utils._component_helpers import _spacing_property
+from ..utils._component_helpers import _html_injector, _spacing_property
 from ._anvil_designer import ChipTemplate
 
 __version__ = "1.6.0"
 
-_style_injector.inject(
+_html_injector.css(
     """.anvil-extras-chip{
     height: 32px;
     font-size: 14px;

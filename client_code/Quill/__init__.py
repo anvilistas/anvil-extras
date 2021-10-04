@@ -11,19 +11,22 @@ from anvil import Spacer as _Spacer
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window as _window
 
-from ..utils._component_helpers import _add_script, _spacing_property
+from ..utils._component_helpers import _html_injector, _spacing_property
 from ._anvil_designer import QuillTemplate
 
 __version__ = "1.6.0"
 
 # <!-- Theme included stylesheets -->
-_add_script('<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">')
-_add_script('<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">')
+prefix = "//cdn.quilljs.com/"
+quill_version = "1.3.6"
+
+_html_injector.cdn(f"{prefix}{quill_version}/quill.snow.css")
+_html_injector.cdn(f"{prefix}{quill_version}/quill.bubble.css")
 
 # <!-- Main Quill library -->
 if _window.get("Quill") is None:
     # support including Quill in the native libraries for easier module imports
-    _add_script('<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>')
+    _html_injector.cdn(f"{prefix}{quill_version}/quill.min.js")
 _Quill = _window.Quill
 
 

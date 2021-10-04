@@ -13,13 +13,13 @@ from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 from anvil.js.window import window as _window
 
-from ..session import style_injector as _style_injector
+from ..utils._component_helpers import _html_injector
 from ._anvil_designer import AutocompleteTemplate
 
 __version__ = "1.6.0"
 
 
-_style_injector.inject(
+_html_injector.css(
     """
 .anvil-role-autocomplete {
     padding: 0 !important;

@@ -11,13 +11,17 @@ import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
 from anvil import Link as _Link
 
-from .. import session
-from ..utils._component_helpers import _get_color, _get_rgb, _spacing_property
+from ..utils._component_helpers import (
+    _get_color,
+    _get_rgb,
+    _html_injector,
+    _spacing_property,
+)
 from ._anvil_designer import TabsTemplate
 
 __version__ = "1.6.0"
 
-session.style_injector.inject(
+_html_injector.css(
     """
 .anvil-extras-tabs.anvil-role-card {
     border-bottom-left-radius: 0px;

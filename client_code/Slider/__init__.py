@@ -9,15 +9,18 @@ import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
 
 from .. import session
-from ..utils._component_helpers import _add_script, _get_color, _spacing_property
+from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
 __version__ = "1.6.0"
 
-_add_script(
-    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.min.css"></link>'
+noui_version = "15.4.0"
+
+_html_injector.cdn(
+    f"https://cdn.jsdelivr.net/npm/nouislider@{noui_version}/dist/nouislider.min.css"
 )
-session.style_injector.inject(
+
+_html_injector.css(
     """
 .anvil-slider-container {
   padding: 10px 0;
@@ -44,7 +47,9 @@ session.style_injector.inject(
 """
 )
 
-_Slider = anvil.js.import_from("https://cdn.skypack.dev/nouislider@15.4.0").default
+_Slider = anvil.js.import_from(
+    f"https://cdn.skypack.dev/nouislider@{noui_version}"
+).default
 
 
 import json
