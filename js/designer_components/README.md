@@ -87,9 +87,10 @@ The DesignerChips component is an example that uses `setProp` and works with bot
 
 
 ## Bundling the javascript
-Install deno
-`cd js/designer_components`
-`deno run -A build-script.ts`
+- Install deno
+- `cd js/designer_components`
+- `deno run -A build-script.ts`
+- This will override the bundled files.
 
 
 
@@ -109,10 +110,9 @@ In each designer component you'll see code like
 
 You'll need equivalent code in your custom component's html.
 
-When hacking it's probably best to:
-- Create a branch
-- bundle the javascript (see above instructions)
-- push the branch to github
-- go to the file of the bundle.js in github and click raw
-- grab the url - something like: `https://raw.githubusercontent.com/anvilistas/anvil-extras/main/js/designer_components/bundle.js`
-- replace the deno url with this url
+When hacking, there's no need to worry about the deno link. Instead:
+- bundle the Javascript (see above instructions)
+- Copy the bundled file into your theme assets.
+- Replace the deno url with a relative theme url: `_/theme/bundle.js`
+
+Whenever you change the local files re-bundle and repeat.
