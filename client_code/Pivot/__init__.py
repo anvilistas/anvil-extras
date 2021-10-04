@@ -44,16 +44,15 @@ class Pivot(PivotTemplate):
         self.pivot_options = {
             option: properties[option] for option in self.option_names
         }
-        spacer = anvil.Spacer()
-        self.node_id = helpers._get_dom_node_id(spacer)
-        self.add_component(spacer)
+        dom_node = anvil.js.get_dom_node(self)
+        self.pivot_node = dom_node.querySelector(".anvil-extras-pivot")
         self.init_components(**properties)
 
     def _init_pivot(self):
         options = {
             value: self.pivot_options[key] for key, value in self.option_names.items()
         }
-        _jquery(f"#{self.node_id}").pivotUI(self.items, options)
+        _jquery(self.pivot_node).pivotUI(self.items, options)
 
     def form_show(self, **event_args):
         self._init_pivot()

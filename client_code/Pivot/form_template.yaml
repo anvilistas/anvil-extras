@@ -1,7 +1,7 @@
 container:
   type: HtmlTemplate
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: <div class="pivot-placeholder"></div>}
+    role: null, html: <div class="pivot-placeholder"><div class="anvil-extras-pivot"></div></div>}
   event_bindings: {show: form_show}
 components: []
 is_package: true
