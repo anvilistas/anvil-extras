@@ -56,6 +56,14 @@ def _add_script(s):
     anvil.js.await_promise(p)
 
 
+def add_html_tag(url, tag_type):
+    tags = {
+        "link": f'<link href="{url}" rel="stylesheet">',
+        "script": f'<script src="{url}"></script>',
+    }
+    _add_script(tags[tag_type])
+
+
 def _spacing_property(a_b):
     def getter(self):
         return getattr(self, "_spacing_" + a_b)

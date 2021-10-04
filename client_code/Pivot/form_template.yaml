@@ -1,0 +1,14 @@
+container:
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: <div class="pivot-placeholder"></div>}
+  event_bindings: {show: form_show}
+components: []
+is_package: true
+custom_component: true
+properties:
+- {name: rows, type: 'text[]', default_value: '', default_binding_prop: true}
+- {name: columns, type: 'text[]', default_value: '', default_binding_prop: false}
+- {name: values, type: 'text[]', default_value: '', default_binding_prop: false}
+- {name: items, type: object, default_binding_prop: false}
+- {name: aggregator, type: string, default_value: Count, default_binding_prop: false}
