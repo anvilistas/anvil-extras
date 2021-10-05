@@ -34,7 +34,7 @@ except AssertionError:
 
 try:
     assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
-except AssertionError:
+except (AssertionError, AttributeError):
     helpers._html_injector.cdn(jqueryui)
     assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
 
