@@ -6,13 +6,14 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil.js import get_dom_node
 
-from anvil_extras import ProgressBar, session
+from anvil_extras import ProgressBar
+from anvil_extras.utils._component_helpers import _html_injector
 
 from ._anvil_designer import DeterminateTemplate
 
 __version__ = "1.6.0"
 
-session.style_injector.inject(ProgressBar.css)
+_html_injector.css(ProgressBar.css)
 
 
 class Determinate(DeterminateTemplate):

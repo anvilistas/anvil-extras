@@ -5,16 +5,15 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil.js import get_dom_node
-from anvil.js.window import document
 
-from anvil_extras import ProgressBar, session
-from anvil_extras.utils._component_helpers import _get_dom_node_id
+from anvil_extras import ProgressBar
+from anvil_extras.utils._component_helpers import _get_dom_node_id, _html_injector
 
 from ._anvil_designer import IndeterminateTemplate
 
 __version__ = "1.6.0"
 
-session.style_injector.inject(ProgressBar.css)
+_html_injector.css(ProgressBar.css)
 
 
 class Indeterminate(IndeterminateTemplate):
@@ -28,7 +27,7 @@ class Indeterminate(IndeterminateTemplate):
   background-color: {track_colour}
 }}
 """
-        session.style_injector.inject(css)
+        _html_injector.css(css)
         self.role = "progress-track"
         self.indicator_panel.role = "indeterminate-progress-indicator"
         self.indicator_panel.background = indicator_colour

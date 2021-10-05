@@ -11,24 +11,67 @@ from anvil import app as _app
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
-from anvil.js.window import jQuery as _S
 
 __version__ = "1.6.0"
 
 _characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
-class StyleInjector:
-    def __init__(self):
-        self.injected = set()
+class HTMLInjector:
+    _injected_css = set()
 
-    def inject(self, css):
+    def css(self, css):
+        """inject some custom css"""
         hashed = hash(css)
-        if hashed not in self.injected:
-            sheet = _document.createElement("style")
-            sheet.innerHTML = css
-            _document.body.appendChild(sheet)
-            self.injected.add(hashed)
+        if hashed in self._injected_css:
+            return
+        sheet = self._create_tag("style")
+        sheet.innerHTML = css
+        self._inject(sheet, head=False)
+        self._injected_css.add(hashed)
+
+    def cdn(self, cdn_url, **attrs):
+        """inject a js/css cdn file"""
+        if cdn_url.endswith("js"):
+            tag = self._create_tag("script", src=cdn_url, **attrs)
+        elif cdn_url.endswith("css"):
+            tag = self._create_tag("link", href=cdn_url, rel="stylesheet", **attrs)
+        else:
+            raise ValueError("Unknown CDN type expected css or js file")
+        self._inject(tag)
+        self._wait_for_load(tag)
+
+    def script(self, js):
+        """inject some javascript code inside a script tag"""
+        s = self._create_tag("script")
+        s.textContent = js
+        self._inject(s)
+
+    def _create_tag(self, tag_name, **attrs):
+        tag = _document.createElement(tag_name)
+        for attr, value in attrs.items():
+            tag.setAttribute(attr, value)
+        return tag
+
+    def _inject(self, tag, head=True):
+        if head:
+            _document.head.appendChild(tag)
+        else:
+            _document.body.appendChild(tag)
+
+    def _wait_for_load(self, tag):
+        if not tag.get("src"):
+            return
+
+        def do_wait(res, rej):
+            tag.onload = res
+            tag.onerror = rej
+
+        p = _Promise(do_wait)
+        anvil.js.await_promise(p)
+
+
+_html_injector = HTMLInjector()
 
 
 def _get_dom_node_id(component):
@@ -36,24 +79,6 @@ def _get_dom_node_id(component):
     if not node.id:
         node.id = "".join([random.choice(_characters) for _ in range(8)])
     return node.id
-
-
-def _add_script(s):
-    dummy = _S(s)[0]  # let jquery pass the tag
-    s = _document.createElement(dummy.tagName)
-    for attr in dummy.attributes:
-        s.setAttribute(attr.name, attr.value)
-    s.textContent = dummy.textContent
-    _document.head.appendChild(s)
-    if not s.get("src"):
-        return
-
-    def _wait_for_load(res, rej):
-        s.onload = res
-        s.onerror = rej
-
-    p = _Promise(_wait_for_load)
-    anvil.js.await_promise(p)
 
 
 def _spacing_property(a_b):
