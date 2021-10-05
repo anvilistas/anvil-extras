@@ -8,7 +8,7 @@ export class DesignerMultiSelectDropDown extends DesignerComponent {
         spacing_below: "small",
     };
     static links = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"];
-    static script = "https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js";
+    static scripts = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"];
     static postLoad() {
         // deno-lint-ignore
         $.fn.selectpicker.Constructor.BootstrapVersion = "3";

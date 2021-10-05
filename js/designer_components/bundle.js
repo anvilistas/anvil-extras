@@ -1,11 +1,14 @@
 // DesignerComponent.ts
 var DesignerComponent = class {
-  static postLoad() {
-  }
   constructor(domNode, pyComponent, el) {
     this.domNode = domNode;
     this.pyComponent = pyComponent;
     this.el = el;
+    this.domNode = domNode;
+    this.pyComponent = pyComponent;
+    this.el = el;
+  }
+  static postLoad() {
   }
   static init(selector, className = "anvil-extras-designer") {
     const doInit = () => {
@@ -30,11 +33,15 @@ var DesignerComponent = class {
         s.innerHTML = this.css;
         document.body.appendChild(s);
       }
-      if (this.script) {
-        const s = document.createElement("script");
-        s.src = this.script;
-        document.body.appendChild(s);
-        s.onload = doInit;
+      if (this.scripts.length) {
+        const promises = this.scripts.map((script) => new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = script;
+          document.body.appendChild(s);
+          s.onload = resolve;
+          s.onerror = reject;
+        }));
+        Promise.all(promises).then(doInit);
       } else {
         doInit();
       }
@@ -60,13 +67,18 @@ var DesignerComponent = class {
       const self = new this(container, pyComponent, el);
       if (props) {
         self.makeGetSets(props);
+      } else if (this.defaults) {
+        self.update({...this.defaults});
+        for (let [propName, propVal] of Object.entries(this.defaults)) {
+          self.setProp(propName, propVal, this.defaults);
+        }
       }
-      self.update({...props || this.defaults});
     }
   }
   makeGetSets(props) {
     const copyProps = {...props};
     const self = this;
+    this.update({...copyProps});
     for (let propName in copyProps) {
       this.setProp(propName, props[propName], copyProps);
       Object.defineProperty(props, propName, {
@@ -136,10 +148,10 @@ var DesignerComponent = class {
 };
 DesignerComponent.css = "";
 DesignerComponent.links = [];
-DesignerComponent.script = "";
+DesignerComponent.script = [];
 DesignerComponent.loaded = false;
 DesignerComponent.loading = false;
-DesignerComponent.defaults = {};
+DesignerComponent.defaults = null;
 DesignerComponent.initializing = false;
 
 // DesignerMultSelectDropDown.ts
@@ -179,7 +191,7 @@ DesignerMultiSelectDropDown.defaults = {
   spacing_below: "small"
 };
 DesignerMultiSelectDropDown.links = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"];
-DesignerMultiSelectDropDown.script = "https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js";
+DesignerMultiSelectDropDown.scripts = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"];
 
 // DesignerQuill.ts
 var DesignerQuill = class extends DesignerComponent {
@@ -226,7 +238,7 @@ DesignerQuill.defaults = {
   visible: true
 };
 DesignerQuill.links = ["//cdn.quilljs.com/1.3.6/quill.snow.css", "//cdn.quilljs.com/1.3.6/quill.bubble.css"];
-DesignerQuill.script = "//cdn.quilljs.com/1.3.6/quill.min.js";
+DesignerQuill.script = ["//cdn.quilljs.com/1.3.6/quill.min.js"];
 
 // DesignerSlider.ts
 var DesignerSlider = class extends DesignerComponent {
@@ -342,7 +354,7 @@ DesignerSlider.defaults = {
   enabled: true
 };
 DesignerSlider.links = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.css"];
-DesignerSlider.script = "https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js";
+DesignerSlider.script = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js"];
 DesignerSlider.css = `.anvil-container-overflow,.anvil-panel-col{overflow:visible}.anvil-slider-container{padding:10px 0;min-height:50px}
 .anvil-slider-container.has-pips{padding-bottom:40px}.noUi-connect{background:var(--primary)}
 .noUi-horizontal .noUi-handle{width:34px;height:34px;right:-17px;top:-10px;border-radius:50%}.noUi-handle::after,.noUi-handle::before{content:none}`;
