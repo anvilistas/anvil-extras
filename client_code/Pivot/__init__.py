@@ -37,6 +37,9 @@ helpers._html_injector.css(
     """
 )
 
+if "ui" not in _jquery.keys():
+    helpers._html_injector.cdn(jqueryui)
+
 try:
     assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
 except AssertionError:
@@ -48,9 +51,6 @@ except AssertionError:
     for dependency in dependencies:
         helpers._html_injector.cdn(dependency)
     assert "pivotUtilities" in _jquery.keys()
-
-if "ui" not in _jquery.keys():
-    helpers._html_injector.cdn(jqueryui)
 
 
 class Pivot(PivotTemplate):
