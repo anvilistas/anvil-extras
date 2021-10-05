@@ -8,7 +8,6 @@
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
 
-from .. import session
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
