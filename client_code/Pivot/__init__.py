@@ -12,13 +12,14 @@ from ._anvil_designer import PivotTemplate
 
 __version__ = "1.6.0"
 
-cdn = "https://cdnjs.cloudflare.com/ajax/libs"
 pivottable_version = "2.23.0"
 jqueryui_version = "1.11.4"
-tags = [
-    (f"{cdn}/pivottable/{pivottable_version}/pivot.min.css", "link"),
-    (f"{cdn}/jqueryui/{jqueryui_version}/jquery-ui.min.js", "script"),
-    (f"{cdn}/pivottable/{pivottable_version}/pivot.min.js", "script"),
+
+prefix = "https://cdnjs.cloudflare.com/ajax/libs"
+dependencies = [
+    f"{prefix}/pivottable/{pivottable_version}/pivot.min.css",
+    f"{prefix}/jqueryui/{jqueryui_version}/jquery-ui.min.js",
+    f"{prefix}/pivottable/{pivottable_version}/pivot.min.js",
 ]
 
 _jquery = anvil.js.window.jQuery
@@ -27,8 +28,8 @@ _jquery = anvil.js.window.jQuery
 try:
     assert "pivotUtilities" in _jquery.keys()
 except AssertionError:
-    for tag in tags:
-        helpers.add_html_tag(*tag)
+    for dependency in dependencies:
+        helpers._html_injector.cdn(dependency)
     assert "pivotUtilities" in _jquery.keys()
 
 
