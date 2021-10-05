@@ -14,6 +14,8 @@ export class DesignerPivot extends DesignerComponent {
         this.pivot = $(domNode.querySelector(".anvil-extras-pivot"));
     }
     update({rows, columns: cols, values: vals, aggregator: aggregatorName}) {
-        this.pivot.pivotUI({rows, cols, vals, aggregatorName}, true);
-    }
+        const keys = [...rows, ...cols, ...vals, ...['key A', 'key B', 'key C']];
+        const item = Object.fromEntries(keys.map(key => [key, 1]));
+        this.pivot.pivotUI([item], {rows, cols, vals, aggregatorName}, true);
+      }
 }

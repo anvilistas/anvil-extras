@@ -573,8 +573,10 @@ var DesignerPivot = class extends DesignerComponent {
     super(domNode, pyComponent, el);
     this.pivot = $(domNode.querySelector(".anvil-extras-pivot"));
   }
-  update({items, rows, columns: cols, values: vals, aggregator: aggregatorName}) {
-    this.pivot.pivotUI(items, {rows, cols, vals, aggregatorName}, true);
+  update({rows, columns: cols, values: vals, aggregator: aggregatorName}) {
+    const keys = [...rows, ...cols, ...vals, ...["key A", "key B", "key C"]];
+    const item = Object.fromEntries(keys.map((key) => [key, 1]));
+    this.pivot.pivotUI([item], {rows, cols, vals, aggregatorName}, true);
   }
 };
 DesignerPivot.links = ["https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css"];
