@@ -81,6 +81,35 @@ def _get_dom_node_id(component):
     return node.id
 
 
+<<<<<<< HEAD
+def _add_script(s):
+    dummy = _S(s)[0]  # let jquery pass the tag
+    s = _document.createElement(dummy.tagName)
+    for attr in dummy.attributes:
+        s.setAttribute(attr.name, attr.value)
+    s.textContent = dummy.textContent
+    _document.head.appendChild(s)
+    if not s.get("src"):
+        return
+
+    def _wait_for_load(res, rej):
+        s.onload = res
+        s.onerror = rej
+
+    p = _Promise(_wait_for_load)
+    anvil.js.await_promise(p)
+
+
+def add_html_tag(url, tag_type):
+    tags = {
+        "link": f'<link href="{url}" rel="stylesheet">',
+        "script": f'<script src="{url}"></script>',
+    }
+    _add_script(tags[tag_type])
+
+
+=======
+>>>>>>> main
 def _spacing_property(a_b):
     def getter(self):
         return getattr(self, "_spacing_" + a_b)

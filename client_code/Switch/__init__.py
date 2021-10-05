@@ -9,8 +9,7 @@ from anvil import CheckBox, app
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 
-from .. import session
-from ..utils._component_helpers import _get_rgb
+from ..utils._component_helpers import _get_rgb, _html_injector
 
 __version__ = "1.6.0"
 
@@ -106,7 +105,7 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::before {
 }
 
 """
-session.style_injector.inject(css)
+_html_injector.css(css)
 
 
 class Switch(CheckBox):

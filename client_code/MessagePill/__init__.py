@@ -4,7 +4,7 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-from .. import session
+from ..utils._component_helpers import _html_injector
 from ._anvil_designer import MessagePillTemplate
 
 __version__ = "1.6.0"
@@ -15,7 +15,7 @@ css = """
     border-radius: 2em;
 }
 """
-session.style_injector.inject(css)
+_html_injector.css(css)
 
 
 class MessagePill(MessagePillTemplate):
