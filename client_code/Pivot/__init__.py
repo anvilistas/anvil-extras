@@ -38,17 +38,19 @@ helpers._html_injector.css(
 )
 
 try:
+    assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
+except AssertionError:
+    raise AssertionError("Incompatible jqueryui version already installed")
+
+try:
     assert "pivotUtilities" in _jquery.keys()
 except AssertionError:
     for dependency in dependencies:
         helpers._html_injector.cdn(dependency)
     assert "pivotUtilities" in _jquery.keys()
 
-try:
-    assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
-except (AssertionError, AttributeError):
+if "ui" not in _jquery.keys():
     helpers._html_injector.cdn(jqueryui)
-    assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
 
 
 class Pivot(PivotTemplate):
