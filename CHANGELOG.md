@@ -1,5 +1,9 @@
 # Unreleased
 
+## New Features
+* Pivot - Dynamic pivot table component
+  https://github.com/anvilistas/anvil-extras/pull/165
+
 ## Bug Fixes
 * MultiSelectDropdown - Hides menu when component is removed from the page
   https://github.com/anvilistas/anvil-extras/pull/149
