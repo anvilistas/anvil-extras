@@ -24,6 +24,18 @@ jqueryui = f"{prefix}/jqueryui/{jqueryui_version}/jquery-ui.min.js"
 
 _jquery = anvil.js.window.jQuery
 
+helpers._html_injector.css(
+    """.anvil-container-overflow, .anvil-panel-col {
+        overflow: visible;
+    }
+    .anvil-extras-pivot-container {
+        display: grid
+    }
+    .pivot-placeholder {
+        overflow: scroll
+    }
+    """
+)
 
 try:
     assert "pivotUtilities" in _jquery.keys()
@@ -55,6 +67,7 @@ class Pivot(PivotTemplate):
         dom_node = anvil.js.get_dom_node(self)
         self.pivot_node = dom_node.querySelector(".anvil-extras-pivot")
         dom_node.querySelector("script").remove()
+        dom_node.classList.add("anvil-extras-pivot-container")
         self.init_components(**properties)
 
     def _init_pivot(self):
