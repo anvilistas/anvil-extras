@@ -51,6 +51,9 @@ class Pivot(PivotTemplate):
         self.init_components(**properties)
 
     def _init_pivot(self):
+        card_node = self.pivot_node.closest(".anvil-role-card")
+        if card_node:
+            card_node.style.overflow = "visible"
         options = {
             value: self.pivot_options[key] for key, value in self.option_names.items()
         }
