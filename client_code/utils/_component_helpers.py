@@ -35,7 +35,7 @@ class HTMLInjector:
         if cdn_url.endswith("js"):
             tag = self._create_tag("script", src=cdn_url, **attrs)
         elif cdn_url.endswith("css"):
-            tag = self._create_tag("link", href=cdn_url, ref="stylesheet", **attrs)
+            tag = self._create_tag("link", href=cdn_url, rel="stylesheet", **attrs)
         else:
             raise ValueError("Unknown CDN type expected css or js file")
         self._inject(tag)
