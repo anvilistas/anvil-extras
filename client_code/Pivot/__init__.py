@@ -47,6 +47,7 @@ class Pivot(PivotTemplate):
         }
         dom_node = anvil.js.get_dom_node(self)
         self.pivot_node = dom_node.querySelector(".anvil-extras-pivot")
+        dom_node.querySelector("script").remove()
         self.init_components(**properties)
 
     def _init_pivot(self):
