@@ -13,7 +13,7 @@ export class DesignerPivot extends DesignerComponent {
         super(domNode, pyComponent, el);
         this.pivot = $(domNode.querySelector(".anvil-extras-pivot"));
     }
-    update({items, rows, columns: cols, values: vals, aggregator: aggregatorName}) {
-        this.pivot.pivotUI(items, {rows, cols, vals, aggregatorName}, true);
+    update({rows, columns: cols, values: vals, aggregator: aggregatorName}) {
+        this.pivot.pivotUI({rows, cols, vals, aggregatorName}, true);
     }
 }
