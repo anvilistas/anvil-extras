@@ -18,9 +18,9 @@ jqueryui_version = "1.11.4"
 prefix = "https://cdnjs.cloudflare.com/ajax/libs"
 dependencies = [
     f"{prefix}/pivottable/{pivottable_version}/pivot.min.css",
-    f"{prefix}/jqueryui/{jqueryui_version}/jquery-ui.min.js",
     f"{prefix}/pivottable/{pivottable_version}/pivot.min.js",
 ]
+jqueryui = f"{prefix}/jqueryui/{jqueryui_version}/jquery-ui.min.js"
 
 _jquery = anvil.js.window.jQuery
 
@@ -32,6 +32,12 @@ except AssertionError:
         helpers._html_injector.cdn(dependency)
     assert "pivotUtilities" in _jquery.keys()
 
+try:
+    assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
+except AssertionError:
+    helpers._html_injector.cdn(jqueryui)
+    assert tuple(int(x) for x in _jquery.ui.version.split(".")) >= (1, 9, 0)
+
 
 class Pivot(PivotTemplate):
     option_names = {
@@ -42,6 +48,7 @@ class Pivot(PivotTemplate):
     }
 
     def __init__(self, **properties):
+        self.pivot_initiated = False
         self.pivot_options = {
             option: properties[option] for option in self.option_names
         }
@@ -60,4 +67,6 @@ class Pivot(PivotTemplate):
         _jquery(self.pivot_node).pivotUI(self.items, options)
 
     def form_show(self, **event_args):
-        self._init_pivot()
+        if not self.pivot_initiated:
+            self._init_pivot()
+            self.pivot_initiated = True
