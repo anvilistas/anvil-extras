@@ -1,8 +1,3 @@
-container:
-  type: HtmlTemplate
-  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: <div class="pivot-placeholder"><div class="anvil-extras-pivot"></div></div>}
-  event_bindings: {show: form_show}
 components: []
 is_package: true
 custom_component: true
@@ -12,3 +7,17 @@ properties:
 - {name: values, type: 'text[]', default_value: '', default_binding_prop: false}
 - {name: items, type: object, default_binding_prop: false}
 - {name: aggregator, type: string, default_value: Count, default_binding_prop: false}
+container:
+  type: HtmlTemplate
+  event_bindings: {show: form_show}
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: '<div class="pivot-placeholder"><div class="anvil-extras-pivot"></div></div>
+      <script type="module">
+
+      import {DesignerPivot} from "https://deno.land/x/anvil_extras@dev-1.7.0/js/designer_components/bundle.min.js";
+
+      DesignerPivot.init();
+
+      </script>
+
+      '}

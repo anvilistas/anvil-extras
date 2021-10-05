@@ -563,11 +563,31 @@ var DesignerChipsInput = class extends DesignerComponent {
   }
 };
 DesignerChipsInput.css = `.anvil-extras-chips-input input{box-shadow:none !important;border:none !important;padding:7px 0 !important;margin-bottom:0 !important;flex:1;min-width:50px}.anvil-extras-chips-input{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid;align-items:center;padding-bottom:4px}`;
+
+// DesignerPivot.ts
+var DesignerPivot = class extends DesignerComponent {
+  static init() {
+    super.init(".pivot-placeholder");
+  }
+  constructor(domNode, pyComponent, el) {
+    super(domNode, pyComponent, el);
+    this.pivot = $(domNode.querySelector(".anvil-extras-pivot"));
+  }
+  update({items, rows, columns: cols, values: vals, aggregator: aggregatorName}) {
+    this.pivot.pivotUI(items, {rows, cols, vals, aggregatorName}, true);
+  }
+};
+DesignerPivot.links = ["https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css"];
+DesignerPivot.scripts = [
+  "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"
+];
 export {
   DesignerChip,
   DesignerChipsInput,
   DesignerComponent,
   DesignerMultiSelectDropDown,
+  DesignerPivot,
   DesignerQuill,
   DesignerSlider,
   DesignerSwitch,
