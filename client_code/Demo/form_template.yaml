@@ -353,4 +353,19 @@ components:
   layout_properties:
     col_widths: {}
     grid_position: STFSBF,BYBVXR
+- type: Label
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
+    text: Pivot Component, font_size: null, font: '', spacing_above: small, icon_align: left,
+    spacing_below: small, italic: false, background: '', bold: true, underline: false,
+    icon: ''}
+  name: label_6
+  layout_properties: {grid_position: 'WHHTUU,ICVIKX'}
+- type: form:Pivot
+  properties:
+    rows: [Province]
+    columns: [Party]
+    values: ''
+    aggregator: Count
+  name: pivot
+  layout_properties: {grid_position: 'HIYTRU,YYRQCD'}
 is_package: true

@@ -1,11 +1,14 @@
 // DesignerComponent.ts
 var DesignerComponent = class {
-  static postLoad() {
-  }
   constructor(domNode, pyComponent, el) {
     this.domNode = domNode;
     this.pyComponent = pyComponent;
     this.el = el;
+    this.domNode = domNode;
+    this.pyComponent = pyComponent;
+    this.el = el;
+  }
+  static postLoad() {
   }
   static init(selector, className = "anvil-extras-designer") {
     const doInit = () => {
@@ -30,11 +33,15 @@ var DesignerComponent = class {
         s.innerHTML = this.css;
         document.body.appendChild(s);
       }
-      if (this.script) {
-        const s = document.createElement("script");
-        s.src = this.script;
-        document.body.appendChild(s);
-        s.onload = doInit;
+      if (this.scripts.length) {
+        const promises = this.scripts.map((script) => new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = script;
+          document.body.appendChild(s);
+          s.onload = resolve;
+          s.onerror = reject;
+        }));
+        Promise.all(promises).then(doInit);
       } else {
         doInit();
       }
@@ -60,13 +67,18 @@ var DesignerComponent = class {
       const self = new this(container, pyComponent, el);
       if (props) {
         self.makeGetSets(props);
+      } else if (this.defaults) {
+        self.update({...this.defaults});
+        for (let [propName, propVal] of Object.entries(this.defaults)) {
+          self.setProp(propName, propVal, this.defaults);
+        }
       }
-      self.update({...props || this.defaults});
     }
   }
   makeGetSets(props) {
     const copyProps = {...props};
     const self = this;
+    this.update({...copyProps});
     for (let propName in copyProps) {
       this.setProp(propName, props[propName], copyProps);
       Object.defineProperty(props, propName, {
@@ -136,10 +148,10 @@ var DesignerComponent = class {
 };
 DesignerComponent.css = "";
 DesignerComponent.links = [];
-DesignerComponent.script = "";
+DesignerComponent.script = [];
 DesignerComponent.loaded = false;
 DesignerComponent.loading = false;
-DesignerComponent.defaults = {};
+DesignerComponent.defaults = null;
 DesignerComponent.initializing = false;
 
 // DesignerMultSelectDropDown.ts
@@ -179,7 +191,7 @@ DesignerMultiSelectDropDown.defaults = {
   spacing_below: "small"
 };
 DesignerMultiSelectDropDown.links = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css"];
-DesignerMultiSelectDropDown.script = "https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js";
+DesignerMultiSelectDropDown.scripts = ["https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"];
 
 // DesignerQuill.ts
 var DesignerQuill = class extends DesignerComponent {
@@ -226,7 +238,7 @@ DesignerQuill.defaults = {
   visible: true
 };
 DesignerQuill.links = ["//cdn.quilljs.com/1.3.6/quill.snow.css", "//cdn.quilljs.com/1.3.6/quill.bubble.css"];
-DesignerQuill.script = "//cdn.quilljs.com/1.3.6/quill.min.js";
+DesignerQuill.scripts = ["//cdn.quilljs.com/1.3.6/quill.min.js"];
 
 // DesignerSlider.ts
 var DesignerSlider = class extends DesignerComponent {
@@ -342,7 +354,7 @@ DesignerSlider.defaults = {
   enabled: true
 };
 DesignerSlider.links = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.css"];
-DesignerSlider.script = "https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js";
+DesignerSlider.scripts = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js"];
 DesignerSlider.css = `.anvil-container-overflow,.anvil-panel-col{overflow:visible}.anvil-slider-container{padding:10px 0;min-height:50px}
 .anvil-slider-container.has-pips{padding-bottom:40px}.noUi-connect{background:var(--primary)}
 .noUi-horizontal .noUi-handle{width:34px;height:34px;right:-17px;top:-10px;border-radius:50%}.noUi-handle::after,.noUi-handle::before{content:none}`;
@@ -551,11 +563,33 @@ var DesignerChipsInput = class extends DesignerComponent {
   }
 };
 DesignerChipsInput.css = `.anvil-extras-chips-input input{box-shadow:none !important;border:none !important;padding:7px 0 !important;margin-bottom:0 !important;flex:1;min-width:50px}.anvil-extras-chips-input{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid;align-items:center;padding-bottom:4px}`;
+
+// DesignerPivot.ts
+var DesignerPivot = class extends DesignerComponent {
+  static init() {
+    super.init(".pivot-placeholder");
+  }
+  constructor(domNode, pyComponent, el) {
+    super(domNode, pyComponent, el);
+    this.pivot = $(domNode.querySelector(".anvil-extras-pivot"));
+  }
+  update({rows, columns: cols, values: vals, aggregator: aggregatorName}) {
+    const keys = [...rows, ...cols, ...vals, ...["key A", "key B", "key C"]];
+    const item = Object.fromEntries(keys.map((key) => [key, 1]));
+    this.pivot.pivotUI([item], {rows, cols, vals, aggregatorName}, true);
+  }
+};
+DesignerPivot.links = ["https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.css"];
+DesignerPivot.scripts = [
+  "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.23.0/pivot.min.js"
+];
 export {
   DesignerChip,
   DesignerChipsInput,
   DesignerComponent,
   DesignerMultiSelectDropDown,
+  DesignerPivot,
   DesignerQuill,
   DesignerSlider,
   DesignerSwitch,

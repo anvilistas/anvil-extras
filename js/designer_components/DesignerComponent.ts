@@ -19,7 +19,7 @@ export class DesignerComponent {
     static links: string[] = [];
 
     /** If using an external CDN to include a script tag override the script attribute */
-    static script = "";
+    static script: string[] = [];
     private static loaded = false;
     private static loading = false;
 
@@ -92,11 +92,19 @@ export class DesignerComponent {
                 s.innerHTML = this.css;
                 document.body.appendChild(s);
             }
-            if (this.script) {
-                const s = document.createElement("script");
-                s.src = this.script;
-                document.body.appendChild(s);
-                s.onload = doInit;
+            if (this.scripts.length) {
+                const promises = this.scripts.map(
+                    (script) =>
+                        new Promise((resolve, reject) => {
+                            const s = document.createElement("script");
+                            s.src = script;
+                            document.body.appendChild(s);
+                            s.onload = resolve;
+                            s.onerror = reject;
+                        })
+                );
+                Promise.all(promises).then(doInit);
+
             } else {
                 doInit();
             }

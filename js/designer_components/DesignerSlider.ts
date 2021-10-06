@@ -24,7 +24,7 @@ export class DesignerSlider extends DesignerComponent {
         enabled: true,
     };
     static links = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.css"];
-    static script = "https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js";
+    static scripts = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js"];
     static css = `.anvil-container-overflow,.anvil-panel-col{overflow:visible}.anvil-slider-container{padding:10px 0;min-height:50px}
 .anvil-slider-container.has-pips{padding-bottom:40px}.noUi-connect{background:var(--primary)}
 .noUi-horizontal .noUi-handle{width:34px;height:34px;right:-17px;top:-10px;border-radius:50%}.noUi-handle::after,.noUi-handle::before{content:none}`;

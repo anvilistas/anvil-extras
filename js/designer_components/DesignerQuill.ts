@@ -13,7 +13,7 @@ export class DesignerQuill extends DesignerComponent {
         visible: true,
     };
     static links = ["//cdn.quilljs.com/1.3.6/quill.snow.css", "//cdn.quilljs.com/1.3.6/quill.bubble.css"];
-    static script = "//cdn.quilljs.com/1.3.6/quill.min.js";
+    static scripts = ["//cdn.quilljs.com/1.3.6/quill.min.js"];
 
     static init() {
         super.init(".quill-editor");

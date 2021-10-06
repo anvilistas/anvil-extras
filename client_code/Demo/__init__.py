@@ -4,10 +4,13 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
+import anvil.http
+
 from ..utils import auto_refreshing
 from ._anvil_designer import DemoTemplate
 
 __version__ = "1.6.0"
+dataset_url = "https://pivottable.js.org/examples/mps.json"
 
 
 #### AUTO REFRESING - the item property updates components
@@ -26,6 +29,7 @@ class Demo(DemoTemplate):
             text="",
         )
         self.item = self.default_item
+        self.pivot.items = anvil.http.request(dataset_url, json=True)
         self.init_components(**properties)
 
     def timer_1_tick(self, **event_args):
