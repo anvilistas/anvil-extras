@@ -187,7 +187,7 @@ def _add_transition_behaviour(component, popper_element, popper_id):
 
     # transition is either None or a promise
     fake_container = _anvil.Container()
-    if component is not None:
+    if component is not None and component.parent is not None:
         # we add the component to a Container component
         # this doesn't really add it to the dom
         # it just allows us to use anvil's underlying show hide architecture
