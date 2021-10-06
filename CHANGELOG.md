@@ -1,4 +1,4 @@
-# Unreleased
+# v1.7.0 06-Oct-2021
 
 ## New Features
 * Pivot - Dynamic pivot table component
