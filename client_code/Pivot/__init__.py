@@ -32,7 +32,7 @@ helpers._html_injector.css(
         display: grid
     }
     .pivot-placeholder {
-        overflow: scroll
+        overflow: auto
     }
     """
 )
