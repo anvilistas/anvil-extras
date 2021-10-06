@@ -9,7 +9,7 @@ from functools import cache, wraps
 
 from anvil.js.window import Function, anvilFormTemplates
 
-__version__ = "1.7.0"
+__version__ = "1.7.1"
 
 _store_writebacks = Function(
     "form",
