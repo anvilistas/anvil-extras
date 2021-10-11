@@ -173,7 +173,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     def _form_hide(self, **event_args):
         """This method is called when the HTML panel is removed from the screen"""
-        if self._menu_shown:
+        if self._menu_visible:
             self._el.selectpicker("toggle")
 
 
