@@ -1,0 +1,436 @@
+Animations
+==========
+A wrapper around the `Web Animations API <https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API>`_
+
+Interfaces
+----------
+.. class:: Animation(component, effect)
+
+    An Animation object will be returned from the ``Effect.animate()`` method and the ``animate()`` function.
+    Provides playback control for an animation.
+
+.. class:: Effect(transiton, **effect_timing_options)
+
+    A combination of a ``Transition`` object and timing options.
+    An effect can be used to animate an Anvil Component with its ``.animate()`` method.
+    ``effect_timing_options`` are equivalent to those listed at `EffectTiming <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_
+
+.. class:: Transition(**css_frames)
+
+    A dictionary based class. Each key should be a css property in camel case with a list of values.
+    Each item in the list represents a style to hit during the animation.
+    The first value in the list is where the animation starts and the final value is where the animation ends.
+
+
+.. function:: animate(component, transition, **timing_options)
+
+    A shortcut for animating an Anvil Component. Returns an Animation instance.
+
+
+
+Examples
+--------
+
+Animate on show
+***************
+
+.. code-block:: python
+
+    from anvil_extras.animations import Effect, Transition
+
+    fade_in = Transition(opacity=[0, 1])
+    effect = Effect(fade_in, duration=500)
+
+    def card_show(self, **event_args):
+        effect.animate(self.card)
+
+.. code-block:: python
+
+    from anvil_extras.animations import animate, fade_in
+
+    def card_show(self, **event_args):
+        animate(self.card, fade_in, duration=500)
+
+
+Animate on remove
+*****************
+.. code-block:: python
+
+    from anvil_extras.animations import animate, fade_out, Easing, Effect
+
+    leave_effect = Effect(fade_out, duration=500, easing=Easing.ease_out)
+
+
+    def button_click(self, **event_args):
+        if self.card.parent is not None:
+            # we can't do this in the hide event because we're already off the screen!
+            leave_effect.animate(self.card).wait()
+            self.card.remove_from_parent()
+
+
+Combine Transitions
+*******************
+
+Transitions can be combined with the `|` operator. They will be merged like dictionaries.
+This is problematic for Transitions with transforms where the last transform wins.
+
+.. code-block:: python
+
+    from anvil_extras.animations import animate, zoom_out, fade_out, get_bounding_rect, Transition
+
+
+
+    def button_click(self, **event_args):
+        if self.card.parent is not None:
+            height = get_bounding_rect(self.card).height
+            t = zoom_out | fade_out | Transition(height=[f"{height}px", 0])
+            animate(self.card, t, duration=500).wait()
+            self.card.remove_from_parent()
+
+    # Equivalent to
+    def button_click(self, **event_args):
+        if self.card.parent is not None:
+            t = zoom_out | fade_out | Transition.height_out(component)
+            animate(self.card, t, duration=500).wait()
+            self.card.remove_from_parent()
+
+
+Animate on visible change
+*************************
+.. code-block:: python
+
+    from anvil_extras.animations import Transition, wait_for
+
+    zoom_in = Transition(transform=["scale(.3)", "none"], opacity=[0, 1])
+
+    def visible_change(self, component):
+        if is_animating(component):
+            return
+
+        is_visible = component.visible
+        if not is_visible:
+            # set this now because we need it on the screen to measure its height
+            # if you have a show event for this component - it may also fire
+            component.visible = True
+            direction = "normal"
+        else:
+            direction = "reverse"
+
+        t = zoom_in | Transition.height_in(component)
+        animate(component, t, duration=900, direction=direction)
+
+        if is_visible:
+            # we're animating - wait for the animation to finish before setting visible to false
+            wait_for(component) # equivalent to animation.wait() or wait_for(animation)
+            component.visible = False
+
+
+
+Swap Elements
+*************
+.. code-block:: python
+
+    from anvil_extras.animations import animate
+
+    def button_click(self, **event_args):
+        # animate wait then remove and re-add
+        components = self.linear_panel.get_components()
+        c0, c1 = components[0], components[1]
+        animate(c0, end_at=c1)
+        animate(c1, end_at=c0).wait()
+        c0.remove_from_parent()
+        c1.remove_from_parent()
+        self.linear_panel.add_component(c0, index=0)
+        self.linear_panel.add_component(c1, index=0)
+
+
+.. code-block:: python
+
+    from anvil_extras.animations import animate, get_bounding_rect, is_animating
+
+    def button_click(self, **event_args):
+        # get positions, remove, change positions, reverse animate
+        components = self.linear_panel.get_components()
+        c0, c1 = components[0], components[1]
+        if is_animating(c0) or is_animating(c1):
+            return
+        p0, p1 = get_bounding_rect(c0), get_bounding_rect(c1)
+        c0.remove_from_parent()
+        c1.remove_from_parent()
+        self.linear_panel.add_component(c0, index=0)
+        self.linear_panel.add_component(c1, index=0)
+        animate(c0, start_at=p0)
+        animate(c1, start_at=p1)
+
+
+.. code-block:: python
+
+    from anvil_extras.animations import animate, get_bounding_rect, is_animating
+
+    def button_click(self, **event_args):
+        # get positions, remove, change positions, reverse animate
+        components = self.linear_panel.get_components()
+        c0, c1 = components[0], components[1]
+        if is_animating(c0) or is_animating(c1):
+            return
+        p0, p1 = get_bounding_rect(c0), get_bounding_rect(c1)
+        c0.remove_from_parent()
+        c1.remove_from_parent()
+        self.linear_panel.add_component(c0, index=0)
+        self.linear_panel.add_component(c1, index=0)
+        animate(c0, start_at=p0)
+        animate(c1, start_at=p1)
+
+
+.. code-block:: python
+
+    from anvil_extras.animations import animate
+
+    class Form1(Form1Template):
+        def __init__(self, **properties):
+            ...
+            self.repeating_panel_1.set_event_handler('x-swap', self.swap)
+
+
+        def swap(self, component, is_up, **event_args):
+            """this event is raised by a child component"""
+            items = self.repeating_panel_1.items
+            components = self.repeating_panel_1.get_components()
+            i = components.index(component)
+            j = i - 1 if is_up else i + 1
+            if j < 0:
+                # we can't go negative
+                return
+            c1 = component
+            try:
+                c2 = components[j]
+            except IndexError:
+                return
+
+            animate(c1, end_at=c2)
+            animate(c2, end_at=c1).wait()
+            items[i], items[j] = items[j], items[i]
+            self.repeating_panel_1.items = items
+
+
+
+    class ItemTemplate1(ItemTemplate1Template):
+        def __init__(self, **properties):
+            # Set Form properties and Data Bindings.
+            self.init_components(**properties)
+            # Any code you write here will run when the form opens.
+
+        def up_btn_click(self, **event_args):
+            """This method is called when the button is clicked"""
+            self.parent.raise_event('x-swap', component=self, is_up=True)
+
+        def down_btn_click(self, **event_args):
+            """This method is called when the button is clicked"""
+            self.parent.raise_event('x-swap', component=self, is_up=False)
+
+
+Full API
+--------
+
+.. function:: is_animating(component)
+
+    Returns a boolean as to whether the component is animating.
+
+.. function:: wait_for(component_or_animation)
+
+    If given an animation equivalent to ``animateion.wait()``.
+    If given a component, will wait for all running animations on the component to finish.
+
+
+.. function:: animate(component, transition=None, start_at=None, end_at=None, use_ghost=False, **effect_timing_options)
+    :noindex:
+
+    ``component``: an anvil Component or Javascript HTMLElement
+
+    ``transition``: Transion object
+
+    ``effect_timing_options``: `various options <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_ to change the behaviour of the animation e.g. ``duration=500``.
+
+    ``use_ghost``: when set to ``True``, will animate a ghost element (i.e. a visual copy).
+    Using a ghost element will allow the component to be animated outside of its container
+
+    ``start_at``, ``end_at``: Can be set to a ``Component`` or ``DOMRect`` (i.e. a computed position of a component from ``get_bounding_rect``)
+    If either ``start_at`` or ``end_at`` are set this will determine the start/end position of the animationn
+    If one value is set and the other omitted the omitted value will be assumed to be the current position of the componenent.
+    A ghost element is always used when ``start_at`` / ``end_at`` are set.
+
+.. function:: get_bounding_rect(component)
+
+    Returns a ``DOMRect`` object. A convenient way to get the ``height``, ``width``, ``x``, ``y`` values of a *component*.
+    Where the ``x``, ``y`` are the absolute positions on the page from the top left corner.
+
+
+.. class:: Transition(transform=[from, to], opacity=[from, to])
+            Transition(transform=[from, middle, to], offset=[0, 0.75, 1])
+            Transition(cssProp0=list[str], cssProp1=list[str], cssProp2=list[str], offset=list[int | float])
+    :noindex:
+
+    Takes css property names as keyword arguments and each value should be a list of transitions for that property
+    ``fly_right = Transition(transform=['none', 'translateX(100%) scale(0)'])``
+
+    Each list item represents css values to be applied across the transition.
+    Typically the first value is the start of the transition and the last value is the end.
+    Lists can be more than 2 values, in which case the transition will be split across the values evenly.
+    You can customize the even split by setting an offset which has values from 0, 1
+
+    ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
+
+    Transition objects can be combined with the ``|`` operator (which behaves like merging dictionaries)
+    ``t = fly_right | fade_out | Transtion.height_out(component)``
+
+    .. classmethod:: height_out(cls, component)
+
+        Returns a Transition starting from the current height of the component and ending at 0 height.
+
+    .. classmethod:: height_in(cls, component)
+
+        Returns a Transition starting from height 0 and ending at the current height of the component.
+
+    .. classmethod:: width_out(cls, component)
+
+        Returns a Transition starting from the current width of the component and ending at 0 width.
+
+    .. classmethod:: width_in(cls, component)
+
+        Returns a Transition starting from width 0 and ending at the current width of the component.
+
+.. class:: Effect(transiton, **effect_timing_options):
+    :noindex:
+
+    Create an effect that can later be used to animate a component.
+    The first argument should be a Transtion object.
+    Other keyword arguments should be `effect timing options <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_.
+
+    .. method:: animate(self, component, use_ghost=False)
+        :noindex:
+
+        animate a component using an effect object.
+        If ``use_ghost`` is ``True`` a ghost element will be animated.
+        Retuns an Animation instance.
+
+    .. method:: getKeyframes(self, component)
+
+        Returns the computed keyframes that make up this effect. Can be used in place of the ``transiton`` argument in other functions.
+
+    .. method:: getTiming(self, component)
+
+        Returns the EffectTiming object associated with this effect.
+
+
+.. class:: Animation(component, effect):
+    :noindex:
+
+    An Animation object will be returned from the ``Effect.animate()`` method and the ``animate()`` function.
+    Provides playback control for an animation.
+
+    .. method:: cancel(self)
+
+        abort animation playback
+
+    .. method:: commitStyles(self)
+
+        Commits the end styling state of an animation to the element
+
+    .. method:: finish(self)
+
+        Seeks the end of an animation
+
+    .. method:: pause(self)
+
+        Suspends playing of an animation
+
+    .. method:: play(self)
+
+        Starts or resumes playing of an animation, or begins the animation again if it previously finished.
+
+    .. method:: persist(self)
+
+        Explicitly persists an animation, when it would otherwise be removed.
+
+    .. method:: reverse(self)
+
+        Reverses playback direction and plays
+
+    .. method:: updatePlaybackRate(self, playback_rate)
+
+        The new speed to set. A positive number (to speed up or slow down the animation), a negative number (to reverse), or zero (to pause).
+
+    .. method:: wait(self)
+
+        Animations are not blocking. Call the wait function to wait for an animation to finish in a blocking way
+
+    .. attribute:: playbackRate
+
+        gets or sets the playback rate
+
+    .. attribute:: onfinish
+
+        set a callback for when the animation finishes
+
+    .. attribute:: oncancel
+
+        set a callback for when the animation is canceled
+
+    .. attribute:: onremove
+
+        set a callback for when the animation is removed
+
+
+.. attribute:: Easing
+
+    An Enum like instance with some common easing values.
+
+    ``Easing.ease``, ``Easing.ease_in``, ``Easing.ease_out``, ``Easing.ease_in_out`` and ``Easing.linear``.
+
+    .. method:: cubic_bezier(po, p1, p2, p3)
+
+        Create a ``cubic_bezier`` easing value from 4 numerical values.
+
+
+Pre-computed transitions
+------------------------
+
+Attention Seekers
+*****************
+* ``bounce = Transition(transform=[f"translateY({n}px)" for n in (0, 0, -30, -30, 0, -15, 0, -15, 0)], offset=[0, 0.2, 0.4, 0.43, 0.53, 0.7, 0.8, 0.9, 1])``
+* ``pulse = Transition(transform=["none", "scale(1.05)", "none"])``
+* ``shake = Transition(transform=[f"translate({x}px)" for x in (0, 10, -10, 10, -10, 10, -10, 10, -10, 0)])``
+
+
+Fades
+*****
+* ``fade_in = Transition(opacity=[0, 1])``
+* ``fade_out = Transition(opacity=[1, 0])``
+* ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
+
+
+FLY
+***
+
+* ``fly_in_up = Transition(transform=["translateY(100%) scale(0)", "none"], opacity=[0, 1])``
+* ``fly_in_down = Transition(transform=["translateY(-100%) scale(0)", "none"], opacity=[0, 1])``
+* ``fly_in_left = Transition(transform=["translateX(100%) scale(0)", "none"], opacity=[0, 1])``
+* ``fly_in_right = Transition(transform=["translateY(-100%) scale(0)", "none"], opacity=[0, 1])``
+
+* ``fly_out_up = Transition(transform=["none", "translateY(-100%) scale(0)"], opacity=[1, 0])``
+* ``fly_out_down = Transition(transform=["none", "translateY(100%) scale(0)"], opacity=[1, 0])``
+* ``fly_out_left = Transition(transform=["none", "translateX(-100%) scale(0)"], opacity=[1, 0])``
+* ``fly_out_right = Transition(transform=["none", "translateX(100%) scale(0)"], opacity=[1, 0])``
+
+Rotate
+******
+
+* ``rotate_in = Transition(transform=["none", "rotate(200deg)"])``
+* ``rotate_out = Transition(transform=["rotate(200deg)", "none"])``
+
+
+Zoom Entrances
+**************
+
+* ``zoom_in = Transition(transform=["scale(.3)", "none"])``
+* ``zoom_out = Transition(transform=["none", "scale(.3)"])``
