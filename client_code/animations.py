@@ -68,10 +68,13 @@ _transforms = (
 
 
 class Transition(dict):
-    """Create a transtion object. Takes property names as keyword arguments and each value should be a list of transitions for that property
-    e.g. fly_right = Transition(transform=['none', 'translateX(100%) scale(0)'])
+    """Create a transtion object.
+    Takes css/transform property names as keyword arguments and each value should be a list of frames for that property.
+    The number of frames must match across all properties.
 
-    Each list item represents css values to be applied across the transition.
+    e.g. slide_right = Transition(translateX=[0, "100%"])
+
+    Each list item represents a css values to be applied across the transition.
     Typically the first value is the start of the transition and the last value is the end.
     Lists can be more than 2 values in which case the transition will be split across the values evenly.
     You can customize the even split by setting an offset which has values from 0, 1
@@ -79,7 +82,7 @@ class Transition(dict):
     e.g. fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])
 
     Transition objects can be combined with the | operator (which behaves like merging dictionaries)
-    e.g. t = fly_right | fade_out | Transtion(height=[f"{current_height}px", "0px"])
+    e.g. t = reversed(slide_right) | zoom_in | fade_in | Transtion.height_in(component)
     """
 
     def __new__(cls, **transitions):
@@ -215,27 +218,29 @@ slide_in_up = Transition(translateY=["100%", 0])
 slide_in_down = Transition(translateY=["-100%", 0])
 slide_in_left = Transition(translateX=["-100%", 0])
 slide_in_right = Transition(translateX=["100%", 0])
+
 slide_out_up = reversed(slide_in_up)
 slide_out_down = reversed(slide_in_down)
 slide_out_left = reversed(slide_in_left)
 slide_out_right = reversed(slide_in_right)
 
-full_zoom_in = Transition(scale=[0, 1])
-fly_in_up = slide_in_up | full_zoom_in | fade_in
-fly_in_down = slide_in_down | full_zoom_in | fade_in
-fly_in_left = slide_in_left | full_zoom_in | fade_in
-fly_in_right = slide_in_right | full_zoom_in | fade_in
+
+rotate_in = Transition(rotate=[0, "200deg"])
+rotate_out = reversed(rotate_in)
+
+zoom_in = Transition(scale=[0.3, 1])
+zoom_out = reversed(zoom_in)
+
+fly_in_up = slide_in_up | zoom_in | fade_in
+fly_in_down = slide_in_down | zoom_in | fade_in
+fly_in_left = slide_in_left | zoom_in | fade_in
+fly_in_right = slide_in_right | zoom_in | fade_in
 
 fly_out_up = reversed(fly_in_up)
 fly_out_down = reversed(fly_in_down)
 fly_out_left = reversed(fly_in_left)
 fly_out_right = reversed(fly_in_right)
 
-rotate_in = Transition(transform=["none", "rotate(200deg)"])
-rotate_out = reversed(rotate_in)
-
-zoom_in = Transition(transform=["scale(.3)", "none"])
-zoom_out = reversed(zoom_in)
 
 # add a method to the window.Animation class for our convenience
 _window.Function(
@@ -522,10 +527,8 @@ def _animate_from_to(component, c1, c2, t, options):
     pos = el.getBoundingClientRect()
     pos1, pos2 = get_bounding_rect(c1), get_bounding_rect(c2)
     t_fromto = Transition(
-        transform=[
-            f"translateX({pos1.x - pos.x}px) translateY({pos1.y - pos.y}px)",
-            f"translateX({pos2.x - pos.x}px) translateY({pos2.y - pos.y}px)",
-        ]
+        translateX=[f"{pos1.x - pos.x}px", f"{pos2.x - pos.x}px"],
+        translateY=[f"{pos1.y - pos.y}px", f"{pos2.y - pos.y}px"],
     )
     if pos1.width != pos2.width:
         t_fromto["width"] = [pos1.width, pos2.width]

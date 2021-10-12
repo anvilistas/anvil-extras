@@ -101,7 +101,7 @@ Animate on visible change
 
     from anvil_extras.animations import Transition, wait_for
 
-    zoom_in = Transition(transform=["scale(.3)", "none"], opacity=[0, 1])
+    zoom = Transition(scale=[.3, 1], opacity=[0, 1])
 
     def visible_change(self, component):
         if is_animating(component):
@@ -116,7 +116,7 @@ Animate on visible change
         else:
             direction = "reverse"
 
-        t = zoom_in | Transition.height_in(component)
+        t = zoom | Transition.height_in(component)
         animate(component, t, duration=900, direction=direction)
 
         if is_visible:
@@ -265,15 +265,15 @@ Full API
     Where the ``x``, ``y`` are the absolute positions on the page from the top left corner.
 
 
-.. class:: Transition(transform=[from, to], opacity=[from, to])
-            Transition(transform=[from, middle, to], offset=[0, 0.75, 1])
-            Transition(cssProp0=list[str], cssProp1=list[str], cssProp2=list[str], offset=list[int | float])
+.. class:: Transition(cssProp0=list[str], cssProp1=list[str], transformProp0=list[str], offset=list[int | float])
     :noindex:
 
-    Takes css property names as keyword arguments and each value should be a list of transitions for that property
-    ``fly_right = Transition(transform=['none', 'translateX(100%) scale(0)'])``
+    Takes css/transform property names as keyword arguments and each value should be a list of frames for that property.
+    The number of frames must match across all properties.
 
-    Each list item represents css values to be applied across the transition.
+    ``slide_right = Transition(translateX=[0, "100%"])``
+
+    Each list item represents a css values to be applied across the transition.
     Typically the first value is the start of the transition and the last value is the end.
     Lists can be more than 2 values, in which case the transition will be split across the values evenly.
     You can customize the even split by setting an offset which has values from 0, 1
@@ -281,7 +281,7 @@ Full API
     ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
 
     Transition objects can be combined with the ``|`` operator (which behaves like merging dictionaries)
-    ``t = fly_right | fade_out | Transtion.height_out(component)``
+    ``t = reversed(slide_right) | zoom_in | fade_in | Transtion.height_in(component)``
 
     .. classmethod:: height_out(cls, component)
 
@@ -298,6 +298,10 @@ Full API
     .. classmethod:: width_in(cls, component)
 
         Returns a Transition starting from width 0 and ending at the current width of the component.
+
+    .. desribe:: reversed(transition)
+
+        Returns a Transition with all frames reversed for each property.
 
 .. class:: Effect(transiton, **effect_timing_options):
     :noindex:
@@ -397,40 +401,55 @@ Pre-computed transitions
 
 Attention Seekers
 *****************
-* ``bounce = Transition(transform=[f"translateY({n}px)" for n in (0, 0, -30, -30, 0, -15, 0, -15, 0)], offset=[0, 0.2, 0.4, 0.43, 0.53, 0.7, 0.8, 0.9, 1])``
-* ``pulse = Transition(transform=["none", "scale(1.05)", "none"])``
-* ``shake = Transition(transform=[f"translate({x}px)" for x in (0, 10, -10, 10, -10, 10, -10, 10, -10, 0)])``
-
+* ``pulse = Transition(scale=[1, 1.05, 1])``
+* ``bounce = Transition(translateY=[0, 0, "-30px", "-30px", 0, "-15px", 0, "-15px", 0], offset=[0, 0.2, 0.4, 0.43, 0.53, 0.7, 0.8, 0.9, 1])``
+* ``shake = Transition(translateX=[0] + ["10px", "-10px"] * 4 + [0])``
 
 Fades
 *****
+
 * ``fade_in = Transition(opacity=[0, 1])``
-* ``fade_out = Transition(opacity=[1, 0])``
 * ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
+* ``fade_out = reversed(fade_in)``
 
+Slides
+******
 
-FLY
-***
+* ``slide_in_up = Transition(translateY=["100%", 0])``
+* ``slide_in_down = Transition(translateY=["-100%", 0])``
+* ``slide_in_left = Transition(translateX=["-100%", 0])``
+* ``slide_in_right = Transition(translateX=["100%", 0])``
 
-* ``fly_in_up = Transition(transform=["translateY(100%) scale(0)", "none"], opacity=[0, 1])``
-* ``fly_in_down = Transition(transform=["translateY(-100%) scale(0)", "none"], opacity=[0, 1])``
-* ``fly_in_left = Transition(transform=["translateX(100%) scale(0)", "none"], opacity=[0, 1])``
-* ``fly_in_right = Transition(transform=["translateY(-100%) scale(0)", "none"], opacity=[0, 1])``
+* ``slide_out_up = reversed(slide_in_up)``
+* ``slide_out_down = reversed(slide_in_down)``
+* ``slide_out_left = reversed(slide_in_left)``
+* ``slide_out_right = reversed(slide_in_right)``
 
-* ``fly_out_up = Transition(transform=["none", "translateY(-100%) scale(0)"], opacity=[1, 0])``
-* ``fly_out_down = Transition(transform=["none", "translateY(100%) scale(0)"], opacity=[1, 0])``
-* ``fly_out_left = Transition(transform=["none", "translateX(-100%) scale(0)"], opacity=[1, 0])``
-* ``fly_out_right = Transition(transform=["none", "translateX(100%) scale(0)"], opacity=[1, 0])``
 
 Rotate
 ******
 
-* ``rotate_in = Transition(transform=["none", "rotate(200deg)"])``
-* ``rotate_out = Transition(transform=["rotate(200deg)", "none"])``
+
+* ``rotate_in = Transition(rotate=[0, "200deg"])``
+* ``rotate_out = reversed(rotate_in)``
 
 
-Zoom Entrances
-**************
+Zoom
+****
 
-* ``zoom_in = Transition(transform=["scale(.3)", "none"])``
-* ``zoom_out = Transition(transform=["none", "scale(.3)"])``
+* ``zoom_in = Transition(scale=[.3, 1])``
+* ``zoom_out = reversed(zoom_in)``
+
+
+Fly
+***
+
+* ``fly_in_up = slide_in_up | zoom_in | fade_in``
+* ``fly_in_down = slide_in_down | zoom_in | fade_in``
+* ``fly_in_left = slide_in_left | zoom_in | fade_in``
+* ``fly_in_right = slide_in_right | zoom_in | fade_in``
+
+* ``fly_out_up = reversed(fly_in_up)``
+* ``fly_out_down = reversed(fly_in_down)``
+* ``fly_out_left = reversed(fly_in_left)``
+* ``fly_out_right = reversed(fly_in_right)``
