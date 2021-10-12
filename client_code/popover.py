@@ -63,7 +63,7 @@ def popover(
     _wait_for_transition(popper_element)
 
     if _has_popover(popper_element):
-        print("Warning: creating a popover on a componet which already has a popover.")
+        print("Warning: creating a popover on a component which already has a popover.")
         print("Destroy the popover before creating a new one.")
         # return here since adding a new popover has no effect
         return
