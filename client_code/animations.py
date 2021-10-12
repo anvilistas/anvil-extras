@@ -20,7 +20,7 @@ def _dom_node(component):
     elif hasattr(component, "nodeType"):
         return component
     raise TypeError(
-        f"Expectd an anvil Component or HTMLElement (got {component.__class__.__name__})"
+        f"Expected an anvil Component or HTMLElement (got {component.__class__.__name__})"
     )
 
 
@@ -42,6 +42,31 @@ class _Easing:
 Easing = _Easing()
 
 
+_transforms = (
+    "matrix",
+    "translate",
+    "translateX",
+    "translateY",
+    "scale",
+    "scaleX",
+    "scaleY",
+    "rotate",
+    "skew",
+    "skewX",
+    "skewY",
+    "matrix3d",
+    "translate3d",
+    "translateZ",
+    "scale3d",
+    "scaleZ",
+    "rotate3d",
+    "rotateX",
+    "rotateY",
+    "rotateZ",
+    "perspective",
+)
+
+
 class Transition(dict):
     """Create a transtion object. Takes property names as keyword arguments and each value should be a list of transitions for that property
     e.g. fly_right = Transition(transform=['none', 'translateX(100%) scale(0)'])
@@ -58,88 +83,159 @@ class Transition(dict):
     """
 
     def __new__(cls, **transitions):
-        # this really just returns the dictionary passed
-        # if we wanted to we could do some type checking
-        return transitions
+        frame_len = None
+        for val in transitions.values():
+            assert (
+                type(val) is list or type(val) is tuple
+            ), "all tranistion must be lists"
+            val_len = len(val)
+            if frame_len is None:
+                frame_len = val_len
+            else:
+                assert frame_len == val_len, "found mismatched frame lengths"
+
+        return cls._create(transitions, frame_len)
 
     def __init__(
         self,
         *,
-        transform=None,
         opacity=None,
+        scale=None,
+        translateX=None,
+        translateY=None,
+        rotate=None,
         backgroundColor=None,
         offset=None,
         **css_transitions,
     ):
-        # just for the autocomplete - some common css transitions included as kwargs
+        # just for the autocomplete - some common css transitions
         pass
 
     @classmethod
-    def _h_w_out(cls, component, attr, out=True):
+    def _create(cls, transitions, frame_len):
+        self = dict.__new__(cls)
+        dict.__init__(self, **transitions)
+        self._frame_len = frame_len
+        return self
+
+    def __repr__(self):
+        return f"Transition({dict.__repr__(self)})"
+
+    @staticmethod
+    def _check_other(other):
+        if isinstance(other, Transition):
+            return other
+        elif isinstance(other, dict):
+            return Transition(**other)
+        else:
+            return NotImplemented
+
+    def __or__(self, other):
+        other = self._check_other(other)
+        if other is NotImplemented:
+            return NotImplemented
+
+        self_len, other_len = self._frame_len, other._frame_len
+
+        if self_len is None:
+            return other._create(other, other_len)
+        elif other_len is None:
+            return other._create(self, self_len)
+        elif other_len != self_len:
+            raise TypeError(
+                "can't combine Transition objects with different frame lengths"
+            )
+
+        return self._create(dict.__or__(self, other), self_len)
+
+    def __ror__(self, other):
+        other = self._check_other(other)
+        if other is NotImplemented:
+            return NotImplemented
+        return other.__or__(self)
+
+    def __reversed__(self):
+        reverse = {}
+        for key, val in self.items():
+            reverse[key] = list(reversed(val))
+        return self._create(reverse, self._frame_len)
+
+    @classmethod
+    def _h_w(cls, component, attr, out=True):
         hw = get_bounding_rect(component)[attr]
         return cls(height=[f"{hw}px", 0] if out else [0, f"{hw}px"])
 
     @classmethod
     def height_out(cls, component):
-        return cls._h_w_out(component, "height", True)
+        return cls._h_w(component, "height", True)
 
     @classmethod
     def width_out(cls, component):
-        return cls._h_w_out(component, "width", True)
+        return cls._h_w(component, "width", True)
 
     @classmethod
     def height_in(cls, component):
-        return cls._h_w_out(component, "height", False)
+        return cls._h_w(component, "height", False)
 
     @classmethod
     def width_in(cls, component):
-        return cls._h_w_out(component, "width", False)
+        return cls._h_w(component, "width", False)
+
+    def _compute(self):
+        # combines transforms into a single string
+        transform = [""] * self._frame_len
+        copy = self.copy()
+        for t in _transforms:
+            frames = copy.pop(t, None)
+            if frames is None:
+                continue
+
+            for i, val in enumerate(frames):
+                transform[i] += f"{t}({val}) "
+
+        if transform[0]:
+            copy["transform"] = transform
+        return copy
 
 
 # Pre-computed styles:
 # https://web-animations.github.io/web-animations-demos/#animate_css/
-pulse = Transition(transform=["none", "scale(1.05)", "none"])
+pulse = Transition(scale=[1, 1.05, 1])
 bounce = Transition(
-    transform=[f"translateY({n}px)" for n in (0, 0, -30, -30, 0, -15, 0, -15, 0)],
+    translateY=[0, 0, "-30px", "-30px", 0, "-15px", 0, "-15px", 0],
     offset=[0, 0.2, 0.4, 0.43, 0.53, 0.7, 0.8, 0.9, 1],
 )
-shake = Transition(
-    transform=[f"translate({x}px)" for x in (0, 10, -10, 10, -10, 10, -10, 10, -10, 0)]
-)
+shake = Transition(translateX=[0] + ["10px", "-10px"] * 4 + [0])
 
 fade_in = Transition(opacity=[0, 1])
 fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])
-fade_out = Transition(opacity=[1, 0])
+fade_out = reversed(fade_in)
 
-fly_in_up = Transition(transform=["translateY(100%) scale(0)", "none"], opacity=[0, 1])
-fly_in_down = Transition(
-    transform=["translateY(-100%) scale(0)", "none"], opacity=[0, 1]
-)
-fly_in_left = Transition(
-    transform=["translateX(100%) scale(0)", "none"], opacity=[0, 1]
-)
-fly_in_right = Transition(
-    transform=["translateY(-100%) scale(0)", "none"], opacity=[0, 1]
-)
+slide_in_up = Transition(translateY=["100%", 0])
+slide_in_down = Transition(translateY=["-100%", 0])
+slide_in_left = Transition(translateX=["-100%", 0])
+slide_in_right = Transition(translateX=["100%", 0])
+slide_out_up = reversed(slide_in_up)
+slide_out_down = reversed(slide_in_down)
+slide_out_left = reversed(slide_in_left)
+slide_out_right = reversed(slide_in_right)
 
-fly_out_up = Transition(
-    transform=["none", "translateY(-100%) scale(0)"], opacity=[1, 0]
-)
-fly_out_down = Transition(
-    transform=["none", "translateY(100%) scale(0)"], opacity=[1, 0]
-)
-fly_out_left = Transition(
-    transform=["none", "translateX(-100%) scale(0)"], opacity=[1, 0]
-)
-fly_out_right = Transition(
-    transform=["none", "translateX(100%) scale(0)"], opacity=[1, 0]
-)
+full_zoom_in = Transition(scale=[0, 1])
+fly_in_up = slide_in_up | full_zoom_in | fade_in
+fly_in_down = slide_in_down | full_zoom_in | fade_in
+fly_in_left = slide_in_left | full_zoom_in | fade_in
+fly_in_right = slide_in_right | full_zoom_in | fade_in
+
+fly_out_up = reversed(fly_in_up)
+fly_out_down = reversed(fly_in_down)
+fly_out_left = reversed(fly_in_left)
+fly_out_right = reversed(fly_in_right)
 
 rotate_in = Transition(transform=["none", "rotate(200deg)"])
-rotate_out = Transition(transform=["rotate(200deg)", "none"])
+rotate_out = reversed(rotate_in)
 
 zoom_in = Transition(transform=["scale(.3)", "none"])
-zoom_out = Transition(transform=["none", "scale(.3)"])
+zoom_out = reversed(zoom_in)
 
 # add a method to the window.Animation class for our convenience
 _window.Function(
@@ -219,6 +315,8 @@ class Animation:
 
 
 def _animate(component, keyframes, options, use_ghost=False):
+    if isinstance(keyframes, Transition):
+        keyframes = keyframes._compute()
     el = _dom_node(component)
 
     if use_ghost:
@@ -245,6 +343,8 @@ class Effect:
     The remainder of the values are timing options"""
 
     def __new__(cls, transition=None, **timings):
+        if isinstance(transition, Transition):
+            transition = transition._compute()
         return _window.KeyframeEffect(None, transition, timings)
 
     def __init__(
