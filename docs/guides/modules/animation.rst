@@ -6,20 +6,21 @@ Interfaces
 ----------
 .. class:: Animation(component, effect)
 
-    An Animation object will be returned from the ``Effect.animate()`` method and the ``animate()`` function.
+    An Animation object will be returned from the ``Effect.animate()`` method and the :attr:`animate()` function.
     Provides playback control for an animation.
 
 .. class:: Effect(transiton, **effect_timing_options)
 
-    A combination of a ``Transition`` object and timing options.
+    A combination of a :class:`Transition` object and timing options.
     An effect can be used to animate an Anvil Component with its ``.animate()`` method.
     ``effect_timing_options`` are equivalent to those listed at `EffectTiming <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_
 
 .. class:: Transition(**css_frames)
 
-    A dictionary-based class. Each key should be a CSS property in camelCase with a list of values.
-    Each item in the list represents a style to hit during the animation.
+    A dictionary-based class. Each key should be a CSS property in camelCase with a list of frames.
+    Each frame in the list represents a style to hit during the animation.
     The first value in the list is where the animation starts and the final value is where the animation ends.
+    See :any:`Pre-computed Transitions<transition-examples>` for examples.
 
 
 .. function:: animate(component, transition, **timing_options)
@@ -37,7 +38,7 @@ Animate on show
 Use the show event to animate an Anvil Component.
 This could could also be at the end of an ``__init__`` function after any expensive operations.
 
-Creating an Effect allows the effect to be re-used by multiple components.
+Creating an :class:`Effect` allows the effect to be re-used by multiple components.
 
 .. code-block:: python
 
@@ -50,7 +51,7 @@ Creating an Effect allows the effect to be re-used by multiple components.
         effect.animate(self.card)
 
 
-Alternatively animate a Component with a Transition and timing options.
+Alternatively use :attr:`animate` with a :class:`Transition` and timing options.
 
 .. code-block:: python
 
@@ -83,7 +84,6 @@ Combine Transitions
 *******************
 
 Transitions can be combined with the `|` operator. They will be merged like dictionaries.
-This is problematic for Transitions with transforms where the last transform wins.
 
 .. code-block:: python
 
@@ -102,7 +102,7 @@ This is problematic for Transitions with transforms where the last transform win
 Animate on visible change
 *************************
 
-Some work is needed to animate a property when the visibility property changes.
+Some work is needed to animate a Component when the visibility property changes.
 A helper function might look something like.
 
 .. code-block:: python
@@ -244,7 +244,7 @@ Full API
 
 .. function:: wait_for(component_or_animation)
 
-    If given an animation equivalent to ``animateion.wait()``.
+    If given an animation equivalent to ``animation.wait()``.
     If given a component, will wait for all running animations on the component to finish.
 
 
@@ -402,7 +402,9 @@ Full API
         Create a ``cubic_bezier`` easing value from 4 numerical values.
 
 
-Pre-computed transitions
+.. _transition-examples:
+
+Pre-computed Transitions
 ------------------------
 
 Attention Seekers
