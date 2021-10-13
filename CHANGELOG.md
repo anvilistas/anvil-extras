@@ -1,3 +1,9 @@
+# Unreleased
+
+## Updates
+* `has_popover()` function added to the popover module
+  https://github.com/anvilistas/anvil-extras/pull/171
+
 # v1.8.0 13-Oct-2021
 
 ## New Features

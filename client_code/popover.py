@@ -63,8 +63,12 @@ def popover(
     _wait_for_transition(popper_element)
 
     if _has_popover(popper_element):
-        print("Warning: creating a popover on a component which already has a popover.")
-        print("Destroy the popover before creating a new one.")
+        msg = (
+            "Warning: attempted to create a popover on a component that already has one. This will have no effect.\n"
+            "Destroy the popover before creating a new one using component.pop('destroy').\n"
+            "Or, use has_popover() to check if this component aleady has a popover."
+        )
+        print(msg)
         # return here since adding a new popover has no effect
         return
 
@@ -152,6 +156,15 @@ def set_default_max_width(width):
     _default_width = width
 
 
+def has_popover(component):
+    if not isinstance(component, _anvil.Component):
+        raise TypeError("Expected a component, not " + type(component).__name__)
+    popper_element = _get_jquery_popper_element(component)
+    _wait_for_transition(popper_element)
+    # just incase we're being destroyed
+    return _has_popover(popper_element)
+
+
 _anvil.Component.popover = popover
 _anvil.Component.pop = pop
 
@@ -187,11 +200,6 @@ def _add_transition_behaviour(component, popper_element, popper_id):
 
     # transition is either None or a promise
     fake_container = _anvil.Container()
-    if component is not None and component.parent is None:
-        # we add the component to a Container component
-        # this doesn't really add it to the dom
-        # it just allows us to use anvil's underlying show hide architecture
-        fake_container.add_component(component)
 
     def resolve_shown(resolve, _reject):
         def f(e):
@@ -207,6 +215,11 @@ def _add_transition_behaviour(component, popper_element, popper_id):
         open_form = _anvil.get_open_form()
         if open_form is not None and fake_container.parent is None:
             open_form.add_component(fake_container)
+        if component is not None and component.parent is None:
+            # we add the component to a Container component
+            # this doesn't really add it to the dom
+            # it just allows us to use anvil's underlying show hide architecture
+            fake_container.add_component(component)
 
     popper_element.on("show.bs.popover", show_in_transition)
 
@@ -214,6 +227,8 @@ def _add_transition_behaviour(component, popper_element, popper_id):
         def f(e):
             _visible_popovers.pop(popper_id, None)
             _set_data(popper_element, "inTransition", None)
+            if component is not None and component.parent is fake_container:
+                component.remove_from_parent()
             fake_container.remove_from_parent()
             popper_element.off("hidden.bs.popover", f)
             resolve(None)
