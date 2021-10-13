@@ -1,7 +1,7 @@
 # Unreleased
 
 ## New Features
-* animate module - Wrap the Web Animations API around a convenient set of python tools for anvil
+* animation module - Wrap the Web Animations API around a convenient set of python tools for anvil
   https://github.com/anvilistas/anvil-extras/pull/169
 
 ## Bug Fixes
