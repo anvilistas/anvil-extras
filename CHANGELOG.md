@@ -1,4 +1,4 @@
-# Unreleased
+# v1.8.0 13-Oct-2021
 
 ## New Features
 * animation module - Wrap the Web Animations API around a convenient set of python tools for anvil
