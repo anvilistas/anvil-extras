@@ -1,11 +1,16 @@
-# Next
+# Unreleased
+
+## New Features
+* animate module - Wrap the Web Animations API around a convenient set of python tools for anvil
+  https://github.com/anvilistas/anvil-extras/pull/169
+
 ## Bug Fixes
 * MultiSelectDropdown - Fix "Hides menu when component is removed from the page"
   https://github.com/anvilistas/anvil-extras/pull/170
-  
+
 # v1.7.1 06-Oct-2021
 ## Bug Fixes
-* 
+*
 
 # v1.7.0 06-Oct-2021
 
