@@ -14,6 +14,8 @@ Interfaces
     A combination of a :class:`Transition` object and timing options.
     An effect can be used to animate an Anvil Component with its ``.animate()`` method.
     ``effect_timing_options`` are equivalent to those listed at `EffectTiming <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_
+    The ``effect_timing_options`` have identical defaults to those listed at `MDN <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_,
+    except ``duration``, which defaults to ``333ms``.
 
 .. class:: Transition(**css_frames)
 
