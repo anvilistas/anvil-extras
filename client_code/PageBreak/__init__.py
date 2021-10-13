@@ -9,7 +9,7 @@ from anvil.js.window import jQuery as _S
 
 from ._anvil_designer import PageBreakTemplate
 
-__version__ = "1.7.1"
+__version__ = "1.8.0"
 
 
 class PageBreak(PageBreakTemplate):
