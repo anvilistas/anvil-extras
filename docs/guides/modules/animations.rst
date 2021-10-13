@@ -17,7 +17,7 @@ Interfaces
 
 .. class:: Transition(**css_frames)
 
-    A dictionary based class. Each key should be a css property in camel case with a list of values.
+    A dictionary-based class. Each key should be a CSS property in camelCase with a list of values.
     Each item in the list represents a style to hit during the animation.
     The first value in the list is where the animation starts and the final value is where the animation ends.
 
@@ -34,6 +34,11 @@ Examples
 Animate on show
 ***************
 
+Use the show event to animate an Anvil Component.
+This could could also be at the end of an ``__init__`` function after any expensive operations.
+
+Creating an Effect allows the effect to be re-used by multiple components.
+
 .. code-block:: python
 
     from anvil_extras.animations import Effect, Transition
@@ -43,6 +48,9 @@ Animate on show
 
     def card_show(self, **event_args):
         effect.animate(self.card)
+
+
+Alternatively animate a Component with a Transition and timing options.
 
 .. code-block:: python
 
@@ -54,6 +62,9 @@ Animate on show
 
 Animate on remove
 *****************
+
+When a component is removed we need to wait for an animation to complete before removing it.
+
 .. code-block:: python
 
     from anvil_extras.animations import animate, fade_out, Easing, Effect
@@ -76,27 +87,24 @@ This is problematic for Transitions with transforms where the last transform win
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate, zoom_out, fade_out, get_bounding_rect, Transition
+    from anvil_extras.animations import animate, zoom_out, fade_out, Transition
 
-
+    zoom_fade_out = zoom_out | fade_out
+    zoom_fade_in = reversed(zoom_fade_out)
 
     def button_click(self, **event_args):
         if self.card.parent is not None:
-            height = get_bounding_rect(self.card).height
-            t = zoom_out | fade_out | Transition(height=[f"{height}px", 0])
-            animate(self.card, t, duration=500).wait()
-            self.card.remove_from_parent()
-
-    # Equivalent to
-    def button_click(self, **event_args):
-        if self.card.parent is not None:
-            t = zoom_out | fade_out | Transition.height_out(component)
+            t = zoom_fade_out | Transition.height_out(component)
             animate(self.card, t, duration=500).wait()
             self.card.remove_from_parent()
 
 
 Animate on visible change
 *************************
+
+Some work is needed to animate a property when the visibility property changes.
+A helper function might look something like.
+
 .. code-block:: python
 
     from anvil_extras.animations import Transition, wait_for
@@ -120,7 +128,7 @@ Animate on visible change
         animate(component, t, duration=900, direction=direction)
 
         if is_visible:
-            # we're animating - wait for the animation to finish before setting visible to false
+            # we're animating - wait for the animation to finish before setting visible to False
             wait_for(component) # equivalent to animation.wait() or wait_for(animation)
             component.visible = False
 
@@ -128,6 +136,12 @@ Animate on visible change
 
 Swap Elements
 *************
+
+Swapping elements requires us to animate from one component to another.
+We wait for the animation to finish.
+Then, remove the components and add them back in their new positions.
+Removing and adding components happens quickly so that the user only sees the components switching places.
+
 .. code-block:: python
 
     from anvil_extras.animations import animate
@@ -144,23 +158,10 @@ Swap Elements
         self.linear_panel.add_component(c1, index=0)
 
 
-.. code-block:: python
 
-    from anvil_extras.animations import animate, get_bounding_rect, is_animating
-
-    def button_click(self, **event_args):
-        # get positions, remove, change positions, reverse animate
-        components = self.linear_panel.get_components()
-        c0, c1 = components[0], components[1]
-        if is_animating(c0) or is_animating(c1):
-            return
-        p0, p1 = get_bounding_rect(c0), get_bounding_rect(c1)
-        c0.remove_from_parent()
-        c1.remove_from_parent()
-        self.linear_panel.add_component(c0, index=0)
-        self.linear_panel.add_component(c1, index=0)
-        animate(c0, start_at=p0)
-        animate(c1, start_at=p1)
+An alternative version would get the positions of the components.
+Then remove and add the components to their new positions.
+Finally animating the components starting from whence they came to their new positions.
 
 
 .. code-block:: python
@@ -180,6 +181,11 @@ Swap Elements
         self.linear_panel.add_component(c1, index=0)
         animate(c0, start_at=p0)
         animate(c1, start_at=p1)
+
+
+
+Switch positions might be useful in a RepatingPanel.
+Here's what that code might look like.
 
 
 .. code-block:: python
@@ -247,7 +253,7 @@ Full API
 
     ``component``: an anvil Component or Javascript HTMLElement
 
-    ``transition``: Transion object
+    ``transition``: Transition object
 
     ``effect_timing_options``: `various options <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_ to change the behaviour of the animation e.g. ``duration=500``.
 
@@ -255,8 +261,8 @@ Full API
     Using a ghost element will allow the component to be animated outside of its container
 
     ``start_at``, ``end_at``: Can be set to a ``Component`` or ``DOMRect`` (i.e. a computed position of a component from ``get_bounding_rect``)
-    If either ``start_at`` or ``end_at`` are set this will determine the start/end position of the animationn
-    If one value is set and the other omitted the omitted value will be assumed to be the current position of the componenent.
+    If either ``start_at`` or ``end_at`` are set this will determine the start/end position of the animation
+    If one value is set and the other omitted the omitted value will be assumed to be the current position of the component.
     A ghost element is always used when ``start_at`` / ``end_at`` are set.
 
 .. function:: get_bounding_rect(component)
@@ -268,15 +274,15 @@ Full API
 .. class:: Transition(cssProp0=list[str], cssProp1=list[str], transformProp0=list[str], offset=list[int | float])
     :noindex:
 
-    Takes css/transform property names as keyword arguments and each value should be a list of frames for that property.
+    Takes CSS/transform property names as keyword arguments and each value should be a list of frames for that property.
     The number of frames must match across all properties.
 
     ``slide_right = Transition(translateX=[0, "100%"])``
 
-    Each list item represents a css values to be applied across the transition.
+    Each list item represents a CSS value to be applied across the transition.
     Typically the first value is the start of the transition and the last value is the end.
     Lists can be more than 2 values, in which case the transition will be split across the values evenly.
-    You can customize the even split by setting an offset which has values from 0, 1
+    You can customize the even split by setting an offset that has values from 0, 1
 
     ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
 
@@ -299,15 +305,15 @@ Full API
 
         Returns a Transition starting from width 0 and ending at the current width of the component.
 
-    .. desribe:: reversed(transition)
+    .. describe:: reversed(transition)
 
         Returns a Transition with all frames reversed for each property.
 
-.. class:: Effect(transiton, **effect_timing_options):
+.. class:: Effect(transition, **effect_timing_options):
     :noindex:
 
     Create an effect that can later be used to animate a component.
-    The first argument should be a Transtion object.
+    The first argument should be a Transition object.
     Other keyword arguments should be `effect timing options <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_.
 
     .. method:: animate(self, component, use_ghost=False)
@@ -315,11 +321,11 @@ Full API
 
         animate a component using an effect object.
         If ``use_ghost`` is ``True`` a ghost element will be animated.
-        Retuns an Animation instance.
+        Returns an Animation instance.
 
     .. method:: getKeyframes(self, component)
 
-        Returns the computed keyframes that make up this effect. Can be used in place of the ``transiton`` argument in other functions.
+        Returns the computed keyframes that make up this effect. Can be used in place of the ``transition`` argument in other functions.
 
     .. method:: getTiming(self, component)
 
@@ -378,7 +384,7 @@ Full API
 
     .. attribute:: oncancel
 
-        set a callback for when the animation is canceled
+        set a callback for when the animation is cancelled
 
     .. attribute:: onremove
 

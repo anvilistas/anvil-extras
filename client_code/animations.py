@@ -69,20 +69,20 @@ _transforms = (
 
 class Transition(dict):
     """Create a transtion object.
-    Takes css/transform property names as keyword arguments and each value should be a list of frames for that property.
+    Takes CSS/transform property names as keyword arguments and each value should be a list of frames for that property.
     The number of frames must match across all properties.
 
     e.g. slide_right = Transition(translateX=[0, "100%"])
 
-    Each list item represents a css values to be applied across the transition.
+    Each list item represents a CSS value to be applied across the transition.
     Typically the first value is the start of the transition and the last value is the end.
     Lists can be more than 2 values in which case the transition will be split across the values evenly.
-    You can customize the even split by setting an offset which has values from 0, 1
+    You can customize the even split by setting an offset that has values from 0, 1
 
     e.g. fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])
 
     Transition objects can be combined with the | operator (which behaves like merging dictionaries)
-    e.g. t = reversed(slide_right) | zoom_in | fade_in | Transtion.height_in(component)
+    e.g. t = reversed(slide_right) | zoom_in | fade_in | Transition.height_in(component)
     """
 
     def __new__(cls, **transitions):
@@ -111,7 +111,7 @@ class Transition(dict):
         offset=None,
         **css_transitions,
     ):
-        # just for the autocomplete - some common css transitions
+        # just for the autocomplete - some common CSS transitions
         pass
 
     @classmethod
@@ -202,7 +202,7 @@ class Transition(dict):
 
 
 # Pre-computed styles:
-# https://web-animations.github.io/web-animations-demos/#animate_css/
+# https://web-animations.github.io/web-animations-demos/#animate_CSS/
 pulse = Transition(scale=[1, 1.05, 1])
 bounce = Transition(
     translateY=[0, 0, "-30px", "-30px", 0, "-15px", 0, "-15px", 0],
@@ -312,7 +312,7 @@ class Animation:
 
     @property
     def oncancel(self):
-        "set a callback for when the animation is canceled"
+        "set a callback for when the animation is cancelled"
 
     @property
     def onremove(self):
@@ -344,7 +344,7 @@ KeyframeEffect.prototype.animate = function(component, ghost=false) {
 
 class Effect:
     """Create an effect that can later be used to animate a component.
-    The first argument should be a Transtion object.
+    The first argument should be a Transition object.
     The remainder of the values are timing options"""
 
     def __new__(cls, transition=None, **timings):
@@ -401,14 +401,14 @@ def animate(
 ):
     """a wrapper around the browser's Animation API. see MDN docs for full details
     component: an anvil Component or Javascript HTMLElement
-    transition: Transion object
+    transition: Transition object
     **effect_timing: various options to change the behaviour of the animation e.g. duration.
 
     Anvil specific arguments:
     use_ghost: when set to True will allow the component to be animated outside of its container
 
     start_at, end_at: Can be set to a component or DOMRect (i.e. a computed position of a component from get_bounding_rect)
-    If either start_at or end_at are set this will determine the start/end position of the animationn
+    If either start_at or end_at are set this will determine the start/end position of the animation
     If one value is set and the other omitted the omitted value will be assumed to be the current position of the componenent.
     A ghost element is always used when start_at/end_at are set.
     """
@@ -498,6 +498,7 @@ def get_bounding_rect(component) -> DOMRect:
 
 
 def _animate_ghost(el, keyframes, options):
+    # TODO if web animations support GroupAnimations in the future we should use that here
     ghost = el.cloneNode(True)
     pos = el.getBoundingClientRect(True)
     _window.Object.assign(
