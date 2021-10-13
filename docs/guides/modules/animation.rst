@@ -41,7 +41,7 @@ Creating an Effect allows the effect to be re-used by multiple components.
 
 .. code-block:: python
 
-    from anvil_extras.animations import Effect, Transition
+    from anvil_extras.animation import Effect, Transition
 
     fade_in = Transition(opacity=[0, 1])
     effect = Effect(fade_in, duration=500)
@@ -54,7 +54,7 @@ Alternatively animate a Component with a Transition and timing options.
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate, fade_in
+    from anvil_extras.animation import animate, fade_in
 
     def card_show(self, **event_args):
         animate(self.card, fade_in, duration=500)
@@ -67,7 +67,7 @@ When a component is removed we need to wait for an animation to complete before 
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate, fade_out, Easing, Effect
+    from anvil_extras.animation import animate, fade_out, Easing, Effect
 
     leave_effect = Effect(fade_out, duration=500, easing=Easing.ease_out)
 
@@ -87,7 +87,7 @@ This is problematic for Transitions with transforms where the last transform win
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate, zoom_out, fade_out, Transition
+    from anvil_extras.animation import animate, zoom_out, fade_out, Transition
 
     zoom_fade_out = zoom_out | fade_out
     zoom_fade_in = reversed(zoom_fade_out)
@@ -107,7 +107,7 @@ A helper function might look something like.
 
 .. code-block:: python
 
-    from anvil_extras.animations import Transition, wait_for
+    from anvil_extras.animation import Transition, wait_for
 
     zoom = Transition(scale=[.3, 1], opacity=[0, 1])
 
@@ -144,7 +144,7 @@ Removing and adding components happens quickly so that the user only sees the co
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate
+    from anvil_extras.animation import animate
 
     def button_click(self, **event_args):
         # animate wait then remove and re-add
@@ -166,7 +166,7 @@ Finally animating the components starting from whence they came to their new pos
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate, get_bounding_rect, is_animating
+    from anvil_extras.animation import animate, get_bounding_rect, is_animating
 
     def button_click(self, **event_args):
         # get positions, remove, change positions, reverse animate
@@ -190,7 +190,7 @@ Here's what that code might look like.
 
 .. code-block:: python
 
-    from anvil_extras.animations import animate
+    from anvil_extras.animation import animate
 
     class Form1(Form1Template):
         def __init__(self, **properties):
