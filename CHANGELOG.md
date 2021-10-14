@@ -1,4 +1,4 @@
-# Unreleased
+# v1.8.1 14-Oct-2021
 
 ## Updates
 * `has_popover()` function added to the popover module
