@@ -9,7 +9,7 @@ import anvil.http
 from ..utils import auto_refreshing
 from ._anvil_designer import DemoTemplate
 
-__version__ = "1.8.0"
+__version__ = "1.8.1"
 dataset_url = "https://pivottable.js.org/examples/mps.json"
 
 

@@ -10,7 +10,7 @@ from anvil.js import await_promise as _await_promise
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window as _window
 
-__version__ = "1.8.0"
+__version__ = "1.8.1"
 
 
 def _dom_node(component):

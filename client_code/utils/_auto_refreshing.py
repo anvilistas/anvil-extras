@@ -8,7 +8,7 @@
 
 from functools import cache
 
-__version__ = "1.8.0"
+__version__ = "1.8.1"
 
 _dict_setitem = dict.__setitem__
 

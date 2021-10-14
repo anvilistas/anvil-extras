@@ -9,7 +9,7 @@
 from functools import wraps
 from time import gmtime, strftime, time
 
-__version__ = "1.8.0"
+__version__ = "1.8.1"
 
 
 def _signature(func, args, kwargs):
