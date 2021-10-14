@@ -1,3 +1,9 @@
+
+# Unreleased
+
+* storage supports `datetime` and `date` objects
+  https://github.com/anvilistas/anvil-extras/pull/179
+
 # v1.8.1 14-Oct-2021
 
 ## Updates

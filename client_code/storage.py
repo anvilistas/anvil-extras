@@ -5,6 +5,8 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+from datetime import date, datetime
+
 import anvil.js
 from anvil.js import window as _window
 
@@ -19,24 +21,61 @@ _forage.dropInstance()
 
 _Proxy = type(_window)
 _Object = _window.Object
+_NoneType = type(None)
+
+_SPECIAL = "$$anvil-extras$$:"
+
+
+def _is_str(key):
+    if type(key) is not str:
+        msg = f"Keys must be strings when serialzing to browser Storage. Found {type(key).__name__}"
+        raise TypeError(msg)
+    return True
+
+
+def _serialize(obj):
+    # we won't support subclasses of builtins so just check type is
+    ob_type = type(obj)
+    if ob_type in (str, int, float, bool, _NoneType, bytes):
+        return obj
+    elif ob_type in (list, tuple):
+        return [_serialize(item) for item in obj]
+    elif ob_type is dict:
+        return {key: val for key, val in obj.items() if _is_str(key)}
+    elif ob_type is datetime:
+        return {_SPECIAL + "datetime": obj.isoformat()}
+    elif ob_type is date:
+        return {_SPECIAL + "date": obj.isoformat()}
+    else:
+        raise TypeError(f"Cannot serialize an object of type {ob_type.__name__}")
+
+
+_deserializers = {"date": date.fromisoformat, "datetime": datetime.fromisoformat}
+
+
+def _special_deserialize(key, value):
+    assert key.startswith(_SPECIAL), "not a special key"
+    key = key[len(_SPECIAL) :]
+    try:
+        return _deserializers[key](value)
+    except KeyError:
+        raise ValueError(f"unknown special deserialization type {key!r}")
 
 
 def _deserialize(obj):
     """convert simple proxy objects (and nested simple proxy objects) to dictionaries"""
-    # @TODO datetime objects - we'd also need a _serialize method for that
-    if isinstance(obj, list):
-        ret = []
-        for item in obj:
-            ret.append(_deserialize(item))
-        return ret
-    elif type(obj) is _Proxy and obj.__class__ == _Object:
+    ob_type = type(obj)
+    if ob_type is list:
+        return [_deserialize(item) for item in obj]
+    elif ob_type is _Proxy and obj.__class__ == _Object:
         # Then we're a simple proxy object
         # keys are strings so only _deserialize the values
-        ret = {}
         # use _Object.keys to avoid possible name conflict
-        for key in _Object.keys(obj):
-            ret[key] = _deserialize(obj[key])
-        return ret
+        keys = _Object.keys(obj)
+        if len(keys) == 1 and keys[0].startswith(_SPECIAL):
+            key = keys[0]
+            return _special_deserialize(key, obj[key])
+        return {key: _deserialize(obj[key]) for key in keys}
     else:
         # we're either bytes, str, ints, floats, None, bool
         return obj
@@ -93,7 +132,7 @@ class StorageWrapper:
         raise KeyError(key)
 
     def __setitem__(self, key, val):
-        self._store.setItem(key, val)
+        self._store.setItem(key, _serialize(val))
 
     def __delitem__(self, key):
         # we can't block here so do a Promise hack
@@ -108,7 +147,8 @@ class StorageWrapper:
         return f"<{self.__class__.__name__} for {self._name!r} store>"
 
     def __iter__(self):
-        return self.keys()
+        # self.keys() suspends and __iter__ can't suspend
+        return StoreIterator(self)
 
     def __len__(self):
         return self._store.length()
@@ -165,6 +205,20 @@ class StorageWrapper:
         message_store = indexed_db.create_store('messages')
         """
         return cls(store_name)
+
+
+class StoreIterator:
+    def __init__(self, store):
+        self._store = store
+        self._keys = None
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._keys is None:
+            self._keys = iter(self._store.keys())
+        return next(self._keys)
 
 
 # The following defines a forage driver whose job is to
@@ -244,25 +298,38 @@ if __name__ == "__main__":
     for _ in local_storage, indexed_db:
         print(_)
         _["foo"] = "bar"
-        print(_["foo"])
+        assert _["foo"] == "bar"
         del _["foo"]
-        print(_.get("foo", "sentinel"))
+        assert _.get("foo", "sentinel") == "sentinel"
         try:
             _["foo"]
-        except KeyError as e:
-            print(repr(e))
+        except KeyError:
+            pass
+        else:
+            raise AssertionError
         _.put("foo", 1)
-        print(_.pop("foo"))
+        assert _.pop("foo") == 1
         x = [{"a": "b"}, "foo"]
         _["x"] = x
-        print(_["x"])
-        print(_["x"] == x)
-        print(_.get("x") == x)
-        print(_.pop("x") == x)
+        assert _["x"] == x == _.get("x") == _.pop("x")
         _["foo"] = None
         _["eggs"] = None
         _.update({"foo": "bar"}, eggs="spam", x=1)
-        print(len(list(_.keys())) == 3, _["eggs"] == "spam")
+        for i in _:  # shouldn't fail
+            pass
+        assert len(list(_.keys())) == 3 and _["eggs"] == "spam"
+        assert list(_) == list(_.keys())
+
+        date_objs = [datetime.now(), datetime.now().astimezone(), date.today()]
+        _["d"] = date_objs
+        assert _["d"] == date_objs
+        try:
+            _["foo"] = slice(1, 2, 3)
+        except TypeError:
+            pass
+        else:
+            raise AssertionError
+
         _.clear()
-        print(len(list(_.keys())) == 0)
-        print("==========")
+        assert len(_) == 0
+        print("===== Tests Passed =====")
