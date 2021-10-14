@@ -240,14 +240,16 @@ Here's what that code might look like.
 Full API
 --------
 
-.. function:: is_animating(component)
+.. function:: is_animating(component, include_children=False)
 
     Returns a boolean as to whether the component is animating.
+    If ``include_children`` is set to ``True`` all child elements will also be checked.
 
-.. function:: wait_for(component_or_animation)
+.. function:: wait_for(component_or_animation, include_children=False)
 
     If given an animation equivalent to ``animation.wait()``.
     If given a component, will wait for all running animations on the component to finish.
+    If ``include_children`` is set to ``True`` all child elements will be waited for.
 
 
 .. function:: animate(component, transition=None, start_at=None, end_at=None, use_ghost=False, **effect_timing_options)

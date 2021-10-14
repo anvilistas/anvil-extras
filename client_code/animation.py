@@ -435,20 +435,23 @@ def animate(
     return _animate(component, transition, effect_timing, use_ghost)
 
 
-def is_animating(component) -> bool:
+def is_animating(component, include_children=False) -> bool:
     """Determines whether a component is currently animating"""
     el = _dom_node(component)
-    return any(a.playState == "running" for a in el.getAnimations())
+    return any(
+        a.playState == "running"
+        for a in el.getAnimations({"subtree": include_children})
+    )
 
 
-def wait_for(animation_or_component):
+def wait_for(animation_or_component, include_children=False):
     """If given an animation equivalent to animateion.wait().
     If given a component, will wait for all running animations on the component to finish"""
     if hasattr(animation_or_component, "finished"):
         _await_promise(animation_or_component.finished)
         return
     el = _dom_node(animation_or_component)
-    animations = el.getAnimations()
+    animations = el.getAnimations({"subtree": include_children})
     _window.Promise.all(list(map(lambda a: a.finished, animations)))
 
 
