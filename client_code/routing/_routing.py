@@ -123,11 +123,12 @@ def main_router(Cls):
                 f"\nurl_pattern = {url_pattern}\nurl_dict    = {url_dict}"
             )
 
-            if getattr(Cls, "on_navigation", None):
+            super_on_navigation = getattr(Cls, "on_navigation", None)
+            if super_on_navigation is not None:
                 logger.print(f"{Cls.__name__} on_navigation called")
                 # on_navigation in your main form will be called here
                 # in the example we change 'selected' role on links using this method
-                Cls.on_navigation(
+                super_on_navigation(
                     self,
                     url_hash=url_hash,
                     url_pattern=url_pattern,
@@ -233,6 +234,15 @@ def main_router(Cls):
                 _navigation.setTitle(form._route_title)
                 self.content_panel.clear()
                 self.content_panel.add_component(form, full_width_row=form._f_w_r)
+                super_on_form_load = getattr(Cls, "on_form_load", None)
+                if super_on_form_load is not None:
+                    super_on_form_load(
+                        self,
+                        url_hash=url_hash,
+                        url_pattern=url_pattern,
+                        url_dict=url_dict,
+                        form=form,
+                    )
 
     MainRouter.__name__ = Cls.__name__
     MainRouter.__module__ = Cls.__module__
