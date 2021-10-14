@@ -303,31 +303,38 @@ if __name__ == "__main__":
     for _ in local_storage, indexed_db:
         print(_)
         _["foo"] = "bar"
-        print(_["foo"])
+        assert _["foo"] == "bar"
         del _["foo"]
-        print(_.get("foo", "sentinel"))
+        assert _.get("foo", "sentinel") == "sentinel"
         try:
             _["foo"]
-        except KeyError as e:
-            print(repr(e))
+        except KeyError:
+            pass
+        else:
+            raise AssertionError
         _.put("foo", 1)
-        print(_.pop("foo"))
+        assert _.pop("foo") == 1
         x = [{"a": "b"}, "foo"]
         _["x"] = x
-        print(_["x"])
-        print(_["x"] == x)
-        print(_.get("x") == x)
-        print(_.pop("x") == x)
+        assert _["x"] == x == _.get("x") == _.pop("x")
         _["foo"] = None
         _["eggs"] = None
         _.update({"foo": "bar"}, eggs="spam", x=1)
         for i in _:  # shouldn't fail
             pass
-        print(len(list(_.keys())) == 3, _["eggs"] == "spam")
-        print(list(_) == list(_.keys()))
+        assert len(list(_.keys())) == 3 and _["eggs"] == "spam"
+        assert list(_) == list(_.keys())
 
-        _["foo"] = [datetime.now(), datetime.now().astimezone(), date.today()]
-        print(_["foo"])
+        date_objs = [datetime.now(), datetime.now().astimezone(), date.today()]
+        _["d"] = date_objs
+        assert _["d"] == date_objs
+        try:
+            _["foo"] = slice(1, 2, 3)
+        except TypeError:
+            pass
+        else:
+            raise AssertionError
 
         _.clear()
-        print(len(list(_.keys())) == 0)
+        assert len(_) == 0
+        print("===== Tests Passed =====")
