@@ -4,6 +4,10 @@
 * `has_popover()` function added to the popover module
   https://github.com/anvilistas/anvil-extras/pull/171
 
+* `Transition` class in the animate module is more flexible for combining transitions.
+  Some pre-computed transitions adjusted. `rotate_in/rotate_out` replaced by `rotate`
+  https://github.com/anvilistas/anvil-extras/pull/173
+
 # v1.8.0 13-Oct-2021
 
 ## New Features
