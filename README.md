@@ -31,6 +31,10 @@ Full instructions can be found in the [Docs](https://anvil-extras.readthedocs.io
 
 #### Modules
 
+| | | | |
+|-|:----:|-|:----:|
+| [Animation](https://anvil-extras.readthedocs.io/en/latest/guides/modules/animation.html) | <img src="images/animation.gif" alt="animation" width="300"/> |  |  |
+
 - [Publish/Subscribe Messaging](https://anvil-extras.readthedocs.io/en/latest/guides/modules/messaging.html)
 - [Dynamic Menu Construction](https://anvil-extras.readthedocs.io/en/latest/guides/modules/navigation.html)
 - [Role Based Authorisation](https://anvil-extras.readthedocs.io/en/latest/guides/modules/authorisation.html)
