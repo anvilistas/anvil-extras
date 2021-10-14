@@ -115,3 +115,7 @@ API
 .. function:: set_default_max_width(width)
 
     update the default max width - this is 276px by default - useful for wider components.
+
+.. function:: has_popover(component)
+
+    Returns a ``bool`` as to whether the component has a popover. A useful flag to prevent creating unnecessary popovers.
