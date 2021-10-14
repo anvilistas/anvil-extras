@@ -5,6 +5,8 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+from datetime import date, datetime
+
 import anvil.js
 from anvil.js import window as _window
 
@@ -21,15 +23,17 @@ _Proxy = type(_window)
 _Object = _window.Object
 _NoneType = type(None)
 
+_SPECIAL = "$$anvil-extras$$:"
+
 
 def _serialize(obj):
-    # @TODO datetime objects
     # we won't support subclasses of builtins so just check type is
     ob_type = type(obj)
     if ob_type is list or ob_type is tuple:
         ret = []
         for item in obj:
             ret.append(_serialize(item))
+        return ret
     elif ob_type is dict:
         ret = {}
         for k, v in obj.items():
@@ -37,25 +41,44 @@ def _serialize(obj):
                 type(k) is str
             ), "Keys must be strings when serialzing to browser Storage"
             ret[k] = _serialize(v)
-    elif ob_type not in (str, int, float, bool, _NoneType, bytes):
-        raise TypeError(f"Cannot serialize an object of type {type(obj).__name__}")
-    return obj
+        return ret
+    elif ob_type in (str, int, float, bool, _NoneType, bytes):
+        return obj
+    elif ob_type is datetime:
+        return {_SPECIAL + "datetime": obj.isoformat()}
+    elif ob_type is date:
+        return {_SPECIAL + "date": obj.isoformat()}
+    else:
+        raise TypeError(f"Cannot serialize an object of type {ob_type.__name__}")
+
+
+def _special_deserialize(key, value):
+    key = key[len(_SPECIAL) :]
+    if key == "date":
+        return date.fromisoformat(value)
+    elif key == "datetime":
+        return datetime.fromisoformat(value)
+    raise ValueError(f"unknown special deserialization type {key!r}")
 
 
 def _deserialize(obj):
     """convert simple proxy objects (and nested simple proxy objects) to dictionaries"""
-    # @TODO datetime objects - we'd also need a _serialize method for that
-    if isinstance(obj, list):
+    ob_type = type(obj)
+    if ob_type is list:
         ret = []
         for item in obj:
             ret.append(_deserialize(item))
         return ret
-    elif type(obj) is _Proxy and obj.__class__ == _Object:
+    elif ob_type is _Proxy and obj.__class__ == _Object:
         # Then we're a simple proxy object
         # keys are strings so only _deserialize the values
         ret = {}
         # use _Object.keys to avoid possible name conflict
-        for key in _Object.keys(obj):
+        keys = _Object.keys(obj)
+        if len(keys) == 1 and keys[0].startswith(_SPECIAL):
+            key = keys[0]
+            return _special_deserialize(key, obj[key])
+        for key in keys:
             ret[key] = _deserialize(obj[key])
         return ret
     else:
@@ -302,12 +325,9 @@ if __name__ == "__main__":
             pass
         print(len(list(_.keys())) == 3, _["eggs"] == "spam")
         print(list(_) == list(_.keys()))
+
+        _["foo"] = [datetime.now(), datetime.now().astimezone(), date.today()]
+        print(_["foo"])
+
         _.clear()
         print(len(list(_.keys())) == 0)
-        from datetime import datetime
-
-        try:
-            _["foo"] = datetime.now()
-        except TypeError:
-            print("TypeError raised successfully")
-        print("==========")

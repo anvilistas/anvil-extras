@@ -19,7 +19,8 @@ Which to chose?
 | If you have small amounts of data which can be converted to JSON - use :attr:`local_storage`.
 | If you have more data which can be converted to JSON (also ``bytes``) - use :attr:`indexed_db`.
 
-*NB: Datetime objects cannot be stored. You'll need to serialize and deserialize these - consider converting datetimes to timestamps (and dates to ordinals).*
+``datetime`` and ``date`` objects are also supported.
+If you want to store anything else you'll need to convert it to something JSONable first.
 
 
 Usage Examples
@@ -118,8 +119,9 @@ API
 
     .. describe:: store[key] = value
 
-        Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored incorrectly. e.g. a ``datetime`` object.
+        Set ``store[key]`` to *value*. If the value is not a JSONable data type it may be stored incorrectly.
         If storing ``bytes`` objects it is best to use the :attr:`indexed_db` store.
+        ``datetime`` and ``date`` objects are also supported.
 
     .. describe:: del store[key]
 
