@@ -304,10 +304,10 @@ if __name__ == "__main__":
         print(list(_) == list(_.keys()))
         _.clear()
         print(len(list(_.keys())) == 0)
-        print("==========")
         from datetime import datetime
 
         try:
             _["foo"] = datetime.now()
         except TypeError:
-            pass
+            print("TypeError raised successfully")
+        print("==========")
