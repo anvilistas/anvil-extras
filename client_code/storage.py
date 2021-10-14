@@ -19,6 +19,27 @@ _forage.dropInstance()
 
 _Proxy = type(_window)
 _Object = _window.Object
+_NoneType = type(None)
+
+
+def _serialize(obj):
+    # @TODO datetime objects
+    # we won't support subclasses of builtins so just check type is
+    ob_type = type(obj)
+    if ob_type is list or ob_type is tuple:
+        ret = []
+        for item in obj:
+            ret.append(_serialize(item))
+    elif ob_type is dict:
+        ret = {}
+        for k, v in obj.items():
+            assert (
+                type(k) is str
+            ), "Keys must be strings when serialzing to browser Storage"
+            ret[k] = _serialize(v)
+    elif ob_type not in (str, int, float, bool, _NoneType, bytes):
+        raise TypeError(f"Cannot serialize an object of type {type(obj).__name__}")
+    return obj
 
 
 def _deserialize(obj):
@@ -93,7 +114,7 @@ class StorageWrapper:
         raise KeyError(key)
 
     def __setitem__(self, key, val):
-        self._store.setItem(key, val)
+        self._store.setItem(key, _serialize(val))
 
     def __delitem__(self, key):
         # we can't block here so do a Promise hack
@@ -108,7 +129,8 @@ class StorageWrapper:
         return f"<{self.__class__.__name__} for {self._name!r} store>"
 
     def __iter__(self):
-        return self.keys()
+        # self.keys() suspends and __iter__ can't suspend
+        return StoreIterator(self)
 
     def __len__(self):
         return self._store.length()
@@ -165,6 +187,20 @@ class StorageWrapper:
         message_store = indexed_db.create_store('messages')
         """
         return cls(store_name)
+
+
+class StoreIterator:
+    def __init__(self, store):
+        self._store = store
+        self._keys = None
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._keys is None:
+            self._keys = iter(self._store.keys())
+        return next(self._keys)
 
 
 # The following defines a forage driver whose job is to
@@ -262,7 +298,16 @@ if __name__ == "__main__":
         _["foo"] = None
         _["eggs"] = None
         _.update({"foo": "bar"}, eggs="spam", x=1)
+        for i in _:  # shouldn't fail
+            pass
         print(len(list(_.keys())) == 3, _["eggs"] == "spam")
+        print(list(_) == list(_.keys()))
         _.clear()
         print(len(list(_.keys())) == 0)
         print("==========")
+        from datetime import datetime
+
+        try:
+            _["foo"] = datetime.now()
+        except TypeError:
+            pass
