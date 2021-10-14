@@ -42,7 +42,7 @@ class _Easing:
 Easing = _Easing()
 
 
-_transforms = (
+_transforms = {
     "matrix",
     "translate",
     "translateX",
@@ -64,7 +64,7 @@ _transforms = (
     "rotateY",
     "rotateZ",
     "perspective",
-)
+}
 
 
 class Transition(dict):
@@ -86,18 +86,22 @@ class Transition(dict):
     """
 
     def __new__(cls, **transitions):
-        frame_len = None
-        for val in transitions.values():
+        t_keys = set()
+        t_len = None
+        for key, val in transitions.items():
             assert (
                 type(val) is list or type(val) is tuple
             ), "all tranistion must be lists"
-            val_len = len(val)
-            if frame_len is None:
-                frame_len = val_len
+            if key not in _transforms:
+                continue
+            t_keys.add(key)
+            if t_len is None:
+                t_len = len(val)
             else:
-                assert frame_len == val_len, "found mismatched frame lengths"
-
-        return cls._create(transitions, frame_len)
+                assert t_len == len(
+                    val
+                ), "transform based transitions must all have the same frame length"
+        return cls._create(transitions, frozenset(t_keys), t_len)
 
     def __init__(
         self,
@@ -115,10 +119,11 @@ class Transition(dict):
         pass
 
     @classmethod
-    def _create(cls, transitions, frame_len):
+    def _create(cls, transitions, transform_keys, transform_len):
         self = dict.__new__(cls)
         dict.__init__(self, **transitions)
-        self._frame_len = frame_len
+        self._t_keys = transform_keys
+        self._t_len = transform_len
         return self
 
     def __repr__(self):
@@ -138,18 +143,20 @@ class Transition(dict):
         if other is NotImplemented:
             return NotImplemented
 
-        self_len, other_len = self._frame_len, other._frame_len
+        self_len, other_len = self._t_len, other._t_len
+
+        merged = dict.__or__(self, other)
 
         if self_len is None:
-            return other._create(other, other_len)
+            return self._create(merged, other._t_keys, other_len)
         elif other_len is None:
-            return other._create(self, self_len)
+            return self._create(merged, self._t_keys, self_len)
         elif other_len != self_len:
-            raise TypeError(
-                "can't combine Transition objects with different frame lengths"
+            raise ValueError(
+                "can't combine Transition objects with different frame lengths for transform based transitions"
             )
 
-        return self._create(dict.__or__(self, other), self_len)
+        return self._create(merged, self._t_keys | other._t_keys, self_len)
 
     def __ror__(self, other):
         other = self._check_other(other)
@@ -161,12 +168,12 @@ class Transition(dict):
         reverse = {}
         for key, val in self.items():
             reverse[key] = list(reversed(val))
-        return self._create(reverse, self._frame_len)
+        return self._create(reverse, self._t_keys, self._t_len)
 
     @classmethod
     def _h_w(cls, component, attr, out=True):
         hw = get_bounding_rect(component)[attr]
-        return cls(height=[f"{hw}px", 0] if out else [0, f"{hw}px"])
+        return cls(**{attr: [f"{hw}px", 0] if out else [0, f"{hw}px"]})
 
     @classmethod
     def height_out(cls, component):
@@ -186,18 +193,20 @@ class Transition(dict):
 
     def _compute(self):
         # combines transforms into a single string
-        transform = [""] * self._frame_len
         copy = self.copy()
-        for t in _transforms:
-            frames = copy.pop(t, None)
+        if self._t_len is None:
+            return copy
+        transform = [""] * self._t_len
+
+        for key in self._t_keys:
+            frames = copy.pop(key, None)
             if frames is None:
+                # This shouldn't happen
                 continue
-
             for i, val in enumerate(frames):
-                transform[i] += f"{t}({val}) "
+                transform[i] += f"{key}({val}) "
+        copy["transform"] = transform
 
-        if transform[0]:
-            copy["transform"] = transform
         return copy
 
 
@@ -219,14 +228,12 @@ slide_in_down = Transition(translateY=["-100%", 0])
 slide_in_left = Transition(translateX=["-100%", 0])
 slide_in_right = Transition(translateX=["100%", 0])
 
-slide_out_up = reversed(slide_in_up)
-slide_out_down = reversed(slide_in_down)
+slide_out_up = reversed(slide_in_down)
+slide_out_down = reversed(slide_in_up)
 slide_out_left = reversed(slide_in_left)
 slide_out_right = reversed(slide_in_right)
 
-
-rotate_in = Transition(rotate=[0, "200deg"])
-rotate_out = reversed(rotate_in)
+rotate = Transition(rotate=[0, "360deg"])
 
 zoom_in = Transition(scale=[0.3, 1])
 zoom_out = reversed(zoom_in)
@@ -236,8 +243,8 @@ fly_in_down = slide_in_down | zoom_in | fade_in
 fly_in_left = slide_in_left | zoom_in | fade_in
 fly_in_right = slide_in_right | zoom_in | fade_in
 
-fly_out_up = reversed(fly_in_up)
-fly_out_down = reversed(fly_in_down)
+fly_out_up = reversed(fly_in_down)
+fly_out_down = reversed(fly_in_up)
 fly_out_left = reversed(fly_in_left)
 fly_out_right = reversed(fly_in_right)
 

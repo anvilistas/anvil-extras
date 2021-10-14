@@ -19,10 +19,21 @@ Interfaces
 
 .. class:: Transition(**css_frames)
 
-    A dictionary-based class. Each key should be a CSS property in camelCase with a list of frames.
+    A dictionary-based class. Each key should be a CSS/ `transform <https://developer.mozilla.org/en-US/docs/Web/CSS/transform>`_ property in camelCase with a list of frames.
     Each frame in the list represents a style to hit during the animation.
     The first value in the list is where the animation starts and the final value is where the animation ends.
     See :any:`Pre-computed Transitions<transition-examples>` for examples.
+
+    Unlike the Web Animations API the ``transform`` CSS property can be written as separate properties.
+
+    e.g. ``transform=["translateX(0) scale(0)", "translateX(100%) scale(1)"]`` becomes ``Transform(scale=[0, 1], translateX=[0, "100%"])``.
+
+    A limitation of this approach is that all transform based properties must have the same number of frames.
+
+    The Web Animations API uses a `keyframes object <https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats>`_ in place of the anvil_extras Transition object.
+    A keyframes object is typically a dictionary of lists or list of dictionaries.
+    Any ``transition`` argument in the ``anvil_extras.animate`` module can be replaced with a keyframes object.
+    i.e. if you find an animation example on the web you can use its keyframes object directly without having to convert it to a :class:`Transition` object.
 
 
 .. function:: animate(component, transition, **timing_options)
@@ -277,19 +288,25 @@ Full API
     :noindex:
 
     Takes CSS/transform property names as keyword arguments and each value should be a list of frames for that property.
-    The number of frames must match across all properties.
+    The number of frames must match across all transform based properties.
 
-    ``slide_right = Transition(translateX=[0, "100%"])``
+    ``fly_right = Transition(translateX=[0, "100%"], scale=[1, 0], opacity=[0, 0.25, 1])``
+        is valid since opacity is not a transform property.
 
-    Each list item represents a CSS value to be applied across the transition.
+
+    ``slide_right = Trnasition(translateX=[0, "100%"], scale=[1, 0.75, 0])``
+        is invalid since the ``scale`` and ``translateX`` are transform properties with mismatched frame lengths.
+
+    Each frame in the list of frames represents a CSS value to be applied across the transition.
     Typically the first value is the start of the transition and the last value is the end.
     Lists can be more than 2 values, in which case the transition will be split across the values evenly.
-    You can customize the even split by setting an offset that has values from 0, 1
+    You can customize the even split by setting an offset that has values from 0 to 1
 
     ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
 
     Transition objects can be combined with the ``|`` operator (which behaves like merging dictionaries)
     ``t = reversed(slide_right) | zoom_in | fade_in | Transtion.height_in(component)``
+    If two transitions have mismatched frame lengths for transform properties this will fail.
 
     .. classmethod:: height_out(cls, component)
 
@@ -430,8 +447,8 @@ Slides
 * ``slide_in_left = Transition(translateX=["-100%", 0])``
 * ``slide_in_right = Transition(translateX=["100%", 0])``
 
-* ``slide_out_up = reversed(slide_in_up)``
-* ``slide_out_down = reversed(slide_in_down)``
+* ``slide_out_up = reversed(slide_in_down)``
+* ``slide_out_down = reversed(slide_in_up)``
 * ``slide_out_left = reversed(slide_in_left)``
 * ``slide_out_right = reversed(slide_in_right)``
 
@@ -439,9 +456,7 @@ Slides
 Rotate
 ******
 
-
-* ``rotate_in = Transition(rotate=[0, "200deg"])``
-* ``rotate_out = reversed(rotate_in)``
+* ``rotate = Transition(rotate=[0, "360deg"])``
 
 
 Zoom
@@ -459,7 +474,7 @@ Fly
 * ``fly_in_left = slide_in_left | zoom_in | fade_in``
 * ``fly_in_right = slide_in_right | zoom_in | fade_in``
 
-* ``fly_out_up = reversed(fly_in_up)``
-* ``fly_out_down = reversed(fly_in_down)``
+* ``fly_out_up = reversed(fly_in_down)``
+* ``fly_out_down = reversed(fly_in_up)``
 * ``fly_out_left = reversed(fly_in_left)``
 * ``fly_out_right = reversed(fly_in_right)``
