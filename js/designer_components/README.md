@@ -3,33 +3,54 @@
 
 ## Intro
 
-So you want to make a Designer Component that updates dynamically in the Designer?
-First - this relies on Javascript.
-It also plays around with Skulpt.
+These notes are based on the internal tools developed by anvil-extras to make custom components dynamically update in the Anvil Designer.
+
+**Can I do this in my own App without `anvil-extras`?**
+
+Probably not.
+
+**Should I do this in my own app?**
+
+Probably not.
+
+
+**I really want to make a Component that updates dynamically in the Designer?**
+
+Don't do it.
+It relies on TypeScript.
+It plays around with Skulpt.
 It's not officially supported.
-It may need updating in the future since it relies on some hackery and implementation details that may change in the future.
+It relies on Anvil implementation details that may change.
+It will probably stop working at some point and need updating.
 
-BUT it is isolated to the Designer, so if it does stop working - the actual Python code won't be affected.
+Oh and did I mention don't do it.
 
-### Notes
-Your custom component must be an HTMLPanel.
-We essentially create a Javascript version of our CustomComponent.
-Anvil never calls the Python class in the Designer, so that's why we need to inject our Javascript version.
-In the Python code, we remove the script tags in the `__init__` method. This way we do not inject the Javascript version into Python.
+
+*Designer Components are isolated to the Designer, so if they do stop working - the actual Python Component won't be affected*.
+
+### Overview
+
+The custom component must be an HTMLPanel.
+Anvil never calls the Python class in the Designer, so we create a Javascript version.
+We inject the Javscript version in the html of the custom component inside script tags.
+The Designer then uses our Javscript version whenever a property is updated.
+We prevent the Javascript version loading in the real app by removing the script tags in our `__init__` method.
+Since this happens before the Component is added to the screen the Javascript version never loads in actual Python.
+
 
 ## Where to start?
 
 Write the Python version first!
 
-When you want to create a Designer version, first look at the comments in `DesignerComponent.ts`.
+When you want to create a Javascript version, first look at the comments in `DesignerComponent.ts`.
 Anything marked as `private` should NOT be overridden.
 
 - Does your Python class have injected `css`?
   - *override the `static css` property*
 - Does your Python class have injected `link` tags?
   - *override the `static links` property*
-- Does your Python class have an injected `script` tag?
-  - *override the `static script` property*
+- Does your Python class have injected `script` tags?
+  - *override the `static scripts` property*
 
 
 ### `static init()`
@@ -51,19 +72,19 @@ The first argument to `super.init()` should be the selector to identify your cus
 ```
 
 An optional second argument can be used, which is a className. This className will be added to the HTMLPanel's domNode.
-In the Designer world, its purpose is to be a flag to prevent instantiating the same domNode multiple times.
-The second argument can be used to add a class to the HTMLPanel you would otherwise have added in your Python `__init__` method.
+In the Designer world, its purpose is a flag to prevent instantiating the same domNode multiple times.
+In practice the second argument can be used to add a class to the HTMLPanel that you would otherwise have added in your Python `__init__` method.
 
 ```typescript
     static init() {
-        super.init(".tabs", "anvil-extras-designer");
+        super.init(".tabs", "anvil-extras-tabs");
     }
 ```
 
 
 ### `constructor(domNode, pyComponent, el)`
 
-A constructor function in javascript is a bit like Python's `__init__` method and `this` acts like `self`.
+A constructor function in Javascript is a bit like Python's `__init__` method and `this` acts like `self`.
 After the `init` method is called we call the constructor.
 There is no need to override the `constructor()` method - but you may want to if you want to add attributes to your `this` argument.
 The arguments to the `constructor()` will be:
@@ -89,7 +110,8 @@ The advantage of `update` is that it is only called once on the first load, wher
 
 
 ## Exporting your Designer class
-- To make your class available you need to export it in `js/designer_components/index.ts`
+
+To make your class available you need to export it in `js/designer_components/index.ts`
 
 ## Bundling the javascript
 - Install deno
@@ -113,7 +135,7 @@ In each designer component, you'll see code like
       </script>
 ```
 
-You'll need equivalent code in your custom component's HTML.
+You'll need equivalent code in your custom component's html.
 
 When hacking, there's no need to worry about the deno link. Instead:
 - bundle the Javascript (see above instructions)
