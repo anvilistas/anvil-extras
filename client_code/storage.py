@@ -26,24 +26,22 @@ _NoneType = type(None)
 _SPECIAL = "$$anvil-extras$$:"
 
 
+def _is_str(key):
+    if type(key) is not str:
+        msg = f"Keys must be strings when serialzing to browser Storage. Found {type(key).__name__}"
+        raise TypeError(msg)
+    return True
+
+
 def _serialize(obj):
     # we won't support subclasses of builtins so just check type is
     ob_type = type(obj)
-    if ob_type is list or ob_type is tuple:
-        ret = []
-        for item in obj:
-            ret.append(_serialize(item))
-        return ret
-    elif ob_type is dict:
-        ret = {}
-        for k, v in obj.items():
-            assert (
-                type(k) is str
-            ), "Keys must be strings when serialzing to browser Storage"
-            ret[k] = _serialize(v)
-        return ret
-    elif ob_type in (str, int, float, bool, _NoneType, bytes):
+    if ob_type in (str, int, float, bool, _NoneType, bytes):
         return obj
+    elif ob_type in (list, tuple):
+        return [_serialize(item) for item in obj]
+    elif ob_type is dict:
+        return {key: val for key, val in obj.items() if _is_str(key)}
     elif ob_type is datetime:
         return {_SPECIAL + "datetime": obj.isoformat()}
     elif ob_type is date:
@@ -52,35 +50,32 @@ def _serialize(obj):
         raise TypeError(f"Cannot serialize an object of type {ob_type.__name__}")
 
 
+_deserializers = {"date": date.fromisoformat, "datetime": datetime.fromisoformat}
+
+
 def _special_deserialize(key, value):
+    assert key.startswith(_SPECIAL), "not a special key"
     key = key[len(_SPECIAL) :]
-    if key == "date":
-        return date.fromisoformat(value)
-    elif key == "datetime":
-        return datetime.fromisoformat(value)
-    raise ValueError(f"unknown special deserialization type {key!r}")
+    try:
+        return _deserializers[key](value)
+    except KeyError:
+        raise ValueError(f"unknown special deserialization type {key!r}")
 
 
 def _deserialize(obj):
     """convert simple proxy objects (and nested simple proxy objects) to dictionaries"""
     ob_type = type(obj)
     if ob_type is list:
-        ret = []
-        for item in obj:
-            ret.append(_deserialize(item))
-        return ret
+        return [_deserialize(item) for item in obj]
     elif ob_type is _Proxy and obj.__class__ == _Object:
         # Then we're a simple proxy object
         # keys are strings so only _deserialize the values
-        ret = {}
         # use _Object.keys to avoid possible name conflict
         keys = _Object.keys(obj)
         if len(keys) == 1 and keys[0].startswith(_SPECIAL):
             key = keys[0]
             return _special_deserialize(key, obj[key])
-        for key in keys:
-            ret[key] = _deserialize(obj[key])
-        return ret
+        return {key: _deserialize(obj[key]) for key in keys}
     else:
         # we're either bytes, str, ints, floats, None, bool
         return obj
