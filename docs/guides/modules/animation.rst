@@ -447,8 +447,8 @@ Slides
 * ``slide_in_left = Transition(translateX=["-100%", 0])``
 * ``slide_in_right = Transition(translateX=["100%", 0])``
 
-* ``slide_out_up = reversed(slide_in_up)``
-* ``slide_out_down = reversed(slide_in_down)``
+* ``slide_out_up = reversed(slide_in_down)``
+* ``slide_out_down = reversed(slide_in_up)``
 * ``slide_out_left = reversed(slide_in_left)``
 * ``slide_out_right = reversed(slide_in_right)``
 
@@ -456,9 +456,7 @@ Slides
 Rotate
 ******
 
-
-* ``rotate_in = Transition(rotate=[0, "200deg"])``
-* ``rotate_out = reversed(rotate_in)``
+* ``rotate = Transition(rotate=[0, "360deg"])``
 
 
 Zoom
@@ -476,7 +474,7 @@ Fly
 * ``fly_in_left = slide_in_left | zoom_in | fade_in``
 * ``fly_in_right = slide_in_right | zoom_in | fade_in``
 
-* ``fly_out_up = reversed(fly_in_up)``
-* ``fly_out_down = reversed(fly_in_down)``
+* ``fly_out_up = reversed(fly_in_down)``
+* ``fly_out_down = reversed(fly_in_up)``
 * ``fly_out_left = reversed(fly_in_left)``
 * ``fly_out_right = reversed(fly_in_right)``
