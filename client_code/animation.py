@@ -354,16 +354,17 @@ class Effect:
     The first argument should be a Transition object.
     The remainder of the values are timing options"""
 
-    def __new__(cls, transition=None, **timings):
+    def __new__(cls, transition=None, duration=333, **timings):
         if isinstance(transition, Transition):
             transition = transition._compute()
+        timings["duration"] = duration
         return _window.KeyframeEffect(None, transition, timings)
 
     def __init__(
         self,
         transition=None,
-        *,
         duration=333,
+        *,
         delay=0,
         direction="normal",
         easing="linear",
@@ -392,8 +393,8 @@ class Effect:
 def animate(
     component,
     transition=None,
-    *,
     duration=333,
+    *,
     start_at=None,
     end_at=None,
     use_ghost=False,
