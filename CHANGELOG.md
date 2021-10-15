@@ -1,8 +1,12 @@
 
 # Unreleased
 
+## Updates:
 * storage supports `datetime` and `date` objects
   https://github.com/anvilistas/anvil-extras/pull/179
+* `on_form_load()` can be used in a `routing.main_router` Form
+  This method will be fired with the current `url_hash` and the `form` that was added to the `content_panel`.
+  https://github.com/anvilistas/anvil-extras/pull/180
 
 # v1.8.1 14-Oct-2021
 
