@@ -5,23 +5,11 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil import Component as _Component
 from anvil.js import await_promise as _await_promise
-from anvil.js import get_dom_node as _get_dom_node
+from anvil.js import get_dom_node as _dom_node
 from anvil.js import window as _window
 
 __version__ = "1.8.1"
-
-
-def _dom_node(component):
-    # TODO remove this function when js.get_dom_node does the same thing
-    if isinstance(component, _Component):
-        return _get_dom_node(component)
-    elif hasattr(component, "nodeType"):
-        return component
-    raise TypeError(
-        f"Expected an anvil Component or HTMLElement (got {component.__class__.__name__})"
-    )
 
 
 class _Easing:
