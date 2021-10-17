@@ -10,6 +10,11 @@
 * `animate` duration argument is no longer keyword only i.e. `animate(self, fade_in, 300)` is valid
   https://github.com/anvilistas/anvil-extras/pull/182
 
+## Bug fixes
+* MultiSelect component works correctly in a popover
+  https://github.com/anvilistas/anvil-extras/pull/187
+
+
 # v1.8.1 14-Oct-2021
 
 ## Updates
