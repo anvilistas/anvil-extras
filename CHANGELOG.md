@@ -7,6 +7,8 @@
 * `on_form_load()` can be used in a `routing.main_router` Form
   This method will be fired with the current `url_hash` and the `form` that was added to the `content_panel`.
   https://github.com/anvilistas/anvil-extras/pull/180
+* `animate` duration argument is no longer keyword only i.e. `animate(self, fade_in, 300)` is valid
+  https://github.com/anvilistas/anvil-extras/pull/182
 
 # v1.8.1 14-Oct-2021
 
