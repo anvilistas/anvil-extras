@@ -23,8 +23,6 @@ __version__ = "1.8.1"
 
 __all__ = ["popover", "pop", "dismiss_on_outside_click", "set_default_max_width"]
 
-_warnings = {"has_pop": False, "has_parent": False}
-
 
 def popover(
     self,
@@ -64,15 +62,9 @@ def popover(
     # We could be in the middle of a 'destroy'
     _wait_for_transition(popper_element)
 
-    if _has_popover(popper_element):
-        msg = (
-            "Warning: attempted to create a popover on a component that already has one. This will have no effect.\n"
-            "Destroy the popover before creating a new one using component.pop('destroy').\n"
-            "Or, use has_popover() to check if this component aleady has a popover before creating a new one."
-        )
-        if not _warnings.get("has_pop"):
-            print(msg)
-        _warnings["has_pop"] = True
+    has_popover = _has_popover(popper_element)
+    _check_warnings(has_popover, component)
+    if has_popover:
         # return here since adding a new popover has no effect
         return
 
@@ -196,6 +188,32 @@ def _set_data(popper_element, attr, value):
         data[attr] = value
 
 
+_warnings = {}
+
+
+def _check_warnings(has_popover, component):
+    if has_popover and not _warnings.get("has_pop"):
+        msg = (
+            "Warning: attempted to create a popover on a component that already has one. This will have no effect.\n"
+            "Destroy the popover before creating a new one using component.pop('destroy').\n"
+            "Or, use has_popover() to check if this component aleady has a popover before creating a new one."
+        )
+        print(msg)
+        _warnings["has_pop"] = True
+    elif (
+        component is not None
+        and component.parent is not None
+        and type(component.parent) is not _anvil.Container
+        and not _warnings.get("has_parent")
+    ):
+        # if the parent is an anvil Container then it's probably an internal issue
+        print(
+            "Warning: the popover content already has a parent this can cause unusual behaviour.\n"
+            "Support for this may be removed in a future version."
+        )
+        _warnings["has_parent"] = True
+
+
 def _add_transition_behaviour(component, popper_element, popper_id):
     # clean up our previous event handlers
     popper_element.off(
@@ -210,24 +228,16 @@ def _add_transition_behaviour(component, popper_element, popper_id):
             _set_data(popper_element, "inTransition", None)
             popper_element.off("shown.bs.popover", f)
             resolve(None)
+            if component is None:
+                return
             open_form = _anvil.get_open_form()
             if open_form is not None and fake_container.parent is None:
                 open_form.add_component(fake_container)
-            if component is None:
-                return
-            elif component.parent is None:
+            if component.parent is None:
                 # we add the component to a Container component
                 # this doesn't really add it to the dom
                 # it just allows us to use anvil's underlying show hide architecture
                 fake_container.add_component(component)
-            elif type(component.parent) is _anvil.Container:
-                pass  # just ignore this - it's probably something internal
-            elif not _warnings.get("has_parent"):
-                print(
-                    "Warning: the popover content already has a parent this can cause unusual behaviour."
-                    "Support for this may be removed in a future version."
-                )
-                _warnings["has_parent"] = True
 
         popper_element.on("shown.bs.popover", f)
 
