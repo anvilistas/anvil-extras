@@ -306,9 +306,13 @@ _window.addEventListener("resize", _update_positions)
 _scrolling = False
 
 
-def _hide_on_scroll(*e):
+def _hide_on_scroll(e):
     global _scrolling
-    if _scrolling or not _visible_popovers:
+    if (
+        _scrolling
+        or not _visible_popovers
+        or e.target.closest(".anvil-popover") is not None
+    ):
         return
 
     _scrolling = True
