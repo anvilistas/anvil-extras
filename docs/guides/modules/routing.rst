@@ -10,43 +10,6 @@ The routing module allows hash based navigation in an anvil app.
 +---------------------------------------+-------------------------------------------------------------------------------------------+
 
 
---------------
-
--  `Introduction <#introduction>`__
--  `Main Form <#main-form>`__
--  `All Route Forms <#all-route-forms>`__
--  `Home form <#home-form>`__
--  `Error form (Optional) <#error-form-optional>`__
--  `Navigation <#navigation>`__
--  `Changing Main Form <#changing-the-main-form>`__
--  `Dynamic Urls <#dynamic-urls>`__
--  `List of Methods <#list-of-methods>`__
--  `Notes and Examples <#notes-and-examples>`__
--  `Form Arguments <#form-arguments>`__
--  `Security <#security>`__
--  `Multiple Route Decorators <#multiple-route-decorators>`__
--  `Navigation Techniques <#navigation-techniques>`__
--  `Page Titles <#page-titles>`__
--  `Full Width Rows <#full-width-rows>`__
--  `Selected Links <#selected-links>`__
--  `Preventing a Form from Unloading (when navigating within the
-   app) <#preventing-a-form-from-unloading-when-navigating-within-the-app>`__
--  `Passing properties to a form <#passing-properties-to-a-form>`__
--  `Sometimes my Route Form is a Route Form sometimes it is a
-   Component <#sometimes-my-route-form-is-a-route-form-sometimes-it-is-a-component>`__
--  `My ``url_dict`` contains the &
-   symbol <#my-url_dict-contains-the--symbol>`__
--  `I have a login form how do I work
-   that? <#i-have-a-login-form-how-do-i-work-that>`__
--  `I have a page that is deleted - how do I remove it from the
-   cache? <#i-have-a-page-that-is-deleted---how-do-i-remove-it-from-the-cache>`__
--  `Form Show is important <#form-show-is-important>`__
--  `A Note on ``load_form`` with Multiple
-   Decorators <#a-note-on-load_form-with-multiple-decorators>`__
--  `Routing Debug Print Statements <#routing-debug-print-statements>`__
--  `Leaving the app <#leaving-the-app>`__
-
-
 Introduction
 ------------
 
@@ -60,7 +23,7 @@ Here are a few examples of URL hashes within an app and associated terminology.
 +------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
 | URL                                |     Description          | ``url_hash``         | ``url_pattern`` | ``url_dict``    | ``url_keys`` |
 +====================================+==========================+======================+=================+=================+==============+
-| ``blog.anvil.app/#```              | Show the app home page   | ``''``               | ``''``          | ``{}``          |  ``[]``      |
+| ``blog.anvil.app/#``               | Show the app home page   | ``''``               | ``''``          | ``{}``          |  ``[]``      |
 +------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
 | ``blog.anvil.app/#blogposts``      | Show the blogs posts     | ``'blogposts'``      | ``'blogposts'`` | ``{}``          | ``[]``       |
 +------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
@@ -76,7 +39,6 @@ Main Form
 This is either the startup form, or the form loaded from a startup module.
 It contains the header, the navigation bar and a ``content_panel``.
 It is based on the Material Design standard-page.html.
-All the other forms will be loaded during the life of the app.
 
 The ``MainForm`` is **not** the ``HomeForm``. The ``MainForm`` has no
 content, only has navigation, header and infrastructure to show all the
@@ -111,7 +73,7 @@ A route form is any form that will be loaded inside the ``MainForm``'s
 -  The first argument to the decorator is the ``url_pattern``
    (think of it like the page name).
 -  The second argument is optional and is any ``url_keys``
-   (a list of strings that make up query strings in the ``url_hash``)
+   (a list of strings that make up a query strings in the ``url_hash``)
 
 .. code:: python
 
@@ -222,10 +184,10 @@ With query string parameters:
 
 
 API
-===
+---
 
 Decorators
-----------
+**********
 .. attribute:: routing.main_router
 
     Apply this decorator above the top level Form - ``MainForm``.
@@ -283,11 +245,30 @@ Decorators
 
 
 List of Methods
----------------
+***************
 
-.. function:: routing.set_url_hash(url_hash, **properties)
+.. function:: routing.set_url_hash(url_hash)
+              routing.set_url_hash(url_hash, **properties)
+              routing.set_url_hash(url_pattern=None, url_dict=None, **properties)
+              routing.set_url_hash(url_hash, *, replace_current_url=False, set_in_history=True, redirect=True, load_from_cache=True, **properties)
 
-    pass
+    Sets the ``url_hash`` and begins navigation to load a form. Any properties provided will be passed to the form's properties.
+    You can also pass the url_pattern and url_dict separately and let the routing module convert this to a valid url_hash.
+    This is particularly useful when you have strings that need encoding as part of the query string.
+
+    The additional keywords in the call signature will adjust the routing behaviour.
+
+    If ``replace_current_url`` is set to ``True``. Then the navigation will happen "in place" rather than as a new history item.
+
+    If ``set_in_history`` is set to ``False`` the the URL will not be added to the browser's history stack.
+
+    If ``redirect`` is set to ``False`` then you do not want to navigate away from the current form.
+
+    if ``load_from_cache`` is set to ``False`` then the new URL will **not** load from cache.
+
+    Note that any additional properties will only be passed to a form
+    if it is the first time the form has loaded and/or it is **not** loaded from cache.
+
 
 .. function:: routing.get_url_components(url_hash=None)
 
@@ -366,11 +347,12 @@ List of Methods
 
 Notes and Examples
 ------------------
+
 pass
 
 
 Changing The Main Form
-----------------------
+**********************
 
 In a more complex app, it's common that you want the main form's sidebar
 links and/or title to change based on the current page being shown.
@@ -429,7 +411,7 @@ the same set of sidebar links.
 --------------
 
 Dynamic Urls
-------------
+************
 
 I am grateful to @starwort who added a dynamic url feature and can be
 used as follows
@@ -462,12 +444,12 @@ You can then check the ``id`` using:
 --------------
 
 Notes and Examples
-==================
+------------------
 
 The following represents some notes and examples that might be helpful
 
 Form Arguments
---------------
+**************
 
 ``Form`` ``__init__`` methods cannot have required named arguments.
 Something like this is not allowed:
@@ -495,7 +477,7 @@ This is the correct way:
 --------------
 
 Security
---------
+********
 
 **Security issue**: You log in, open a form with some data, go to the
 next form, log out, go back 3 steps and you see the cached stuff that
@@ -511,7 +493,7 @@ logging out.
 --------------
 
 Multiple Route Decorators
--------------------------
+*************************
 
 It is possible to define optional parameters by adding multiple
 decorators, e.g. one with and one without the key. Here is an example
@@ -542,7 +524,7 @@ Perhaps your form displays a different ``item`` depending on the
 --------------
 
 Navigation Techniques
----------------------
+*********************
 
 ``redirect=False``
 ~~~~~~~~~~~~~~~~~~
@@ -626,7 +608,7 @@ in the ``routing.set_url_hash`` method, default kwargs are as follows:
 --------------
 
 Page Titles
------------
+***********
 
 You can set each ``Route Form`` to have a ``title`` parameter which will
 change the page title
@@ -668,7 +650,7 @@ loaded from the database.
 --------------
 
 Full Width Rows
----------------
+***************
 
 You can set a ``Route Form`` to load as a ``full_width_row`` by setting
 the ``full_width_row`` parameter to ``True``.
@@ -681,7 +663,7 @@ the ``full_width_row`` parameter to ``True``.
 --------------
 
 Main Router Callbacks
----------------------
+*********************
 
 There are two call backs available for a ``MainForm``.
 
@@ -765,7 +747,7 @@ Note if you wanted to use a fade out you could also use the
 
 
 Preventing a Form from Unloading (when navigating within the app)
------------------------------------------------------------------
+*****************************************************************
 
 Create a method in a ``Route Form`` called ``before_unload``
 
@@ -790,7 +772,7 @@ App <#leaving-the-app>`__ below)
 --------------
 
 Passing properties to a form
-----------------------------
+****************************
 
 You can pass properties to a form by adding them as keyword arguments
 with either ``routing.load_form`` or ``routing.set_url_hash``
@@ -810,7 +792,7 @@ with either ``routing.load_form`` or ``routing.set_url_hash``
 --------------
 
 Sometimes my Route Form is a Route Form sometimes it is a Component
--------------------------------------------------------------------
+*******************************************************************
 
 No problem... use the parameter ``route=False`` to avoid typical routing
 behaviour
@@ -824,7 +806,7 @@ behaviour
 --------------
 
 My ``url_dict`` contains the & symbol
--------------------------------------
+*************************************
 
 let's say your ``url_dict`` is ``{'name': 'A & B'}`` doing the following
 will cause a problem
@@ -844,7 +826,7 @@ HashRouting will encode this correctly
 --------------
 
 I have a login form how do I work that?
----------------------------------------
+***************************************
 
 As part of ``HashRouting`` navigation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -917,7 +899,7 @@ which does nothing, to keep HashRouting happy)
 --------------
 
 I have a page that is deleted - how do I remove it from the cache?
-------------------------------------------------------------------
+******************************************************************
 
 .. code:: python
 
@@ -947,7 +929,7 @@ And in the ``__init__`` method - you will want something like:
 --------------
 
 Form Show is important
-----------------------
+**********************
 
 since the forms are loaded from cache you may want to use the
 ``form_show`` events if there is a state change
@@ -1045,7 +1027,7 @@ updated and the ``form_show`` event is triggered.
 --------------
 
 A Note on ``load_form`` with Multiple Decorators
-------------------------------------------------
+************************************************
 
 .. code:: python
 
@@ -1066,7 +1048,7 @@ Instead do: ``routing.load_form(Home, url_pattern='home')`` or
 --------------
 
 Routing Debug Print Statements
-------------------------------
+******************************
 
 To debug your routing behaviour use the routing logger. Routing logs are
 turned off by default.
@@ -1093,7 +1075,7 @@ following way...
 --------------
 
 Leaving the app
----------------
+***************
 
 Routing implements `W3 Schools
 onbeforeunload <https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_onbeforeunload_dom>`__
