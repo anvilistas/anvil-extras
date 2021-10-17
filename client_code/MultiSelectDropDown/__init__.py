@@ -28,6 +28,7 @@ jQuery.fn.offset = function() {
 )
 
 
+# If we update this - check the form_hide/form_show behaviour still works
 bs_select_version = "1.13.18"
 prefix = "https://cdn.jsdelivr.net/npm/bootstrap-select@"
 suffix = "/dist/js/bootstrap-select.min"
@@ -89,19 +90,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
-
-        self._menu_visible = False
-
-        def shown(*e):
-            self._menu_visible = True
-
-        self._el.on("shown.bs.select", shown)
-
-        def hidden(*e):
-            self._menu_visible = False
-
-        self._el.on("hidden.bs.select", hidden)
-
         self._init = True
 
     ##### PROPERTIES #####
@@ -162,7 +150,16 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     enable_filtering = _component_property("enable_filtering", "data-live-search")
     enabled = _component_property("enabled", "disabled", lambda v: not v)
 
-    visible = _HtmlPanel.visible
+    @property
+    def visible(self):
+        return _HtmlPanel.visible.__get__(self, type(self))
+
+    @visible.setter
+    def visible(self, val):
+        self._el.data("selectpicker")["$bsContainer"].toggleClass(
+            "visible-false", not val
+        )
+        _HtmlPanel.visible.__set__(self, val)
 
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
@@ -172,9 +169,17 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         return self.raise_event("change")
 
     def _form_hide(self, **event_args):
-        """This method is called when the HTML panel is removed from the screen"""
-        if self._menu_visible:
-            self._el.selectpicker("toggle")
+        # this is a bit of a hack - we're using the libraries private methods for this
+        bs_container = self._el.data("selectpicker")["$bsContainer"]
+        bs_container.removeClass("anvil-popover").attr("popover_id", None).detach()
+
+    def _form_show(self, **event_args):
+        popover = self._dom_node.closest(".anvil-popover")
+        if popover is None:
+            return
+        pop_id = popover.getAttribute("popover_id")
+        bs_container = self._el.data("selectpicker")["$bsContainer"]
+        bs_container.addClass("anvil-popover").attr("popover_id", pop_id)
 
 
 ##### PRIVATE Functions #####
