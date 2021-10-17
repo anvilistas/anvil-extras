@@ -8,6 +8,11 @@
   This method will be fired with the current `url_hash` and the `form` that was added to the `content_panel`.
   https://github.com/anvilistas/anvil-extras/pull/180
 
+## Bug fixes
+* MultiSelect component works correctly in a popover
+  https://github.com/anvilistas/anvil-extras/pull/187
+
+
 # v1.8.1 14-Oct-2021
 
 ## Updates
