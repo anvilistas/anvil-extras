@@ -1,4 +1,4 @@
-name: CI
+name: check_codebase
 
 on:
   push:
