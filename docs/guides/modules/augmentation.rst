@@ -77,7 +77,7 @@ you can prevent default behaviour of an event by returning a value in the event 
 
 
 DataGrid pagination_click
-----------------
+-------------------------
 
 Importing the augment module gives DataGrid's a ``pagination_click`` event
 
