@@ -9,6 +9,8 @@ from anvil.tables import app_tables
 
 import marshmallow
 
+__version__ = "1.8.1"
+
 anvil_to_marshmallow = {
     "bool": marshmallow.fields.Boolean,
     "date": marshmallow.fields.Date,
