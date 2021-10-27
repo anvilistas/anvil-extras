@@ -22,7 +22,7 @@ In a server module, import and call the function `datatable_schema` to get a `ma
 
    schema = datatable_schema("books")
 
-To serialise a row from the books table, create an instance of the Schema class and call its `dump` method:
+To serialise a row from the books table, call the schema's `dump` method:
 
 .. code-block:: python
 
