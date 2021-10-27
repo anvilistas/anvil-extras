@@ -17,6 +17,7 @@ anvil_to_marshmallow = {
     "datetime": marshmallow.fields.DateTime,
     "number": marshmallow.fields.Number,
     "string": marshmallow.fields.Str,
+    "simpleObject": marshmallow.fields.Raw,
 }
 
 
@@ -74,11 +75,14 @@ def schema_from_table(
     if linked_tables is None:
         linked_tables = {}
 
-    schema_definition = {
-        column["name"]: anvil_to_marshmallow[column["type"]]()
-        for column in table.list_columns()
-        if column["type"] != "liveObject" and column["name"] not in exclusions
-    }
+    try:
+        schema_definition = {
+            column["name"]: anvil_to_marshmallow[column["type"]]()
+            for column in table.list_columns()
+            if column["type"] != "liveObject" and column["name"] not in exclusions
+        }
+    except KeyError as e:
+        raise ValueError(f"{e} columns are not supported")
 
     if table_name in linked_tables:
         linked_schema_definition = {
