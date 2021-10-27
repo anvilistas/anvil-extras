@@ -82,8 +82,8 @@ def schema_from_table(
 
     if table_name in linked_tables:
         linked_schema_definition = {
-            column: schema_from_table(
-                linked_table, ignore_columns, linked_tables, with_id
+            column: marshmallow.fields.Nested(
+                schema_from_table(linked_table, ignore_columns, linked_tables, with_id)
             )
             for column, linked_table in linked_tables[table_name].items()
         }
