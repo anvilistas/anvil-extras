@@ -121,7 +121,6 @@ Finally, let's imagine the 'authors' table has a 'date_of_birth' column but we d
    from anvil_extras.serialisation import datatable_schema
    from pprint import pprint
 
-   # The books table has one linked column named 'author' and that is a link to the 'authors' table
    linked_tables = {"books": {"author": "authors"}}
    ignore_columns = {"books": "publication_date", "authors": "date_of_birth"}
    schema = datatable_schema(
