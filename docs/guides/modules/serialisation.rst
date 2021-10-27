@@ -12,7 +12,7 @@ Usage
 -----
 Let's imagine we have a data table named 'books' with columns 'title' and 'publication_date'.
 
-In a server module, call the server function `schema_from_table` get a `marshmallow <https://marshmallow.readthedocs.io/en/stable/>`_ Schema class:
+In a server module, call the server function `schema_from_table` to get a `marshmallow <https://marshmallow.readthedocs.io/en/stable/>`_ Schema class:
 
 .. code-block:: python
 
