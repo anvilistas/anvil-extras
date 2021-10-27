@@ -21,7 +21,7 @@ anvil_to_marshmallow = {
 }
 
 
-def _exclusions_for_table(table_name, ignore_columns):
+def _exclusions(table_name, ignore_columns):
     """Generate a list of columns to exclude from serialisation for a given table name
 
     Parameters
@@ -70,7 +70,7 @@ def datatable_schema(
     marshmallow.Schema
     """
     table = getattr(app_tables, table_name)
-    exclusions = _exclusions_for_table(table_name, ignore_columns)
+    exclusions = _exclusions(table_name, ignore_columns)
     if linked_tables is None:
         linked_tables = {}
 
