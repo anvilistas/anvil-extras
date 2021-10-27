@@ -11,37 +11,52 @@ In a server module, call the server function `schema_from_table` get a `marshmal
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.server_code.serialisation import schema_from_table
+   from anvil-extras.serialisation import schema_from_table
+   from pprint import pprint
 
    Schema = schema_from_table("books")
 
-To serialise a row from the books table, create an instance of the Schema class and call its `dumps` method:
+To serialise a row from the books table, create an instance of the Schema class and call its `dump` method:
 
 .. code-block:: python
 
    schema = Schema()
    book = app_tables.books.get(title="Fluent Python")
-   result = schema.dumps(book)
+   result = schema.dump(book)
+   pprint(result)
 
-To serialise all the rows from the books table, set the `many` attribute of the schema object:
+   >> {"publication_date": "2015-08-01", "title": "Fluent Python"}
+
+To serialise several rows from the books table, set the `many` argument to True:
 
 .. code-block:: python
 
-   schema = Schema(many=True)
    books = app_tables.books.search()
-   result = schema.dumps(books)
+   result = schema.dump(books, many=True)
+   pprint(result)
+
+   >> [{'publication_date': '2015-08-01', 'title': 'Fluent Python'},
+   >>  {'publication_date': '2015-01-01', 'title': 'Practical Vim'},
+   >>  {'publication_date': None, 'title': "The Hitch Hiker's Guide to the Galaxy"}]
+
 
 To exclude the publication date from the result, pass its name to the server function:
 
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.server_code.serialisation import schema_from_table
+   from anvil-extras.serialisation import schema_from_table
+   from pprint import pprint
 
-   Schema = schema_from_table("books", ignore_colums="publication_date")
+   Schema = schema_from_table("books", ignore_columns="publication_date")
+   schema = Schema()
    books = app_tables.books.search()
-   schema = Schema(many=True)
-   result = schema.dumps(books)
+   result = schema.dump(books, many=True)
+   pprint(result)
+
+   >> [{'title': 'Fluent Python'},
+   >>  {'title': 'Practical Vim'},
+   >>  {'title': "The Hitch Hiker's Guide to the Galaxy"}]
 
 You can also pass a list of column names to ignore.
 
@@ -50,12 +65,20 @@ If you want the row id included in the results, set the `with_id` argument:
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.server_code.serialisation import schema_from_table
+   from anvil-extras.serialisation import schema_from_table
+   from pprint import pprint
 
-   Schema = schema_from_table("books", ignore_colums="publication_date", with_id=True)
+   Schema = schema_from_table("books", ignore_columns="publication_date", with_id=True)
+   schema = Schema()
    books = app_tables.books.search()
-   schema = Schema(many=True)
-   result = schema.dumps(books)
+   result = schema.dump(books, many=True)
+   pprint(result)
+
+   >> [{'_id': '[169162,297786594]', 'title': 'Fluent Python'},
+   >>  {'_id': '[169162,297786596]', 'title': 'Practical Vim'},
+   >>  {'_id': '[169162,297786597]',
+   >>   'title': "The Hitch Hiker's Guide to the Galaxy"}]
+
 
 Linked Tables
 +++++++++++++
@@ -67,18 +90,25 @@ To include the author in the results for a books search, create a dict to define
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.server_code.serialisation import schema_from_table
+   from anvil-extras.serialisation import schema_from_table
+   from pprint import pprint
 
    # The books table has one linked column named 'author' and that is a link to the 'authors' table
-   linked_tables = {"books": {"author": "authors"}
+   linked_tables = {"books": {"author": "authors"}}
    Schema = schema_from_table(
        "books",
-       ignore_colums="publication_date",
+       ignore_columns="publication_date",
        linked_tables=linked_tables,
     )
+   schema = Schema()
    books = app_tables.books.search()
-   schema = Schema(many=True)
-   result = schema.dumps(books)
+   result = schema.dump(books, many=True)
+   pprint(result)
+
+   >> [{'author': {'name': 'Luciano Ramalho'}, 'title': 'Fluent Python'},
+   >>  {'author': {'name': 'Drew Neil'}, 'title': 'Practical Vim'},
+   >>  {'author': {'name': 'Douglas Adams'},
+   >>   'title': "The Hitch Hiker's Guide to the Galaxy"}]
 
 Finally, let's imagine the 'authors' table has a 'date_of_birth' column but we don't want to include that in the results:
 
@@ -86,16 +116,23 @@ Finally, let's imagine the 'authors' table has a 'date_of_birth' column but we d
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.server_code.serialisation import schema_from_table
+   from anvil-extras.serialisation import schema_from_table
+   from pprint import pprint
 
    # The books table has one linked column named 'author' and that is a link to the 'authors' table
-   linked_tables = {"books": {"author": "authors"}
+   linked_tables = {"books": {"author": "authors"}}
    ignore_columns = {"books": "publication_date", "authors": "date_of_birth"}
    Schema = schema_from_table(
        "books",
-       ignore_colums=ignore_columns,
+       ignore_columns=ignore_columns,
        linked_tables=linked_tables,
     )
+   schema = Schema()
    books = app_tables.books.search()
-   schema = Schema(many=True)
-   result = schema.dumps(books)
+   result = schema.dump(books, many=True)
+   pprint(result)
+
+   >> [{'author': {'name': 'Luciano Ramalho'}, 'title': 'Fluent Python'},
+   >>  {'author': {'name': 'Drew Neil'}, 'title': 'Practical Vim'},
+   >>  {'author': {'name': 'Douglas Adams'},
+   >>   'title': "The Hitch Hiker's Guide to the Galaxy"}]
