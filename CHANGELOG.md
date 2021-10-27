@@ -1,5 +1,8 @@
-
 # Unreleased
+
+## New Features
+* Dynamic serialisation of data tables rows
+  https://github.com/anvilistas/anvil-extras/pull/191
 
 ## Updates:
 * storage supports `datetime` and `date` objects
