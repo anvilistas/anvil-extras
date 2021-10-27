@@ -50,7 +50,7 @@ To exclude the publication date from the result, pass its name to the server fun
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import datatable_schema
+   from anvil_extras.serialisation import datatable_schema
    from pprint import pprint
 
    schema = datatable_schema("books", ignore_columns="publication_date")
@@ -69,7 +69,7 @@ If you want the row id included in the results, set the `with_id` argument:
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import datatable_schema
+   from anvil_extras.serialisation import datatable_schema
    from pprint import pprint
 
    schema = datatable_schema("books", ignore_columns="publication_date", with_id=True)
@@ -93,7 +93,7 @@ To include the author in the results for a books search, create a dict to define
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import datatable_schema
+   from anvil_extras.serialisation import datatable_schema
    from pprint import pprint
 
    # The books table has one linked column named 'author' and that is a link to the 'authors' table
@@ -118,7 +118,7 @@ Finally, let's imagine the 'authors' table has a 'date_of_birth' column but we d
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import datatable_schema
+   from anvil_extras.serialisation import datatable_schema
    from pprint import pprint
 
    # The books table has one linked column named 'author' and that is a link to the 'authors' table
