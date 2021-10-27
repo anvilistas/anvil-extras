@@ -17,7 +17,7 @@ In a server module, call the server function `schema_from_table` to get a `marsh
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import schema_from_table
+   from anvil_extras.serialisation import schema_from_table
    from pprint import pprint
 
    Schema = schema_from_table("books")
