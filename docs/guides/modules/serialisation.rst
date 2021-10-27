@@ -12,7 +12,7 @@ Usage
 -----
 Let's imagine we have a data table named 'books' with columns 'title' and 'publication_date'.
 
-In a server module, call the server function `datatable_schema` to get a `marshmallow <https://marshmallow.readthedocs.io/en/stable/>`_ Schema instance:
+In a server module, import and call the function `datatable_schema` to get a `marshmallow <https://marshmallow.readthedocs.io/en/stable/>`_ Schema instance:
 
 .. code-block:: python
 
