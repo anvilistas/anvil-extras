@@ -47,7 +47,7 @@ def _exclusions_for_table(table_name, ignore_columns):
         return []
 
 
-def schema_from_table(
+def datatable_schema(
     table_name, ignore_columns=None, linked_tables=None, with_id=False
 ):
     """Generate a marshmallow Schema dynamically from a table name
@@ -67,8 +67,7 @@ def schema_from_table(
 
     Returns
     -------
-    class
-        A subclass of marshmallow.Schema
+    marshmallow.Schema
     """
     table = getattr(app_tables, table_name)
     exclusions = _exclusions_for_table(table_name, ignore_columns)
@@ -87,7 +86,7 @@ def schema_from_table(
     if table_name in linked_tables:
         linked_schema_definition = {
             column: marshmallow.fields.Nested(
-                schema_from_table(linked_table, ignore_columns, linked_tables, with_id)
+                datatable_schema(linked_table, ignore_columns, linked_tables, with_id)
             )
             for column, linked_table in linked_tables[table_name].items()
         }
@@ -96,4 +95,4 @@ def schema_from_table(
     if with_id:
         schema_definition["_id"] = marshmallow.fields.Function(lambda row: row.get_id())
 
-    return marshmallow.Schema.from_dict(schema_definition)
+    return marshmallow.Schema.from_dict(schema_definition)()

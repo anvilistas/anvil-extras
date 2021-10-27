@@ -12,21 +12,20 @@ Usage
 -----
 Let's imagine we have a data table named 'books' with columns 'title' and 'publication_date'.
 
-In a server module, call the server function `schema_from_table` to get a `marshmallow <https://marshmallow.readthedocs.io/en/stable/>`_ Schema class:
+In a server module, call the server function `datatable_schema` to get a `marshmallow <https://marshmallow.readthedocs.io/en/stable/>`_ Schema instance:
 
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil_extras.serialisation import schema_from_table
+   from anvil_extras.serialisation import datatable_schema
    from pprint import pprint
 
-   Schema = schema_from_table("books")
+   schema = datatable_schema("books")
 
 To serialise a row from the books table, create an instance of the Schema class and call its `dump` method:
 
 .. code-block:: python
 
-   schema = Schema()
    book = app_tables.books.get(title="Fluent Python")
    result = schema.dump(book)
    pprint(result)
@@ -51,11 +50,10 @@ To exclude the publication date from the result, pass its name to the server fun
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import schema_from_table
+   from anvil-extras.serialisation import datatable_schema
    from pprint import pprint
 
-   Schema = schema_from_table("books", ignore_columns="publication_date")
-   schema = Schema()
+   schema = datatable_schema("books", ignore_columns="publication_date")
    books = app_tables.books.search()
    result = schema.dump(books, many=True)
    pprint(result)
@@ -71,11 +69,10 @@ If you want the row id included in the results, set the `with_id` argument:
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import schema_from_table
+   from anvil-extras.serialisation import datatable_schema
    from pprint import pprint
 
-   Schema = schema_from_table("books", ignore_columns="publication_date", with_id=True)
-   schema = Schema()
+   schema = datatable_schema("books", ignore_columns="publication_date", with_id=True)
    books = app_tables.books.search()
    result = schema.dump(books, many=True)
    pprint(result)
@@ -96,17 +93,16 @@ To include the author in the results for a books search, create a dict to define
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import schema_from_table
+   from anvil-extras.serialisation import datatable_schema
    from pprint import pprint
 
    # The books table has one linked column named 'author' and that is a link to the 'authors' table
    linked_tables = {"books": {"author": "authors"}}
-   Schema = schema_from_table(
+   schema = datatable_schema(
        "books",
        ignore_columns="publication_date",
        linked_tables=linked_tables,
     )
-   schema = Schema()
    books = app_tables.books.search()
    result = schema.dump(books, many=True)
    pprint(result)
@@ -122,18 +118,17 @@ Finally, let's imagine the 'authors' table has a 'date_of_birth' column but we d
 .. code-block:: python
 
    from anvil.tables import app_tables
-   from anvil-extras.serialisation import schema_from_table
+   from anvil-extras.serialisation import datatable_schema
    from pprint import pprint
 
    # The books table has one linked column named 'author' and that is a link to the 'authors' table
    linked_tables = {"books": {"author": "authors"}}
    ignore_columns = {"books": "publication_date", "authors": "date_of_birth"}
-   Schema = schema_from_table(
+   schema = datatable_schema(
        "books",
        ignore_columns=ignore_columns,
        linked_tables=linked_tables,
     )
-   schema = Schema()
    books = app_tables.books.search()
    result = schema.dump(books, many=True)
    pprint(result)
