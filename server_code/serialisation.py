@@ -60,8 +60,8 @@ def _link_columns(columns):
     -------
     dict
 
-        e.g. For a table with two linked columns, 'link1' and link2' plus a mult-link
-        column, 'multilink', this would generate
+        e.g. For a table with two linked columns, 'link1' and link2' plus a multi-link
+        column, 'multilink', this would return:
 
         {"liveObject": {"link1", "link2"}, "liveObjectArray": {"multilink"}}
     """
