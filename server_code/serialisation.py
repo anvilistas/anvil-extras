@@ -87,17 +87,19 @@ def datatable_schema(
         raise ValueError(f"{e} columns are not supported")
 
     if table_name in linked_tables:
-        link_columns = [c["name"] for c in columns if c["type"] == "liveObject"]
+        link_columns = {
+            field_type: {c["name"]}
+            for field_type in ("liveObject", "liveObjectArray")
+            for c in columns
+            if c["type"] == field_type
+        }
         linked_schema_definition = {
             column: marshmallow.fields.Nested(
                 datatable_schema(linked_table, ignore_columns, linked_tables, with_id)
             )
             for column, linked_table in linked_tables[table_name].items()
-            if column in link_columns
+            if column in link_columns["liveObject"]
         }
-        multilink_columns = [
-            c["name"] for c in columns if c["type"] == "liveObjectArray"
-        ]
         multilink_schema_definition = {
             column: marshmallow.fields.List(
                 marshmallow.fields.Nested(
@@ -107,7 +109,7 @@ def datatable_schema(
                 )
             )
             for column, linked_table in linked_tables[table_name].items()
-            if column in multilink_columns
+            if column in link_columns["liveObjectArray"]
         }
         schema_definition = {
             **schema_definition,
