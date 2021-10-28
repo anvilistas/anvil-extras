@@ -48,6 +48,31 @@ def _exclusions(table_name, ignore_columns):
         return []
 
 
+def _link_columns(columns):
+    """Generate a dict mapping linked column types to sets of column names
+
+    Parameters
+    ----------
+    columns : list
+        of the form return by table.list_columns()
+
+    Returns
+    -------
+    dict
+
+        e.g. For a table with two linked columns, 'link1' and link2' plus a mult-link
+        column, 'multilink', this would generate
+
+        {"liveObject": {"link1", "link2"}, "liveObjectArray": {"multilink"}}
+    """
+    return {
+        field_type: {c["name"]}
+        for field_type in ("liveObject", "liveObjectArray")
+        for c in columns
+        if c["type"] == field_type
+    }
+
+
 def datatable_schema(
     table_name, ignore_columns=None, linked_tables=None, with_id=False
 ):
@@ -87,12 +112,7 @@ def datatable_schema(
         raise ValueError(f"{e} columns are not supported")
 
     if table_name in linked_tables:
-        link_columns = {
-            field_type: {c["name"]}
-            for field_type in ("liveObject", "liveObjectArray")
-            for c in columns
-            if c["type"] == field_type
-        }
+        link_columns = _link_columns(columns)
         linked_schema_definition = {
             column: marshmallow.fields.Nested(
                 datatable_schema(linked_table, ignore_columns, linked_tables, with_id)
