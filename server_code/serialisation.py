@@ -18,6 +18,7 @@ anvil_to_marshmallow = {
     "number": marshmallow.fields.Number,
     "string": marshmallow.fields.Str,
     "simpleObject": marshmallow.fields.Raw,
+    "media": marshmallow.fields.Raw,
 }
 
 
