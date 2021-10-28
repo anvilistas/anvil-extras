@@ -13,8 +13,8 @@ __version__ = "1.8.1"
 
 anvil_to_marshmallow = {
     "bool": marshmallow.fields.Boolean,
-    "date": marshmallow.fields.Date,
-    "datetime": marshmallow.fields.DateTime,
+    "date": marshmallow.fields.Raw,
+    "datetime": marshmallow.fields.Raw,
     "number": marshmallow.fields.Number,
     "string": marshmallow.fields.Str,
     "simpleObject": marshmallow.fields.Raw,
