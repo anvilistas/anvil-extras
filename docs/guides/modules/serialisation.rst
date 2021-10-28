@@ -5,8 +5,6 @@ A server module that provides dynamic serialisation of data table rows.
 A single data table row is converted to a dictionary of simple Python types.
 A set of rows is converted to a list of those dictionaries.
 
-At present, multiple link columns are not supported.
-
 Usage
 -----
 Let's imagine we have a data table named 'books' with columns 'title' and 'publication_date'.
