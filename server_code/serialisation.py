@@ -11,7 +11,7 @@ import marshmallow
 
 __version__ = "1.8.1"
 
-anvil_to_marshmallow = {
+FIELD_TYPES = {
     "bool": marshmallow.fields.Boolean,
     "date": marshmallow.fields.Raw,
     "datetime": marshmallow.fields.Raw,
@@ -20,6 +20,7 @@ anvil_to_marshmallow = {
     "simpleObject": marshmallow.fields.Raw,
     "media": marshmallow.fields.Raw,
 }
+LINKED_COLUMN_TYPES = ("liveObject", "liveObjectArray")
 
 
 def _exclusions(table_name, ignore_columns):
@@ -67,7 +68,7 @@ def _link_columns(columns):
     """
     return {
         field_type: {c["name"] for c in columns if c["type"] == field_type}
-        for field_type in ("liveObject", "liveObjectArray")
+        for field_type in LINKED_COLUMN_TYPES
     }
 
 
@@ -101,9 +102,9 @@ def datatable_schema(
 
     try:
         schema_definition = {
-            column["name"]: anvil_to_marshmallow[column["type"]]()
+            column["name"]: FIELD_TYPES[column["type"]]()
             for column in columns
-            if column["type"] not in ("liveObject", "liveObjectArray")
+            if column["type"] not in LINKED_COLUMN_TYPES
             and column["name"] not in exclusions
         }
     except KeyError as e:
