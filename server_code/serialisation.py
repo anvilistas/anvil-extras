@@ -71,6 +71,7 @@ def datatable_schema(
     marshmallow.Schema
     """
     table = getattr(app_tables, table_name)
+    columns = table.list_columns()
     exclusions = _exclusions(table_name, ignore_columns)
     if linked_tables is None:
         linked_tables = {}
@@ -78,20 +79,41 @@ def datatable_schema(
     try:
         schema_definition = {
             column["name"]: anvil_to_marshmallow[column["type"]]()
-            for column in table.list_columns()
-            if column["type"] != "liveObject" and column["name"] not in exclusions
+            for column in columns
+            if column["type"] not in ("liveObject", "liveObjectArray")
+            and column["name"] not in exclusions
         }
     except KeyError as e:
         raise ValueError(f"{e} columns are not supported")
 
     if table_name in linked_tables:
+        link_columns = [c["name"] for c in columns if c["type"] == "liveObject"]
         linked_schema_definition = {
             column: marshmallow.fields.Nested(
                 datatable_schema(linked_table, ignore_columns, linked_tables, with_id)
             )
             for column, linked_table in linked_tables[table_name].items()
+            if column in link_columns
         }
-        schema_definition = {**schema_definition, **linked_schema_definition}
+        multilink_columns = [
+            c["name"] for c in columns if c["type"] == "liveObjectArray"
+        ]
+        multilink_schema_definition = {
+            column: marshmallow.fields.List(
+                marshmallow.fields.Nested(
+                    datatable_schema(
+                        linked_table, ignore_columns, linked_tables, with_id
+                    )
+                )
+            )
+            for column, linked_table in linked_tables[table_name].items()
+            if column in multilink_columns
+        }
+        schema_definition = {
+            **schema_definition,
+            **linked_schema_definition,
+            **multilink_schema_definition,
+        }
 
     if with_id:
         schema_definition["_id"] = marshmallow.fields.Function(lambda row: row.get_id())
