@@ -66,10 +66,8 @@ def _link_columns(columns):
         {"liveObject": {"link1", "link2"}, "liveObjectArray": {"multilink"}}
     """
     return {
-        field_type: {c["name"]}
+        field_type: {c["name"] for c in columns if c["type"] == field_type}
         for field_type in ("liveObject", "liveObjectArray")
-        for c in columns
-        if c["type"] == field_type
     }
 
 
