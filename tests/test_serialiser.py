@@ -1,5 +1,19 @@
 from server_code import serialisation
 
+COLUMNS = {
+    "books": [
+        {"name": "title", "type": "string"},
+        {"name": "publisher", "type": "string"},
+        {"name": "author", "type": "liveObject"},
+    ]
+}
+
+BOOKS = [
+    {"title": "Fluent Python", "publisher": "O'Reilly"},
+    {"title": "Practical Vim", "publisher": "Pragmatic Bookshelf"},
+    {"title": "The Hitch Hiker's Guide to the Galaxy", "publisher": "Pan"},
+]
+
 
 def test_exclusions():
     test_cases = [
@@ -25,3 +39,27 @@ def test_link_columns():
     expected = {"liveObject": {"link1", "link2"}, "liveObjectArray": {"multilink"}}
     result = serialisation._link_columns(test_columns)
     assert result == expected
+
+
+def test_basic_schema_definition():
+    result = serialisation._basic_schema_definition(
+        table_name="books", columns=COLUMNS, ignore_columns=None, with_id=False
+    )
+    assert set(result.keys()) == {"title", "publisher"}
+
+    ignore_columns = "publisher"
+    result = serialisation._basic_schema_definition(
+        table_name="books",
+        columns=COLUMNS,
+        ignore_columns=ignore_columns,
+        with_id=False,
+    )
+    assert set(result.keys()) == {"title"}
+
+    result = serialisation._basic_schema_definition(
+        table_name="books",
+        columns=COLUMNS,
+        ignore_columns=ignore_columns,
+        with_id=True,
+    )
+    assert set(result.keys()) == {"_id", "title"}
