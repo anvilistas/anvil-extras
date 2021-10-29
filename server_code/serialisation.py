@@ -72,29 +72,6 @@ def _link_columns(columns):
     }
 
 
-def _columns(table_name, linked_tables):
-    """Generate a dict mapping table names to column lists
-
-    For the given table and each table found in the linked_tables dict.
-
-    Parameters
-    ----------
-    table_name : str
-        The name of a data table within the app
-    linked_tables : dict
-        mapping a table name to a dict which, in turn, maps a column name to a linked
-        table name
-
-    Returns
-    -------
-    dict
-    """
-    tables = {table_name}.union(
-        {table for link in linked_tables.values() for table in link.values()}
-    )
-    return {table: getattr(app_tables, table).list_columns() for table in tables}
-
-
 def _basic_schema_definition(table_name, columns, ignore_columns, with_id):
     """
     Parameters
@@ -183,6 +160,30 @@ def _schema_definition(table_name, columns, ignore_columns, linked_tables, with_
             **multilinked,
         }
     return result
+
+
+# The following functions hit the data tables service and thus have no tests.
+def _columns(table_name, linked_tables):
+    """Generate a dict mapping table names to column lists
+
+    For the given table and each table found in the linked_tables dict.
+
+    Parameters
+    ----------
+    table_name : str
+        The name of a data table within the app
+    linked_tables : dict
+        mapping a table name to a dict which, in turn, maps a column name to a linked
+        table name
+
+    Returns
+    -------
+    dict
+    """
+    tables = {table_name}.union(
+        {table for link in linked_tables.values() for table in link.values()}
+    )
+    return {table: getattr(app_tables, table).list_columns() for table in tables}
 
 
 def datatable_schema(
