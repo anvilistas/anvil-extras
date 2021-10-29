@@ -16,6 +16,8 @@
 ## Bug fixes
 * MultiSelect component works correctly in a popover
   https://github.com/anvilistas/anvil-extras/pull/187
+* popover `is_visible` bug when using `pop("toggle")`
+  https://github.com/anvilistas/anvil-extras/pull/199
 
 
 # v1.8.1 14-Oct-2021

@@ -13,6 +13,8 @@
 # https://getbootstrap.com/docs/3.4/javascript/#popovers
 #
 
+from time import sleep
+
 import anvil as _anvil
 from anvil.js import window as _window
 from anvil.js.window import Promise as _Promise
@@ -266,9 +268,30 @@ def _add_transition_behaviour(component, popper_element, popper_id):
 
 
 def _wait_for_transition(popper_element):
+    bs_data = popper_element.data("bs.popover")
+    if bs_data is None:
+        return
+
     transition = _get_data(popper_element, "inTransition")
     if transition is not None:
         _anvil.js.await_promise(transition)
+        return
+
+    timeout = bs_data.get("timeout")
+    # bs sets a timeout when it does a toggle with a delay
+    if timeout is None:
+        return
+
+    delay = None
+    hoverState = bs_data.get("hoverState")
+    if hoverState == "in":
+        delay = bs_data.options.delay.show
+    elif hoverState == "out":
+        delay = bs_data.options.delay.hide
+
+    if delay is not None:
+        sleep(delay / 1000)
+        _wait_for_transition(popper_element)
 
 
 _sticky_popovers = set()
