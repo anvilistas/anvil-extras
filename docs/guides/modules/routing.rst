@@ -13,7 +13,7 @@ The routing module allows hash based navigation in an anvil app.
 Introduction
 ------------
 
-An Anvil app is a Single Page app. When the user navigates through the app pages the URL does not change.
+An Anvil app is a single page app. When the user navigates through the app's pages the URL does not change.
 The part of the URL before the `#` is used by the server to identify the app.
 The part following the `#`, is never sent to the server, and used only by the browser.
 
@@ -79,8 +79,8 @@ A route form is any form that will be loaded inside the ``MainForm``'s
 
     from anvil_extras import routing
 
-    @routing.route('article', url_keys=['id']) class
-    ArticleForm(ArticleFormTemplate):
+    @routing.route('article', url_keys=['id'])
+    class ArticleForm(ArticleFormTemplate):
         ...
 
 
@@ -179,6 +179,30 @@ With query string parameters:
 
 
 ``routing.set_url_hash`` - has some additional kwargs that can be passed - some examples below.
+
+--------------
+
+Dynamic Vars
+------------
+
+An alternative to a query string is to include a dynamic URL hash.
+The dynamic variables inside the URL pattern will be included in the ``dynamic_vars`` attribute.
+
+.. code:: python
+
+    from anvil_extras import routing
+
+    @routing.route("article/{id}")
+    class ArticleForm(ArticleFormTemplate):
+        ...
+
+You can then check the ``id`` using:
+
+.. code:: python
+
+        print(self.dynamic_vars) # {'id': 3}
+        print(self.dynamic_vars['id']) # 3
+
 
 --------------
 
@@ -348,7 +372,153 @@ List of Methods
 Notes and Examples
 ------------------
 
-pass
+The following represents some notes and examples that might be helpful
+
+
+Routing Debug Print Statements
+******************************
+
+To debug your routing behaviour use the routing logger.
+Routing logs are turned off by default.
+
+To use the routing logger, in your ``MainForm`` do:
+
+.. code:: python
+
+    from anvil_extras import routing
+
+    routing.logger.debug = True
+
+    @routing.main_router
+    class MainForm(MainFormTemplate):
+        ...
+
+
+Page Titles
+***********
+
+You can set each ``Route Form`` to have a ``title`` parameter which will
+change the browser tab title
+
+If you do not provide a title then the page title will be the default
+title provided by Anvil in your titles and logos
+
+.. code:: python
+
+    @routing.route('home', title='Home | RoutingExample')
+    @routing.route('',     title='Home | RoutingExample')
+    class Home(HomeTemplate):
+        ...
+
+.. code:: python
+
+    @routing.route('article', url_keys=['id'], title="Article-{id} | RoutingExample")
+    class ArticleForm(ArticleFormTemplate):
+        ...
+
+.. code:: python
+
+    @routing.route('article', url_keys=['id'], title="Article-{id} | RoutingExample")
+    class ArticleForm(ArticleFormTemplate):
+        ...
+
+.. code:: python
+
+    @routing.route('article/{id}', title='Article | {id}')
+    class ArticleForm(ArticleFormTemplate):
+        ...
+
+
+-  Think ``f strings`` without the f
+-  Anything in curly braces should be an item from ``url_keys`` or a variable in the ``url_pattern``.
+
+You can also dynamically set the page title,
+for example, to values loaded from the database.
+
+.. code:: python
+
+    from anvil.js.window import document
+
+    @routing.route('article', url_keys=['id'])
+    class ArticleForm(ArticleFormTemplate):
+      def __init__(self, **properties):
+        self.item = anvil.server.call('get_article', article_id=self.url_dict['id'])
+        document.title = f"{self.item['title']} | RoutingExample'"
+
+        self.init_components(**properties)
+
+
+
+Full Width Rows
+***************
+
+You can set a ``Route Form`` to load as a ``full_width_row`` by setting
+the ``full_width_row`` parameter to ``True``.
+
+.. code:: python
+
+    @routing.route('home', title='Home', full_width_row=True)
+    class Home(HomeTemplate):
+        ...
+
+
+Multiple Route Decorators
+*************************
+
+It is possible to define optional parameters by adding multiple
+decorators, e.g. one with and one without the key. Here is an example
+that allows to use the ``home page`` with the default empty string and
+with one optional ``search`` parameter:
+
+.. code:: python
+
+    @routing.route('')
+    @routing.route('', url_keys=['search'])
+    class Form1(Form1Template):
+      def __init__(self, **properties):
+        self.init_components(**properties)
+        self.search_terms.text = self.url_dict.get('search', '')
+
+Perhaps your form displays a different ``item`` depending on the
+``url_pattern``/``url_hash``:
+
+.. code:: python
+
+    @routing.route('articles')
+    @routing.route('blogposts')
+    class ListItems(ListItemsTemplate):
+      def __init__(self, **properties):
+        self.init_components(**properties)
+        self.item = anvil.server.call(f'get_{self.url_pattern}')  # self.url_pattern is provided by the routing module
+
+
+Form Arguments
+**************
+
+It's usually better to avoid required named arguments for a Form.
+Something like this is not allowed:
+
+.. code:: python
+
+    @routing.route('form1', url_keys=['key1'])
+    class Form1(Form1Template):
+      def __init__(self, key1, **properties):
+
+All the parameters listed in ``url_keys`` are required, and the rule is
+enforced by the routing module. If the ``Route Form`` has required
+``url_keys`` then the routing module will provide a ``url_dict`` with
+the parameters from the ``url_hash``.
+
+This is the correct way:
+
+.. code:: python
+
+    @routing.route('form1', url_keys=['key1'])
+    class Form1(Form1Template):
+      def __init__(self, **properties):
+        key1 = self.url_dict['key1']  #routing provides self.url_dict
+
+
 
 
 Changing The Main Form
@@ -408,73 +578,7 @@ the same set of sidebar links.
         Manager.setup_sidelinks('home')
         Manager.set_title('Home')
 
---------------
 
-Dynamic Urls
-************
-
-I am grateful to @starwort who added a dynamic url feature and can be
-used as follows
-
-.. code:: python
-
-    from HashRouting import routing
-
-    @routing.route('article/{id}')
-    class ArticleForm(ArticleFormTemplate):
-
-You can then check the ``id`` using:
-
-.. code:: python
-
-        print(self.dynamic_vars) # {'id': 3}
-        print(self.dynamic_vars['id']) # 3
-
-`Page Titles <#page-titles>`__ should work the same way with
-``dynamic_vars`` as they do with the ``url_dict``
-
-.. code:: python
-
-    from HashRouting import routing
-
-    @routing.route('article/{id}', title='Article | {id}')
-    class ArticleForm(ArticleFormTemplate):
-
-
---------------
-
-Notes and Examples
-------------------
-
-The following represents some notes and examples that might be helpful
-
-Form Arguments
-**************
-
-``Form`` ``__init__`` methods cannot have required named arguments.
-Something like this is not allowed:
-
-.. code:: python
-
-    @routing.route('form1', url_keys=['key1'])
-    class Form1(Form1Template):
-      def __init__(self, key1, **properties):
-
-All the parameters listed in ``url_keys`` are required, and the rule is
-enforced by the routing module. If the ``Route Form`` has required
-``url_keys`` then the routing module will provide a ``url_dict`` with
-the parameters from the ``url_hash``.
-
-This is the correct way:
-
-.. code:: python
-
-    @routing.route('form1', url_keys=['key1'])
-    class Form1(Form1Template):
-      def __init__(self, **properties):
-        key1 = self.url_dict['key1']  #routing provides self.url_dict
-
---------------
 
 Security
 ********
@@ -492,36 +596,6 @@ logging out.
 
 --------------
 
-Multiple Route Decorators
-*************************
-
-It is possible to define optional parameters by adding multiple
-decorators, e.g. one with and one without the key. Here is an example
-that allows to use the ``home page`` with the default empty string and
-with one optional ``search`` parameter:
-
-.. code:: python
-
-    @routing.route('')
-    @routing.route('', url_keys=['search'])
-    class Form1(Form1Template):
-      def __init__(self, **properties):
-        self.init_components(**properties)
-        self.search_terms.text = self.url_dict.get('search', '')
-
-Perhaps your form displays a different ``item`` depending on the
-``url_pattern``/``url_hash``:
-
-.. code:: python
-
-    @routing.route('articles')
-    @routing.route('blogposts')
-    class ListItems(ListItemsTemplate):
-      def __init__(self, **properties):
-        self.init_components(**properties)
-        self.item = anvil.server.call(f'get_{self.url_pattern}')  # self.url_pattern is provided by the routing module
-
---------------
 
 Navigation Techniques
 *********************
@@ -607,60 +681,6 @@ in the ``routing.set_url_hash`` method, default kwargs are as follows:
 
 --------------
 
-Page Titles
-***********
-
-You can set each ``Route Form`` to have a ``title`` parameter which will
-change the page title
-
-If you do not provide a title then the page title will be the default
-title provided by Anvil in your titles and logos
-
-**Examples**:
-
-.. code:: python
-
-    @routing.route('home', title='Home | RoutingExample')
-    @routing.route('',     title='Home | RoutingExample')
-    class Home(HomeTemplate):
-
-.. code:: python
-
-    @routing.route('article', url_keys=['id'], title="Article-{id} | RoutingExample")
-    class ArticleForm(ArticleFormTemplate):
-
--  Think ``f strings`` without the f
--  Anything in curly braces should be an item from ``url_keys``
-
-You can also dynamically set the page title, for example, to values
-loaded from the database.
-
-.. code:: python
-
-    from anvil.js.window import document
-
-    @routing.route('article', url_keys=['id'])
-    class ArticleForm(ArticleFormTemplate):
-      def __init__(self, **properties):
-        self.item = anvil.server.call('get_article', article_id=self.url_dict['id'])
-        document.title = f"{self.item['title']} | RoutingExample'"
-
-        self.init_components(**properties)
-
---------------
-
-Full Width Rows
-***************
-
-You can set a ``Route Form`` to load as a ``full_width_row`` by setting
-the ``full_width_row`` parameter to ``True``.
-
-.. code:: python
-
-    @routing.route('home', title='Home', full_width_row=True)
-    class Home(HomeTemplate):
-
---------------
 
 Main Router Callbacks
 *********************
@@ -821,15 +841,14 @@ instead do
 
     routing.set_url_hash(url_pattern='customer', url_dict={'name':'A&B'})
 
-HashRouting will encode this correctly
+anvil_extras will encode this correctly
 
 --------------
 
 I have a login form how do I work that?
 ***************************************
 
-As part of ``HashRouting`` navigation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As part of ``anvil_extras`` navigation
 
 .. code:: python
 
@@ -871,12 +890,11 @@ Then for the ``LoginForm``
                              )
         # '' replaces 'login' in the history stack and redirects to the HomeForm
 
-Separate from ``HashRouting`` navigation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Separate from ``anvil_extras`` navigation
 
 Rather than have the ``LoginForm`` be part of the navigation, you could
 create a ``LoginForm`` as a startup form without using any
-``HashRouting`` decorators.
+``anvil_extras`` decorators.
 
 Then when the user has signed in you can call ``open_form('MainForm')``.
 The ``main_router`` will then take control of the ``url_hash`` based
@@ -889,7 +907,7 @@ the ``url_hash`` will change but there will be no change in forms...)
 :smile:
 
 (You will need to add an on\_navigation method to the ``LoginForm``,
-which does nothing, to keep HashRouting happy)
+which does nothing, to keep anvil_extras happy)
 
 .. code:: python
 
@@ -1026,54 +1044,6 @@ updated and the ``form_show`` event is triggered.
 
 --------------
 
-A Note on ``load_form`` with Multiple Decorators
-************************************************
-
-.. code:: python
-
-    @routing.route('home')
-    @routing.route('')
-    class Home(HomeTemplate):
-
-``routing.load_form(Home)`` will raise a ``KeyError`` since it does not
-know which ``url_pattern`` to choose
-
-.. code:: python
-
-    raise KeyError("Home has multiple decorators - you must provide a url_pattern [and url_keys] with load_form()")
-
-Instead do: ``routing.load_form(Home, url_pattern='home')`` or
-``routing.load_form(Home, url_pattern='')``
-
---------------
-
-Routing Debug Print Statements
-******************************
-
-To debug your routing behaviour use the routing logger. Routing logs are
-turned off by default.
-
-To use the routing logger, in your ``MainForm`` do:
-
-.. code:: python
-
-    from HashRouting import routing
-
-    routing.logger.debug = True
-
-    @routing.main_router
-    class MainForm(MainFormTemplate):
-
-You can also show the entire log of routing print statements in the
-following way...
-
-.. code:: python
-
-    def button_1_click(self, **event_args):
-      alert(routing.show_log(), large=True)
-
---------------
-
 Leaving the app
 ***************
 
@@ -1092,7 +1062,7 @@ To implement this behaviour for all pages change the setting in your
 
 .. code:: python
 
-    from HashRouting import routing
+    from anvil_extras import routing
 
     routing.set_warning_before_app_unload(True)
 
