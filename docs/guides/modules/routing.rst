@@ -1,7 +1,7 @@
 Routing
 =======
 
-The routing module allows hash based navigation in an anvil app.
+The routing module allows hash based navigation in an Anvil app.
 
 +---------------------------------------+-------------------------------------------------------------------------------------------+
 | Live Example:                         | `hash-routing-example.anvil.app <https://hash-routing-example.anvil.app/>`__              |
@@ -20,17 +20,17 @@ The part following the `#`, is never sent to the server, and used only by the br
 The routing module takes advantage of the URL hash and allows unique URLs to be defined for forms within an app.
 Here are a few examples of URL hashes within an app and associated terminology.
 
-+------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
-| URL                                |     Description          | ``url_hash``         | ``url_pattern`` | ``url_dict``    | ``url_keys`` |
-+====================================+==========================+======================+=================+=================+==============+
-| ``blog.anvil.app/#``               | Show the app home page   | ``''``               | ``''``          | ``{}``          |  ``[]``      |
-+------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
-| ``blog.anvil.app/#blogposts``      | Show the blogs posts     | ``'blogposts'``      | ``'blogposts'`` | ``{}``          | ``[]``       |
-+------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
-| ``blog.anvil.app/#tags``           | Show the list of tags    | ``'tags'``           | ``'tags'``      | ``{}``          | ``[]``       |
-+------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
-| ``blog.anvil.app/#blogpost?id=10`` | Show the blog post by ID | ``'blogpost?id=10'`` | ``'blogpost'``  | ``{'id':'10'}`` | ``['id']``   |
-+------------------------------------+--------------------------+----------------------+-----------------+-----------------+--------------+
++--------------------------------+----------------------+-----------------+-----------------+--------------+-----------------+
+| URL                            | ``url_hash``         | ``url_pattern`` | ``url_dict``    | ``url_keys`` | ``dynamic_vars``|
++================================+======================+=================+=================+==============+=================+
+| ``blog.anvil.app/#``           | ``''``               | ``''``          | ``{}``          |  ``[]``      | ``{}``          |
++--------------------------------+----------------------+-----------------+-----------------+--------------+-----------------+
+| ``blog.anvil.app/#blog``       | ``'blog'``           | ``'blog'``      | ``{}``          | ``[]``       | ``{}``          |
++--------------------------------+----------------------+-----------------+-----------------+--------------+-----------------+
+| ``blog.anvil.app/#blog?id=10`` | ``'blog?id=10'``     | ``'blog'``      | ``{'id':'10'}`` | ``['id']``   | ``{}``          |
++--------------------------------+----------------------+-----------------+-----------------+--------------+-----------------+
+| ``blog.anvil.app/#blog/10``    | ``'blog/10'``        | ``'blog/{id}'`` | ``{}``          | ``[]``       | ``{'id': 10}``  |
++--------------------------------+----------------------+-----------------+-----------------+--------------+-----------------+
 
 
 Main Form
@@ -40,9 +40,8 @@ This is either the startup form, or the form loaded from a startup module.
 It contains the header, the navigation bar and a ``content_panel``.
 It is based on the Material Design standard-page.html.
 
-The ``MainForm`` is **not** the ``HomeForm``. The ``MainForm`` has no
-content, only has navigation, header and infrastructure to show all the
-other forms.
+The ``MainForm`` is **not** the ``HomeForm``. The ``MainForm`` has **no
+content**. It only has a navigation bar, header, optional sidebar and a ``content_panel``.
 
 -  import the routing module
 -  import all the forms that may be added to the ``content_panel``
@@ -60,7 +59,6 @@ other forms.
     class Main(MainTemplate):
 
 
---------------
 
 Route Forms
 -----------
@@ -157,11 +155,12 @@ Instead
     # option 1
     set_url_hash('articles') # anvil's built in method
 
-    # or an empty string to navigate to home page
+    # or an empty string to navigate to the home page
     set_url_hash('')
 
     # option 2
-    routing.set_url_hash('articles') #routing's set_url_method has some bonus features...
+    routing.set_url_hash('articles')
+    #routing.set_url_method() has some bonus features.
 
 
 With query string parameters:
@@ -178,9 +177,10 @@ With query string parameters:
     routing.set_url_hash(url_pattern='article', url_dict={'id':self.item['id']})
 
 
-``routing.set_url_hash`` - has some additional kwargs that can be passed - some examples below.
+``routing.set_url_hash()`` - has some additional features.
+See API docs and Examples.
 
---------------
+
 
 Dynamic Vars
 ------------
@@ -203,6 +203,9 @@ You can then check the ``id`` using:
         print(self.dynamic_vars) # {'id': 3}
         print(self.dynamic_vars['id']) # 3
 
+Multiple dynanamic variables are supported e.g. ``foo/{var_name_1}/{var_name_2}``.
+A dynamic varaible must be the entire contained within a ``/`` portion of the ``url_pattern``,
+e.g. ``foo/article-{id}`` is not valid.
 
 --------------
 
@@ -211,7 +214,7 @@ API
 ---
 
 Decorators
-**********
+^^^^^^^^^^
 .. attribute:: routing.main_router
 
     Apply this decorator above the top level Form - ``MainForm``.
@@ -269,7 +272,7 @@ Decorators
 
 
 List of Methods
-***************
+^^^^^^^^^^^^^^^
 
 .. function:: routing.set_url_hash(url_hash)
               routing.set_url_hash(url_hash, **properties)
@@ -376,7 +379,7 @@ The following represents some notes and examples that might be helpful
 
 
 Routing Debug Print Statements
-******************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To debug your routing behaviour use the routing logger.
 Routing logs are turned off by default.
@@ -395,9 +398,9 @@ To use the routing logger, in your ``MainForm`` do:
 
 
 Page Titles
-***********
+^^^^^^^^^^^
 
-You can set each ``Route Form`` to have a ``title`` parameter which will
+You can set each ``Route Form`` to have a ``title`` parameter, which will
 change the browser tab title
 
 If you do not provide a title then the page title will be the default
@@ -405,15 +408,8 @@ title provided by Anvil in your titles and logos
 
 .. code:: python
 
-    @routing.route('home', title='Home | RoutingExample')
-    @routing.route('',     title='Home | RoutingExample')
+    @routing.route('', title='Home | RoutingExample')
     class Home(HomeTemplate):
-        ...
-
-.. code:: python
-
-    @routing.route('article', url_keys=['id'], title="Article-{id} | RoutingExample")
-    class ArticleForm(ArticleFormTemplate):
         ...
 
 .. code:: python
@@ -429,8 +425,8 @@ title provided by Anvil in your titles and logos
         ...
 
 
--  Think ``f strings`` without the f
--  Anything in curly braces should be an item from ``url_keys`` or a variable in the ``url_pattern``.
+-  Think f-strings without the f
+-  Anything in curly braces should be an item from ``url_keys`` or a dynamic variable in the ``url_pattern``.
 
 You can also dynamically set the page title,
 for example, to values loaded from the database.
@@ -450,20 +446,20 @@ for example, to values loaded from the database.
 
 
 Full Width Rows
-***************
+^^^^^^^^^^^^^^^
 
 You can set a ``Route Form`` to load as a ``full_width_row`` by setting
 the ``full_width_row`` parameter to ``True``.
 
 .. code:: python
 
-    @routing.route('home', title='Home', full_width_row=True)
+    @routing.route('', title='Home', full_width_row=True)
     class Home(HomeTemplate):
         ...
 
 
 Multiple Route Decorators
-*************************
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible to define optional parameters by adding multiple
 decorators, e.g. one with and one without the key. Here is an example
@@ -480,7 +476,7 @@ with one optional ``search`` parameter:
         self.search_terms.text = self.url_dict.get('search', '')
 
 Perhaps your form displays a different ``item`` depending on the
-``url_pattern``/``url_hash``:
+``url_pattern``/ ``url_hash``:
 
 .. code:: python
 
@@ -489,11 +485,12 @@ Perhaps your form displays a different ``item`` depending on the
     class ListItems(ListItemsTemplate):
       def __init__(self, **properties):
         self.init_components(**properties)
-        self.item = anvil.server.call(f'get_{self.url_pattern}')  # self.url_pattern is provided by the routing module
+        self.item = anvil.server.call(f'get_{self.url_pattern}')
+        # self.url_pattern is provided by the routing module
 
 
 Form Arguments
-**************
+^^^^^^^^^^^^^^
 
 It's usually better to avoid required named arguments for a Form.
 Something like this is not allowed:
@@ -503,6 +500,7 @@ Something like this is not allowed:
     @routing.route('form1', url_keys=['key1'])
     class Form1(Form1Template):
       def __init__(self, key1, **properties):
+        ...
 
 All the parameters listed in ``url_keys`` are required, and the rule is
 enforced by the routing module. If the ``Route Form`` has required
@@ -516,200 +514,35 @@ This is the correct way:
     @routing.route('form1', url_keys=['key1'])
     class Form1(Form1Template):
       def __init__(self, **properties):
-        key1 = self.url_dict['key1']  #routing provides self.url_dict
+        key1 = self.url_dict['key1']
+        #routing provides self.url_dict
 
-
-
-
-Changing The Main Form
-**********************
-
-In a more complex app, it's common that you want the main form's sidebar
-links and/or title to change based on the current page being shown.
-
-There are many ways of doing this with the routing library. This will
-show one basic approach that can be customized to suit your needs.
-
-Create a client module to manage the main form changes. In this example,
-the module is called Manager and contains functions for changing sidebar
-links and the title. This code depends on the main form having a column
-panel called column\_panel\_1 for the sidebar links, and a label called
-title for the title.
-
-.. code:: python
-
-    import anvil
-    from anvil_extras import routing
-
-    _sidelinks = {
-      'home': [{'text': 'About', 'url': 'about'}, {'text': 'News', 'url': 'news'}],
-      'news': [{'text': 'Last Month', 'url': 'last-month'}, {'text': 'Home', 'url': ''}]
-    }
-
-    def setup_sidelinks(id):
-      if id in _sidelinks:
-        links_panel = anvil.get_open_form().column_panel_1
-
-        if links_panel.tag.current != id:
-          links_panel.tag.current = id
-          links_panel.clear()
-
-          for link in _sidelinks[id]:
-            sidelink = anvil.Link(text=link['text'])
-            sidelink.tag.url_hash = link['url']
-            sidelink.set_event_handler('click', _handle_click)
-            links_panel.add_component(sidelink)
-
-    def _handle_click(sender, **event_args):
-      routing.set_url_hash(sender.tag.url_hash)
-
-    def set_title(title):
-      anvil.get_open_form().title.text = title
-
-Then, in every form that is a routing target, you need to tell the
-manager what sidebar links and title to display. Multiple forms can use
-the same set of sidebar links.
-
-.. code:: python
-
-      def form_show(self, **event_args):
-        # We setup the side navigation links in form show, so that when the form is navigated
-        # away from and back again we can setup the links again.
-        Manager.setup_sidelinks('home')
-        Manager.set_title('Home')
-
-
-
-Security
-********
-
-**Security issue**: You log in, open a form with some data, go to the
-next form, log out, go back 3 steps and you see the cached stuff that
-was there when you were logged in.
-
-**Solution 1**: When a form shows sensitive data it should always check
-for user permission in the ``form_show`` event, which is triggered when
-a cached form is shown.
-
-**Solution 2**: Call ``routing.clear_cache()`` to remove the cache upon
-logging out.
-
---------------
-
-
-Navigation Techniques
-*********************
-
-``redirect=False``
-~~~~~~~~~~~~~~~~~~
-
-It is possible to set a new url without navigating away from the current
-form. For example a form could have this code:
-
-.. code:: python
-
-    def search_click(self, **event_args):
-      if self.search_terms.text:
-        routing.set_url_hash(f'?search={self.search_terms.text}',
-                              redirect=False
-                              )
-      else:
-        routing.set_url_hash('',
-                              redirect=False,
-                              )
-      self.search(self.search_terms.text)
-
-This way search parameters are added to the history stack so that the
-user can navigate back and forward but routing does not attempt to
-navigate to a new form instance.
-
-**IMPORTANT**
-
-If you do ``routing.set_url_hash`` inside the ``__init__`` method or
-``form_show`` event, be careful, you may cause an infinite loop if your
-``url_hash`` points to the same form and ``redirect=True``! In this
-case, you will get a ``warning`` from the ``routing.logger`` and
-navigation/redirection will be halted.
-
-Navigation will be halted: \* after 5 navigation attempts without
-loading a form to ``content_panel``
-
-``replace_current_url=True``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It is also possible to replace the current url in the history stack
-rather than creating a new entry in the history stack.
-
-In the ``ArticleForm`` example perhaps we want to create a new article
-if the ``id`` parameter is empty like: ``url_hash = "article?id="``
-
-.. code:: python
-
-    @routing.route('article', url_keys=['id'])
-    class ArticleForm(ArticleFormTemplate):
-      def __init__(self, **properties):
-        # Set Form properties and Data Bindings.
-        self.init_components(**properties)
-        # Any code you write here will run when the form opens.
-        if url_dict['id']:
-          self.item = anvil.server.call("get_article_by_id",self.url_dict['id'])
-        else:
-          # url_dict['id'] is empty
-          self.item = anvil.server.call('create_new_article')
-          routing.set_url_hash(f"article?id={self.item['id']",
-                                replace_current_url=True,
-                                set_in_history=True,
-                                redirect=False
-                              )
-
-
-in the ``routing.set_url_hash`` method, default kwargs are as follows:
-
-.. code:: python
-
-    """
-    replace_current_url = False # Set to True if you want the url change to happen 'in place' rather than as a new history item
-    set_in_history      = True  # Set to False if you don't want the new Url in the browser history
-    redirect            = True  # Set to False if you don't wish to navigate away from current Form
-    load_from_cache     = True  # Set to False if you want the new URL to NOT load from cache
-    """
-
--  ``routing.load_form`` optional ``kwargs`` are the same, except for
-   ``redirect`` which is not available.
--  don't worry about calling ``set_url_hash`` to the current hash in the
-   window address bar - nothing will happen.
-
---------------
 
 
 Main Router Callbacks
-*********************
+^^^^^^^^^^^^^^^^^^^^^
 
-There are two call backs available for a ``MainForm``.
+There are two callbacks available for a ``MainForm``.
 
 -  ``on_navigation``: called whenever the ``url_hash`` changes
--  ``on_form_load``: called after a form is loaded into the content
-   panel
+-  ``on_form_load``: called after a form is loaded into the ``content_panel``
+
 
 ``on_navigation`` example:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To use the Material Design role ``'selected'`` for navigation, create an
-``on_navigation`` method in your ``MainForm``.
+To use the Material Design role ``'selected'`` for sidebar links,
+create an ``on_navigation`` method in your ``MainForm``.
 
 .. code:: python
 
     @routing.main_router
     class MainForm(MainFormTemplate):
       def __init__(self, **properties):
-        # Set Form properties and Data Bindings.
         self.init_components(**properties)
-        # Any code you write here will run when the form opens.
-
         self.links = [self.articles_link, self.blog_posts_link]
         self.blog_posts_link.tag.url_hash = 'blog-posts'
         self.articles_link.tag.url_hash   = 'articles'
-
 
       def on_navigation(self, **nav_args):
         # this method is called whenever routing provides navigation behaviour
@@ -739,35 +572,206 @@ If you want to use animation when a form is loaded you might use the
 .. code:: python
 
       def on_form_load(self, **nav_args):
-        # this method is called whenever the routing module has loaded a form into the content_panel
-        form = nav_args["form"]
-        animate(form, fade_in, duration=300)
+          # this method is called whenever the routing module has loaded a form into the content_panel
+          form = nav_args["form"]
+          animate(form, fade_in, duration=300)
 
-**Nav Args provided:**
-
-.. code:: python
-
-    nav_args = {'url_hash':    url_hash,
-                'url_pattern': url_pattern,
-                'url_dict':    url_dict,
-                'form': form # the form that was loaded
-                }
 
 Note if you wanted to use a fade out you could also use the
 ``on_navigation`` method.
 
 .. code:: python
 
-      def on_navigation_load(self, **nav_args):
-        # this method is called whenever the routing module has loaded a form into the content_panel
-        form = nav_args["unload_form"]
-        animate(form, fade_out, duration=300).wait() # wait for animation before continuing
+      def on_navigation(self, **nav_args):
+          # this method is called whenever the url_hash changes
+          form = nav_args["unload_form"]
+          animate(form, fade_out, duration=300).wait()
+          # wait for animation before continuing
+
+
+
+Navigation Techniques
+^^^^^^^^^^^^^^^^^^^^^
+
+``redirect=False``
+~~~~~~~~~~~~~~~~~~
+
+It is possible to set a new url without navigating away from the current
+form. For example a form could have this code:
+
+.. code:: python
+
+    def search_click(self, **event_args):
+      if self.search_terms.text:
+          routing.set_url_hash(f'?search={self.search_terms.text}',
+                               redirect=False
+                              )
+      else:
+          routing.set_url_hash('',
+                               redirect=False,
+                              )
+      self.search(self.search_terms.text)
+
+This way search parameters are added to the history stack so that the
+user can navigate back and forward but routing does not attempt to
+navigate to a new form instance.
+
+Important
+~~~~~~~~~
+
+Be careful if you use ``routing.set_url_hash`` inside the ``__init__`` method or
+``form_show`` event. You may cause an infinite loop if your
+``url_hash`` points to the same form and ``redirect=True``! In this
+case, you will get a ``warning`` from the ``routing.logger`` and
+navigation/redirection will be halted.
+
+Navigation will be halted after 5 navigation attempts without
+loading a form to the ``content_panel``.
+
+``replace_current_url=True``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is also possible to replace the current url in the history stack
+rather than creating a new entry in the history stack.
+
+In the demo app the ``ArticleForm`` creates a new article
+if the ``id`` parameter is empty like: ``url_hash = "article?id="``
+
+.. code:: python
+
+    @routing.route('article', url_keys=['id'])
+    class ArticleForm(ArticleFormTemplate):
+        def __init__(self, **properties):
+            self.init_components(**properties)
+            if url_dict['id']:
+                self.item = anvil.server.call("get_article_by_id",self.url_dict['id'])
+            else:
+                # url_dict['id'] is empty
+                self.item = anvil.server.call('create_new_article')
+                routing.set_url_hash(f"article?id={self.item['id']",
+                                     replace_current_url=True,
+                                     set_in_history=True,
+                                     redirect=False
+                                    )
+
+
+See API docs for a list of valid kwargs for ``routing.set_url_hash()``.
+
+
+Changing The Main Form
+^^^^^^^^^^^^^^^^^^^^^^
+
+In a more complex app, it's common to want to change the Main Form.
+At present, changing the Main Form is not supported (support may be added in a future release).
+
+Instead it is recommended to change the structure of the Main Form dynamically
+(sidebar, navbar and title) based on the ``url_hash``.
+
+Let's say you have an admin part of the app and a standard part of the app.
+All admin content starts with ``admin/``.
+
+Use the ``on_navigation`` callback to change the sidebar and title components.
+
+.. code:: python
+
+    def on_navigation(self, url_hash, **nav_args):
+        is_admin = url_hash.startswith("admin/")
+        if is_admin is not self.is_admin:
+            self.setup(admin=is_admin)
+
+    def setup(self, admin=False):
+        if admin:
+            self.sidebar = self.admin_sidebar_panel
+            self.title_label.text = "Admin"
+        else:
+            self.sidebar = self.main_sidebar_panel
+            self.title_label.text = "Main"
+        self.clear(slot="left-nav")
+        self.add_component(self.sidebar, slot="left-nav")
+        self.is_admin = admin
+
+
+An alternative might be to use the form_show event of various Route Forms.
+We can outsource managing the Main Form structure changes to a separate module.
+In this example, the module is called Manager and contains functions for changing sidebar
+links and the title. This code depends on the main form having a column
+panel called ``sidebar_panel`` for the sidebar links, and a label called
+title for the title.
+
+.. code:: python
+
+    import anvil
+    from anvil_extras import routing
+
+    def _handle_click(sender, **event_args):
+        routing.set_url_hash(sender.tag.url_hash)
+
+    def _make_link(text, url):
+        link = anvil.Link(text=text)
+        link.tag.url_hash = url
+        link.set_event_handler('click', _handle_click)
+        return link
+
+    _home_links = [{'text': 'About', 'url': 'about'}, {'text': 'News', 'url': 'news'}]
+    _news_links = [{'text': 'Last Month', 'url': 'last-month'}, {'text': 'Home', 'url': ''}]
+
+    _sidelinks = {
+        'home': [_make_link(**link_def) for link_def in _home_links)],
+        'news': [_make_link(**link_def) for link_def in _news_links)],
+    }
+
+    def setup_sidelinks(id):
+        if id not in _sidelinks:
+            return
+
+        sidebar_panel = anvil.get_open_form().sidebar_panel
+
+        if sidebar_panel.tag.current == id:
+            return
+
+        sidebar_panel.clear()
+        sidebar_panel.tag.current = id
+
+        for link in _sidelinks[id]:
+            links_panel.add_component(sidelink)
+
+
+    def set_title(title):
+        anvil.get_open_form().title.text = title
+
+
+Then, in every form that is a routing target,
+you tell the manager which sidebar links and title to display.
+Multiple forms can use the same set of sidebar links.
+
+.. code:: python
+
+    def form_show(self, **event_args):
+        # We setup the side navigation links in form show, so that when the form is navigated
+        # away from and back again we can setup the links again.
+        Manager.setup_sidelinks('home')
+        Manager.set_title('Home')
+
+
+Security
+^^^^^^^^
+
+**Security issue**: You log in, open a form with some data, go to the
+next form, log out, go back 3 steps and you see the cached stuff that
+was there when you were logged in.
+
+**Solution 1**: When a form shows sensitive data it should always check
+for user permission in the ``form_show`` event, which is triggered when
+a cached form is shown.
+
+**Solution 2**: Call ``routing.clear_cache()`` to remove the cache upon
+logging out.
 
 --------------
 
 
 Preventing a Form from Unloading (when navigating within the app)
-*****************************************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create a method in a ``Route Form`` called ``before_unload``
 
@@ -792,7 +796,7 @@ App <#leaving-the-app>`__ below)
 --------------
 
 Passing properties to a form
-****************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can pass properties to a form by adding them as keyword arguments
 with either ``routing.load_form`` or ``routing.set_url_hash``
@@ -812,7 +816,7 @@ with either ``routing.load_form`` or ``routing.set_url_hash``
 --------------
 
 Sometimes my Route Form is a Route Form sometimes it is a Component
-*******************************************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 No problem... use the parameter ``route=False`` to avoid typical routing
 behaviour
@@ -826,7 +830,7 @@ behaviour
 --------------
 
 My ``url_dict`` contains the & symbol
-*************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 let's say your ``url_dict`` is ``{'name': 'A & B'}`` doing the following
 will cause a problem
@@ -846,7 +850,7 @@ anvil_extras will encode this correctly
 --------------
 
 I have a login form how do I work that?
-***************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As part of ``anvil_extras`` navigation
 
@@ -917,7 +921,7 @@ which does nothing, to keep anvil_extras happy)
 --------------
 
 I have a page that is deleted - how do I remove it from the cache?
-******************************************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -947,7 +951,7 @@ And in the ``__init__`` method - you will want something like:
 --------------
 
 Form Show is important
-**********************
+^^^^^^^^^^^^^^^^^^^^^^
 
 since the forms are loaded from cache you may want to use the
 ``form_show`` events if there is a state change
@@ -1045,7 +1049,7 @@ updated and the ``form_show`` event is triggered.
 --------------
 
 Leaving the app
-***************
+^^^^^^^^^^^^^^^
 
 Routing implements `W3 Schools
 onbeforeunload <https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_onbeforeunload_dom>`__
