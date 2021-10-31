@@ -107,3 +107,23 @@ To use ``wait_for_writeback``, import the decorator and apply it to a function, 
 
 
 The click event will now only be called after all active writebacks have finished executing.
+
+
+Correct Canvas Resolution
+-------------------------
+
+Canvas elements can appear blurry on retina screens.
+This helper function ensures a canvas element appears sharp.
+It should be called inside the canvas ``reset`` event.
+
+.. code-block:: python
+
+   from anvil_extras.utils import correect_canvas_resolution
+
+   class MyForm(MyFormTemplate):
+        ...
+
+        def canvas_reset(self, **event_args):
+            c = self.canvas
+            correect_canvas_resolution(c)
+            ...
