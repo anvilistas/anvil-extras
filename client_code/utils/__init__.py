@@ -11,12 +11,18 @@ __version__ = "1.8.1"
 
 
 def __dir__():
-    return ["auto_refreshing", "wait_for_writeback", "timed", "BindingRefreshDict"]
+    return [
+        "auto_refreshing",
+        "wait_for_writeback",
+        "timed",
+        "BindingRefreshDict",
+        "correct_canvas_resolution",
+    ]
 
 
 @cache
 def __getattr__(name):
-    # todo use dynamic imports but __import__ is not yet supported in skult
+    # todo use dynamic imports but __import__ is not yet supported in skulpt
     if name == "auto_refreshing":
         from ._auto_refreshing import auto_refreshing
 
@@ -33,5 +39,9 @@ def __getattr__(name):
         from ._auto_refreshing import BindingRefreshDict
 
         return BindingRefreshDict
+    elif name == "correct_canvas_resolution":
+        from ._canvas_helpers import correct_canvas_resolution
+
+        return correct_canvas_resolution
     else:
         raise AttributeError(name)
