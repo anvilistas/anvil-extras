@@ -3,7 +3,7 @@
 ## New Features
 * Dynamic serialisation of data tables rows
   https://github.com/anvilistas/anvil-extras/pull/191
-* `util.correct_canvas_resolution()` - canvas elements can look blurry on retina displays
+* `utils.correct_canvas_resolution()` - canvas elements can look blurry on retina displays
   This function sharpens the resolution of a canvas element when called in the reset event
   https://github.com/anvilistas/anvil-extras/pull/202
 
