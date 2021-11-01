@@ -118,12 +118,12 @@ It should be called inside the canvas ``reset`` event.
 
 .. code-block:: python
 
-   from anvil_extras.utils import correect_canvas_resolution
+   from anvil_extras.utils import correct_canvas_resolution
 
    class MyForm(MyFormTemplate):
         ...
 
         def canvas_reset(self, **event_args):
             c = self.canvas
-            correect_canvas_resolution(c)
+            correct_canvas_resolution(c)
             ...
