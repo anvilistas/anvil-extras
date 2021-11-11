@@ -21,12 +21,16 @@ Properties
             "---",
             {"key": "item 3": "value": 3, "title": "3rd times a charm"},
         ]
-
+    
     The ``"key"`` property is what is displayed in the dropdown.
     The ``value`` property is what is returned from the ``selected_values``.
+    
     The remainder of the properties are optional.
+    
     ``"enabled"`` determines if the option is enabled or not - defaults to ``True``.
+    
     ``"title"`` determines what is displayed in the selected box - if not set it will use the value from ``"key"``.
+    
     ``"subtext"`` adds subtext to the dropdown display.
 
     To create a divider include ``"---"`` at the appropriate index.
