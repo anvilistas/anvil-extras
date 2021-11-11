@@ -230,18 +230,22 @@ def _add_transition_behaviour(component, popper_element, popper_id):
             _set_data(popper_element, "inTransition", None)
             popper_element.off("shown.bs.popover", f)
             resolve(None)
-            if component is None:
-                return
-            open_form = _anvil.get_open_form()
-            if open_form is not None and fake_container.parent is None:
-                open_form.add_component(fake_container)
-            if component.parent is None:
-                # we add the component to a Container component
-                # this doesn't really add it to the dom
-                # it just allows us to use anvil's underlying show hide architecture
-                fake_container.add_component(component)
 
         popper_element.on("shown.bs.popover", f)
+
+    def fire_show_event(e):
+        if component is None:
+            return
+        open_form = _anvil.get_open_form()
+        if open_form is not None and fake_container.parent is None:
+            open_form.add_component(fake_container)
+        if component.parent is None:
+            # we add the component to a Container component
+            # this doesn't really add it to the dom
+            # it just allows us to use anvil's underlying show hide architecture
+            fake_container.add_component(component)
+
+    popper_element.on("inserted.bs.popover", fire_show_event)
 
     def show_in_transition(e):
         _set_data(popper_element, "inTransition", _Promise(resolve_shown))
