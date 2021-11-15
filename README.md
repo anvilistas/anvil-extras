@@ -56,3 +56,16 @@ The maintainers of the project are:
 
 - [Owen Campbell](https://github.com/meatballs)
 - [Stu Cork](https://github.com/s-cork)
+
+Both [Owen](https://anvil.works/forum/u/owen.campbell) and [Stu](https://anvil.works/forum/u/stucork) can also be found via the [Anvil Users Forum](https://anvil.works/forum).
+
+## Credits
+
+Most of the effort to produce and maintain this library has come from the personal time
+of the contributors without any form of remuneration.
+
+However, some of the effort has been funded by the employers and/or paying clients of
+the contributors:
+
+- [Anvil](https://anvil.works)
+- [Osmosis Investment Management](https://osmosisim.com)
