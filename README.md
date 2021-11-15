@@ -25,6 +25,7 @@ Full instructions can be found in the [Docs](https://anvil-extras.readthedocs.io
 | Multi Select Dropdown | <img alt="multi select" src="images/multi_select.gif" width="300"/> | Quill Editor | <img alt="quill" src="images/quill.gif" width="300"/> |
 | Sliders | <img alt="sliders" src="images/sliders.gif" width="300"/> | Chips | <img alt="chips" src="images/chips.gif" width="300"/> |
 | Autocomplete | <img alt="auto complete" src="images/autocomplete.gif" width="300"/> | Pivot | <img alt="pivot" src="images/pivot.gif" width="300"/> |
+| Switch | <img alt="switch" src="images/switch.gif" width="300"/> ||
 
 
 <br>
