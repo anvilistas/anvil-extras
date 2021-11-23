@@ -119,7 +119,7 @@ def main_router(Cls):
                 url_hash, url_pattern, url_dict = get_url_components()
 
             logger.print(
-                f"on_navigation triggerd\nurl_hash    = {url_hash}"
+                f"on_navigation triggered\nurl_hash    = {url_hash}"
                 f"\nurl_pattern = {url_pattern}\nurl_dict    = {url_dict}"
             )
 
