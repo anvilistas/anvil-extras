@@ -7,20 +7,28 @@
 
 from anvil.tables import app_tables
 
-import marshmallow as mm
+from . import lazy_module_loader as lazy
 
 __version__ = "1.8.1"
 
-FIELD_TYPES = {
-    "bool": mm.fields.Boolean,
-    "date": mm.fields.Raw,
-    "datetime": mm.fields.Raw,
-    "number": mm.fields.Number,
-    "string": mm.fields.Str,
-    "simpleObject": mm.fields.Raw,
-    "media": mm.fields.Raw,
-}
 LINKED_COLUMN_TYPES = ("liveObject", "liveObjectArray")
+FIELD_TYPES = None
+
+
+def _get_field_types():
+    global FIELD_TYPES
+    if FIELD_TYPES is None:
+        mm = lazy.marshmallow
+        FIELD_TYPES = {
+            "bool": mm.fields.Boolean,
+            "date": mm.fields.Raw,
+            "datetime": mm.fields.Raw,
+            "number": mm.fields.Number,
+            "string": mm.fields.Str,
+            "simpleObject": mm.fields.Raw,
+            "media": mm.fields.Raw,
+        }
+    return FIELD_TYPES
 
 
 def _exclusions(table_name, ignore_columns):
@@ -86,10 +94,12 @@ def _basic_schema_definition(table_name, columns, ignore_columns, with_id):
     with_id : boolean
         whether the internal anvil id should be included in the serialised output
     """
+    mm = lazy.marshmallow
+    field_types = _get_field_types()
     exclusions = _exclusions(table_name, ignore_columns)
     try:
         result = {
-            column["name"]: FIELD_TYPES[column["type"]]()
+            column["name"]: field_types[column["type"]]()
             for column in columns[table_name]
             if column["type"] not in LINKED_COLUMN_TYPES
             and column["name"] not in exclusions
@@ -123,6 +133,7 @@ def _schema_definition(table_name, columns, ignore_columns, linked_tables, with_
     -------
     dict
     """
+    mm = lazy.marshmallow
     result = _basic_schema_definition(table_name, columns, ignore_columns, with_id)
     if table_name in linked_tables:
         link_columns = _link_columns(columns[table_name])
@@ -208,6 +219,7 @@ def datatable_schema(
     -------
     marshmallow.Schema
     """
+    mm = lazy.marshmallow
     if linked_tables is None:
         linked_tables = {}
     columns = _columns(table_name, linked_tables)
