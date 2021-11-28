@@ -515,13 +515,13 @@ def set_url_hash(
         url_hash, url_pattern=url_pattern, url_dict=url_dict
     )
 
-    if url_hash == get_url_hash() and url_hash in _cache and _current_form is not None:
-        return  # should not continue if url_hash is identical to the addressbar hash!
-        # but do continue if the url_hash is not in the cache i.e it was manually removed
-
     # remove from cache
     if not load_from_cache:
         remove_from_cache(url_hash)
+
+    if url_hash == get_url_hash() and url_hash in _cache and _current_form is not None:
+        return  # should not continue if url_hash is identical to the addressbar hash!
+        # but do continue if the url_hash is not in the cache i.e it was manually removed
 
     if set_in_history and not replace_current_url:
         logger.print(
