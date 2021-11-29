@@ -21,7 +21,8 @@
   https://github.com/anvilistas/anvil-extras/pull/187
 * popover `is_visible` bug when using `pop("toggle")`
   https://github.com/anvilistas/anvil-extras/pull/199
-
+* Using routing load_from_cache=False to reload the current form works correctly
+  https://github.com/anvilistas/anvil-extras/issues/243
 
 # v1.8.1 14-Oct-2021
 
