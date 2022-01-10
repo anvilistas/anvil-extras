@@ -60,7 +60,7 @@ Events
 ----------
 :tab_click:
 
-    When any tab is clicked. Inclues the paramters ``tab_index`` ``tab_title`` and ``tab_component`` as part of the ``event_args``
+    When any tab is clicked. Includes the parameters ``tab_index`` ``tab_title`` and ``tab_component`` as part of the ``event_args``
 
 :show:
 
