@@ -48,6 +48,7 @@ _defaults = {
     "enabled": True,
     "spacing_below": "small",
     "spacing_above": "small",
+    "enable_select_all": True,
 }
 
 
@@ -149,6 +150,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     placeholder = _component_property("placeholder", "title")
     enable_filtering = _component_property("enable_filtering", "data-live-search")
     enabled = _component_property("enabled", "disabled", lambda v: not v)
+    enable_select_all = _component_property("enable_select_all", "data-actions-box")
 
     @property
     def visible(self):
