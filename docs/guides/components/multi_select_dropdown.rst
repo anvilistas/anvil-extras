@@ -67,6 +67,10 @@ Properties
 
     get or set the current selected values.
 
+:enable_select_all: Boolean
+
+    Enable Select All and Deselect All buttons.
+
 
 Events
 ----------
