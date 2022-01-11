@@ -1,6 +1,7 @@
 # Unreleased
 
 ## New Features
+* Select All functionality added to MultiSelect component
 * Dynamic serialisation of data tables rows
   https://github.com/anvilistas/anvil-extras/pull/191
 * `utils.correct_canvas_resolution()` - canvas elements can look blurry on retina displays
