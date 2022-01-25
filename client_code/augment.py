@@ -63,6 +63,11 @@ def add_event_handler(component: _Component, event: str, func: _Callable) -> Non
     component.add_event_handler(event, func)
 
 
+def remove_event_handler(component: _Component, event: str, func: _Callable) -> None:
+    """equivalent to anvil's remove_event_handler"""
+    component.remove_event_handler(event, func)
+
+
 _trigger_writeback = _Function(
     "self",
     """
