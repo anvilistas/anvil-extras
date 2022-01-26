@@ -14,7 +14,7 @@ container:
     role: null, html: '<div class="pivot-placeholder"><div class="anvil-extras-pivot"></div></div>
       <script type="module">
 
-      import {DesignerPivot} from "https://deno.land/x/anvil_extras@dev-1.8.2/js/designer_components/bundle.min.js";
+      import {DesignerPivot} from "https://deno.land/x/anvil_extras@dev-1.8.2-a/js/designer_components/bundle.min.js";
 
       DesignerPivot.init();
 
