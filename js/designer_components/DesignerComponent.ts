@@ -5,6 +5,8 @@ interface Window {
     Sk: any;
 }
 
+const HASUNITS = /[a-zA-Z%]/g
+
 /**
  * To create a designer class that supports dynamically updating the design view
  * subclass from DesignerComponent
@@ -237,6 +239,11 @@ export class DesignerComponent {
             return color.slice(4, color.length - 1);
         }
         return color;
+    }
+
+    public getCssLength(len?: string) {
+        len ??= "";
+        return ("" + len).match(HASUNITS) ? len : len + "px";
     }
 
     /** helper method for clearing a domnode that will be reinstantiated during an update */
