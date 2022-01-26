@@ -21,7 +21,7 @@ export class DesignerComponent {
     static links: string[] = [];
 
     /** If using an external CDN to include a script tag override the script attribute */
-    static script: string[] = [];
+    static scripts: string[] = [];
     private static loaded = false;
     private static loading = false;
 
