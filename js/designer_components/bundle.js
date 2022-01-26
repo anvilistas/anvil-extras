@@ -153,7 +153,7 @@ var DesignerComponent = class {
 };
 DesignerComponent.css = "";
 DesignerComponent.links = [];
-DesignerComponent.script = [];
+DesignerComponent.scripts = [];
 DesignerComponent.loaded = false;
 DesignerComponent.loading = false;
 DesignerComponent.defaults = null;
