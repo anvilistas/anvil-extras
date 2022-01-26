@@ -19,30 +19,37 @@ _html_injector.cdn(
     f"https://cdn.jsdelivr.net/npm/nouislider@{noui_version}/dist/nouislider.min.css"
 )
 
+BAR_HEIGHT = "--slider-height"
+BACKGROUND = "--slider-background"
+HANDLE_SIZE = "--slider-handle-size"
+
 _html_injector.css(
-    """
-.anvil-slider-container {
+    f"""
+.anvil-slider-container {{
   padding: 10px 0;
-}
-.anvil-slider-container.has-pips {
+}}
+.anvil-slider-container.has-pips {{
   padding-bottom: 40px;
-}
-.anvil-container-overflow, .anvil-panel-col {
+}}
+.anvil-container-overflow, .anvil-panel-col {{
     overflow: visible;
-}
-.noUi-connect {
-  background: var(--primary);
-}
-.noUi-horizontal .noUi-handle {
-    width: 34px;
-    height: 34px;
-    right: -17px;
-    top: -10px;
+}}
+.noUi-connect {{
+  background: var({BACKGROUND});
+}}
+.noUi-horizontal {{
+    height: var({BAR_HEIGHT})
+}}
+.noUi-horizontal .noUi-handle {{
+    width: var({HANDLE_SIZE});
+    height: var({HANDLE_SIZE});
+    right: calc(var({HANDLE_SIZE}) / -2);
+    top: calc((-2px + var({BAR_HEIGHT}) - var({HANDLE_SIZE}))/2);
     border-radius: 50%;
-}
-.noUi-handle::before, .noUi-handle::after {
+}}
+.noUi-handle::before, .noUi-handle::after {{
     content: none
-}
+}}
 """
 )
 
@@ -239,6 +246,10 @@ _defaults = {
     "values": None,
     "formatted_value": None,
     "formatted_values": None,
+    "bar_height": None,
+    "handle_size": None,
+    "color": None,
+    "role": None,
 }
 
 
@@ -281,10 +292,19 @@ class Slider(SliderTemplate):
         self._slider.on("change", lambda a, h, *e: self.raise_event("change", handle=h))
 
         ###### PROPS TO INIT ######
-        always = {p: props[p] for p in ("color", "spacing_above", "spacing_below")}
+        always = {
+            p: props[p]
+            for p in (
+                "color",
+                "spacing_above",
+                "spacing_below",
+                "bar_height",
+                "handle_size",
+            )
+        }
         if_true = {
             p: props[p]
-            for p in ("formatted_value", "formatted_values", "value", "values")
+            for p in ("formatted_value", "formatted_values", "value", "values", "role")
             if props[p] is not None
         }
         if_false = {p: props[p] for p in ("enabled", "visible") if not props[p]}
@@ -358,6 +378,30 @@ class Slider(SliderTemplate):
 
     ###### VISUAL PROPS ######
     @property
+    def bar_height(self):
+        return self._props["bar_height"]
+
+    @bar_height.setter
+    def bar_height(self, value):
+        self._props["bar_height"] = value
+        value = value or 18
+        if isinstance(value, (int, float)) or value.isdigit():
+            value = f"{value}px"
+        self._dom_node.style.setProperty(BAR_HEIGHT, value)
+
+    @property
+    def handle_size(self):
+        return self._props["handle_size"]
+
+    @handle_size.setter
+    def handle_size(self, value):
+        self._props["handle_size"] = value
+        value = value or 34
+        if isinstance(value, (int, float)) or value.isdigit():
+            value = f"{value}px"
+        self._dom_node.style.setProperty(HANDLE_SIZE, value)
+
+    @property
     def enabled(self):
         return not self._slider_node.getAttribute("disabled")
 
@@ -375,11 +419,12 @@ class Slider(SliderTemplate):
     @color.setter
     def color(self, value):
         self._color = value
-        self._dom_node.style.setProperty("--primary", _get_color(value))
+        self._dom_node.style.setProperty(BACKGROUND, _get_color(value))
 
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
+    role = _HtmlPanel.role
 
     ###### METHODS ######
     def reset(self):
