@@ -128,7 +128,7 @@ In each designer component, you'll see code like
 ```html
       <script type="module">
 
-      import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-1.2.1/js/designer_components/bundle.min.js";
+      import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-1.8.2/js/designer_components/bundle.min.js";
 
       DesignerQuill.init();
 
