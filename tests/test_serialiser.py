@@ -65,7 +65,12 @@ def test_link_columns():
         {"name": "link2", "type": "liveObject"},
         {"name": "multilink", "type": "liveObjectArray"},
     ]
-    expected = {"liveObject": {"link1", "link2"}, "liveObjectArray": {"multilink"}}
+    expected = {
+        "liveObject": {"link1", "link2"},
+        "liveObjectArray": {"multilink"},
+        "link_multiple": set(),
+        "link_single": set(),
+    }
     result = serialisation._link_columns(test_columns)
     assert result == expected
 
