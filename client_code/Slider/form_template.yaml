@@ -91,7 +91,6 @@ properties:
 - {name: handle_size, type: string, default_value: '', default_binding_prop: false,
   description: Set the size of the handle - the default size is 34, group: appearance,
   important: false}
-- {name: handle_color, type: color, default_value: null, group: appearance, important: false}
 - {name: role, type: string, default_value: '', default_binding_prop: false, group: appearance}
 is_package: true
 events:
