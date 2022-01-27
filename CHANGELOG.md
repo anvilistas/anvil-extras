@@ -1,4 +1,4 @@
-# Unreleased
+# v1.9.0 27-Jan-2022
 
 ## New Features
 * Select All functionality added to MultiSelect component
