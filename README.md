@@ -42,7 +42,7 @@ Full instructions can be found in the [Docs](https://anvil-extras.readthedocs.io
 - [Augmented Events](https://anvil-extras.readthedocs.io/en/latest/guides/modules/augmentation.html)
 - [Popovers ](https://anvil-extras.readthedocs.io/en/latest/guides/modules/popover.html)
 - [Client and server side logging/timing ](https://anvil_extras.readthedocs.io/en/latest/guides/modules/utils.html)
-
+- [Dynamic serialisation of data table rows](https://anvil-extras.readthedocs.io/en/latest/guides/modules/serialisation.html)
 
 
 ## Contributing
