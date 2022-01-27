@@ -47,7 +47,6 @@ _html_injector.css(
     height: var({HANDLE_SIZE});
     right: calc(var({HANDLE_SIZE}) / -2);
     top: calc((-2px + var({BAR_HEIGHT}) - var({HANDLE_SIZE}))/2);
-    background: var({HANDLE_COLOR});
     border-radius: 50%;
 }}
 .noUi-handle::before, .noUi-handle::after {{
@@ -270,7 +269,6 @@ _defaults = {
     "formatted_values": None,
     "bar_height": None,
     "handle_size": None,
-    "handle_color": None,
     "color": None,
     "role": None,
 }
@@ -415,7 +413,6 @@ class Slider(SliderTemplate):
     bar_height = _css_length_prop("bar_height", BAR_HEIGHT, 18)
     handle_size = _css_length_prop("handle_size", HANDLE_SIZE, 34)
     color = _color_prop("color", BAR_COLOR)
-    handle_color = _color_prop("handle_color", HANDLE_COLOR, "#fff")
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible

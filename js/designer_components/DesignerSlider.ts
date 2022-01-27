@@ -17,7 +17,6 @@ interface Formatter {
 const BAR_COLOR = "--slider-bar-color";
 const BAR_HEIGHT = "--slider-height";
 const HANDLE_SIZE = "--slider-handle-size";
-const HANDLE_COLOR = "--slider-handle-color";
 export class DesignerSlider extends DesignerComponent {
     static defaults = {
         start: [20, 80],
@@ -32,7 +31,7 @@ export class DesignerSlider extends DesignerComponent {
     static css = `.anvil-slider-container{padding:10px 0}.anvil-slider-container.has-pips{padding-bottom:40px}
     .anvil-container-overflow,.anvil-panel-col{overflow:visible}.noUi-connect{background:var(${BAR_COLOR})}
     .noUi-horizontal{height:var(${BAR_HEIGHT})}
-    .noUi-horizontal .noUi-handle{width:var(${HANDLE_SIZE});height:var(${HANDLE_SIZE});right:calc(var(${HANDLE_SIZE}) / -2);top:calc((-2px + var(${BAR_HEIGHT}) - var(${HANDLE_SIZE}))/2);background: var(${HANDLE_COLOR});border-radius:50%}
+    .noUi-horizontal .noUi-handle{width:var(${HANDLE_SIZE});height:var(${HANDLE_SIZE});right:calc(var(${HANDLE_SIZE}) / -2);top:calc((-2px + var(${BAR_HEIGHT}) - var(${HANDLE_SIZE}))/2);border-radius:50%}
     .noUi-handle::after,.noUi-handle::before{content:none}`;
     static init() {
         super.init(".anvil-slider", "anvil-slider-container");
@@ -126,7 +125,6 @@ export class DesignerSlider extends DesignerComponent {
                 this.slider.removeChild(this.slider.firstElementChild);
             }
             this.domNode.style.setProperty(BAR_COLOR, this.getColor(props.color, true));
-            this.domNode.style.setProperty(HANDLE_COLOR, this.getColor(props.handle_color, "#fff"));
             this.updateSpacing(props);
             this.updateVisible(props);
             this.updateRole(props);

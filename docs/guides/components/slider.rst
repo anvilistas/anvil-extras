@@ -116,6 +116,18 @@ Properties
 
     The color of the bars. Can be set to theme colors like ``'theme:Primary 500'`` or hex values ``'#2196F3'``.
 
+:color: str
+
+    The color of the bars. Can be set to theme colors like ``'theme:Primary 500'`` or hex values ``'#2196F3'``.
+
+:bar_height: str | int
+
+    The height of the bar. Can be a css length or an integer, which will be set to the pixel height. Defaults to 18.
+
+:handle_size: str
+
+    The size of the handle. Can be a css length or an integer, which will be the diameter of the handle. Defaults to 34.
+
 :enabled: bool
 
     Disable interactivity
