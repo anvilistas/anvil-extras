@@ -36,7 +36,7 @@ container:
 
       <script type="module">
 
-      import {DesignerChip} from "https://deno.land/x/anvil_extras@dev-1.2.1/js/designer_components/bundle.min.js";
+      import {DesignerChip} from "https://deno.land/x/anvil_extras@dev-1.8.2-c/js/designer_components/bundle.min.js";
 
       DesignerChip.init();
 

@@ -1,4 +1,5 @@
 // DesignerComponent.ts
+var HASUNITS = /[a-zA-Z%]/g;
 var DesignerComponent = class {
   constructor(domNode, pyComponent, el) {
     this.domNode = domNode;
@@ -137,6 +138,10 @@ var DesignerComponent = class {
     }
     return color;
   }
+  getCssLength(len) {
+    len ??= "";
+    return ("" + len).match(HASUNITS) ? len : len + "px";
+  }
   clearElement(el) {
     while (el.firstElementChild) {
       el.removeChild(el.firstElementChild);
@@ -148,7 +153,7 @@ var DesignerComponent = class {
 };
 DesignerComponent.css = "";
 DesignerComponent.links = [];
-DesignerComponent.script = [];
+DesignerComponent.scripts = [];
 DesignerComponent.loaded = false;
 DesignerComponent.loading = false;
 DesignerComponent.defaults = null;
@@ -241,6 +246,9 @@ DesignerQuill.links = ["//cdn.quilljs.com/1.3.6/quill.snow.css", "//cdn.quilljs.
 DesignerQuill.scripts = ["//cdn.quilljs.com/1.3.6/quill.min.js"];
 
 // DesignerSlider.ts
+var BAR_COLOR = "--slider-bar-color";
+var BAR_HEIGHT = "--slider-height";
+var HANDLE_SIZE = "--slider-handle-size";
 var DesignerSlider = class extends DesignerComponent {
   static init() {
     super.init(".anvil-slider", "anvil-slider-container");
@@ -325,9 +333,14 @@ var DesignerSlider = class extends DesignerComponent {
       if (this.slider.firstElementChild) {
         this.slider.removeChild(this.slider.firstElementChild);
       }
-      this.domNode.style.setProperty("--primary", this.getColor(props.color, true));
+      this.domNode.style.setProperty(BAR_COLOR, this.getColor(props.color, true));
       this.updateSpacing(props);
       this.updateVisible(props);
+      this.updateRole(props);
+      const barHeight = this.getCssLength(props.bar_height || 18);
+      const handleSize = this.getCssLength(props.handle_size || 34);
+      this.domNode.style.setProperty(BAR_HEIGHT, barHeight);
+      this.domNode.style.setProperty(HANDLE_SIZE, handleSize);
       props.enabled ? this.slider.removeAttribute("disabled") : this.slider.setAttribute("disabled", "");
       noUiSlider.create(this.slider, props);
     } catch (e) {
@@ -355,9 +368,11 @@ DesignerSlider.defaults = {
 };
 DesignerSlider.links = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.css"];
 DesignerSlider.scripts = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js"];
-DesignerSlider.css = `.anvil-container-overflow,.anvil-panel-col{overflow:visible}.anvil-slider-container{padding:10px 0;min-height:50px}
-.anvil-slider-container.has-pips{padding-bottom:40px}.noUi-connect{background:var(--primary)}
-.noUi-horizontal .noUi-handle{width:34px;height:34px;right:-17px;top:-10px;border-radius:50%}.noUi-handle::after,.noUi-handle::before{content:none}`;
+DesignerSlider.css = `.anvil-slider-container{padding:10px 0}.anvil-slider-container.has-pips{padding-bottom:40px}
+    .anvil-container-overflow,.anvil-panel-col{overflow:visible}.noUi-connect{background:var(${BAR_COLOR})}
+    .noUi-horizontal{height:var(${BAR_HEIGHT})}
+    .noUi-horizontal .noUi-handle{width:var(${HANDLE_SIZE});height:var(${HANDLE_SIZE});right:calc(var(${HANDLE_SIZE}) / -2);top:calc((-2px + var(${BAR_HEIGHT}) - var(${HANDLE_SIZE}))/2);border-radius:50%}
+    .noUi-handle::after,.noUi-handle::before{content:none}`;
 
 // DesignerSwitch.ts
 var DesignerSwitch = class extends DesignerComponent {

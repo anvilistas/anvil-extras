@@ -19,30 +19,38 @@ _html_injector.cdn(
     f"https://cdn.jsdelivr.net/npm/nouislider@{noui_version}/dist/nouislider.min.css"
 )
 
+BAR_HEIGHT = "--slider-height"
+BAR_COLOR = "--slider-bar_color"
+HANDLE_SIZE = "--slider-handle-size"
+
+
 _html_injector.css(
-    """
-.anvil-slider-container {
+    f"""
+.anvil-slider-container {{
   padding: 10px 0;
-}
-.anvil-slider-container.has-pips {
+}}
+.anvil-slider-container.has-pips {{
   padding-bottom: 40px;
-}
-.anvil-container-overflow, .anvil-panel-col {
+}}
+.anvil-container-overflow, .anvil-panel-col {{
     overflow: visible;
-}
-.noUi-connect {
-  background: var(--primary);
-}
-.noUi-horizontal .noUi-handle {
-    width: 34px;
-    height: 34px;
-    right: -17px;
-    top: -10px;
+}}
+.noUi-connect {{
+  background: var({BAR_COLOR});
+}}
+.noUi-horizontal {{
+    height: var({BAR_HEIGHT})
+}}
+.noUi-horizontal .noUi-handle {{
+    width: var({HANDLE_SIZE});
+    height: var({HANDLE_SIZE});
+    right: calc(var({HANDLE_SIZE}) / -2);
+    top: calc((-2px + var({BAR_HEIGHT}) - var({HANDLE_SIZE}))/2);
     border-radius: 50%;
-}
-.noUi-handle::before, .noUi-handle::after {
+}}
+.noUi-handle::before, .noUi-handle::after {{
     content: none
-}
+}}
 """
 )
 
@@ -190,6 +198,25 @@ def _slider_prop(prop, fset=None, fget=None):
     return property(_prop_getter(prop, fget), setter)
 
 
+def _color_prop(prop, var_name, default=None):
+    def setter(self, value):
+        self._props[prop] = value
+        self._dom_node.style.setProperty(var_name, _get_color(value or default))
+
+    return property(_prop_getter(prop), setter)
+
+
+def _css_length_prop(prop, var_name, default):
+    def setter(self, value):
+        self._props[prop] = value
+        value = value or default
+        if isinstance(value, (int, float)) or str(value).isdigit():
+            value = f"{value}px"
+        self._dom_node.style.setProperty(var_name, value)
+
+    return property(_prop_getter(prop), setter)
+
+
 def _min_max_prop(prop):
     def getter(self):
         return self._props["range"][prop]
@@ -239,6 +266,10 @@ _defaults = {
     "values": None,
     "formatted_value": None,
     "formatted_values": None,
+    "bar_height": None,
+    "handle_size": None,
+    "color": None,
+    "role": None,
 }
 
 
@@ -281,10 +312,19 @@ class Slider(SliderTemplate):
         self._slider.on("change", lambda a, h, *e: self.raise_event("change", handle=h))
 
         ###### PROPS TO INIT ######
-        always = {p: props[p] for p in ("color", "spacing_above", "spacing_below")}
+        always = {
+            p: props[p]
+            for p in (
+                "color",
+                "spacing_above",
+                "spacing_below",
+                "bar_height",
+                "handle_size",
+            )
+        }
         if_true = {
             p: props[p]
-            for p in ("formatted_value", "formatted_values", "value", "values")
+            for p in ("formatted_value", "formatted_values", "value", "values", "role")
             if props[p] is not None
         }
         if_false = {p: props[p] for p in ("enabled", "visible") if not props[p]}
@@ -357,6 +397,7 @@ class Slider(SliderTemplate):
             raise TypeError(f"pips should be a bool or a dict, got {type(pips)}")
 
     ###### VISUAL PROPS ######
+
     @property
     def enabled(self):
         return not self._slider_node.getAttribute("disabled")
@@ -368,18 +409,13 @@ class Slider(SliderTemplate):
         else:
             self._slider_node.setAttribute("disabled", True)
 
-    @property
-    def color(self):
-        return self._color
-
-    @color.setter
-    def color(self, value):
-        self._color = value
-        self._dom_node.style.setProperty("--primary", _get_color(value))
-
+    bar_height = _css_length_prop("bar_height", BAR_HEIGHT, 18)
+    handle_size = _css_length_prop("handle_size", HANDLE_SIZE, 34)
+    color = _color_prop("color", BAR_COLOR)
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
+    role = _HtmlPanel.role
 
     ###### METHODS ######
     def reset(self):

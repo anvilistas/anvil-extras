@@ -288,12 +288,13 @@ components:
     col_widths: {}
     grid_position: VGOMRT,ISPGIW
 - type: form:Slider
-  properties: {pips_mode: count, min: -5, tooltips: true, margin: null, pips_stepped: false,
-    pips: true, pips_values: '5', max: 5, padding: '', enabled: true, pips_density: -1,
-    limit: null, animate: false, visible: true, connect: lower, start: '0', behaviour: tap,
-    spacing_above: small, spacing_below: small, color: null, format: .1f, step: 1}
+  properties: {role: '', pips_mode: count, min: -5, tooltips: true, margin: null,
+    pips_stepped: false, pips: true, pips_values: '5', max: 5, padding: '', enabled: true,
+    pips_density: -1, limit: null, animate: false, visible: true, connect: lower,
+    start: '0', behaviour: tap, handle_size: '', spacing_above: small, spacing_below: small,
+    bar_height: '', color: null, format: .1f, step: 1}
   name: slider_agree
-  layout_properties: {grid_position: 'GJXJSN,BPVKWE'}
+  layout_properties: {grid_position: 'CVTVHB,QMZPRB'}
   event_bindings: {change: slider_agree_change}
   data_bindings:
   - {property: formatted_value, code: 'self.item[''agree'']', writeback: true}

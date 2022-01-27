@@ -14,6 +14,9 @@ interface Formatter {
     from: (value: string) => number | false;
 }
 
+const BAR_COLOR = "--slider-bar-color";
+const BAR_HEIGHT = "--slider-height";
+const HANDLE_SIZE = "--slider-handle-size";
 export class DesignerSlider extends DesignerComponent {
     static defaults = {
         start: [20, 80],
@@ -25,9 +28,11 @@ export class DesignerSlider extends DesignerComponent {
     };
     static links = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.css"];
     static scripts = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js"];
-    static css = `.anvil-container-overflow,.anvil-panel-col{overflow:visible}.anvil-slider-container{padding:10px 0;min-height:50px}
-.anvil-slider-container.has-pips{padding-bottom:40px}.noUi-connect{background:var(--primary)}
-.noUi-horizontal .noUi-handle{width:34px;height:34px;right:-17px;top:-10px;border-radius:50%}.noUi-handle::after,.noUi-handle::before{content:none}`;
+    static css = `.anvil-slider-container{padding:10px 0}.anvil-slider-container.has-pips{padding-bottom:40px}
+    .anvil-container-overflow,.anvil-panel-col{overflow:visible}.noUi-connect{background:var(${BAR_COLOR})}
+    .noUi-horizontal{height:var(${BAR_HEIGHT})}
+    .noUi-horizontal .noUi-handle{width:var(${HANDLE_SIZE});height:var(${HANDLE_SIZE});right:calc(var(${HANDLE_SIZE}) / -2);top:calc((-2px + var(${BAR_HEIGHT}) - var(${HANDLE_SIZE}))/2);border-radius:50%}
+    .noUi-handle::after,.noUi-handle::before{content:none}`;
     static init() {
         super.init(".anvil-slider", "anvil-slider-container");
     }
@@ -119,9 +124,14 @@ export class DesignerSlider extends DesignerComponent {
             if (this.slider.firstElementChild) {
                 this.slider.removeChild(this.slider.firstElementChild);
             }
-            this.domNode.style.setProperty("--primary", this.getColor(props.color, true));
+            this.domNode.style.setProperty(BAR_COLOR, this.getColor(props.color, true));
             this.updateSpacing(props);
             this.updateVisible(props);
+            this.updateRole(props);
+            const barHeight = this.getCssLength(props.bar_height || 18);
+            const handleSize = this.getCssLength(props.handle_size || 34);
+            this.domNode.style.setProperty(BAR_HEIGHT, barHeight);
+            this.domNode.style.setProperty(HANDLE_SIZE, handleSize);
             props.enabled ? this.slider.removeAttribute("disabled") : this.slider.setAttribute("disabled", "");
             noUiSlider.create(this.slider, props);
         } catch (e) {

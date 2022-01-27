@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/pull/202
 * `augment.remove_event_handler()` added to the augment module
   https://github.com/anvilistas/anvil-extras/pull/259
+* Slider - visual properties - `handle_size`, `bar_height`, and `role` added
+  https://github.com/anvilistas/anvil-extras/pull/261
 
 ## Updates:
 * storage supports `datetime` and `date` objects
