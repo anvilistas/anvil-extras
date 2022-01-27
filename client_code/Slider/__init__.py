@@ -22,7 +22,6 @@ _html_injector.cdn(
 BAR_HEIGHT = "--slider-height"
 BAR_COLOR = "--slider-bar_color"
 HANDLE_SIZE = "--slider-handle-size"
-HANDLE_COLOR = "--slider-handle-color"
 
 
 _html_injector.css(
