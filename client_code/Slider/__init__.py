@@ -20,8 +20,10 @@ _html_injector.cdn(
 )
 
 BAR_HEIGHT = "--slider-height"
-BACKGROUND = "--slider-background"
+BAR_COLOR = "--slider-bar_color"
 HANDLE_SIZE = "--slider-handle-size"
+HANDLE_COLOR = "--slider-handle-color"
+
 
 _html_injector.css(
     f"""
@@ -35,7 +37,7 @@ _html_injector.css(
     overflow: visible;
 }}
 .noUi-connect {{
-  background: var({BACKGROUND});
+  background: var({BAR_COLOR});
 }}
 .noUi-horizontal {{
     height: var({BAR_HEIGHT})
@@ -45,6 +47,7 @@ _html_injector.css(
     height: var({HANDLE_SIZE});
     right: calc(var({HANDLE_SIZE}) / -2);
     top: calc((-2px + var({BAR_HEIGHT}) - var({HANDLE_SIZE}))/2);
+    background: var({HANDLE_COLOR});
     border-radius: 50%;
 }}
 .noUi-handle::before, .noUi-handle::after {{
@@ -197,6 +200,25 @@ def _slider_prop(prop, fset=None, fget=None):
     return property(_prop_getter(prop, fget), setter)
 
 
+def _color_prop(prop, var_name, default=None):
+    def setter(self, value):
+        self._props[prop] = value
+        self._dom_node.style.setProperty(var_name, _get_color(value or default))
+
+    return property(_prop_getter(prop), setter)
+
+
+def _css_length_prop(prop, var_name, default):
+    def setter(self, value):
+        self._props[prop] = value
+        value = value or default
+        if isinstance(value, (int, float)) or str(value).isdigit():
+            value = f"{value}px"
+        self._dom_node.style.setProperty(var_name, value)
+
+    return property(_prop_getter(prop), setter)
+
+
 def _min_max_prop(prop):
     def getter(self):
         return self._props["range"][prop]
@@ -248,6 +270,7 @@ _defaults = {
     "formatted_values": None,
     "bar_height": None,
     "handle_size": None,
+    "handle_color": None,
     "color": None,
     "role": None,
 }
@@ -377,29 +400,6 @@ class Slider(SliderTemplate):
             raise TypeError(f"pips should be a bool or a dict, got {type(pips)}")
 
     ###### VISUAL PROPS ######
-    @property
-    def bar_height(self):
-        return self._props["bar_height"]
-
-    @bar_height.setter
-    def bar_height(self, value):
-        self._props["bar_height"] = value
-        value = value or 18
-        if isinstance(value, (int, float)) or value.isdigit():
-            value = f"{value}px"
-        self._dom_node.style.setProperty(BAR_HEIGHT, value)
-
-    @property
-    def handle_size(self):
-        return self._props["handle_size"]
-
-    @handle_size.setter
-    def handle_size(self, value):
-        self._props["handle_size"] = value
-        value = value or 34
-        if isinstance(value, (int, float)) or value.isdigit():
-            value = f"{value}px"
-        self._dom_node.style.setProperty(HANDLE_SIZE, value)
 
     @property
     def enabled(self):
@@ -412,15 +412,10 @@ class Slider(SliderTemplate):
         else:
             self._slider_node.setAttribute("disabled", True)
 
-    @property
-    def color(self):
-        return self._color
-
-    @color.setter
-    def color(self, value):
-        self._color = value
-        self._dom_node.style.setProperty(BACKGROUND, _get_color(value))
-
+    bar_height = _css_length_prop("bar_height", BAR_HEIGHT, 18)
+    handle_size = _css_length_prop("handle_size", HANDLE_SIZE, 34)
+    color = _color_prop("color", BAR_COLOR)
+    handle_color = _color_prop("handle_color", HANDLE_COLOR, "#fff")
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible

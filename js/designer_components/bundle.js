@@ -246,9 +246,10 @@ DesignerQuill.links = ["//cdn.quilljs.com/1.3.6/quill.snow.css", "//cdn.quilljs.
 DesignerQuill.scripts = ["//cdn.quilljs.com/1.3.6/quill.min.js"];
 
 // DesignerSlider.ts
-var BACKGROUND = "--slider-background";
+var BAR_COLOR = "--slider-bar-color";
 var BAR_HEIGHT = "--slider-height";
 var HANDLE_SIZE = "--slider-handle-size";
+var HANDLE_COLOR = "--slider-handle-color";
 var DesignerSlider = class extends DesignerComponent {
   static init() {
     super.init(".anvil-slider", "anvil-slider-container");
@@ -333,7 +334,8 @@ var DesignerSlider = class extends DesignerComponent {
       if (this.slider.firstElementChild) {
         this.slider.removeChild(this.slider.firstElementChild);
       }
-      this.domNode.style.setProperty(BACKGROUND, this.getColor(props.color, true));
+      this.domNode.style.setProperty(BAR_COLOR, this.getColor(props.color, true));
+      this.domNode.style.setProperty(HANDLE_COLOR, this.getColor(props.handle_color, "#fff"));
       this.updateSpacing(props);
       this.updateVisible(props);
       this.updateRole(props);
@@ -369,8 +371,9 @@ DesignerSlider.defaults = {
 DesignerSlider.links = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.css"];
 DesignerSlider.scripts = ["https://cdn.jsdelivr.net/npm/nouislider@15.4.0/dist/nouislider.js"];
 DesignerSlider.css = `.anvil-slider-container{padding:10px 0}.anvil-slider-container.has-pips{padding-bottom:40px}
-    .anvil-container-overflow,.anvil-panel-col{overflow:visible}.noUi-connect{background:var(${BACKGROUND})}
-    .noUi-horizontal{height:var(${BAR_HEIGHT})}.noUi-horizontal .noUi-handle{width:var(${HANDLE_SIZE});height:var(${HANDLE_SIZE});right:calc(var(${HANDLE_SIZE}) / -2);top:calc((-2px + var(${BAR_HEIGHT}) - var(${HANDLE_SIZE}))/2);border-radius:50%}
+    .anvil-container-overflow,.anvil-panel-col{overflow:visible}.noUi-connect{background:var(${BAR_COLOR})}
+    .noUi-horizontal{height:var(${BAR_HEIGHT})}
+    .noUi-horizontal .noUi-handle{width:var(${HANDLE_SIZE});height:var(${HANDLE_SIZE});right:calc(var(${HANDLE_SIZE}) / -2);top:calc((-2px + var(${BAR_HEIGHT}) - var(${HANDLE_SIZE}))/2);background: var(${HANDLE_COLOR});border-radius:50%}
     .noUi-handle::after,.noUi-handle::before{content:none}`;
 
 // DesignerSwitch.ts

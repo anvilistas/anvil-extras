@@ -38,7 +38,7 @@ container:
 
       <script type="module">
 
-      import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-1.8.2-a/js/designer_components/bundle.min.js";
+      import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-1.8.2-b/js/designer_components/bundle.min.js";
 
       DesignerQuill.init();
 
