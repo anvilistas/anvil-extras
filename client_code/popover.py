@@ -159,8 +159,8 @@ def dismiss_on_outside_click(dismiss=True):
 
 # this is the default behavior
 def dismiss_on_scroll(dismiss=True):
-    """hide popovers when a user clicks outside the popover
-    this is the default behavior
+    """hide popovers when a user scrolls. This is the default behavior
+    You should change the default container if you set this globally to False.
     """
     _window.removeEventListener("scroll", _hide_on_scroll, True)
     if dismiss:
