@@ -23,7 +23,14 @@ from anvil.js.window import jQuery as _S
 
 __version__ = "1.9.0"
 
-__all__ = ["popover", "pop", "dismiss_on_outside_click", "set_default_max_width"]
+__all__ = [
+    "popover",
+    "pop",
+    "dismiss_on_outside_click",
+    "dismiss_on_scroll",
+    "set_default_max_width",
+    "set_default_container",
+]
 
 
 def popover(
@@ -36,10 +43,12 @@ def popover(
     delay={"show": 100, "hide": 100},
     max_width=None,
     auto_dismiss=True,
+    dismiss_on_scroll=True,
+    container=None,
 ):
     """should be called by a button or link
     content - either text or an anvil component or Form
-    placement -  right, left, top, bottom (for left/right best to have links and buttons inside flow panels)
+    placement -  right, left, top, bottom, auto (for left/right best to have links and buttons inside flow panels)
     trigger - manual, focus, hover, click (can be a combination of two e.g. 'hover focus')
     animation - True or False
     delay - {'show': 100, 'hide': 100}
@@ -72,6 +81,7 @@ def popover(
 
     popper_id = _get_next_id()
     max_width = _default_max_width if max_width is None else max_width
+    container = _default_container if container is None else container
 
     _add_transition_behaviour(component, popper_element, popper_id)
 
@@ -90,11 +100,12 @@ def popover(
             "title": title,
             "placement": placement,
             "trigger": trigger,
+            "selector": f'[popover_id="{popper_id}"]',
             "animation": animation,
             "delay": delay,
             "html": html,
             "template": _template.format(popper_id, max_width),
-            "container": "body",
+            "container": container,
             "sanitize": False,
         }
     )
@@ -110,6 +121,7 @@ def popover(
         "ae.popover",
         {
             "autoDismiss": bool(auto_dismiss),
+            "autoScrollHide": bool(dismiss_on_scroll),
             "inTransition": None,
         },
     )
@@ -140,9 +152,19 @@ def dismiss_on_outside_click(dismiss=True):
     """hide popovers when a user clicks outside the popover
     this is the default behavior
     """
-    _document.body.removeEventListener("click", _hide_popovers_on_outside_click)
+    _document.body.removeEventListener("click", _hide_popovers_on_outside_click, True)
     if dismiss:
         _document.body.addEventListener("click", _hide_popovers_on_outside_click, True)
+
+
+# this is the default behavior
+def dismiss_on_scroll(dismiss=True):
+    """hide popovers when a user clicks outside the popover
+    this is the default behavior
+    """
+    _window.removeEventListener("scroll", _hide_on_scroll, True)
+    if dismiss:
+        _window.addEventListener("scroll", _hide_on_scroll, True)
 
 
 _default_max_width = ""
@@ -152,6 +174,17 @@ def set_default_max_width(width):
     """update the default max width - this is 276px by default - useful for wider components"""
     global _default_width
     _default_width = width
+
+
+_default_container = "body"
+
+
+def set_default_container(selector_or_element):
+    """The default container for popovers is the body page.
+    In advanced set ups when the popovers can scroll with the element, you will want to change this.
+    This can also be set per popover"""
+    global _default_container
+    _default_container = selector_or_element
 
 
 def has_popover(component):
@@ -365,16 +398,14 @@ def _hide_on_scroll(e):
         transitions = []
         try:
             for popper_element in _visible_popovers.copy().values():
-                _popper_execute(popper_element, "hide")
-                transitions.append(_get_data(popper_element, "inTransition"))
+                if _get_data(popper_element, "autoScrollHide", True):
+                    _popper_execute(popper_element, "hide")
+                    transitions.append(_get_data(popper_element, "inTransition"))
             _anvil.js.await_promise(_Promise.all(transitions))
         finally:
             _scrolling = False
 
     _window.requestAnimationFrame(do_hide)
-
-
-_window.addEventListener("scroll", _hide_on_scroll, True)
 
 
 def _popper_execute(popper_element, behavior: str):
@@ -429,6 +460,7 @@ def _hide_popovers_on_outside_click(e):
 
 # make this the default behaviour
 dismiss_on_outside_click(True)
+dismiss_on_scroll(True)
 
 _visible_popovers = {}
 
