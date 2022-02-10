@@ -14,7 +14,7 @@ Example Clone Link:
 
 Introduction
 ------------
-Popovers are already included with anvil since anvil `ships with bootstrap <https://anvil.works/docs/client/javascript#already-included-javascript>`_.
+Popovers are already included with Anvil since Anvil `ships with bootstrap <https://anvil.works/docs/client/javascript#already-included-javascript>`_.
 
 This module provides a python wrapper around `bootstrap popovers <https://getbootstrap.com/docs/3.4/javascript/#popovers>`_.
 When the ``popover`` module is imported, all anvil components get two additional methods - ``pop`` and ``popover``.
@@ -49,7 +49,7 @@ Usage
 API
 ---
 
-.. method:: popover(self, content, title='', placement='right', trigger='click', animation=True, delay={"show": 100, "hide": 100}, max_width=None, auto_dismiss=True)
+.. method:: popover(self, content, title='', placement='right', trigger='click', animation=True, delay={"show": 100, "hide": 100}, max_width=None, auto_dismiss=True, dismiss_on_scroll=True, container="body")
 
     popover is a method that can be used with any anvil component. Commonly used on ``Button`` and ``Link`` components.
 
@@ -60,7 +60,7 @@ API
     .. describe:: content
 
         content can be a string or an anvil component. If an anvil component is used - that component will have a new attribute ``popper`` added.
-        This allows the the content form to close itself using ``self.popper.pop('hide')``.
+        This allows the content form to close itself using ``self.popper.pop('hide')``.
 
     .. describe:: title
 
@@ -68,7 +68,9 @@ API
 
     .. describe:: placement
 
-        One of ``'right'``, ``'left'``, ``'top'``, ``'bottom'``. If using ``left`` or ``right`` it may be best to place the component in a ``FlowPanel``.
+        One of ``'right'``, ``'left'``, ``'top'``, ``'bottom'`` or ``'auto'``.
+        If using ``left`` or ``right`` it may be best to place the component in a ``FlowPanel``.
+        ``'auto'`` can be combined with other values e.g. ``'auto bottom'``.
 
     .. describe:: trigger
 
@@ -90,6 +92,18 @@ API
 
         When clicking outside a popover the popover will be closed. Setting this flag to ``False`` overrides that behaviour.
         Note that popovers will always be dismissed when the page is scrolled. This prevents popovers from appearing in weird places on the page.
+        Note this is ignored if ``dismiss_on_outside_click()`` is used to set the global behaviour to ``False``
+
+    .. describe:: dismiss_on_scroll
+
+        All popovers are hidden when the page is scrolled. See the ``dismiss_on_scroll`` function for more details.
+        Setting this to ``False`` may not be what you want unless you've adjusted the container of the popover.
+        This argument will be ignored if set globally to ``False`` using ``dismiss_on_scroll(dismiss=False)``.
+
+    .. describe:: container
+
+        Set the container of the popover to an element or selector on the page. The default value is ``"body"``.
+
 
 
 .. method:: pop(self, behaviour)
@@ -109,8 +123,22 @@ API
 
 .. function:: dismiss_on_outside_click(dismiss=True)
 
-    by default if you click outside of a popover the popover will close. This behaviour can be overridden globally by calling this function. It can also be set per popover using the ``auto_dismiss`` argument.
+    By default, if you click outside of a popover the popover will close. This behaviour can be overridden globally by calling this function. It can also be set per popover using the ``auto_dismiss`` argument.
     Note that popovers will always be dismissed when the page is scrolled. This prevents popovers from appearing in weird places on the page.
+
+.. function:: dismiss_on_scroll(dismiss=True)
+
+    By default, if you scroll the popover will close. This behaviour can be overridden globally by calling this function. It can also be set per popover using the ``dismiss_on_scroll`` argument.
+    Note that popovers will not scroll with their parents by default since they are fixed on the body of the page.
+    If you use this method it should be combined with either, setting the default container to something other than ``"body"``.
+
+
+.. function:: set_default_container(selector_or_element)
+
+    The default container is ``"body"``. This is used since it prevents overflow issues with popovers nested in the anvil component hierarchy.
+    However, it does prevent popovers from scrolling with their attached elements.
+    If you want your popovers to scroll with their popper element, either change this setting globally or use the ``container`` argument per popover.
+
 
 .. function:: set_default_max_width(width)
 
@@ -119,3 +147,31 @@ API
 .. function:: has_popover(component)
 
     Returns a ``bool`` as to whether the component has a popover. A useful flag to prevent creating unnecessary popovers.
+
+
+
+Scrolling in Material Design
+----------------------------
+
+To support scrolling in Material Design you will need to change the following HTML in the ``standard-page.html``,
+adding an element within the content div.
+
+.. code-block:: html
+
+    <div class="content">
+        <div anvil-slot-repeat="default" class="anvil-measure-this"></div>
+        <div class="placeholder drop-here" anvil-if-slot-empty="default" anvil-drop-slot="default">Drop a ColumnPanel here.</div>
+        <div id="popover-container" style="position:relative;"></div>
+    </div>
+
+
+.. code-block:: python
+
+    from anvil-extras import popover
+
+    popover.set_default_container("#popover-container")
+    popover.dismiss_on_scroll(False)
+
+
+In Material Design, the contents of the ``#content`` div are scrolled on the page.
+Adding a container element within this part of the HTML allows the popovers to be relative to the page.

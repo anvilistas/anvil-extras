@@ -1,3 +1,11 @@
+# Unreleased
+
+## New Features
+* Popovers - supports changing the default container to something other than `"body"`
+  add ``dismiss_on_scroll()`` and ``set_default_container()`` methods
+  https://github.com/anvilistas/anvil-extras/pull/268
+
+
 # v1.9.0 27-Jan-2022
 
 ## New Features
