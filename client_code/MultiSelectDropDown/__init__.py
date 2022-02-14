@@ -57,7 +57,7 @@ _defaults = {
     "enabled": True,
     "spacing_below": "small",
     "spacing_above": "small",
-    "enable_select_all": True,
+    "enable_select_all": False,
 }
 
 
