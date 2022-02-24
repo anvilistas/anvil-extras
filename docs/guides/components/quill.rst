@@ -39,6 +39,10 @@ Properties
 
     Check the Quill docs.
 
+:sanitize: Boolean
+
+    Set the default sanitize behaviour used for the ``set_html()`` method.
+
 :spacing_above: String
 
     One of ``"none"``, ``"small"``, ``"medium"``, ``"large"``
@@ -72,9 +76,12 @@ There are two Anvil specific methods:
 
     Returns a string representing the html of the contents of the Quill editor. Useful for presenting the text in a RichText component under the ``"restricted_html"`` format.
 
-:set_html:
+:set_html(html, sanitize=None):
 
-    Set the contents of the Quill editor to html. The html will be sanitized in the same way that a RichText component sanitizes the html. See Anvil's documentation on the RichText component.
+    Set the contents of the Quill editor to html.
+    If ``sanitize`` is ``True``, then the html will be sanitized in the same way that a RichText component sanitizes the html.
+    If ``sanitize`` is unset the the default ``sanitize`` attribute will be used to determine this behaviour.
+    If See Anvil's documentation on the RichText component.
 
 
 
