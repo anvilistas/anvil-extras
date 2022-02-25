@@ -40,6 +40,15 @@ _html_injector.cdn(f"{prefix}{bs_select_version}/dist/css/bootstrap-select.min.c
 _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 
 
+def off_dd_click(e):
+    # see bug #271
+    if not e.target.closest(".bootstrap-select"):
+        _S(_document).trigger("click.bs.dropdown.data-api")
+
+
+_document.addEventListener("click", off_dd_click, True)
+
+
 _defaults = {
     "align": "left",
     "placeholder": "None Selected",
@@ -48,7 +57,7 @@ _defaults = {
     "enabled": True,
     "spacing_below": "small",
     "spacing_above": "small",
-    "enable_select_all": True,
+    "enable_select_all": False,
 }
 
 
