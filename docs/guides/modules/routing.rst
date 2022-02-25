@@ -1,7 +1,7 @@
 Routing
 =======
 
-The routing module allows hash based navigation in an Anvil app.
+The routing module allows hash-based navigation in an Anvil app.
 
 +---------------------------------------+-------------------------------------------------------------------------------------------+
 | Live Example:                         | `hash-routing-example.anvil.app <https://hash-routing-example.anvil.app/>`__              |
@@ -13,9 +13,9 @@ The routing module allows hash based navigation in an Anvil app.
 Introduction
 ------------
 
-An Anvil app is a single page app. When the user navigates through the app's pages the URL does not change.
+An Anvil app is a single-page app. When the user navigates through the app's pages the URL does not change.
 The part of the URL before the `#` is used by the server to identify the app.
-The part following the `#`, is never sent to the server, and used only by the browser.
+The part following the `#`, is never sent to the server and used only by the browser.
 
 The routing module takes advantage of the URL hash and allows unique URLs to be defined for forms within an app.
 Here are a few examples of URL hashes within an app and associated terminology.
@@ -36,7 +36,7 @@ Here are a few examples of URL hashes within an app and associated terminology.
 Main Form
 ---------
 
-This is either the startup form, or the form loaded from a startup module.
+This is either the startup form or the form loaded from a startup module.
 It contains the header, the navigation bar and a ``content_panel``.
 It is based on the Material Design standard-page.html.
 
@@ -69,7 +69,7 @@ A route form is any form that will be loaded inside the ``MainForm``'s
 -  Import the routing module
 -  add the ``@routing.route`` decorator above the class definition
 -  The first argument to the decorator is the ``url_pattern``
-   (think of it like the page name).
+   (think of it as the page name).
 -  The second argument is optional and is any ``url_keys``
    (a list of strings that make up a query strings in the ``url_hash``)
 
@@ -121,7 +121,7 @@ that does not exist, or the query string does not match the ``url_keys``
 listed in the decorator. Follow these steps to create an error form that
 shows an error message:
 
--  Create a form with a label ``Sorry, this page does not exist``
+-  Create a form with the label ``Sorry, this page does not exist``
 -  Import the routing module
 -  add the decorator ``@routing.error_form``
 
@@ -160,7 +160,7 @@ Instead
 
     # option 2
     routing.set_url_hash('articles')
-    #routing.set_url_method() has some bonus features.
+    #routing.set_url_hash() method has some bonus features.
 
 
 With query string parameters:
@@ -178,7 +178,7 @@ With query string parameters:
 
 
 ``routing.set_url_hash()`` - has some additional features.
-See API docs and Examples.
+See `API Docs <#api>`__ and Examples.
 
 
 
@@ -204,7 +204,7 @@ You can then check the ``id`` using:
         print(self.dynamic_vars['id']) # 3
 
 Multiple dynanamic variables are supported e.g. ``foo/{var_name_1}/{var_name_2}``.
-A dynamic varaible must be the entire contained within a ``/`` portion of the ``url_pattern``,
+A dynamic varaible must be entirely contained within a ``/`` portion of the ``url_pattern``,
 e.g. ``foo/article-{id}`` is not valid.
 
 --------------
@@ -217,7 +217,7 @@ Decorators
 ^^^^^^^^^^
 .. attribute:: routing.main_router
 
-    Apply this decorator above the top level Form - ``MainForm``.
+    Apply this decorator above the top-level Form - ``MainForm``.
     The ``MainForm`` must have a ``content_panel``.
     There are two callbacks available to a ``main_router`` ``MainForm``.
 
@@ -226,12 +226,12 @@ Decorators
 
         The ``on_navigation`` method, when added to your ``MainForm``, will be called whenever the ``url_hash`` is changed.
         It's a good place to adjust the look of your ``MainForm`` if the ``url_hash`` changes. e.g. the selected link in the sidebar.
-        The ``unload_form`` is possibly ``None`` if this is the first load of the app.
+        The ``unload_form`` is possible ``None`` if this is the first load of the app.
 
     .. method:: on_form_load(self, **nav_args)
                 on_form_load(self, url_hash, url_patter, url_dict, form)
 
-        The ``on_form_load`` is called after a form hass been loaded into the ``content_panel``.
+        The ``on_form_load`` is called after a form has been loaded into the ``content_panel``.
         This is also a good time to adjust the ``MainForm``.
 
 
@@ -239,13 +239,13 @@ Decorators
 
     The ``routing.route`` decorator should be called with arguments that determine the shape of the ``url_hash``.
     The ``url_pattern`` determines the string immediately after the ``#``.
-    The ``url_keys`` determine the required query string paramaters in a ``url_hash``.
+    The ``url_keys`` determine the required query string parameters in a ``url_hash``.
 
-    The routing module adds certain parameters to a ``Route Form`` and suppots a callback.
+    The routing module adds certain parameters to a ``Route Form`` and supports a ``before_unload`` callback.
 
     .. attribute:: url_hash
 
-        The current ``url_hash`` being displayed. The ``url_hash`` includes the query. See `Introduction <#introduction>`__ for examples.
+        The current ``url_hash``. The ``url_hash`` includes the query. See `Introduction <#introduction>`__ for examples.
 
     .. attribute:: url_pattern
 
@@ -287,7 +287,7 @@ List of Methods
 
     If ``replace_current_url`` is set to ``True``. Then the navigation will happen "in place" rather than as a new history item.
 
-    If ``set_in_history`` is set to ``False`` the the URL will not be added to the browser's history stack.
+    If ``set_in_history`` is set to ``False`` the URL will not be added to the browser's history stack.
 
     If ``redirect`` is set to ``False`` then you do not want to navigate away from the current form.
 
@@ -343,7 +343,7 @@ List of Methods
 
 .. function:: routing.go(x=0)
 
-    Go forwad/back x number of pages. Use negative values to go back.
+    Go forward/back x number of pages. Use negative values to go back.
 
 .. function:: routing.go_back()
 
@@ -445,7 +445,7 @@ for example, to values loaded from the database.
 
 
 
-Full Width Rows
+Full-Width Rows
 ^^^^^^^^^^^^^^^
 
 You can set a ``Route Form`` to load as a ``full_width_row`` by setting
@@ -463,7 +463,7 @@ Multiple Route Decorators
 
 It is possible to define optional parameters by adding multiple
 decorators, e.g. one with and one without the key. Here is an example
-that allows to use the ``home page`` with the default empty string and
+that allows using the ``home page`` with the default empty string and
 with one optional ``search`` parameter:
 
 .. code:: python
@@ -553,7 +553,8 @@ create an ``on_navigation`` method in your ``MainForm``.
           else:
             link.role = 'default'
 
-**Nav Args provided by the ``main_router`` class decorator**
+
+**Nav Args will look like:**
 
 .. code:: python
 
@@ -577,7 +578,7 @@ If you want to use animation when a form is loaded you might use the
           animate(form, fade_in, duration=300)
 
 
-Note if you wanted to use a fade out you could also use the
+Note if you wanted to use a fade-out you could also use the
 ``on_navigation`` method.
 
 .. code:: python
@@ -596,8 +597,8 @@ Navigation Techniques
 ``redirect=False``
 ~~~~~~~~~~~~~~~~~~
 
-It is possible to set a new url without navigating away from the current
-form. For example a form could have this code:
+It is possible to set a new URL without navigating away from the current
+form. For example, a form could have this code:
 
 .. code:: python
 
@@ -613,7 +614,7 @@ form. For example a form could have this code:
       self.search(self.search_terms.text)
 
 This way search parameters are added to the history stack so that the
-user can navigate back and forward but routing does not attempt to
+user can navigate back and forward, but routing does not attempt to
 navigate to a new form instance.
 
 Important
@@ -631,7 +632,7 @@ loading a form to the ``content_panel``.
 ``replace_current_url=True``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is also possible to replace the current url in the history stack
+It is also possible to replace the current URL in the history stack
 rather than creating a new entry in the history stack.
 
 In the demo app the ``ArticleForm`` creates a new article
@@ -644,7 +645,7 @@ if the ``id`` parameter is empty like: ``url_hash = "article?id="``
         def __init__(self, **properties):
             self.init_components(**properties)
             if url_dict['id']:
-                self.item = anvil.server.call("get_article_by_id",self.url_dict['id'])
+                self.item = anvil.server.call("get_article_by_id", self.url_dict['id'])
             else:
                 # url_dict['id'] is empty
                 self.item = anvil.server.call('create_new_article')
@@ -655,7 +656,7 @@ if the ``id`` parameter is empty like: ``url_hash = "article?id="``
                                     )
 
 
-See API docs for a list of valid kwargs for ``routing.set_url_hash()``.
+See `API Docs <#api>`__ for a list of valid kwargs for ``routing.set_url_hash()``.
 
 
 Changing The Main Form
@@ -664,7 +665,7 @@ Changing The Main Form
 In a more complex app, it's common to want to change the Main Form.
 At present, changing the Main Form is not supported (support may be added in a future release).
 
-Instead it is recommended to change the structure of the Main Form dynamically
+Instead, it is recommended to change the structure of the Main Form dynamically
 (sidebar, navbar and title) based on the ``url_hash``.
 
 Let's say you have an admin part of the app and a standard part of the app.
@@ -748,7 +749,7 @@ Multiple forms can use the same set of sidebar links.
 
     def form_show(self, **event_args):
         # We setup the side navigation links in form show, so that when the form is navigated
-        # away from and back again we can setup the links again.
+        # away from and back again we can set up the links again.
         Manager.setup_sidelinks('home')
         Manager.set_title('Home')
 
@@ -798,17 +799,9 @@ App <#leaving-the-app>`__ below)
 Passing properties to a form
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can pass properties to a form by adding them as keyword arguments
-with either ``routing.load_form`` or ``routing.set_url_hash``
+You can pass properties to a form by adding them as keyword arguments to ``routing.set_url_hash``
 
 .. code:: python
-
-
-    def article_link_click(self, **event_args):
-      routing.load_form(Article, id=self.item['id'], item=self.item)
-      # if your RouteForm has required keys then you should provide these as kwargs
-      # nb the key id could also be a key in self.item in which case
-      # routing.load_form(Article, item=self.item) is sufficient (but may be slower to load if item is a LiveObjectProxy [Table Row])
 
     def article_link_click(self, **event_args):
       routing.set_url_hash(f'article?id={self.item["id"]'}, item=self.item)
@@ -825,34 +818,34 @@ behaviour
 
     def button_click(self,**event_args):
       alert(ArticleForm(route=False))
-      #setting route = False stops the Route Form using the routing module...
+      # setting route = False stops the Route Form using the routing module...
 
 --------------
 
 My ``url_dict`` contains the & symbol
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-let's say your ``url_dict`` is ``{'name': 'A & B'}`` doing the following
+Let's say your ``url_dict`` is ``{'name': 'A&B'}`` doing the following
 will cause a problem
 
 .. code:: python
 
     routing.set_url_hash('customer?name=A&B')
 
-instead do
+instead, do
 
 .. code:: python
 
     routing.set_url_hash(url_pattern='customer', url_dict={'name':'A&B'})
 
-anvil_extras will encode this correctly
+``anvil_extras.routing`` will encode this correctly
 
 --------------
 
 I have a login form how do I work that?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As part of ``anvil_extras`` navigation
+**As part of anvil_extras.routing**
 
 .. code:: python
 
@@ -894,11 +887,11 @@ Then for the ``LoginForm``
                              )
         # '' replaces 'login' in the history stack and redirects to the HomeForm
 
-Separate from ``anvil_extras`` navigation
+**Separate from anvil_extras.routing**
 
 Rather than have the ``LoginForm`` be part of the navigation, you could
-create a ``LoginForm`` as a startup form without using any
-``anvil_extras`` decorators.
+create a startup module that will call ``open_form("LoginForm")`` if no user is logged in.
+The ``LoginForm`` should **not** have any ``anvil_extras.routing`` decorators.
 
 Then when the user has signed in you can call ``open_form('MainForm')``.
 The ``main_router`` will then take control of the ``url_hash`` based
@@ -911,7 +904,7 @@ the ``url_hash`` will change but there will be no change in forms...)
 :smile:
 
 (You will need to add an on\_navigation method to the ``LoginForm``,
-which does nothing, to keep anvil_extras happy)
+which does nothing, to keep the ``routing`` module happy)
 
 .. code:: python
 
@@ -1005,27 +998,6 @@ That way you wouldn't need to utilise the show event of the
                              replace_current_url=True,
                              load_from_cache=False)
 
-**Additional alternative approach to the above scenario:**
-
-use ``routing.load_form`` instead of ``routing.set_url_hash``
-
-.. code:: python
-
-    @routing.route('article', keys=['id'], title='Article-{id}')
-    class ArticleForm(ArticleFormTemplate):
-      def __init__(self, **properties):
-        try:
-          self.item = anvil.server.call('get_article_by_id',self.url_dict['id'])
-        except:
-          routing.load_form(ListArticlesForm, replace_current_url=True, load_from_cache=False)
-
-      def trash_link_click(self, **event_args):
-        """called when trash_link is clicked removes the """
-        self.item.delete()  # table row
-        routing.remove_from_cache(self.url_hash) # self.url_hash provided by the @routing.route class decorator
-        routing.load_form(ListArticlesForm,
-                          replace_current_url=True,
-                          load_from_cache=False)
 
 Example 2
 ~~~~~~~~~
@@ -1035,7 +1007,7 @@ In the search example above the same form represents multiple
 
 No problem.
 
-Whenever navigation is triggered by back/forward button clicks the
+Whenever navigation is triggered by clicking the back/forward buttons, the
 ``self.url_hash``, ``self.url_dict`` and ``self.url_pattern`` are
 updated and the ``form_show`` event is triggered.
 
@@ -1056,9 +1028,9 @@ onbeforeunload <https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_onbe
 method.
 
 This warns the user before navigating away from the app using a default
-browser warning. (does not work on ios)
+browser warning. (This may not work on ios)
 
-By default this setting is switched off. To switch it on do:
+By default, this setting is switched off. To switch it on do:
 ``routing.set_warning_before_app_unload(True)``
 
 To implement this behaviour for all pages change the setting in your
