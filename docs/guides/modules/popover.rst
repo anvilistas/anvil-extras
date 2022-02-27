@@ -187,7 +187,7 @@ Alternatively you could dynamically insert the container component in your MainF
 
 
     popover_container = document.createElement("div")
-    popover_container.style = "relative"
+    popover_container.style.position = "relative"
     popover.set_default_container(popover_container)
     popover.dismiss_on_scroll(False)
 
