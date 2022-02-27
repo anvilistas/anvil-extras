@@ -40,6 +40,15 @@ _html_injector.cdn(f"{prefix}{bs_select_version}/dist/css/bootstrap-select.min.c
 _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 
 
+def off_dd_click(e):
+    # see bug #271
+    if not e.target.closest(".bootstrap-select"):
+        _S(_document).trigger("click.bs.dropdown.data-api")
+
+
+_document.addEventListener("click", off_dd_click, True)
+
+
 _defaults = {
     "align": "left",
     "placeholder": "None Selected",
@@ -48,7 +57,7 @@ _defaults = {
     "enabled": True,
     "spacing_below": "small",
     "spacing_above": "small",
-    "enable_select_all": True,
+    "enable_select_all": False,
 }
 
 
@@ -77,9 +86,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._init = False
 
         self._dom_node = _js.get_dom_node(self)
-        self._el = _S(self._dom_node).find("select")
+        _S_dom_node = _S(self._dom_node)
+        self._el = _S_dom_node.find("select")
 
-        _S(self._dom_node).html("").append(self._el)
+        _S_dom_node.html("").append(self._el)
         # remove all the script tags before they load into the dom
 
         self._values = {}
@@ -91,6 +101,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
+        self.set_event_handler("x-popover-init", self._mk_popover)
         self._init = True
 
     ##### PROPERTIES #####
@@ -170,18 +181,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def change(self, *e):
         return self.raise_event("change")
 
-    def _form_hide(self, **event_args):
+    def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this
-        bs_container = self._el.data("selectpicker")["$bsContainer"]
-        bs_container.removeClass("anvil-popover").attr("popover_id", None).detach()
-
-    def _form_show(self, **event_args):
-        popover = self._dom_node.closest(".anvil-popover")
-        if popover is None:
-            return
-        pop_id = popover.getAttribute("popover_id")
-        bs_container = self._el.data("selectpicker")["$bsContainer"]
-        bs_container.addClass("anvil-popover").attr("popover_id", pop_id)
+        init_node(self._el.data("selectpicker")["$bsContainer"])
 
 
 ##### PRIVATE Functions #####

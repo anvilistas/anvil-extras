@@ -21,6 +21,8 @@ from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
+from .utils._component_helpers import walk as _walk
+
 __version__ = "1.9.0"
 
 __all__ = [
@@ -100,7 +102,6 @@ def popover(
             "title": title,
             "placement": placement,
             "trigger": trigger,
-            "selector": f'[popover_id="{popper_id}"]',
             "animation": animation,
             "delay": delay,
             "html": html,
@@ -115,8 +116,8 @@ def popover(
         # otherwise the tooltip doesn't work for Buttons
         popper_element.attr("title", tooltip)
 
-    popper_element.addClass("anvil-popover")
-    popper_element.attr("popover_id", popper_id)
+    make_popover = _popover_maker(popper_id)
+    make_popover(popper_element)
     popper_element.data(
         "ae.popover",
         {
@@ -125,6 +126,10 @@ def popover(
             "inTransition": None,
         },
     )
+
+    if component is not None:
+        for c in _walk(component):
+            c.raise_event("x-popover-init", init_node=make_popover)
 
 
 def pop(self, behavior):
@@ -159,8 +164,8 @@ def dismiss_on_outside_click(dismiss=True):
 
 # this is the default behavior
 def dismiss_on_scroll(dismiss=True):
-    """hide popovers when a user clicks outside the popover
-    this is the default behavior
+    """hide popovers when a user scrolls. This is the default behavior
+    You should change the default container if you set this globally to False.
     """
     _window.removeEventListener("scroll", _hide_on_scroll, True)
     if dismiss:
@@ -202,6 +207,13 @@ _anvil.Component.pop = pop
 ######## helper functions ########
 
 _popper_count = 0
+
+
+def _popover_maker(id):
+    def _make_popover_element(dom_node):
+        _S(dom_node).addClass("anvil-popover").attr("popover_id", id)
+
+    return _make_popover_element
 
 
 def _get_next_id():

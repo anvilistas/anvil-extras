@@ -7,6 +7,11 @@
 * Quill - adds a sanitize property and a sanitize kwarg to the `set_html()` method
   https://github.com/anvilistas/anvil-extras/issues/273
 
+## Bug fixes
+* Multi-select - fix button clicks don't always close the dropdown menu
+  https://github.com/anvilistas/anvil-extras/issues/271
+
+
 # v1.9.0 27-Jan-2022
 
 ## New Features

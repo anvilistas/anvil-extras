@@ -153,8 +153,10 @@ API
 Scrolling in Material Design
 ----------------------------
 
-To support scrolling in Material Design you will need to change the following HTML in the ``standard-page.html``,
-adding an element within the content div.
+To support scrolling in Material Design the container element should be a div element within the standard-page.html.
+It should be nested within the ``.content`` div.
+
+You can adjust the HTML as follows.
 
 .. code-block:: html
 
@@ -167,11 +169,30 @@ adding an element within the content div.
 
 .. code-block:: python
 
-    from anvil-extras import popover
+    from anvil_extras import popover
 
     popover.set_default_container("#popover-container")
     popover.dismiss_on_scroll(False)
 
 
-In Material Design, the contents of the ``#content`` div are scrolled on the page.
-Adding a container element within this part of the HTML allows the popovers to be relative to the page.
+
+Alternatively you could dynamically insert the container component in your MainForm with python.
+(Assuming your main form uses the standard-page.html)
+
+.. code-block:: python
+
+    import anvil.js
+    from anvil.js.window import document
+    from anvil_extras import popover
+
+
+    popover_container = document.createElement("div")
+    popover_container.style.position = "relative"
+    popover.set_default_container(popover_container)
+    popover.dismiss_on_scroll(False)
+
+
+    class MainForm(MainFormTemplate):
+        def __init__(self, **event_args):
+            content_div = anvil.js.get_dom_node(self).querySelector(".content")
+            content_div.appendChild(popover_container)
