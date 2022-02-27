@@ -100,7 +100,6 @@ def popover(
             "title": title,
             "placement": placement,
             "trigger": trigger,
-            "selector": f'[popover_id="{popper_id}"]',
             "animation": animation,
             "delay": delay,
             "html": html,
