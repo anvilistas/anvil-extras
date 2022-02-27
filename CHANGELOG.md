@@ -4,6 +4,8 @@
 * Popovers - supports changing the default container to something other than `"body"`
   add ``dismiss_on_scroll()`` and ``set_default_container()`` methods
   https://github.com/anvilistas/anvil-extras/pull/268
+* Quill - adds a sanitize property and a sanitize kwarg to the `set_html()` method
+  https://github.com/anvilistas/anvil-extras/issues/273
 
 ## Bug fixes
 * Multi-select - fix button clicks don't always close the dropdown menu

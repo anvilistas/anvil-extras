@@ -23,6 +23,7 @@ properties:
   default_value: null, important: false}
 - {name: spacing_above, type: string, default_value: small, group: layout, important: false}
 - {name: spacing_below, type: string, default_value: small, group: layout, important: false}
+- {name: sanitize, type: boolean, default_value: true, description: sets the default sanitize behaviour for set_html(), group: interaction, important: false}
 is_package: true
 events:
 - {name: text_change, description: when the quill text changes, default: true}

@@ -40,21 +40,30 @@ _defaults = {
     "readonly": False,
     "spacing_above": "small",
     "spacing_below": "small",
+    "sanitize": True,
     "theme": "snow",
     "toolbar": True,
     "visible": True,
 }
 
 
-def _quill_init_prop(propname):
-    def getter(self):
+def _quill_prop(propname, setter=None):
+    def prop_getter(self):
         return self._props[propname]
 
-    def setter(self, val):
-        self._props[propname] = val
+    def prop_setter(self, value):
+        self._props[propname] = value
+        if setter is not None:
+            setter(self, value)
+
+    return property(prop_getter, prop_setter)
+
+
+def _quill_init_prop(propname):
+    def setter(self, _value):
         self._init_quill()
 
-    return property(getter, setter)
+    return _quill_prop(propname, setter)
 
 
 class Quill(QuillTemplate):
@@ -136,7 +145,7 @@ class Quill(QuillTemplate):
         )
 
         if html:
-            self.set_html(html)
+            self.set_html(html, False)
 
     def __getattr__(self, name):
         init, *rest = name.split("_")
@@ -144,14 +153,17 @@ class Quill(QuillTemplate):
         return getattr(self._quill, name)
 
     #### Properties ####
-    @property
-    def enabled(self):
-        return self._props["enabled"]
-
-    @enabled.setter
-    def enabled(self, value):
+    def _set_enabled(self, value):
         self._quill.enable(bool(value))
-        self._props["enabled"] = value
+
+    def _set_auto_expand(self, value):
+        self._spacer.height = "auto" if value else self._min_height
+
+    def _set_height(self, value):
+        if isinstance(value, (int, float)) or value.isdigit():
+            value = f"{value}px"
+        self._el.style.minHeight = value
+        self._min_height = value
 
     @property
     def content(self):
@@ -165,27 +177,10 @@ class Quill(QuillTemplate):
             return self._quill.setText(value)
         self._quill.setContents(value)
 
-    @property
-    def auto_expand(self):
-        return self._props["auto_expand"]
-
-    @auto_expand.setter
-    def auto_expand(self, value):
-        self._props["auto_expand"] = value
-        self._spacer.height = "auto" if value else self._min_height
-
-    @property
-    def height(self):
-        return self._props["height"]
-
-    @height.setter
-    def height(self, value):
-        self._props["height"] = value
-        if isinstance(value, (int, float)) or value.isdigit():
-            value = f"{value}px"
-        self._el.style.minHeight = value
-        self._min_height = value
-
+    enabled = _quill_prop("enabled", _set_enabled)
+    auto_expand = _quill_prop("auto_expand", _set_auto_expand)
+    height = _quill_prop("height", _set_height)
+    sanitize = _quill_prop("sanitize")
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
@@ -210,10 +205,13 @@ class Quill(QuillTemplate):
         Can also be used as a classmethod by calling it with a simple object Quill.to_html(content)"""
         return self._quill and self._quill.root.innerHTML
 
-    def set_html(self, html):
+    def set_html(self, html, sanitize=None):
         """set the content to html. This method sanitizes the html
         in the same way the RichText compeonent does"""
-        self._rt = self._rt or _RT(visible=False, format="restricted_html")
-        self._rt.content = html
-        html = _get_dom_node(self._rt).innerHTML
+        if sanitize is None:
+            sanitize = self._props["sanitize"]
+        if sanitize:
+            self._rt = self._rt or _RT(visible=False, format="restricted_html")
+            self._rt.content = html
+            html = _get_dom_node(self._rt).innerHTML
         self._quill.root.innerHTML = html
