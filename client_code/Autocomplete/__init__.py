@@ -79,7 +79,7 @@ class Autocomplete(AutocompleteTemplate):
         dom_node.addEventListener("input", self._on_input)
         dom_node.addEventListener("focus", self._on_focus, True)
         dom_node.addEventListener("blur", self._on_blur)
-        dom_node.addEventListener("popover.content", self._mk_popover)
+        self.set_event_handler("x-popover-init", self._mk_popover)
 
         # ensure the same method is passed to $(window).off('resize')
         self._reset_position = self._reset_position
@@ -221,8 +221,8 @@ class Autocomplete(AutocompleteTemplate):
         _document.body.removeChild(self._lp_node)
         _S(_window).off("resize", self._reset_position)
 
-    def _mk_popover(self, e):
-        e.detail(self._lp_node)
+    def _mk_popover(self, init_node, **event_args):
+        init_node(self._lp_node)
 
     ##### Properties ######
     @property

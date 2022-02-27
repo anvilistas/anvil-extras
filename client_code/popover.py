@@ -17,10 +17,11 @@ from time import sleep
 
 import anvil as _anvil
 from anvil.js import window as _window
-from anvil.js.window import CustomEvent as _CustomEvent
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
+
+from .utils._component_helpers import walk as _walk
 
 __version__ = "1.9.0"
 
@@ -127,11 +128,8 @@ def popover(
     )
 
     if component is not None:
-        # this event can be caught by components e.g. autocomplete etc
-        event = _CustomEvent("popover.content", {"detail": make_popover})
-        content.dispatchEvent(event)
-        for child in content.querySelectorAll(".anvil-component"):
-            child.dispatchEvent(event)
+        for c in _walk(component):
+            c.raise_event("x-popover-init", init_node=make_popover)
 
 
 def pop(self, behavior):

@@ -101,7 +101,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
-        self._dom_node.addEventListener("popover.content", self._mk_popover)
+        self.set_event_handler("x-popover-init", self._mk_popover)
         self._init = True
 
     ##### PROPERTIES #####
@@ -181,9 +181,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def change(self, *e):
         return self.raise_event("change")
 
-    def _mk_popover(self, e):
+    def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this
-        e.detail(self._el.data("selectpicker")["$bsContainer"])
+        init_node(self._el.data("selectpicker")["$bsContainer"])
 
 
 ##### PRIVATE Functions #####
