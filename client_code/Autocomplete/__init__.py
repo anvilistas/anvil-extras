@@ -79,6 +79,7 @@ class Autocomplete(AutocompleteTemplate):
         dom_node.addEventListener("input", self._on_input)
         dom_node.addEventListener("focus", self._on_focus, True)
         dom_node.addEventListener("blur", self._on_blur)
+        dom_node.addEventListener("popover.content", self._mk_popover)
 
         # ensure the same method is passed to $(window).off('resize')
         self._reset_position = self._reset_position
@@ -219,6 +220,9 @@ class Autocomplete(AutocompleteTemplate):
         """This method is called when the TextBox is removed from the screen"""
         _document.body.removeChild(self._lp_node)
         _S(_window).off("resize", self._reset_position)
+
+    def _mk_popover(self, e):
+        e.detail(self._lp_node)
 
     ##### Properties ######
     @property

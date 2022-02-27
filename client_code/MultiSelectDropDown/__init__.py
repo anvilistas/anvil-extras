@@ -86,9 +86,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._init = False
 
         self._dom_node = _js.get_dom_node(self)
-        self._el = _S(self._dom_node).find("select")
+        _S_dom_node = _S(self._dom_node)
+        self._el = _S_dom_node.find("select")
 
-        _S(self._dom_node).html("").append(self._el)
+        _S_dom_node.html("").append(self._el)
         # remove all the script tags before they load into the dom
 
         self._values = {}
@@ -100,6 +101,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
+        self._dom_node.addEventListener("popover.content", self._mk_popover)
         self._init = True
 
     ##### PROPERTIES #####
@@ -179,18 +181,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def change(self, *e):
         return self.raise_event("change")
 
-    def _form_hide(self, **event_args):
+    def _mk_popover(self, e):
         # this is a bit of a hack - we're using the libraries private methods for this
-        bs_container = self._el.data("selectpicker")["$bsContainer"]
-        bs_container.removeClass("anvil-popover").attr("popover_id", None).detach()
-
-    def _form_show(self, **event_args):
-        popover = self._dom_node.closest(".anvil-popover")
-        if popover is None:
-            return
-        pop_id = popover.getAttribute("popover_id")
-        bs_container = self._el.data("selectpicker")["$bsContainer"]
-        bs_container.addClass("anvil-popover").attr("popover_id", pop_id)
+        e.detail(self._el.data("selectpicker")["$bsContainer"])
 
 
 ##### PRIVATE Functions #####
