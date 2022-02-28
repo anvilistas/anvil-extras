@@ -31,6 +31,7 @@ _current_form = None  # the current form that should be on the content panel - t
 _main_router = None  # this will be the main router - get_open_form() can break if the main_router hasn't loaded yet
 _on_navigation_stack_depth = 0
 _properties = {}
+_warnings = {}
 
 """
 Terminology and examples
@@ -571,6 +572,12 @@ def load_form(
     load_form(ArticleForm, item=item)          #  where 'id' is a key in item...
     load_form(AritcleForm, id=3, item=item)    #  as above but this is quicker if item is a live_object_proxy as it prevents a server call
     """
+    if not _warnings.get("load_form"):
+        _warnings["load_form"] = True
+        print(
+            "Deprecated: routing.load_form() is deprecated and may be removed from future releases. Use routing.set_url_hash() instead"
+        )
+
     path = _get_path(form, url_pattern, url_keys)
     # could rais an exception
 
