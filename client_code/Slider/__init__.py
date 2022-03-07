@@ -55,7 +55,7 @@ _html_injector.css(
 )
 
 _Slider = anvil.js.import_from(
-    f"https://cdn.skypack.dev/nouislider@{noui_version}"
+    "https://cdn.skypack.dev/pin/nouislider@v15.4.0-qwAfTOVKkfvhMhVnBPSn/mode=imports,min/optimized/nouislider.js"
 ).default
 
 
