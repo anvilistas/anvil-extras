@@ -10,6 +10,8 @@ from anvil.js.window import location
 
 from ._logging import log
 
+__version__ = "1.9.0"
+
 
 def get_url_components(url_hash=None):
     """returns  url_hash, url_pattern, url_dict
