@@ -20,15 +20,6 @@ route_info = namedtuple(
 template_info = namedtuple("template_info", ["form", "path", "condition"])
 
 
-def main_router(cls):
-    """
-    decorator for the main form
-    @routing.main_router
-    """
-    template()(cls)
-    return cls
-
-
 def template(path="", priority=0, condition=None):
     if not isinstance(path, str):
         raise TypeError("the first argument to template must be a str")

@@ -1,11 +1,30 @@
 # Unreleased
 
+## Breaking Changes
+* `routing.load_form()` was removed. Use `routing.set_url_hash()` instead.
+
 ## New Features
 * Popovers - supports changing the default container to something other than `"body"`
-  add ``dismiss_on_scroll()`` and ``set_default_container()`` methods
+  add `dismiss_on_scroll()` and `set_default_container()` methods
   https://github.com/anvilistas/anvil-extras/pull/268
 * Quill - adds a sanitize property and a sanitize kwarg to the `set_html()` method
   https://github.com/anvilistas/anvil-extras/issues/273
+* routing - adds support for multiple top level forms
+  https://github.com/anvilistas/anvil-extras/pull/281
+  * **`@routing.template(path='', priority=0, condition=None)`**
+     A template form is a top level form that holds the header, navigation bar, side panel and an empty `content_panel`.
+     When navigating the routing module will ensure the correct template is the current `open_form` based on the `priority`, `path`, and `condition`. The current `url_hash` must start with the `path`, and if a `condition` is set it must return `True`.
+     Templates are checked order of priority, highest values first.
+  * **`@routing.default_template` replaces `@routing.main_router`**.
+     The `@main_router` decorator is still available. `@default_template` is equivalent to `@template()`
+  * **`routing.NavigationExit()`**
+     when raised within a `template`'s `on_navgation` callback, this will prevent the `routing` module from changing the `content_panel`.
+     This is useful if you have a `LoginForm` as a `template` whose content should remain unchanged when the user tries to navigate to other `routes`.
+  * **`routing.launch()`**
+    called within a startup module, replaces the call to `open_form()`.
+    `routing.launch()` checks the current `url_hash` and ensures that the correct template is loaded based on the paramaters of each template.
+    Calling `routing.set_url_hash()` in a Startup Module will have no effect on form loading until `routing.launch()` has been called. (This allows you to change the `url_hash` within the startup logic)
+
 
 ## Bug fixes
 * Multi-select - fix button clicks don't always close the dropdown menu
