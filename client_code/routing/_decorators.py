@@ -111,11 +111,6 @@ def error_form(cls):
     """optional decorator - this is the error form simply use the decorator above your error Form
     @routing.error_form
     """
-
-    class ErrorForm(cls):
-        def __init__(self, **properties):
-            self._route_props = {"title": None, "layout_props": {}}
-            cls.__init__(self, **properties)
-
-    _router._error_form = ErrorForm
-    return ErrorForm
+    cls._route_props = {"title": None, "layout_props": {}}
+    _router._error_form = cls
+    return cls
