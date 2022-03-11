@@ -8,7 +8,8 @@ properties:
   important: true}
 - {name: multiple, type: boolean, default_value: true, group: interaction, important: true}
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
-- {name: enable_select_all, type: boolean, default_value: false, group: interaction, important: true}
+- {name: enable_select_all, type: boolean, default_value: false, group: interaction,
+  important: true}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
 - {name: spacing_above, type: string, default_value: small, group: layout, important: false}
 - {name: spacing_below, type: string, default_value: small, group: layout, important: false}
