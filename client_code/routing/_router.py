@@ -93,6 +93,8 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         form = _cache.get(url_hash)
         if form is None:
             form = get_form_to_add(url_hash, url_pattern, url_dict, properties)
+        else:
+            log(lambda: f"{form.__class__.__name__!r} loading from cache")
         update_form_attrs(form)
         add_form_to_container(form)
         alert_form_loaded(form=form, **url_args)
@@ -136,10 +138,10 @@ def load_template(url_hash):
     else:
         load_error_or_raise(f"No template for {url_hash!r}")
     if current_cls is cls:
-        log(lambda: "routing template unchanged")
+        log(lambda: f"{cls.__name__!r} routing template unchanged")
     else:
         log(
-            lambda: f"routing template changed to {cls.__name__!r}, exiting this navigation call"
+            lambda: f"{current_cls.__name__!r} routing template changed to {cls.__name__!r}, exiting this navigation call"
         )
         _current_form = None
         f = cls()
@@ -149,10 +151,11 @@ def load_template(url_hash):
 
 
 def alert_on_navigation(**url_args):
-    on_navigation = getattr(get_open_form(), "on_navigation", None)
-    if on_navigation is None:
-        return
-    on_navigation(unload_form=_current_form, **url_args)
+    f = get_open_form()
+    on_navigation = getattr(f, "on_navigation", None)
+    if on_navigation is not None:
+        log(lambda: f"{f.__class__.__name__!r}.on_navigation() called")
+        on_navigation(unload_form=_current_form, **url_args)
 
 
 def clear_container():
@@ -163,6 +166,7 @@ def get_form_to_add(url_hash, url_pattern, url_dict, properties):
     global _current_form
     path, dynamic_vars = path_matcher(url_hash, url_pattern, url_dict)
     form = path.form.__new__(path.form, **properties)
+    log(lambda: f"adding {form.__class__.__name__!r} to cache")
     _current_form = _cache[url_hash] = form
     form._routing_props = {
         "title": path.title,
@@ -175,6 +179,9 @@ def get_form_to_add(url_hash, url_pattern, url_dict, properties):
     form.dynamic_vars = dynamic_vars
     form.__init__(**properties)  # this might be slow if it does a bunch of server calls
     if _current_form is not form:
+        log(
+            lambda: f"Problem loading {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
+        )
         # and if it was slow, and some navigation happened we should end now
         raise NavigationExit
     return form
@@ -243,8 +250,10 @@ def add_form_to_container(form):
 
 
 def alert_form_loaded(**url_args):
-    on_form_load = getattr(get_open_form(), "on_form_load", None)
+    f = get_open_form()
+    on_form_load = getattr(f, "on_form_load", None)
     if on_form_load is not None:
+        log(lambda: f"{f.__class__.__name__!r}.on_form_load() called")
         on_form_load(**url_args)
 
 

@@ -61,7 +61,7 @@ def go(x=0):
 def on_session_expired(reload_hash=True, allow_cancel=True):
     """override anvil's default session expired behaviour"""
     print(
-        "Depracated: it is now possible to catch a SessionExpiredError in the anvil.set_default_error_handler() callback"
+        "Deprecated: it is now possible to catch a SessionExpiredError in the anvil.set_default_error_handler() callback"
     )
     if type(reload_hash) is not bool:
         raise TypeError(f"reload_hash must be a bool not {type(reload_hash)}")
