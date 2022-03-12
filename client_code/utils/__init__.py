@@ -15,6 +15,7 @@ def __dir__():
         "auto_refreshing",
         "wait_for_writeback",
         "timed",
+        "logging",
         "BindingRefreshDict",
         "correct_canvas_resolution",
     ]
@@ -31,6 +32,10 @@ def __getattr__(name):
         from ._timed import timed
 
         return timed
+    elif name == "logging":
+        from . import _logging
+
+        return _logging
     elif name == "wait_for_writeback":
         from ._writeback_waiter import wait_for_writeback
 

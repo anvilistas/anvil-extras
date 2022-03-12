@@ -6,36 +6,61 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 
+import sys
 from functools import wraps
-from time import gmtime, strftime, time
+from time import time
+
+try:
+    import logging
+
+    def get_logger():
+        logging.basicConfig(level=logging.INFO)
+        handler = logging.StreamHandler(sys.stdout)
+        formatter = logging.Formatter(
+            "%(asctime)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        handler.setFormatter(formatter)
+        logger = logging.getLogger(__name__)
+        logger.addHandler(handler)
+        return logger
+
+
+except ImportError:
+    from . import _logging as logging
+
+    def get_logger():
+        return logging.Logger(
+            name="timing", format="{datetime:%Y-%m-%d %H:%M:%S}: {msg}"
+        )
+
 
 __version__ = "1.9.0"
 
+LOGGER = get_logger()
+
 
 def _signature(func, args, kwargs):
-    """Text representation of a function's signature"""
-    arguments = [str(a) for a in args]
-    arguments.extend([f"{key}={value}" for key, value in kwargs.items()])
-    return f"{func.__name__}({','.join(arguments)})"
+    sig = [repr(a) for a in args]
+    sig.extend(f"{key}={value!r}" for key, value in kwargs.items())
+    sig = ",".join(sig)
+    if len(sig) > 50:
+        sig = sig[:50] + "..."
+    return f"{func.__name__}({sig})"
 
 
-def _timestamp(seconds):
-    """Text representation of a unix timestamp"""
-    return strftime("%Y-%m-%d %H:%M:%S", gmtime(seconds))
-
-
-def timed(func):
-    """A decorator to time the execution of a function"""
-
+def timed(func, logger=LOGGER, level=logging.INFO):
     @wraps(func)
     def wrapper(*args, **kwargs):
         signature = _signature(func, args, kwargs)
+        logger.log(msg=f"{signature} called", level=level)
         started_at = time()
-        print(f"{_timestamp(started_at)} {signature} called")
         result = func(*args, **kwargs)
         finished_at = time()
         duration = f"{(finished_at - started_at):.2f}s"
-        print(f"{_timestamp(finished_at)} {signature} completed({duration})")
+        logger.log(
+            msg=f"{signature} completed({duration})",
+            level=level,
+        )
         return result
 
     return wrapper
