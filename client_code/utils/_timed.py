@@ -24,7 +24,6 @@ try:
         logger.addHandler(handler)
         return logger
 
-
 except ImportError:
     from . import _logging as logging
 
