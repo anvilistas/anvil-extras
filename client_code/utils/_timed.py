@@ -10,6 +10,8 @@ import sys
 from functools import wraps
 from time import time
 
+__version__ = "1.9.0"
+
 try:
     import logging
 
@@ -33,12 +35,11 @@ except ImportError:
         )
 
 
-__version__ = "1.9.0"
-
 LOGGER = get_logger()
 
 
 def _signature(func, args, kwargs):
+    """Text representation of a function's signature"""
     sig = [repr(a) for a in args]
     sig.extend(f"{key}={value!r}" for key, value in kwargs.items())
     sig = ",".join(sig)
@@ -48,6 +49,8 @@ def _signature(func, args, kwargs):
 
 
 def timed(func, logger=LOGGER, level=logging.INFO):
+    """A decorator to time the execution of a function"""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         signature = _signature(func, args, kwargs)
