@@ -1,13 +1,13 @@
 Utils
 =====
-Client and server side utility functions.
+Client and server-side utility functions.
 
 Logging
 -------
 
 A lightweight logging implementation, similar to Python's logging module.
 It can be used on both the server and the client.
-It supports logging levels, and a custom format.
+It supports logging levels and a custom format.
 
 .. code-block:: python
 
@@ -30,7 +30,7 @@ API
 
     .. attribute:: level
 
-        One of ``loging.NOTSET``, ``logging.DEBUG``, ``logging.INFO``, ``logging.WARNING``, ``logging.CRITICAL``
+        One of ``logging.NOTSET``, ``logging.DEBUG``, ``logging.INFO``, ``logging.WARNING``, ``logging.CRITICAL``
         If the logging level is set to ``logging.INFO``, then only logs at the level of
         ``INFO``, ``WARNING`` or ``CRITICAL`` will be logged. This is useful for turning on and off
         debug logs in your app.
@@ -42,12 +42,12 @@ API
     .. attribute:: stream
 
         A valid stream is any object that has a valid ``.write()`` and ``.flust()`` method.
-        The default stream is the ``sys.stdout`` stream. This will log to the console in the IDE and passed to the app logs.
-        A valid python stream can be used. On the client you may want to create your own.
+        The default stream is the ``sys.stdout`` stream. This will log to the console in the IDE and get passed to the app logs.
+        A valid python stream can be used. On the client, you may want to create your own.
 
-    .. attribute:: disbaled
+    .. attribute:: disabled
 
-        To stop a logger from outputing to the console set it to disabled ``logger.disabled = True``.
+        To stop a logger from outputting to the console set it to disabled ``logger.disabled = True``.
 
 
     .. code-block:: python
@@ -65,7 +65,7 @@ API
     .. method:: log(level, msg)
 
         The level is a valid logging level. If the level is greater than or equal to the logger's level
-        the msg will be logged according to the loggers format.
+        the msg will be logged according to the logger's format.
 
     .. method:: debug(msg)
 
@@ -89,7 +89,7 @@ API
 
     .. method:: get_format_params(*, level, msg, **params)
 
-        This method can be overridden by subclass. Any extra params can be used in the format string.
+        This method can be overridden by a subclass. Any extra params can be used in the format string.
 
     .. code-block:: python
 
@@ -110,7 +110,7 @@ The ``TimerLogger`` is a subclass of ``Logger``.
 It supports an extra format argument ``elapsed`` with a default format of:
 ``"{time:%H:%M:%S} | {name}: ({elapsed:6.3f} secs) | {msg}"``
 
-It adds 3 methods which can be used as follows.
+It adds 3 methods, which can be used as follows.
 
 .. code-block:: python
 
@@ -136,7 +136,7 @@ The above code logs
     # 20:58:02 | my timer: ( 2.005 secs) | end
 
 
-Each method can take an option msg argument.
+Each method can take an optional msg argument.
 Each method calls the the ``debug()`` method, i.e. if you set ``TimerLogger(level=logging.INFO)``,
 then the above logs would not be displayed in the console.
 
@@ -196,13 +196,13 @@ Import the ``timed`` decorator and apply it to a function:
 
 The decorator takes a ``logging.Logger`` instance as one of its optional keyword arguments.
 On both the server and the client this can be a Logger from the anvil_extras logging module.
-On the server this can be from the Python ``logging`` module.
+On the server, this can be from the Python ``logging`` module.
 
 The decorator also takes an optional ``level`` keyword argument which must be one of the standard levels from the logging module.
 When no argument is passed, the default level is ``logging.INFO``.
 
 The default logger is an anvil_extras Logger instance, which will log to stdout.
-Messages will appear in your App's logs and in the IDE console.
+Messages will appear in your App's logs and the IDE console.
 You can, however, create your own logger and pass that instead if you need more sophisticated behaviour:
 
 .. code-block:: python
@@ -265,9 +265,9 @@ As in the above code, with auto-refresh, ``item`` is changed but ``other_item`` 
 
 Wait for writeback
 ------------------
-Using ``wait_for_writeback`` as a decorator prevents a function executing before any queued writebacks have completed.
+Using ``wait_for_writeback`` as a decorator prevents a function from executing before any queued writebacks have been completed.
 
-This is particularly useful if you have a form with text fields. Race condidtions can occur between a text field writing back to an item and a click event that uses the item.
+This is particularly useful if you have a form with text fields. Race conditions can occur between a text field writing back to an item and a click event that uses the item.
 
 To use ``wait_for_writeback``, import the decorator and apply it to a function, usually an event_handler:
 
