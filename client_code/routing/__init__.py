@@ -60,7 +60,7 @@ def go(x=0):
 
 def on_session_expired(reload_hash=True, allow_cancel=True):
     """override anvil's default session expired behaviour"""
-    print(
+    logger.warning(
         "Deprecated: it is now possible to catch a SessionExpiredError in the anvil.set_default_error_handler() callback"
     )
     if type(reload_hash) is not bool:

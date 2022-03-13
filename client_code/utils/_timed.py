@@ -10,32 +10,11 @@ import sys
 from functools import wraps
 from time import time
 
+from . import logging as logging
+
 __version__ = "1.9.0"
 
-try:
-    import logging
-
-    def get_logger():
-        logging.basicConfig(level=logging.INFO)
-        handler = logging.StreamHandler(sys.stdout)
-        formatter = logging.Formatter(
-            "%(asctime)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-        )
-        handler.setFormatter(formatter)
-        logger = logging.getLogger(__name__)
-        logger.addHandler(handler)
-        return logger
-
-except ImportError:
-    from . import _logging as logging
-
-    def get_logger():
-        return logging.Logger(
-            name="timing", format="{datetime:%Y-%m-%d %H:%M:%S}: {msg}"
-        )
-
-
-LOGGER = get_logger()
+LOGGER = logging.Logger(name="timing", format="{datetime:%Y-%m-%d %H:%M:%S}: {msg}")
 
 
 def _signature(func, args, kwargs):
@@ -43,20 +22,23 @@ def _signature(func, args, kwargs):
     sig = [repr(a) for a in args]
     sig.extend(f"{key}={value!r}" for key, value in kwargs.items())
     sig = ",".join(sig)
-    if len(sig) > 50:
-        sig = sig[:50] + "..."
+    if len(sig) > 40:
+        sig = sig[:40] + "..."
+
     return f"{func.__name__}({sig})"
 
 
-def timed(func, logger=LOGGER, level=logging.INFO):
+def timed(_func=None, *, logger=LOGGER, level=logging.INFO):
     """A decorator to time the execution of a function"""
+    if _func is None:
+        return lambda _func: timed(_func, logger=logger, level=level)
 
-    @wraps(func)
+    @wraps(_func)
     def wrapper(*args, **kwargs):
-        signature = _signature(func, args, kwargs)
+        signature = _signature(_func, args, kwargs)
         logger.log(msg=f"{signature} called", level=level)
         started_at = time()
-        result = func(*args, **kwargs)
+        result = _func(*args, **kwargs)
         finished_at = time()
         duration = f"{(finished_at - started_at):.2f}s"
         logger.log(

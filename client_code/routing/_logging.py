@@ -7,14 +7,23 @@
 
 __version__ = "1.9.0"
 
-from ..utils._logging import Logger
+from ..utils.logging import DEBUG, INFO
+from ..utils.logging import Logger as _Logger
 
-logger = Logger("#routing", format="{name}: {msg}")
+
+class Logger(_Logger):
+    def __setattr__(self, attr: str, value) -> None:
+        if attr == "debug":  # backwards compatability
+            return _Logger.__setattr__(self, "level", DEBUG if value else INFO)
+        return _Logger.__setattr__(self, attr, value)
+
+
+logger = Logger("#routing", format="{name}: {msg}", level=INFO)
 # set to false if you don't wish to debug. You can also - in your main form - do routing.logger.debug = False
 _callable = type(lambda: None)
 
 
 def log(f: _callable):
-    if logger.level:
+    if logger.level > DEBUG:
         return
-    logger.print(f())
+    logger.debug(f())
