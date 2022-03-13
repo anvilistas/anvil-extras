@@ -8,7 +8,7 @@
 import anvil
 from anvil.js.window import location
 
-from ._logging import log
+from ._logging import logger
 
 __version__ = "1.9.0"
 
@@ -38,8 +38,8 @@ def get_url_components(url_hash=None):
         key_value_pairs = url_dict.split("&")
         for i, pair in enumerate(key_value_pairs):
             if "=" not in pair:
-                log(
-                    lambda: f"\n\n**WARNING**:\ngot an unusual url parameter with no '=': {pair!r}"
+                logger.debug(
+                    f"\n\n**WARNING**:\ngot an unusual url parameter with no '=': {pair!r}"
                     f"\nIf this parameter split unexpectedly it probably contains '&'. Use:"
                     f"\nrouting.set_url_hash(url_pattern=url_pattern, url_dict=url_dict)"
                     f"\nFor correct encoding\n"

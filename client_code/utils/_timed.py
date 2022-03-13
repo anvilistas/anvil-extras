@@ -10,7 +10,7 @@ import sys
 from functools import wraps
 from time import time
 
-from . import logging as logging
+from .. import logging as logging
 
 __version__ = "1.9.0"
 

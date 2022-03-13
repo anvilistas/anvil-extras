@@ -118,13 +118,11 @@ class TimerLogger(Logger):
         Logger.__init__(self, name=name, level=level, format=format, stream=stream)
         self._t = None
 
-    def get_format_params(self, *, level, msg, **params):
+    def get_format_params(self, **params):
         if self._t is None:
             raise RuntimeError(f"{self} has not started, or has ended already")
         elapsed = _time() - self._t
-        return Logger.get_format_params(
-            self, level=level, msg=msg, elapsed=elapsed, **params
-        )
+        return Logger.get_format_params(self, elapsed=elapsed, **params)
 
     def start(self, msg="start"):
         if self._t is not None:

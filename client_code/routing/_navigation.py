@@ -10,7 +10,6 @@ from functools import wraps
 from anvil.js.window import history, location, window
 
 from . import _router
-from ._logging import logger
 
 __version__ = "1.9.0"
 
