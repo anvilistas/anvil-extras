@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from functools import cache
+from functools import lru_cache
 
 __version__ = "1.9.0"
 
@@ -15,12 +15,13 @@ def __dir__():
         "auto_refreshing",
         "wait_for_writeback",
         "timed",
+        "logging",
         "BindingRefreshDict",
         "correct_canvas_resolution",
     ]
 
 
-@cache
+@lru_cache(maxsize=None)
 def __getattr__(name):
     # todo use dynamic imports but __import__ is not yet supported in skulpt
     if name == "auto_refreshing":

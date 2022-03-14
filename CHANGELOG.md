@@ -24,11 +24,20 @@
     called within a startup module, replaces the call to `open_form()`.
     `routing.launch()` checks the current `url_hash` and ensures that the correct template is loaded based on the paramaters of each template.
     Calling `routing.set_url_hash()` in a Startup Module will have no effect on form loading until `routing.launch()` has been called. (This allows you to change the `url_hash` within the startup logic)
+* `logging` module
+  https://github.com/anvilistas/anvil-extras/pull/282
+  Small, simple, lightweight API for logging in anvil apps, a bit like the Python logging module.
+  See the docs:
+  * `Logger` https://anvil-extras.readthedocs.io/en/latest/guides/modules/logging.html#logger
+  * `TimerLogger` https://anvil-extras.readthedocs.io/en/latest/guides/modules/logging.html#timerlogger
+
 
 
 ## Bug fixes
 * Multi-select - fix button clicks don't always close the dropdown menu
   https://github.com/anvilistas/anvil-extras/issues/271
+* fix bug with `@timed` decorator if used with keyword logger and level arguments
+  https://github.com/anvilistas/anvil-extras/pull/282
 
 
 # v1.9.0 27-Jan-2022

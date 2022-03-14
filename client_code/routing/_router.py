@@ -11,7 +11,7 @@ from anvil import get_open_form, open_form
 from anvil.js.window import document
 
 from ._alert import handle_alert_unload as _handle_alert_unload
-from ._logging import log
+from ._logging import logger
 from ._utils import get_url_components
 
 __version__ = "1.9.0"
@@ -29,8 +29,8 @@ class _StackDepthContext:
         if self.stack_depth <= 5:
             self.stack_depth += 1
             return
-        log(
-            lambda: "**WARNING**"
+        logger.debug(
+            "**WARNING**"
             "\nurl_hash redirected too many times without a form load, getting out\ntry setting redirect=False"
         )
         raise NavigationExit
@@ -68,15 +68,15 @@ def launch():
 
 def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
     if not _ready:
-        log(
-            lambda: f"routing is not ready or the template has not finished loading: queuing the call {url_hash!r}"
+        logger.debug(
+            f"routing is not ready or the template has not finished loading: queuing the call {url_hash!r}"
         )
         _queued.append([(url_hash, url_pattern, url_dict), properties])
         return
     if url_hash is None:
         url_hash, url_pattern, url_dict = get_url_components()
-    log(
-        lambda: f"navigation triggered\n\turl_hash    = {url_hash!r}"
+    logger.debug(
+        f"navigation triggered\n\turl_hash    = {url_hash!r}"
         f"\n\turl_pattern = {url_pattern!r}\n\turl_dict    = {url_dict}"
     )
     with stack_depth_context:
@@ -94,7 +94,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         if form is None:
             form = get_form_to_add(url_hash, url_pattern, url_dict, properties)
         else:
-            log(lambda: f"{form.__class__.__name__!r} loading from cache")
+            logger.debug(f"{form.__class__.__name__!r} loading from cache")
         update_form_attrs(form)
         add_form_to_container(form)
         alert_form_loaded(form=form, **url_args)
@@ -102,7 +102,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
 
 def handle_alert_unload():
     if _handle_alert_unload():
-        log(lambda: "unload prevented by active alert")
+        logger.debug("unload prevented by active alert")
         raise NavigationExit
 
 
@@ -115,7 +115,7 @@ def handle_form_unload():
     with _navigation.PreventUnloading():
         if not before_unload():
             return
-        log(lambda: f"stop unload called from {_current_form.__class__.__name__}")
+        logger.debug(f"stop unload called from {_current_form.__class__.__name__}")
         _navigation.stopUnload()
         raise NavigationExit
 
@@ -127,7 +127,7 @@ def load_template(url_hash):
     if form is not None and current_cls not in _templates:
         raise NavigationExit  # not using templates
 
-    log(lambda: "Checking routing templates")
+    logger.debug("Checking routing templates")
     for cls, path, condition in chain.from_iterable(_ordered_templates.values()):
         if not url_hash.startswith(path):
             continue
@@ -138,14 +138,14 @@ def load_template(url_hash):
     else:
         load_error_or_raise(f"No template for {url_hash!r}")
     if current_cls is cls:
-        log(lambda: f"{cls.__name__!r} routing template unchanged")
+        logger.debug(f"{cls.__name__!r} routing template unchanged")
     else:
-        log(
-            lambda: f"{current_cls.__name__!r} routing template changed to {cls.__name__!r}, exiting this navigation call"
+        logger.debug(
+            f"{current_cls.__name__!r} routing template changed to {cls.__name__!r}, exiting this navigation call"
         )
         _current_form = None
         f = cls()
-        log(lambda: f"form template loaded {cls.__name__!r}, re-navigating")
+        logger.debug(f"form template loaded {cls.__name__!r}, re-navigating")
         open_form(f)
         raise NavigationExit
 
@@ -154,7 +154,7 @@ def alert_on_navigation(**url_args):
     f = get_open_form()
     on_navigation = getattr(f, "on_navigation", None)
     if on_navigation is not None:
-        log(lambda: f"{f.__class__.__name__!r}.on_navigation() called")
+        logger.debug(f"{f.__class__.__name__}.on_navigation() called")
         on_navigation(unload_form=_current_form, **url_args)
 
 
@@ -166,7 +166,7 @@ def get_form_to_add(url_hash, url_pattern, url_dict, properties):
     global _current_form
     path, dynamic_vars = path_matcher(url_hash, url_pattern, url_dict)
     form = path.form.__new__(path.form, **properties)
-    log(lambda: f"adding {form.__class__.__name__!r} to cache")
+    logger.debug(f"adding {form.__class__.__name__!r} to cache")
     _current_form = _cache[url_hash] = form
     form._routing_props = {
         "title": path.title,
@@ -179,8 +179,8 @@ def get_form_to_add(url_hash, url_pattern, url_dict, properties):
     form.dynamic_vars = dynamic_vars
     form.__init__(**properties)  # this might be slow if it does a bunch of server calls
     if _current_form is not form:
-        log(
-            lambda: f"Problem loading {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
+        logger.debug(
+            f"Problem loading {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
         )
         # and if it was slow, and some navigation happened we should end now
         raise NavigationExit
@@ -214,8 +214,8 @@ def path_matcher(url_hash, url_pattern, url_dict):
             if set(url_dict) == route_info.url_keys:
                 return route_info, dynamic_vars
 
-    log(
-        lambda: f"no route form with:\n\turl_pattern={url_pattern!r}\n\turl_keys={list(url_dict.keys())}\n"
+    logger.debug(
+        f"no route form with:\n\turl_pattern={url_pattern!r}\n\turl_keys={list(url_dict.keys())}\n"
         "If this is unexpected perhaps you haven't imported the form correctly"
     )
     load_error_or_raise(f"{url_hash!r} does not exist")
@@ -253,13 +253,13 @@ def alert_form_loaded(**url_args):
     f = get_open_form()
     on_form_load = getattr(f, "on_form_load", None)
     if on_form_load is not None:
-        log(lambda: f"{f.__class__.__name__!r}.on_form_load() called")
+        logger.debug(f"{f.__class__.__name__}.on_form_load() called")
         on_form_load(**url_args)
 
 
 def load_error_form():
     global _error_form, _current_form
-    log(lambda: f"loading error form: {_error_form!r}")
+    logger.debug(f"loading error form: {_error_form!r}")
     url_hash, _, _ = get_url_components()
     _cache[url_hash] = _error_form()
     _current_form = _cache[url_hash]
@@ -271,8 +271,8 @@ def load_error_form():
 
 
 def add_route_info(route_info):
-    log(
-        lambda: "   route registered: (form={form.__name__!r}, url_pattern={url_pattern!r}, url_keys={url_keys}, title={title!r})".format(
+    logger.debug(
+        "   route registered: (form={form.__name__!r}, url_pattern={url_pattern!r}, url_keys={url_keys}, title={title!r})".format(
             **route_info._asdict()
         )
     )
@@ -281,8 +281,8 @@ def add_route_info(route_info):
 
 def add_template_info(cls, priority, template_info):
     global _ordered_templates, _templates
-    log(
-        lambda: "template registered: (form={form.__name__!r}, path={path!r}, priority={priority}, condition={condition})".format(
+    logger.debug(
+        "template registered: (form={form.__name__!r}, path={path!r}, priority={priority}, condition={condition})".format(
             priority=priority, **template_info._asdict()
         )
     )

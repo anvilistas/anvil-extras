@@ -77,6 +77,7 @@ This is equivalent to:
 If you have a different top-level template for the ``admin`` section of your app you might want a second template.
 
 .. code:: python
+
     from .. import Globals
 
     @routing.template(path="admin", priority=1, condition=lambda: Globals.admin is not None)
@@ -89,6 +90,7 @@ will become the ``open_form``.
 Another example might be a login template
 
 .. code:: python
+
     from .. import Globals
 
     @routing.template(path="", priority=2, condition=lambda: Globals.user is None)

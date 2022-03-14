@@ -1,33 +1,23 @@
 Utils
 =====
-Client and server side utility functions.
+Client and server-side utility functions.
+
+
+
 
 Timing
 ------
-There are client and server side decorators which you can use to show that a function has been called and the length of time it took to execute.
 
-Client Code
-^^^^^^^^^^^
-Import the ``timed`` decorator and apply it to a function:
 
-.. code-block:: python
+timed decorator
+^^^^^^^^^^^^^^^
 
-   from anvil_extras.utils import timed
-
-   @timed
-   def target_function(args, **kwargs):
-       print("hello world")
-
-When the decorated function is called, you will see messages in the IDE console showing the arguments that were passed to it and the execution time.
-
-Server Code
-^^^^^^^^^^^
 Import the ``timed`` decorator and apply it to a function:
 
 .. code-block:: python
 
    import anvil.server
-   from anvil_extras.server_utils import timed
+   from anvil_extras.utils import timed
 
 
    @anvil.server.callable
@@ -35,22 +25,40 @@ Import the ``timed`` decorator and apply it to a function:
    def target_function(args, **kwargs):
        print("hello world")
 
-On the server side, the decorator takes a ``logging.Logger`` instance as one of its optional arguments. The default instance will log to stdout, so that messages will appear in your app's logs and in the IDE console. You can, however, create your own logger and pass that instead if you need more sophisticated behaviour:
+The decorator takes a ``logging.Logger`` instance as one of its optional keyword arguments.
+On both the server and the client this can be a Logger from the anvil_extras logging module.
+On the server, this can be from the Python ``logging`` module.
+
+The decorator also takes an optional ``level`` keyword argument which must be one of the standard levels from the logging module.
+When no argument is passed, the default level is ``logging.INFO``.
+
+The default logger is an anvil_extras Logger instance, which will log to stdout.
+Messages will appear in your App's logs and the IDE console.
+You can, however, create your own logger and pass that instead if you need more sophisticated behaviour:
 
 .. code-block:: python
 
    import logging
-   import anvil.server
-   from anvil_extras.server_utils import timed
+   from anvil_extras.utils import timed
 
    my_logger = logging.getLogger(__name__)
 
 
-   @timed(logger=my_logger)
+   @timed(logger=my_logger, level=logging.DEBUG)
    def target_function(args, **kwargs):
        ...
 
-The decorator also takes an optional ``level`` argument which must be one of the standard levels from the logging module. When no argument is passed, the default level is ``logging.INFO``.
+.. code-block:: python
+
+   from anvil_extras.utils import timed, logging
+
+   my_logger = logging.Logger(name="Timing", format={"{name}: {time:%H:%M:%S}-{msg}"}, level=logging.DEBUG)
+
+   @timed(logger=my_logger, level=logging.DEBUG)
+   def target_function(args, **kwargs):
+       ...
+
+
 
 Auto-Refresh
 ------------
@@ -88,9 +96,9 @@ As in the above code, with auto-refresh, ``item`` is changed but ``other_item`` 
 
 Wait for writeback
 ------------------
-Using ``wait_for_writeback`` as a decorator prevents a function executing before any queued writebacks have completed.
+Using ``wait_for_writeback`` as a decorator prevents a function from executing before any queued writebacks have been completed.
 
-This is particularly useful if you have a form with text fields. Race condidtions can occur between a text field writing back to an item and a click event that uses the item.
+This is particularly useful if you have a form with text fields. Race conditions can occur between a text field writing back to an item and a click event that uses the item.
 
 To use ``wait_for_writeback``, import the decorator and apply it to a function, usually an event_handler:
 

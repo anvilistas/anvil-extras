@@ -12,7 +12,6 @@ from anvil.js import window as _w
 from . import _navigation
 from . import _router as _r
 from ._decorators import error_form, route, template
-from ._logging import log as _log
 from ._logging import logger
 from ._router import NavigationExit, launch
 from ._utils import (
@@ -23,8 +22,6 @@ from ._utils import (
     get_url_pattern,
 )
 
-logger.debug = False
-
 default_template = template()
 main_router = default_template  # backwards compatability
 
@@ -33,11 +30,11 @@ main_router = default_template  # backwards compatability
 def reload_page(hard=False):
     """reload the current page"""
     if hard:
-        _log(lambda: "hard reload_page called")
+        logger.debug("hard reload_page called")
         _w.location.reload()
     else:
-        _log(
-            lambda: "reload_page called, clearing the cache for this page and reloading"
+        logger.debug(
+            "reload_page called, clearing the cache for this page and reloading"
         )
         url_hash, url_pattern, url_dict = get_url_components()
         remove_from_cache(url_hash)
@@ -46,7 +43,7 @@ def reload_page(hard=False):
 
 def go_back():
     """go to previous page"""
-    _log(lambda: "going back a page")
+    logger.debug("going back a page")
     _w.history.back()
 
 
@@ -54,13 +51,13 @@ def go(x=0):
     """go forward x pages (use negative x to go back)"""
     if not isinstance(x, int):
         raise TypeError(f"go requires an int not {type(x)}")
-    _log(lambda: f"go called with with x={x}")
+    logger.debug(f"go called with with x={x}")
     _w.history.go(x)
 
 
 def on_session_expired(reload_hash=True, allow_cancel=True):
     """override anvil's default session expired behaviour"""
-    print(
+    logger.warning(
         "Deprecated: it is now possible to catch a SessionExpiredError in the anvil.set_default_error_handler() callback"
     )
     if type(reload_hash) is not bool:
@@ -74,7 +71,7 @@ def on_session_expired(reload_hash=True, allow_cancel=True):
 
 def set_warning_before_app_unload(warning=True):
     """set a warning message before someone tries to navigate away from the app"""
-    _log(lambda: f"Setting warning before app unload set to: {warning}")
+    logger.debug(f"Setting warning before app unload set to: {warning}")
 
     def beforeunload(e):
         e.preventDefault()  # cancel the event
@@ -91,11 +88,11 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
     url_hash = _process_url_arguments(
         url_hash, url_pattern=url_pattern, url_dict=url_dict
     )[0]
-    _log(lambda: f"removing {url_hash!r} from cache")
+    logger.debug(f"removing {url_hash!r} from cache")
     cached = _r._cache.pop(url_hash, None)
     if cached is None:
-        _log(
-            lambda: f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
+        logger.debug(
+            f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
         )
 
 
@@ -107,12 +104,12 @@ def add_to_cache(url_hash, form):
     """the form should be initiated
     useful if you have a form instance and want to add it to cache without navigating to it
     """
-    _log(lambda: f"adding {url_hash!r} to cache with {form.__class__.__name__!r}")
+    logger.debug(f"adding {url_hash!r} to cache with {form.__class__.__name__!r}")
     _r._cache[url_hash] = form
 
 
 def clear_cache():
-    _log(lambda: "clearing the cache")
+    logger.debug("clearing the cache")
     _r._cache.clear()
 
 
@@ -173,18 +170,18 @@ def set_url_hash(
         # but do continue if the url_hash is not in the cache i.e it was manually removed
 
     if set_in_history and not replace_current_url:
-        _log(
-            lambda: f"setting url_hash to: '#{url_hash}', adding to top of history stack"
+        logger.debug(
+            f"setting url_hash to: '#{url_hash}', adding to top of history stack"
         )
         _navigation.pushState(url_hash)
     elif set_in_history and replace_current_url:
-        _log(
-            lambda: f"setting url_hash to: '#{url_hash}', replacing current_url, setting in history"
+        logger.debug(
+            f"setting url_hash to: '#{url_hash}', replacing current_url, setting in history"
         )
         _navigation.replaceState(url_hash)
     elif not set_in_history and replace_current_url:
-        _log(
-            lambda: f"setting url_hash to: '#{url_hash}', replacing current_url, NOT setting in history"
+        logger.debug(
+            f"setting url_hash to: '#{url_hash}', replacing current_url, NOT setting in history"
         )
         _navigation.replaceUrlNotState(url_hash)
 
