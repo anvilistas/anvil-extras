@@ -33,19 +33,18 @@ Here are a few examples of URL hashes within an app and associated terminology.
 +--------------------------------+----------------------+-----------------+-----------------+--------------+-----------------+
 
 
-Main Form
----------
+Template Forms
+--------------
 
-This is either the startup form or the form loaded from a startup module.
-It contains the header, the navigation bar and a ``content_panel``.
-It is based on the Material Design standard-page.html.
+These are top-level forms.
 
-The ``MainForm`` is **not** the ``HomeForm``. The ``MainForm`` has **no
-content**. It only has a navigation bar, header, optional sidebar and a ``content_panel``.
+A ``TemplateForm`` is **not** the ``HomeForm``. A ``TemplateForm`` has **no content**.
+It only has a navigation bar, header, optional sidebar and a ``content_panel``
+(This is based on the Material Design standard-page.html).
 
 -  import the routing module
 -  import all the forms that may be added to the ``content_panel``
--  add the decorator: ``@routing.main_router``
+-  add the decorator: ``@routing.template(path, priority, condition)``
 
 .. code:: python
 
@@ -55,15 +54,54 @@ content**. It only has a navigation bar, header, optional sidebar and a ``conten
     from .Form3 import Form3
     from .ErrorForm import ErrorForm
 
-    @routing.main_router
+    @routing.template(path="", priority=0, condition=None)
     class Main(MainTemplate):
 
+
+An Anvil app can have multiple template forms.
+When the ``url_hash`` changes the routing module will
+check each registered template form in order of priority (highest values first).
+A template form will be loaded as the ``open_form`` only if,
+the current ``url_hash`` starts with the template's path argument **and** either the condition is ``None``
+**or** the condition is a callable that returns ``True``.
+
+The above example would be the fallback template form.
+This is equivalent to:
+
+.. code:: python
+
+    @routing.defult_template
+    class Main(MainTemplate):
+
+
+If you have a different top-level template for the ``admin`` section of your app you might want a second template.
+
+.. code:: python
+    from .. import Globals
+
+    @routing.template(path="admin", priority=1, condition=lambda: Globals.admin is not None)
+    class AdminForm(AdminTemplate):
+
+The above code takes advantage of an implied ``Globals`` module that has an ``admin`` attribute.
+If the ``url_hash`` starts with ``admin`` and the ``Globals.admin`` is not ``None`` then this template
+will become the ``open_form``.
+
+Another example might be a login template
+
+.. code:: python
+    from .. import Globals
+
+    @routing.template(path="", priority=2, condition=lambda: Globals.user is None)
+    class LoginForm(LoginTemplate):
+
+
+Note that ``TemplateForms`` are never cached (unlike ``RouteForms``).
 
 
 Route Forms
 -----------
 
-A route form is any form that will be loaded inside the ``MainForm``'s
+A route form is any form that will be loaded inside a ``TemplateForm``'s
 ``content_panel``.
 
 -  Import the routing module
@@ -97,7 +135,7 @@ Or without any ``url_keys``
 Home form
 ---------
 
-The ``HomeForm`` is also a ``Route Form`` that appears in the ``content_panel`` of the ``MainForm``.
+The ``HomeForm`` is also a ``Route Form`` that appears in the ``content_panel`` of the loaded ``TemplateForm``.
 
 -  Import the routing module
 -  add the ``@routing.route`` decorator
@@ -134,6 +172,32 @@ shows an error message:
         ...
 
 --------------
+
+Startup Forms and Startup Modules
+---------------------------------
+
+If you are using a Startup Module or a Startup Form all the ``TemplateForm``s and ``RouteForm``s must
+be imported otherwise they will not be registered by the ``routing`` module.
+
+If using a Startup module, it is recommended call ``routing.launch()`` after any initial app logic
+
+.. code:: python
+
+    from anvil_extras import routing
+    from .. import Global
+
+
+    # Setup some global data
+    Global.user = anvil.server.call("get_user")
+    if Global.user is None:
+        routing.set_url_hash("login", replace_current_url=True)
+
+    routing.launch() # I will load the correct template form
+
+
+It is also ok to use ``anvil.open_form("LoginForm")``, or to use a ``TemplateForm`` as the Startup Form.
+In either case, the ``routing`` module will validate the template form is correct based on the registered templates for the app.
+
 
 Navigation
 ----------
@@ -215,24 +279,29 @@ API
 
 Decorators
 ^^^^^^^^^^
-.. attribute:: routing.main_router
+.. function:: routing.template(path='', priority=0, condition=None)
 
-    Apply this decorator above the top-level Form - ``MainForm``.
-    The ``MainForm`` must have a ``content_panel``.
-    There are two callbacks available to a ``main_router`` ``MainForm``.
+    Apply this decorator above the top-level Form - ``TemplateForm``.
+    The ``TemplateForm`` must have a ``content_panel``.
+    There are two callbacks available to a ``TemplateForm``.
 
     .. method:: on_navitagion(self, **nav_args)
                 on_navitagion(self, url_hash, url_patter, url_dict, unload_form)
 
-        The ``on_navigation`` method, when added to your ``MainForm``, will be called whenever the ``url_hash`` is changed.
-        It's a good place to adjust the look of your ``MainForm`` if the ``url_hash`` changes. e.g. the selected link in the sidebar.
+        The ``on_navigation`` method, when added to your ``TemplateForm``, will be called whenever the ``url_hash`` is changed.
+        It's a good place to adjust the look of your ``TemplateForm`` if the ``url_hash`` changes. e.g. the selected link in the sidebar.
         The ``unload_form`` is possible ``None`` if this is the first load of the app.
 
     .. method:: on_form_load(self, **nav_args)
                 on_form_load(self, url_hash, url_patter, url_dict, form)
 
         The ``on_form_load`` is called after a form has been loaded into the ``content_panel``.
-        This is also a good time to adjust the ``MainForm``.
+        This is also a good time to adjust the ``TemplateForm``.
+
+
+.. attribute:: routing.default_template
+
+    equivalent to ``routing.template(path='', priority=0, condition=None)``.
 
 
 .. function:: routing.route(url_pattern, url_keys=[], title=None, full_width_row=False)
@@ -253,7 +322,7 @@ Decorators
 
     .. attribute:: url_dict
 
-        The query string converted to a python dict.
+        The query string is converted to a python dict.
 
     .. attribute:: dynamic_vars
 
@@ -270,9 +339,27 @@ Decorators
     that will be displayed if the ``url_hash`` does not refer to any known ``Route Form``.
 
 
+Exception
+^^^^^^^^^
+
+.. exception:: routing.NavigationExit
+
+    Usually called inside the ``on_navigation`` callback.
+    Prevents the current navigation from attempting to change the ``content_panel``.
+    Useful for login forms.
+
 
 List of Methods
 ^^^^^^^^^^^^^^^
+
+.. function:: routing.launch()
+
+    This can be called inside a Startup Module.
+    It will ensure that the correct Template is loaded based on the current ``url_hash`` and template conditions.
+    Calling ``open_form()`` on a ``TemplateForm`` will implicitly call ``routing.launch()``.
+    Until ``routing.launch()`` is called anvil components will not be loaded when the ``url_hash`` is changed.
+    This allows you to set the ``url_hash`` in startup logic before any navigation is attempted.
+    Similarly when a ``TemplateForm`` is loaded any routing is delayed until after the ``TemplateForm`` has been initialized.
 
 .. function:: routing.set_url_hash(url_hash)
               routing.set_url_hash(url_hash, **properties)
@@ -384,17 +471,13 @@ Routing Debug Print Statements
 To debug your routing behaviour use the routing logger.
 Routing logs are turned off by default.
 
-To use the routing logger, in your ``MainForm`` do:
+To use the routing logger, in your Startup Module
 
 .. code:: python
 
     from anvil_extras import routing
 
     routing.logger.debug = True
-
-    @routing.main_router
-    class MainForm(MainFormTemplate):
-        ...
 
 
 Page Titles
@@ -519,10 +602,10 @@ This is the correct way:
 
 
 
-Main Router Callbacks
-^^^^^^^^^^^^^^^^^^^^^
+Template Form Callbacks
+^^^^^^^^^^^^^^^^^^^^^^^
 
-There are two callbacks available for a ``MainForm``.
+There are two callbacks available for a ``TemplateForm``.
 
 -  ``on_navigation``: called whenever the ``url_hash`` changes
 -  ``on_form_load``: called after a form is loaded into the ``content_panel``
@@ -532,11 +615,11 @@ There are two callbacks available for a ``MainForm``.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To use the Material Design role ``'selected'`` for sidebar links,
-create an ``on_navigation`` method in your ``MainForm``.
+create an ``on_navigation`` method in your ``TemplateForm``.
 
 .. code:: python
 
-    @routing.main_router
+    @routing.default_template
     class MainForm(MainFormTemplate):
       def __init__(self, **properties):
         self.init_components(**properties)
@@ -546,7 +629,7 @@ create an ``on_navigation`` method in your ``MainForm``.
 
       def on_navigation(self, **nav_args):
         # this method is called whenever routing provides navigation behaviour
-        # url_hash, url_pattern, url_dict are provided by the main_router class decorator
+        # url_hash, url_pattern, url_dict are provided by the template class decorator
         for link in self.links:
           if link.tag.url_hash == nav_args.get('url_hash'):
             link.role = 'selected'
@@ -583,11 +666,12 @@ Note if you wanted to use a fade-out you could also use the
 
 .. code:: python
 
-      def on_navigation(self, **nav_args):
-          # this method is called whenever the url_hash changes
-          form = nav_args["unload_form"]
-          animate(form, fade_out, duration=300).wait()
-          # wait for animation before continuing
+    def on_navigation(self, **nav_args):
+        # this method is called whenever the url_hash changes
+        form = nav_args["unload_form"]
+        if form is not None:
+            animate(form, fade_out, duration=300).wait()
+            # wait for animation before continuing
 
 
 
@@ -659,101 +743,6 @@ if the ``id`` parameter is empty like: ``url_hash = "article?id="``
 See `API Docs <#api>`__ for a list of valid kwargs for ``routing.set_url_hash()``.
 
 
-Changing The Main Form
-^^^^^^^^^^^^^^^^^^^^^^
-
-In a more complex app, it's common to want to change the Main Form.
-At present, changing the Main Form is not supported (support may be added in a future release).
-
-Instead, it is recommended to change the structure of the Main Form dynamically
-(sidebar, navbar and title) based on the ``url_hash``.
-
-Let's say you have an admin part of the app and a standard part of the app.
-All admin content starts with ``admin/``.
-
-Use the ``on_navigation`` callback to change the sidebar and title components.
-
-.. code:: python
-
-    def on_navigation(self, url_hash, **nav_args):
-        is_admin = url_hash.startswith("admin/")
-        if is_admin is not self.is_admin:
-            self.setup(admin=is_admin)
-
-    def setup(self, admin=False):
-        if admin:
-            self.sidebar = self.admin_sidebar_panel
-            self.title_label.text = "Admin"
-        else:
-            self.sidebar = self.main_sidebar_panel
-            self.title_label.text = "Main"
-        self.clear(slot="left-nav")
-        self.add_component(self.sidebar, slot="left-nav")
-        self.is_admin = admin
-
-
-An alternative might be to use the form_show event of various Route Forms.
-We can outsource managing the Main Form structure changes to a separate module.
-In this example, the module is called Manager and contains functions for changing sidebar
-links and the title. This code depends on the main form having a column
-panel called ``sidebar_panel`` for the sidebar links, and a label called
-title for the title.
-
-.. code:: python
-
-    import anvil
-    from anvil_extras import routing
-
-    def _handle_click(sender, **event_args):
-        routing.set_url_hash(sender.tag.url_hash)
-
-    def _make_link(text, url):
-        link = anvil.Link(text=text)
-        link.tag.url_hash = url
-        link.set_event_handler('click', _handle_click)
-        return link
-
-    _home_links = [{'text': 'About', 'url': 'about'}, {'text': 'News', 'url': 'news'}]
-    _news_links = [{'text': 'Last Month', 'url': 'last-month'}, {'text': 'Home', 'url': ''}]
-
-    _sidelinks = {
-        'home': [_make_link(**link_def) for link_def in _home_links)],
-        'news': [_make_link(**link_def) for link_def in _news_links)],
-    }
-
-    def setup_sidelinks(id):
-        if id not in _sidelinks:
-            return
-
-        sidebar_panel = anvil.get_open_form().sidebar_panel
-
-        if sidebar_panel.tag.current == id:
-            return
-
-        sidebar_panel.clear()
-        sidebar_panel.tag.current = id
-
-        for link in _sidelinks[id]:
-            links_panel.add_component(sidelink)
-
-
-    def set_title(title):
-        anvil.get_open_form().title.text = title
-
-
-Then, in every form that is a routing target,
-you tell the manager which sidebar links and title to display.
-Multiple forms can use the same set of sidebar links.
-
-.. code:: python
-
-    def form_show(self, **event_args):
-        # We setup the side navigation links in form show, so that when the form is navigated
-        # away from and back again we can set up the links again.
-        Manager.setup_sidelinks('home')
-        Manager.set_title('Home')
-
-
 Security
 ^^^^^^^^
 
@@ -804,41 +793,7 @@ You can pass properties to a form by adding them as keyword arguments to ``routi
 .. code:: python
 
     def article_link_click(self, **event_args):
-      routing.set_url_hash(f'article?id={self.item["id"]'}, item=self.item)
-
---------------
-
-Sometimes my Route Form is a Route Form sometimes it is a Component
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-No problem... use the parameter ``route=False`` to avoid typical routing
-behaviour
-
-.. code:: python
-
-    def button_click(self,**event_args):
-      alert(ArticleForm(route=False))
-      # setting route = False stops the Route Form using the routing module...
-
---------------
-
-My ``url_dict`` contains the & symbol
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Let's say your ``url_dict`` is ``{'name': 'A&B'}`` doing the following
-will cause a problem
-
-.. code:: python
-
-    routing.set_url_hash('customer?name=A&B')
-
-instead, do
-
-.. code:: python
-
-    routing.set_url_hash(url_pattern='customer', url_dict={'name':'A&B'})
-
-``anvil_extras.routing`` will encode this correctly
+        routing.set_url_hash(f'article?id={self.item["id"]'}, item=self.item)
 
 --------------
 
@@ -847,32 +802,48 @@ I have a login form how do I work that?
 
 **As part of anvil_extras.routing**
 
-.. code:: python
+Login forms are the default form to load if no user is logged in.
 
-    @routing.main_router
-    class MainForm(MainFormTemplate):
-      def __init__(self, **properties):
-        # Set Form properties and Data Bindings.
-        self.init_components(**properties)
+You could create a login template.
+We don't want the user to navigate back/forward to other ``routes`` within our app once the user has logged out.
 
-        user = anvil.users.get_user()
-        if user is None:
-          routing.set_url_hash('login',
-                               replace_current_url=True,
-                               redirect=False
-                               )
-        # after the init method the main router will navigate to the login form so no need to redirect
-
-Then for the ``LoginForm``
+You can avoid this by raising a ``routing.NavigationExit()`` exception in the ``on_navigation()`` callback.
 
 .. code:: python
+
+    @routing.template("", priority=10, condition=lambda: Globals.user is None)
+    class LoginForm(LoginFormTemplate):
+        def on_navigation(self, **url_args):
+            raise routing.NavigationExit()
+            # prevent routing from changing the content panel based on the hash if the user tries to navigate back to a previous page
+
+        def login_button_click(self, **event_args):
+            user = anvil.users.login_with_form()
+            if user is not None:
+                Globals.user = user
+                routing.set_url_hash("")
+
+
+Alternatively, you could load the login form as a ``route`` form.
+
+
+.. code:: python
+
+    @routing.default_template
+    class MainForm(Mainemplate):
+        def __init__(self, **properties):
+            if Globals.users is None:
+                routing.set_url_hash("login") # this logic could also be in a Startup Module
+
+        def on_navigation(self, url_hash, **url_args):
+            if Globals.user is None and url_hash != "login":
+                raise routing.NavigationExit() # prevent routing from changing the content panel
+
 
     @routing.route('login')
     class LoginForm(LoginFormTemplate):
-      def __init__(self, **properties):
-        # Set Form properties and Data Bindings.
-        self.init_components(**properties)
-        # Any code you write here will run when the form opens.
+        def __init__(self, **properties):
+            self.init_components(**properties)
 
       def form_show(self, **event_args):
         """This method is called when the column panel is shown on the screen"""
@@ -894,22 +865,17 @@ create a startup module that will call ``open_form("LoginForm")`` if no user is 
 The ``LoginForm`` should **not** have any ``anvil_extras.routing`` decorators.
 
 Then when the user has signed in you can call ``open_form('MainForm')``.
-The ``main_router`` will then take control of the ``url_hash`` based
-navigation.
+The ``routing`` module will return to changing ``templates`` and load ``routes`` when the ``url_hash`` changes.
 
-When the user signs out you can call ``open_form('LoginForm')`` and the
-``main_router`` will no longer have control of the navigation. There
+When the user signs out you can call ``open_form('LoginForm')``.
+``routing`` will no longer take control of the navigation. There
 will still be entries when the user hits back/forward navigation (i.e.
 the ``url_hash`` will change but there will be no change in forms...)
 :smile:
 
-(You will need to add an on\_navigation method to the ``LoginForm``,
-which does nothing, to keep the ``routing`` module happy)
 
-.. code:: python
+It is a good idea to call ``routing.clear_cache()`` when a user logs out.
 
-    def on_navigation(self):
-        pass
 
 --------------
 
@@ -1033,17 +999,7 @@ browser warning. (This may not work on ios)
 By default, this setting is switched off. To switch it on do:
 ``routing.set_warning_before_app_unload(True)``
 
-To implement this behaviour for all pages change the setting in your
-``MainForm`` like:
-
-.. code:: python
-
-    from anvil_extras import routing
-
-    routing.set_warning_before_app_unload(True)
-
-    @routing.main_router
-    class MainForm(MainFormTemplate):
+To implement this behaviour for all pages change the setting in your Startup Module.
 
 To implement this behaviour only on specific ``Route Forms`` toggle the
 setting like:

@@ -5,14 +5,14 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "1.9.0"
+from functools import wraps
 
-from time import sleep
+from anvil.js.window import history, location, window
 
-from anvil import get_open_form
-from anvil.js.window import document, history, location, window
-
+from . import _router
 from ._logging import logger
+
+__version__ = "1.9.0"
 
 # re-initialise the state object which was overridden on load or this is a new session
 state = history.state or {"url": location.hash, "pos": 0}
@@ -21,10 +21,24 @@ history.replaceState(state, "", state["url"])
 # undo and pos are used for unload behavior
 current = {"undo": 0, "pos": state["pos"]}
 
+# Form Unload Behaviour - here we prevent the user from navigating away from the current form
+# while we wait for the unload function to complete
+
+undoing = False
+waiting = False
+
 
 # when the window back or forward button is pressed onPopState is triggered
 # a popstate is also triggered from a change in the URL in this case the window.history.state will be None
 def onPopState(e):
+    global undoing, waiting
+    if undoing:
+        undoing = False
+        current["pos"] = history.state["pos"]
+        return
+    elif waiting:
+        return preventUnloadPopState(e)
+
     state = e.state
     if state:  # then we're loading from back forward navigation
         current["undo"] = current["pos"] - state["pos"]
@@ -38,102 +52,25 @@ def onPopState(e):
     # we always favour the state['url'] over location.hash
     # since we allow (replace_current_url=True, set_in_history=False)
 
-    main_form = get_open_form()
-    on_navigation = getattr(main_form, "on_navigation", None)
-    if on_navigation is not None:
-        on_navigation()
-    else:
-        logger.print(
-            "the open form is not using '@main_router' or has no 'on_navigation' method"
-        )
+    _router.navigate()
 
 
 window.onpopstate = onPopState
 
 
-def pushState(url):
-    # set_in_history = True, replace_current_url=False
-    current["pos"] += 1
-    current["undo"] = -1
-    state = {"url": url, "pos": current["pos"]}
-    history.pushState(state, "", url)
-
-
-def replaceState(url):
-    # set_in_history=True, replace_current_url=True
-    current["undo"] = 0
-    state = {"url": url, "pos": history.state["pos"]}
-    history.replaceState(state, "", url)
-
-
-def replaceUrlNotState(url):
-    # set_in_history=False, replace_current_url=True
-    current["undo"] = 0
-    history.replaceState(history.state, "", url)
-
-
-#### some helpers #####
-defaultTitle = document.title
-
-
-def setTitle(title):
-    document.title = defaultTitle if title is None else title
-
-
-def reloadPage():
-    location.reload()
-
-
-def goBack():
-    window.history.back()
-
-
-def goTo(x):
-    window.history.go(x)
-
-
-def getUrlHash():
-    return location.hash[1:]  # without the hash
-
-
-############ App unload behaviour ############
-
-# app unload behavior
-def onBeforeUnload(e):
-    e.preventDefault()  # cancel the event
-    e.returnValue = ""  # chrome requires a returnValue to be set
-
-
 def stopUnload():
-    window.onpopstate = None
+    global undoing
+    undoing = True
     history.go(current["undo"])
-    sleep(0.1)  # allow go to fire
-    window.onpopstate = onPopState
-    current["pos"] = history.state["pos"]
 
 
-def setAppUnloadBehaviour(warning):
-    window.onbeforeunload = onBeforeUnload if warning else None
-
-
-def setUnloadPopStateBehaviour(flag):
-    # at this point we're waiting for the unload function to complete
-    # so we bind to the unloadPopStateTemp which prevents any forward back navigation
-    window.onpopstate = unloadPopStateTemp if flag else onPopState
-
-
-# Form Unload Behaviour - here we prevent the user from navigating away from the current form
-# while we wait for the unload function to complete
-def unloadPopStateTemp(e):
+def preventUnloadPopState(e):
+    global undoing
     e.preventDefault()
     state = e.state
     if state:
-        temp_undo = current["pos"] - state["pos"]
-        window.onpopstate = None  # unbind onpopstate
-        history.go(temp_undo)  # reverse the navigation
-        sleep(0.1)  # allow go to fire before rebinding onpopstate
-        window.onpopstate = unloadPopStateTemp
-
+        undoing = True
+        history.go(current["pos"] - state["pos"])  # reverse the navigation
     else:
         # the user is determined to navigate away and has changed the url manually so let them!
         # Not letting them will break the app...
@@ -142,3 +79,47 @@ def unloadPopStateTemp(e):
         history.replaceState(state, "")
         window.onbeforeunload = None
         location.reload()
+
+
+class PreventUnloading:
+    def __enter__(self):
+        global waiting
+        waiting = True
+
+    def __exit__(self, *args):
+        global waiting
+        waiting = False
+
+
+def ensure_hash(f):
+    @wraps(f)
+    def hash_wrapper(url):
+        if not url.startswith("#"):
+            url = "#" + url
+        return f(url)
+
+    return hash_wrapper
+
+
+@ensure_hash
+def pushState(url):
+    # set_in_history = True, replace_current_url=False
+    current["pos"] += 1
+    current["undo"] = -1
+    state = {"url": url, "pos": current["pos"]}
+    history.pushState(state, "", url)
+
+
+@ensure_hash
+def replaceState(url):
+    # set_in_history=True, replace_current_url=True
+    current["undo"] = 0
+    state = {"url": url, "pos": history.state["pos"]}
+    history.replaceState(state, "", url)
+
+
+@ensure_hash
+def replaceUrlNotState(url):
+    # set_in_history=False, replace_current_url=True
+    current["undo"] = 0
+    history.replaceState(history.state, "", url)
