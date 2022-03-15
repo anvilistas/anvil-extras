@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "1.9.0"
+__version__ = "2.0.0"
 
 from anvil.js import window as _w
 
