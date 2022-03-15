@@ -20,13 +20,13 @@ Install as a third-party dependency
 * In the buttons to the right of 'Add a dependency', click the 'Third Party' button
 * Enter the id of the Anvil-Extras app: C6ZZPAPN4YYF5NVJ
 * Hit enter and ensure that the library appears in your list of dependencies
-* Select whether you wish to use the 'Development' or 'Published' version
+* Select which version you wish to use
 
-For the published version, the dependency will be automatically updated as new versions are released.
-On the development version, the update will occur whenever we merge new changes into the library's code base.
-
+The 'Development' version will update whenever we merge new changes into the library's code base.
 Whilst we wouldn't intentionally merge broken code into the development version, you should
 consider it unstable and not suitable for production use.
+
+The 'Published' version is fixed to v1.9.0 and will no longer update (because v2.0.0 includes a breaking change).
 
 Install as a clone
 ------------------
