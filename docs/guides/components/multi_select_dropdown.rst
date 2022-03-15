@@ -16,10 +16,10 @@ Properties
     .. code-block:: python
 
         self.multi_select_drop_down.items = [
-            {"key": "1st": "value": 1, "subtext": "pick me"},
-            {"key": "2nd": "value": 2, "enabled": False},
+            {"key": "1st", "value": 1, "subtext": "pick me"},
+            {"key": "2nd", "value": 2, "enabled": False},
             "---",
-            {"key": "item 3": "value": 3, "title": "3rd times a charm"},
+            {"key": "item 3", "value": 3, "title": "3rd times a charm"},
         ]
 
     The ``"key"`` property is what is displayed in the dropdown.
