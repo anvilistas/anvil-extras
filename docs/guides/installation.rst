@@ -1,16 +1,14 @@
 Installation
 ============
-There are two options for installling anvil-extras:
+There are two options for installing anvil-extras:
 
 #. As a third-party dependency
 
-   This is the simplest option. After you add the library to your app, there is no
-   further maintenance involved and updates will happen automatically.
+   This is the simplest option.
 #. As a clone
 
    This option involves using git on your local machine to manage your own copy of the
-   anvil-extras library. There is more work involved but you gain full control over when
-   and if your copy is updated.
+   anvil-extras library. There is more work involved but you gain full control over your copy.
 
 NOTE: If you are an enterprise user, you cannot use the third-party dependency option.
 
@@ -18,7 +16,7 @@ Install as a third-party dependency
 -----------------------------------
 * From the gear icon at the top of your app's left hand sidebar, select 'Dependencies'
 * In the buttons to the right of 'Add a dependency', click the 'Third Party' button
-* Enter the id of the Anvil-Extras app: C6ZZPAPN4YYF5NVJ
+* Enter the id of the anvil-extras app: C6ZZPAPN4YYF5NVJ
 * Hit enter and ensure that the library appears in your list of dependencies
 * Select which version you wish to use
 
@@ -27,6 +25,7 @@ Whilst we wouldn't intentionally merge broken code into the development version,
 consider it unstable and not suitable for production use.
 
 The 'Published' version is fixed to v1.9.0 and will no longer update (because v2.0.0 includes a breaking change).
+So updating to the latest version now requires manually changing the version from 'Settings: Dependencies'.
 
 Install as a clone
 ------------------
