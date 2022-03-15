@@ -123,9 +123,18 @@ The default format for a ``TimerLogger`` is:
 ``"{time:%H:%M:%S} | {name}: ({elapsed:6.3f} secs) | {msg}"``
 
 It adds 3 methods to the API above:
-* ``.start(msg='start')`` - records the starting timestamp
-* ``.check(msg="check", restart=False)`` - records the elapsed time - optionally restart the ``TimerLogger``
-* ``.end(msg="end")`` - records the elapsed time and ends the ``TimerLogger``
+
+.. method:: start(msg='start')
+
+    records the starting timestamp
+
+.. method:: check(msg="check", restart=False)
+
+    records the elapsed time (optionally restart the ``TimerLogger``)
+
+.. method:: end(msg="end")
+
+    records the elapsed time and ends the ``TimerLogger``
 
 
 The ``TimerLogger`` can be used to check times between lines of code.
