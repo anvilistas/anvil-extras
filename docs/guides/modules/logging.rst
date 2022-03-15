@@ -107,11 +107,11 @@ API
 
         class UIDLogger(Logger):
             def __init__(self, name="uid logger", uid=None, level=INFO, format="{uid}: {msg}"):
-                super().__init__(name, level, format)
+                super().__init__(name=name, level=level, format=format)
                 self.uid = uid or uuid4()
 
             def get_format_params(self, **params):
-                super().get_format_params(uid=self.uid, **params)
+                return super().get_format_params(uid=self.uid, **params)
 
 
 TimerLogger
