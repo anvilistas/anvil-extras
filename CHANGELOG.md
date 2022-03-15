@@ -1,4 +1,4 @@
-# Unreleased
+# v2.0.0 15-Mar-2022
 
 ## Breaking Changes
 * `routing.load_form()` was removed. Use `routing.set_url_hash()` instead.
@@ -30,8 +30,6 @@
   See the docs:
   * `Logger` https://anvil-extras.readthedocs.io/en/latest/guides/modules/logging.html#logger
   * `TimerLogger` https://anvil-extras.readthedocs.io/en/latest/guides/modules/logging.html#timerlogger
-
-
 
 ## Bug fixes
 * Multi-select - fix button clicks don't always close the dropdown menu
