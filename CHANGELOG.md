@@ -1,4 +1,4 @@
-# Unreleased
+# v2.0.1 16-Mar-2022
 
 ## BugFixes:
 * routing - fix regression with before unload
