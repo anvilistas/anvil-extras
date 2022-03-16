@@ -7,7 +7,7 @@
 
 from functools import lru_cache
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 
 def __dir__():

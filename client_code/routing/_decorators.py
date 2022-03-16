@@ -12,7 +12,7 @@ from anvil.js.window import setTimeout
 
 from . import _router
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 route_info = namedtuple(
     "route_info", ["form", "url_pattern", "url_keys", "title", "fwr", "url_parts"]

@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 from ..logging import DEBUG, INFO
 from ..logging import Logger as _Logger

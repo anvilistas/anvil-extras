@@ -6,7 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil import Label, Link, get_open_form, set_url_hash
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 # A dict mapping a form's name to a further dict with the form's class and title
 _forms = {}
