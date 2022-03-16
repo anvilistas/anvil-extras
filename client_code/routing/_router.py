@@ -79,6 +79,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         f"navigation triggered\n\turl_hash    = {url_hash!r}"
         f"\n\turl_pattern = {url_pattern!r}\n\turl_dict    = {url_dict}"
     )
+    global _current_form
     with stack_depth_context:
         handle_alert_unload()
         handle_form_unload()
@@ -95,6 +96,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
             form = get_form_to_add(url_hash, url_pattern, url_dict, properties)
         else:
             logger.debug(f"{form.__class__.__name__!r} loading from cache")
+        _current_form = form
         update_form_attrs(form)
         add_form_to_container(form)
         alert_form_loaded(form=form, **url_args)
@@ -113,11 +115,10 @@ def handle_form_unload():
     from . import _navigation
 
     with _navigation.PreventUnloading():
-        if not before_unload():
-            return
-        logger.debug(f"stop unload called from {_current_form.__class__.__name__}")
-        _navigation.stopUnload()
-        raise NavigationExit
+        if before_unload():
+            logger.debug(f"stop unload called from {_current_form.__class__.__name__}")
+            _navigation.stopUnload()
+            raise NavigationExit
 
 
 def load_template(url_hash):
