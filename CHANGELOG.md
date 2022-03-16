@@ -1,3 +1,9 @@
+# Unreleased
+
+## BugFixes:
+* routing - fix regression with before unload
+  https://github.com/anvilistas/anvil-extras/issues/289
+
 # v2.0.0 15-Mar-2022
 
 ## Breaking Changes
