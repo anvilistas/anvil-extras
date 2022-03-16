@@ -58,15 +58,10 @@ def go(x=0):
 def on_session_expired(reload_hash=True, allow_cancel=True):
     """override anvil's default session expired behaviour"""
     logger.warning(
-        "Deprecated: it is now possible to catch a SessionExpiredError in the anvil.set_default_error_handler() callback"
+        "Deprecated: on_session_expired() is deprecated.\n"
+        "Anvil's default session expired modal now reloads the current hash.\n"
+        "To override this behavior for a SessionExpiredError, use the anvil.set_default_error_handler() callback."
     )
-    if type(reload_hash) is not bool:
-        raise TypeError(f"reload_hash must be a bool not {type(reload_hash)}")
-    if type(allow_cancel) is not bool:
-        raise TypeError(f"allow_cancel must be a bool not {type(allow_cancel)}")
-    from ._session_expired import session_expired_handler
-
-    session_expired_handler(reload_hash, allow_cancel)
 
 
 def set_warning_before_app_unload(warning=True):
