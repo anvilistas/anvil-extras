@@ -188,9 +188,8 @@ def set_url_hash(
     if redirect:
         _r.navigate(url_hash, url_pattern, url_dict, **properties)
     elif set_in_history and _r._current_form:
-        _r._cache[
-            url_hash
-        ] = _r._current_form  # no need to add to cache if not being set in history
+        _r._cache[url_hash] = _r._current_form
+        # no need to add to cache if not being set in history
 
 
 def load_form(*args, **kws):
