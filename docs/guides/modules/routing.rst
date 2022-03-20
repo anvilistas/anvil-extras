@@ -70,7 +70,7 @@ This is equivalent to:
 
 .. code:: python
 
-    @routing.defult_template
+    @routing.default_template
     class Main(MainTemplate):
 
 
