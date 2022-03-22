@@ -29,6 +29,7 @@ def template(path="", priority=0, condition=None):
 
         def on_show(sender, **e):
             sender.remove_event_handler("show", on_show)
+            # wait till the show event so that this template is the open_form before re-navigating
             _router.launch()
 
         @wraps(cls_init)
