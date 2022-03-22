@@ -194,6 +194,17 @@ def clear_container():
 def get_form_to_add(template_info, url_hash, url_pattern, url_dict, properties):
     global _current_form
     path, dynamic_vars = path_matcher(template_info, url_hash, url_pattern, url_dict)
+
+    # check if path is cached with another template
+    if len(path.templates) > 1:
+        for template in path.templates:
+            form = _cache.get((url_hash, template), None)
+            if form is not None:
+                logger.debug(
+                    f"Loading {form.__class__.__name__!r} from cache - cached with {template!r}"
+                )
+                return form
+
     form = path.form.__new__(path.form, **properties)
     logger.debug(f"adding {form.__class__.__name__!r} to cache")
     _current_form = _cache[url_hash] = form
