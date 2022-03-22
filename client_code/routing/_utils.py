@@ -5,6 +5,8 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+from collections import namedtuple
+
 import anvil
 from anvil.js.window import location
 
@@ -94,3 +96,36 @@ def _get_url_hash(url_pattern, url_dict):
     )
     url_params = "?" + url_params if url_params else ""
     return url_pattern + url_params
+
+
+_RouteInfoBase = namedtuple(
+    "route_info",
+    ["form", "templates", "url_pattern", "url_keys", "title", "fwr", "url_parts"],
+)
+
+TemplateInfo = namedtuple("template_info", ["form", "path", "condition"])
+
+
+class RouteInfo(_RouteInfoBase):
+    @staticmethod
+    def as_dynamic_var(part):
+        if len(part) > 1 and part[0] == "{" and part[-1] == "}":
+            return part[1:-1], True
+        return part, False
+
+    def __new__(cls, form, templates, url_pattern, url_keys, title, fwr, url_parts=()):
+        if url_pattern.endswith("/"):
+            url_pattern = url_pattern[:-1]
+
+        url_keys = frozenset(url_keys)
+
+        if templates is None or type(templates) is str:
+            templates = (templates,)
+        elif type(templates) is not tuple:
+            templates = tuple(templates)
+
+        url_parts = [cls.as_dynamic_var(part) for part in url_pattern.split("/")]
+
+        return _RouteInfoBase.__new__(
+            cls, form, templates, url_pattern, url_keys, title, fwr, url_parts
+        )

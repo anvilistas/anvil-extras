@@ -231,6 +231,10 @@ def path_matcher(template_info, url_hash, url_pattern, url_dict):
     valid_routes = _routes.get(template_info.form.__name__, []) + _routes.get(None, [])
 
     for route_info in valid_routes:
+        if not route_info.url_pattern.startswith(template_info.path):
+            route_info = route_info._replace(
+                url_pattern=template_info.path + route_info.url_pattern
+            )
         if num_given_parts != len(route_info.url_parts):
             # url pattern CANNOT fit, skip deformatting
             continue

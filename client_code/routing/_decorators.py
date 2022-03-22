@@ -5,18 +5,12 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from collections import namedtuple
 from functools import wraps
 
 from . import _router
+from ._utils import RouteInfo, TemplateInfo
 
 __version__ = "2.0.1"
-
-route_info = namedtuple(
-    "route_info",
-    ["form", "url_pattern", "url_keys", "title", "fwr", "url_parts", "templates"],
-)
-template_info = namedtuple("template_info", ["form", "path", "condition"])
 
 
 def template(path="", priority=0, condition=None):
@@ -28,7 +22,7 @@ def template(path="", priority=0, condition=None):
         raise TypeError("the condition must be None or a callable")
 
     def template_wrapper(cls):
-        info = template_info(cls, path, condition)
+        info = TemplateInfo(cls, path, condition)
         _router.add_template_info(cls, priority, info)
 
         cls_init = cls.__init__
@@ -78,11 +72,6 @@ class route:
         self.url_parts = []
         self.templates = template
 
-    def as_dynamic_var(self, part):
-        if len(part) > 1 and part[0] == "{" and part[-1] == "}":
-            return part[1:-1], True
-        return part, False
-
     def validate_args(self, cls):
         if not isinstance(self.url_pattern, str):
             raise TypeError(
@@ -96,20 +85,10 @@ class route:
             raise TypeError(
                 f"title must be type str or None not {type(self.title)} in {cls.__name__}"
             )
-        if self.url_pattern.endswith("/"):
-            self.url_pattern = self.url_pattern[:-1]
-        self.url_keys = frozenset(self.url_keys)
-        self.url_parts = [
-            self.as_dynamic_var(part) for part in self.url_pattern.split("/")
-        ]
-        if self.templates is None or isinstance(self.templates, str):
-            self.templates = (self.templates,)
-        else:
-            self.templates = tuple(self.templates)
 
     def __call__(self, cls):
         self.validate_args(cls)
-        info = route_info(form=cls, **self.__dict__)
+        info = RouteInfo(form=cls, **self.__dict__)
         _router.add_route_info(info)
         return cls
 
