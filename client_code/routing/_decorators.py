@@ -8,14 +8,13 @@
 from collections import namedtuple
 from functools import wraps
 
-from anvil.js.window import setTimeout
-
 from . import _router
 
 __version__ = "2.0.1"
 
 route_info = namedtuple(
-    "route_info", ["form", "url_pattern", "url_keys", "title", "fwr", "url_parts"]
+    "route_info",
+    ["form", "url_pattern", "url_keys", "title", "fwr", "url_parts", "templates"],
 )
 template_info = namedtuple("template_info", ["form", "path", "condition"])
 
@@ -34,15 +33,20 @@ def template(path="", priority=0, condition=None):
 
         cls_init = cls.__init__
 
+        def on_show(sender, **e):
+            sender.remove_event_handler("show", on_show)
+            _router.launch()
+
         @wraps(cls_init)
         def init_and_route(self, *args, **kws):
+            _router._ready = False
             try:
-                _router._ready = False
                 cls_init(self, *args, **kws)
-                setTimeout(_router.launch)
-                # use set timeout so that if called with open_form
-                # then the main_router is the open form before we try to navigate
-
+                handlers = self.get_event_handlers("show")
+                self.set_event_handler("show", on_show)
+                # make us the first show event handler and re-add existing
+                for handler in handlers:
+                    self.add_event_handler("show", handler)
             finally:
                 _router.ready = True
 
@@ -59,12 +63,20 @@ class route:
     @routing.route(url_pattern=str,url_keys=List[str], title=str)
     """
 
-    def __init__(self, url_pattern="", url_keys=[], title=None, full_width_row=False):
+    def __init__(
+        self,
+        url_pattern="",
+        url_keys=[],
+        title=None,
+        full_width_row=False,
+        template=None,
+    ):
         self.url_pattern = url_pattern
         self.url_keys = url_keys
         self.title = title
         self.fwr = full_width_row
         self.url_parts = []
+        self.templates = template
 
     def as_dynamic_var(self, part):
         if len(part) > 1 and part[0] == "{" and part[-1] == "}":
@@ -90,6 +102,10 @@ class route:
         self.url_parts = [
             self.as_dynamic_var(part) for part in self.url_pattern.split("/")
         ]
+        if self.templates is None or isinstance(self.templates, str):
+            self.templates = (self.templates,)
+        else:
+            self.templates = tuple(self.templates)
 
     def __call__(self, cls):
         self.validate_args(cls)
