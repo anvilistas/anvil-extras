@@ -5,19 +5,12 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from collections import namedtuple
 from functools import wraps
 
-from anvil.js.window import setTimeout
-
 from . import _router
+from ._utils import RouteInfo, TemplateInfo
 
 __version__ = "2.0.1"
-
-route_info = namedtuple(
-    "route_info", ["form", "url_pattern", "url_keys", "title", "fwr", "url_parts"]
-)
-template_info = namedtuple("template_info", ["form", "path", "condition"])
 
 
 def template(path="", priority=0, condition=None):
@@ -29,20 +22,26 @@ def template(path="", priority=0, condition=None):
         raise TypeError("the condition must be None or a callable")
 
     def template_wrapper(cls):
-        info = template_info(cls, path, condition)
+        info = TemplateInfo(cls, path, condition)
         _router.add_template_info(cls, priority, info)
 
         cls_init = cls.__init__
 
+        def on_show(sender, **e):
+            sender.remove_event_handler("show", on_show)
+            # wait till the show event so that this template is the open_form before re-navigating
+            _router.launch()
+
         @wraps(cls_init)
         def init_and_route(self, *args, **kws):
+            _router._ready = False
             try:
-                _router._ready = False
                 cls_init(self, *args, **kws)
-                setTimeout(_router.launch)
-                # use set timeout so that if called with open_form
-                # then the main_router is the open form before we try to navigate
-
+                handlers = self.get_event_handlers("show")
+                self.set_event_handler("show", on_show)
+                # make us the first show event handler and re-add existing
+                for handler in handlers:
+                    self.add_event_handler("show", handler)
             finally:
                 _router.ready = True
 
@@ -59,17 +58,20 @@ class route:
     @routing.route(url_pattern=str,url_keys=List[str], title=str)
     """
 
-    def __init__(self, url_pattern="", url_keys=[], title=None, full_width_row=False):
+    def __init__(
+        self,
+        url_pattern="",
+        url_keys=[],
+        title=None,
+        full_width_row=False,
+        template=None,
+    ):
         self.url_pattern = url_pattern
         self.url_keys = url_keys
         self.title = title
         self.fwr = full_width_row
         self.url_parts = []
-
-    def as_dynamic_var(self, part):
-        if len(part) > 1 and part[0] == "{" and part[-1] == "}":
-            return part[1:-1], True
-        return part, False
+        self.templates = template
 
     def validate_args(self, cls):
         if not isinstance(self.url_pattern, str):
@@ -84,16 +86,10 @@ class route:
             raise TypeError(
                 f"title must be type str or None not {type(self.title)} in {cls.__name__}"
             )
-        if self.url_pattern.endswith("/"):
-            self.url_pattern = self.url_pattern[:-1]
-        self.url_keys = frozenset(self.url_keys)
-        self.url_parts = [
-            self.as_dynamic_var(part) for part in self.url_pattern.split("/")
-        ]
 
     def __call__(self, cls):
         self.validate_args(cls)
-        info = route_info(form=cls, **self.__dict__)
+        info = RouteInfo(form=cls, **self.__dict__)
         _router.add_route_info(info)
         return cls
 

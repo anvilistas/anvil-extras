@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+from functools import wraps
 from itertools import chain
 
 from anvil import get_open_form, open_form
@@ -41,12 +42,35 @@ class _StackDepthContext:
             return True
 
 
+def _update_key(key):
+    if type(key) is str:
+        key = (key, type(get_open_form()).__name__)
+    return key
+
+
+def _wrap_method(method):
+    @wraps(method)
+    def wrapped(self, key, *args):
+        return method(self, _update_key(key), *args)
+
+    return wrapped
+
+
+class _Cache(dict):
+    __getitem__ = _wrap_method(dict.__getitem__)
+    __setitem__ = _wrap_method(dict.__setitem__)
+    __delitem__ = _wrap_method(dict.__delitem__)
+    get = _wrap_method(dict.get)
+    pop = _wrap_method(dict.pop)
+    setdefault = _wrap_method(dict.setdefault)
+
+
 stack_depth_context = _StackDepthContext()
 default_title = document.title
 
 _current_form = None
-_cache = {}
-_routes = []
+_cache = _Cache()
+_routes = {}
 _templates = set()
 _ordered_templates = {}
 _error_form = None
@@ -83,7 +107,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
     with stack_depth_context:
         handle_alert_unload()
         handle_form_unload()
-        load_template(url_pattern)
+        template_info = load_template(url_pattern)
         url_args = {
             "url_hash": url_hash,
             "url_pattern": url_pattern,
@@ -93,7 +117,9 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         clear_container()
         form = _cache.get(url_hash)
         if form is None:
-            form = get_form_to_add(url_hash, url_pattern, url_dict, properties)
+            form = get_form_to_add(
+                template_info, url_hash, url_pattern, url_dict, properties
+            )
         else:
             logger.debug(f"{form.__class__.__name__!r} loading from cache")
         _current_form = form
@@ -129,7 +155,8 @@ def load_template(url_hash):
         raise NavigationExit  # not using templates
 
     logger.debug("Checking routing templates")
-    for cls, path, condition in chain.from_iterable(_ordered_templates.values()):
+    for template_info in chain.from_iterable(_ordered_templates.values()):
+        cls, path, condition = template_info
         if not url_hash.startswith(path):
             continue
         if condition is None:
@@ -140,6 +167,7 @@ def load_template(url_hash):
         load_error_or_raise(f"No template for {url_hash!r}")
     if current_cls is cls:
         logger.debug(f"{cls.__name__!r} routing template unchanged")
+        return template_info
     else:
         logger.debug(
             f"{current_cls.__name__!r} routing template changed to {cls.__name__!r}, exiting this navigation call"
@@ -163,17 +191,30 @@ def clear_container():
     get_open_form().content_panel.clear()
 
 
-def get_form_to_add(url_hash, url_pattern, url_dict, properties):
+def get_form_to_add(template_info, url_hash, url_pattern, url_dict, properties):
     global _current_form
-    path, dynamic_vars = path_matcher(url_hash, url_pattern, url_dict)
-    form = path.form.__new__(path.form, **properties)
+    route_info, dynamic_vars = path_matcher(
+        template_info, url_hash, url_pattern, url_dict
+    )
+
+    # check if path is cached with another template
+    if len(route_info.templates) > 1:
+        for template in route_info.templates:
+            form = _cache.get((url_hash, template), None)
+            if form is not None:
+                logger.debug(
+                    f"Loading {form.__class__.__name__!r} from cache - cached with {template!r}"
+                )
+                return form
+
+    form = route_info.form.__new__(route_info.form, **properties)
     logger.debug(f"adding {form.__class__.__name__!r} to cache")
     _current_form = _cache[url_hash] = form
     form._routing_props = {
-        "title": path.title,
-        "layout_props": {"full_width_row": path.fwr},
+        "title": route_info.title,
+        "layout_props": {"full_width_row": route_info.fwr},
     }
-    form.url_keys = path.url_keys
+    form.url_keys = route_info.url_keys
     form.url_pattern = url_pattern
     form.url_dict = url_dict
     form.url_hash = url_hash
@@ -196,11 +237,17 @@ def load_error_or_raise(msg):
         raise LookupError(msg)
 
 
-def path_matcher(url_hash, url_pattern, url_dict):
+def path_matcher(template_info, url_hash, url_pattern, url_dict):
     given_parts = url_pattern.split("/")
     num_given_parts = len(given_parts)
 
-    for route_info in _routes:
+    valid_routes = _routes.get(template_info.form.__name__, []) + _routes.get(None, [])
+
+    for route_info in valid_routes:
+        if not route_info.url_pattern.startswith(template_info.path):
+            route_info = route_info._replace(
+                url_pattern=template_info.path + route_info.url_pattern
+            )
         if num_given_parts != len(route_info.url_parts):
             # url pattern CANNOT fit, skip deformatting
             continue
@@ -216,7 +263,8 @@ def path_matcher(url_hash, url_pattern, url_dict):
                 return route_info, dynamic_vars
 
     logger.debug(
-        f"no route form with:\n\turl_pattern={url_pattern!r}\n\turl_keys={list(url_dict.keys())}\n"
+        f"no route form with:\n\turl_pattern={url_pattern!r}\n\turl_keys={list(url_dict.keys())}"
+        f"\n\ttemplate={template_info.form.__name__!r}\n"
         "If this is unexpected perhaps you haven't imported the form correctly"
     )
     load_error_or_raise(f"{url_hash!r} does not exist")
@@ -277,7 +325,8 @@ def add_route_info(route_info):
             **route_info._asdict()
         )
     )
-    _routes.append(route_info)
+    for template in route_info.templates:
+        _routes.setdefault(template, []).append(route_info)
 
 
 def add_template_info(cls, priority, template_info):

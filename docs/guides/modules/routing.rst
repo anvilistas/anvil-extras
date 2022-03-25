@@ -306,11 +306,15 @@ Decorators
     equivalent to ``routing.template(path='', priority=0, condition=None)``.
 
 
-.. function:: routing.route(url_pattern, url_keys=[], title=None, full_width_row=False)
+.. function:: routing.route(url_pattern, url_keys=[], title=None, full_width_row=False, template=None)
 
     The ``routing.route`` decorator should be called with arguments that determine the shape of the ``url_hash``.
     The ``url_pattern`` determines the string immediately after the ``#``.
     The ``url_keys`` determine the required query string parameters in a ``url_hash``.
+
+    The ``template``, when set, should be set to a string or list of strings that represent valid templates this route can be added to.
+    If no ``template`` is set then this form can be added to any template.
+
 
     The routing module adds certain parameters to a ``Route Form`` and supports a ``before_unload`` callback.
 
@@ -426,7 +430,7 @@ List of Methods
 .. function:: routing.get_cache()
 
     Returns the cache object from the ``routing`` module.
-    Adjusting the cache directly may have side effects.
+    Adjusting the cache directly may have side effects and is not supported.
 
 
 
@@ -572,6 +576,78 @@ Perhaps your form displays a different ``item`` depending on the
         self.init_components(**properties)
         self.item = anvil.server.call(f'get_{self.url_pattern}')
         # self.url_pattern is provided by the routing module
+
+
+Setting a Route's Template
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    @routing.route('foo', template="MainRouter")
+    class Foo(FooTemplate):
+        def __init__(self, **properties):
+            ...
+
+Setting a template argument determines which templates a route form can be added to.
+If no template is set then this route can be added to any template.
+
+
+A template argument should be the name of the template or a list of template names.
+
+.. code:: python
+
+    @routing.route('foo', template=["MainRouter", "AdminRouter"])
+    class Foo(FooTemplate):
+        def __init__(self, **properties):
+            ...
+
+
+If you have a route that can be used on multiple templates, consider using ``/`` notation.
+
+
+.. code:: python
+
+
+    @routing.template('admin', priority=2, condition=lambda Globals.is_admin)
+    class AdminRouter(AdminRouterTemplate):
+        ...
+
+    @routing.route('/foo', template="AdminRouter")
+    class Foo(FooTemplate):
+        ...
+
+
+In the above example, since the route ``"/foo"`` does not start with ``admin``,
+``"admin/foo"`` will be a valid ``url_pattern`` for this route
+
+This allows you to write a route for different templates and only specify the suffix.
+
+
+.. code:: python
+
+
+    @routing.template('admin', priority=2, condition=lambda Globals.is_admin)
+    class AdminRouter(AdminRouterTemplate):
+
+    @routing.template('accounts')
+    class AccountRouter(AccountRouterTemplate):
+
+    @routing.route('/foo', template=["AdminRouter", "AccountRouter"])
+    class Foo(FooTemplate):
+
+
+The Foo route will be added for the url_patterns ``"admin/foo"`` and ``"accounts/foo"``.
+
+Note that the cached version of the Foo form will be added to either templates.
+If you don't want to use a cached version for different templates, you should use multiple decorators
+
+
+.. code:: python
+
+    @routing.route('/foo', template="AdminRouter")
+    @routing.route('/foo', template="AccountRouter")
+    class Foo(FooTemplate):
+
 
 
 Form Arguments

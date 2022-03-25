@@ -1,3 +1,11 @@
+# Unreleased
+
+## Features
+* routing -  a template argument was added to the `@routing.route` decorator.
+  This argument determines which templates a route can be added to.
+  https://github.com/anvilistas/anvil-extras/issues/293
+
+
 # v2.0.1 16-Mar-2022
 
 ## BugFixes:
