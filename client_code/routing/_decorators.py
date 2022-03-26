@@ -13,16 +13,18 @@ from ._utils import RouteInfo, TemplateInfo
 __version__ = "2.0.1"
 
 
-def template(path="", priority=0, condition=None):
+def template(path="", priority=0, condition=None, redirect=None):
     if not isinstance(path, str):
         raise TypeError("the first argument to template must be a str")
     if not isinstance(priority, int):
         raise TypeError("the template priority must be an int")
     if condition is not None and not callable(condition):
         raise TypeError("the condition must be None or a callable")
+    if redirect is not None and not isinstance(redirect, str):
+        raise TypeError("redirect must be set to a str")
 
     def template_wrapper(cls):
-        info = TemplateInfo(cls, path, condition)
+        info = TemplateInfo(cls, path, condition, redirect)
         _router.add_template_info(cls, priority, info)
 
         cls_init = cls.__init__

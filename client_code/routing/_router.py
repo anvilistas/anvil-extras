@@ -156,13 +156,23 @@ def load_template(url_hash):
 
     logger.debug("Checking routing templates")
     for template_info in chain.from_iterable(_ordered_templates.values()):
-        cls, path, condition = template_info
+        cls, path, condition, redirect = template_info
         if not url_hash.startswith(path):
             continue
         if condition is None:
             break
         elif condition():
             break
+        elif redirect is not None:
+            from . import set_url_hash
+
+            logger.debug(
+                f"{cls.__name__!r} routing template url valid, condition() failed, invoking redirect={redirect!r}"
+            )
+            set_url_hash(
+                redirect, replace_current_url=True, set_in_history=False, redirect=True
+            )
+            raise NavigationExit
     else:
         load_error_or_raise(f"No template for {url_hash!r}")
     if current_cls is cls:
@@ -332,7 +342,7 @@ def add_route_info(route_info):
 def add_template_info(cls, priority, template_info):
     global _ordered_templates, _templates
     logger.debug(
-        "template registered: (form={form.__name__!r}, path={path!r}, priority={priority}, condition={condition})".format(
+        "template registered: (form={form.__name__!r}, path={path!r}, priority={priority}, condition={condition}), redirect={redirect}".format(
             priority=priority, **template_info._asdict()
         )
     )
