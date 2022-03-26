@@ -54,7 +54,7 @@ It only has a navigation bar, header, optional sidebar and a ``content_panel``
     from .Form3 import Form3
     from .ErrorForm import ErrorForm
 
-    @routing.template(path="", priority=0, condition=None)
+    @routing.template(path="", priority=0, condition=None, redirect=None)
     class Main(MainTemplate):
 
 
@@ -65,7 +65,11 @@ A template form will be loaded as the ``open_form`` only if,
 the current ``url_hash`` starts with the template's path argument **and** either the condition is ``None``
 **or** the condition is a callable that returns ``True``.
 
-The above example would be the fallback template form.
+In the case when a template form's path starts with the current ``url_hash`` and the condition returns ``False``,
+if a redirect argument is provided as a string, then routing will redirect to the string provided.
+This can be useful for redirecting to a login form, or redirecting when a user no longer has permission.
+
+In the above example, the template form is effectively a fallback template.
 This is equivalent to:
 
 .. code:: python
@@ -80,12 +84,14 @@ If you have a different top-level template for the ``admin`` section of your app
 
     from .. import Globals
 
-    @routing.template(path="admin", priority=1, condition=lambda: Globals.admin is not None)
+    @routing.template(path="admin", priority=1, condition=lambda: Globals.admin is not None, redirect="")
     class AdminForm(AdminTemplate):
 
 The above code takes advantage of an implied ``Globals`` module that has an ``admin`` attribute.
 If the ``url_hash`` starts with ``admin`` and the ``Globals.admin`` is not ``None`` then this template
 will become the ``open_form``.
+
+If the condition fails and the ``url_hash`` starts with ``"admin"`` then routing will redirect to the empty ``url_hash=""``
 
 Another example might be a login template
 
@@ -281,7 +287,7 @@ API
 
 Decorators
 ^^^^^^^^^^
-.. function:: routing.template(path='', priority=0, condition=None)
+.. function:: routing.template(path='', priority=0, condition=None, redirect=None)
 
     Apply this decorator above the top-level Form - ``TemplateForm``.
     The ``TemplateForm`` must have a ``content_panel``.
@@ -303,7 +309,7 @@ Decorators
 
 .. attribute:: routing.default_template
 
-    equivalent to ``routing.template(path='', priority=0, condition=None)``.
+    equivalent to ``routing.template(path='', priority=0, condition=None, redirect=None)``.
 
 
 .. function:: routing.route(url_pattern, url_keys=[], title=None, full_width_row=False, template=None)
@@ -900,6 +906,24 @@ You can avoid this by raising a ``routing.NavigationExit()`` exception in the ``
             if user is not None:
                 Globals.user = user
                 routing.set_url_hash("")
+
+
+You can use the redirect argument of a template making the LoginForm the fallback form
+
+.. code:: python
+
+    @routing.template("", priority=0, condition=lambda: Globals.user is not None, redirect="login")
+    class Dashboard(DashboardTemplate):
+        ...
+
+    @routing.template("login", priority=1)
+    class LoginRouter(LoginRouterTemplate):
+        ...
+
+
+In this case if the ``Global.user`` is ``None`` the and the url starts with anything other than login, the redirect will be invoked.
+(Be careful not to create an infinite loop - if the Dashboard had a higher priority than the LoginForm,
+the Dashboard template would always be checked first and would always redirect).
 
 
 Alternatively, you could load the login form as a ``route`` form.

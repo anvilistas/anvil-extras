@@ -4,6 +4,9 @@
 * routing -  a template argument was added to the `@routing.route` decorator.
   This argument determines which templates a route can be added to.
   https://github.com/anvilistas/anvil-extras/issues/293
+* routing - templates can take a redirect url_hash argument,
+  if the condition() fails on a template routing will redirect to this url_hash if present
+  https://github.com/anvilistas/anvil-extras/issues/295
 
 
 # v2.0.1 16-Mar-2022
