@@ -79,6 +79,7 @@ class _Cache(dict):
     __getitem__ = _wrap_method(dict.__getitem__)
     __setitem__ = _wrap_method(dict.__setitem__)
     __delitem__ = _wrap_method(dict.__delitem__)
+    __contains__ = _wrap_method(dict.__contains__)
     get = _wrap_method(dict.get)
     pop = _wrap_method(dict.pop)
     setdefault = _wrap_method(dict.setdefault)
