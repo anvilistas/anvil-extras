@@ -8,22 +8,38 @@
 from functools import wraps
 
 from . import _router
-from ._utils import RouteInfo, TemplateInfo
+from ._utils import RedirectInfo, RouteInfo, TemplateInfo
 
 __version__ = "2.0.1"
 
 
-def template(path="", priority=0, condition=None):
-    if not isinstance(path, str):
-        raise TypeError("the first argument to template must be a str")
+def _check_types_common(priority, condition):
     if not isinstance(priority, int):
         raise TypeError("the template priority must be an int")
     if condition is not None and not callable(condition):
         raise TypeError("the condition must be None or a callable")
 
+
+def _make_frozen_set(obj, attr):
+    if isinstance(obj, str):
+        return frozenset((obj,))
+    rv = set()
+    for o in obj:
+        if not isinstance(o, str):
+            raise TypeError(
+                f"expected an iterable of strings or a string for {attr} argument"
+            )
+        rv.add(o)
+    return frozenset(rv)
+
+
+def template(path="", priority=0, condition=None):
+    _check_types_common(priority, condition)
+    path = _make_frozen_set(path, "path")
+
     def template_wrapper(cls):
         info = TemplateInfo(cls, path, condition)
-        _router.add_template_info(cls, priority, info)
+        _router.add_top_level_info("template", cls, priority, info)
 
         cls_init = cls.__init__
 
@@ -52,46 +68,35 @@ def template(path="", priority=0, condition=None):
     return template_wrapper
 
 
-class route:
+def redirect(path, priority=0, condition=None):
+    _check_types_common(priority, condition)
+    path = _make_frozen_set(path, "path")
+
+    def redirect_wrapper(fn):
+        info = RedirectInfo(fn, path, condition)
+        _router.add_top_level_info("redirect", redirect, priority, info)
+        return fn
+
+    return redirect_wrapper
+
+
+def route(url_pattern="", url_keys=[], title=None, full_width_row=False, template=None):
     """
     the route decorator above any form you want to load in the content_panel
     @routing.route(url_pattern=str,url_keys=List[str], title=str)
     """
+    if not isinstance(url_pattern, str):
+        raise TypeError(f"url_pattern must be type str not {type(url_pattern)}")
+    if not (title is None or isinstance(title, str)):
+        raise TypeError(f"title must be type str or None not {type(title)}")
+    url_keys = _make_frozen_set(url_keys, "url_keys")
 
-    def __init__(
-        self,
-        url_pattern="",
-        url_keys=[],
-        title=None,
-        full_width_row=False,
-        template=None,
-    ):
-        self.url_pattern = url_pattern
-        self.url_keys = url_keys
-        self.title = title
-        self.fwr = full_width_row
-        self.url_parts = []
-        self.templates = template
-
-    def validate_args(self, cls):
-        if not isinstance(self.url_pattern, str):
-            raise TypeError(
-                f"url_pattern must be type str not {type(self.url_pattern)} in {cls.__name__}"
-            )
-        if not (isinstance(self.url_keys, list) or isinstance(self.url_keys, tuple)):
-            raise TypeError(
-                f"keys should be a list or tuple not {type(self.url_keys)} in {cls.__name__}"
-            )
-        if not (self.title is None or isinstance(self.title, str)):
-            raise TypeError(
-                f"title must be type str or None not {type(self.title)} in {cls.__name__}"
-            )
-
-    def __call__(self, cls):
-        self.validate_args(cls)
-        info = RouteInfo(form=cls, **self.__dict__)
+    def route_wrapper(cls):
+        info = RouteInfo(cls, template, url_pattern, url_keys, title, full_width_row)
         _router.add_route_info(info)
         return cls
+
+    return route_wrapper
 
 
 def error_form(cls):

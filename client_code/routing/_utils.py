@@ -104,6 +104,7 @@ _RouteInfoBase = namedtuple(
 )
 
 TemplateInfo = namedtuple("template_info", ["form", "path", "condition"])
+RedirectInfo = namedtuple("redirect_info", ["redirect", "path", "condition"])
 
 
 class RouteInfo(_RouteInfoBase):

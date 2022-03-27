@@ -11,7 +11,7 @@ from anvil.js import window as _w
 
 from . import _navigation
 from . import _router as _r
-from ._decorators import error_form, route, template
+from ._decorators import error_form, redirect, route, template
 from ._logging import logger
 from ._router import NavigationExit, launch
 from ._utils import (
