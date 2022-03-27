@@ -26,13 +26,17 @@ class navigation_context:
     contexts = []
 
     def __init__(self, url_hash):
-        self.stale = False
+        self.is_stale = False
         self.url_hash = url_hash
 
-    def check_stale(self):
-        assert self is self.contexts[-1]
-        if self.stale:
+    @classmethod
+    def check_stale(cls):
+        if cls.contexts and cls.contexts[-1].is_stale:
             raise NavigationExit
+
+    @classmethod
+    def is_current_context(cls, url_hash):
+        return cls.contexts and cls.contexts[-1].url_hash == url_hash
 
     def __enter__(self):
         num_contexts = len(self.contexts)
@@ -41,7 +45,7 @@ class navigation_context:
             self.contexts.append(self)
         elif num_contexts <= 10:
             for context in self.contexts:
-                context.stale = True
+                context.is_stale = True
             self.contexts.append(self)
         else:
             logger.debug(
@@ -117,15 +121,18 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         return
     if url_hash is None:
         url_hash, url_pattern, url_dict = get_url_components()
-    logger.debug(
-        f"navigation triggered: url_hash={url_hash!r}, url_pattern={url_pattern!r}, url_dict={url_dict}"
-    )
+    if navigation_context.is_current_context(url_hash):
+        return
+
+    msg = f"navigation triggered: url_hash={url_hash!r}, url_pattern={url_pattern!r}, url_dict={url_dict}"
+    logger.debug(msg)
+
     global _current_form
     with navigation_context(url_hash) as nav_context:
         handle_alert_unload()
         handle_form_unload()
         nav_context.check_stale()
-        template_info, init_path = load_template_or_redirect(url_pattern, nav_context)
+        template_info, init_path = load_template_or_redirect(url_pattern)
         nav_context.check_stale()
         url_args = {
             "url_hash": url_hash,
@@ -169,7 +176,7 @@ def handle_form_unload():
             raise NavigationExit
 
 
-def load_template_or_redirect(url_hash, nav_context: navigation_context):
+def load_template_or_redirect(url_hash):
     global _current_form
     form = get_open_form()
     current_cls = type(form)
@@ -191,7 +198,7 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
             break
         redirect_hash = callable_()
         if isinstance(redirect_hash, str):
-            if redirect_hash == nav_context.url_hash:
+            if navigation_context.is_current_context(redirect_hash):
                 continue
 
             from . import set_url_hash
@@ -204,7 +211,7 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
                 redirect=True,
                 replace_current_url=True,
             )
-        nav_context.check_stale()
+        navigation_context.check_stale()
 
     else:
         load_error_or_raise(f"no template for url_hash={url_hash!r}")
@@ -212,9 +219,8 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
         logger.debug(f"unchanged template: {callable_.__name__!r}")
         return info, path
     else:
-        logger.debug(
-            f"changing template: {current_cls.__name__!r} -> {callable_.__name__!r}, exiting this navigation call"
-        )
+        msg = f"changing template: {current_cls.__name__!r} -> {callable_.__name__!r}"
+        logger.debug(msg)
         _current_form = None
         f = callable_()
         logger.debug(f"loaded template: {callable_.__name__!r}, re-navigating")
