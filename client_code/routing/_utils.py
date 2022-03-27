@@ -22,6 +22,9 @@ def get_url_components(url_hash=None):
     if url_hash is None:
         # url_hash = anvil.get_url_hash()  #changed since anvil decodes the url_hash
         url_hash = location.hash[1:]  # without the hash
+    elif isinstance(url_hash, str):
+        url_hash = url_hash if not url_hash.startswith("#") else url_hash[1:]
+
     if isinstance(url_hash, dict):
         # this is the case when anvil converts the url hash to a dict automatically
         url_pattern = ""
