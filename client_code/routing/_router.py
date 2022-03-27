@@ -25,8 +25,9 @@ class NavigationExit(Exception):
 class navigation_context:
     contexts = []
 
-    def __init__(self):
+    def __init__(self, url_hash):
         self.stale = False
+        self.url_hash = url_hash
 
     def check_stale(self):
         assert self is self.contexts[-1]
@@ -120,7 +121,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         f"navigation triggered: url_hash={url_hash!r}, url_pattern={url_pattern!r}, url_dict={url_dict}"
     )
     global _current_form
-    with navigation_context() as nav_context:
+    with navigation_context(url_hash) as nav_context:
         handle_alert_unload()
         handle_form_unload()
         nav_context.check_stale()
@@ -190,6 +191,9 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
             break
         redirect_hash = callable_()
         if isinstance(redirect_hash, str):
+            if redirect_hash == nav_context.url_hash:
+                continue
+
             from . import set_url_hash
 
             logger.debug(f"redirecting to url_hash: {redirect_hash!r}")
