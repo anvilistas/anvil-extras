@@ -53,7 +53,7 @@ class navigation_context:
     def __exit__(self, exc_type, *args):
         self.contexts.pop()
         num_contexts = len(self.contexts)
-        logger.debug(f"exiting navigation level:{num_contexts}")
+        logger.debug(f"exiting navigation level: {num_contexts}")
         if not num_contexts:
             logger.debug("navigation complete\n")
         if exc_type is NavigationExit:
@@ -117,8 +117,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
     if url_hash is None:
         url_hash, url_pattern, url_dict = get_url_components()
     logger.debug(
-        f"navigation triggered\n\turl_hash    = {url_hash!r}"
-        f"\n\turl_pattern = {url_pattern!r}\n\turl_dict    = {url_dict}"
+        f"navigation triggered: url_hash={url_hash!r}, url_pattern={url_pattern!r}, url_dict={url_dict}"
     )
     global _current_form
     with navigation_context() as nav_context:
@@ -140,7 +139,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
                 template_info, init_path, url_hash, url_pattern, url_dict, properties
             )
         else:
-            logger.debug(f"{form.__class__.__name__!r} loading from cache")
+            logger.debug(f"loading route: {form.__class__.__name__!r} from cache")
         nav_context.check_stale()
         _current_form = form
         update_form_attrs(form)
@@ -162,7 +161,9 @@ def handle_form_unload():
 
     with _navigation.PreventUnloading():
         if before_unload():
-            logger.debug(f"stop unload called from {_current_form.__class__.__name__}")
+            logger.debug(
+                f"stop unload called from route: {_current_form.__class__.__name__}"
+            )
             _navigation.stopUnload()
             raise NavigationExit
 
@@ -174,7 +175,7 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
     if form is not None and current_cls not in _templates:
         raise NavigationExit  # not using templates
 
-    logger.debug("checking routing templates and redirects")
+    logger.debug("checking templates and redirects")
     for info in chain.from_iterable(_ordered_info.values()):
         callable_, paths, condition = info
         try:
@@ -191,7 +192,7 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
         if isinstance(redirect_hash, str):
             from . import set_url_hash
 
-            logger.debug(f"redirecting to url_hash {redirect_hash!r}")
+            logger.debug(f"redirecting to url_hash: {redirect_hash!r}")
 
             set_url_hash(
                 redirect_hash,
@@ -202,17 +203,17 @@ def load_template_or_redirect(url_hash, nav_context: navigation_context):
         nav_context.check_stale()
 
     else:
-        load_error_or_raise(f"No template for {url_hash!r}")
+        load_error_or_raise(f"no template for url_hash={url_hash!r}")
     if current_cls is callable_:
-        logger.debug(f"{callable_.__name__!r} routing template unchanged")
+        logger.debug(f"unchanged template: {callable_.__name__!r}")
         return info, path
     else:
         logger.debug(
-            f"{current_cls.__name__!r} routing template changed to {callable_.__name__!r}, exiting this navigation call"
+            f"changing template: {current_cls.__name__!r} -> {callable_.__name__!r}, exiting this navigation call"
         )
         _current_form = None
         f = callable_()
-        logger.debug(f"form template loaded {callable_.__name__!r}, re-navigating")
+        logger.debug(f"loaded template: {callable_.__name__!r}, re-navigating")
         open_form(f)
         raise NavigationExit
 
@@ -243,12 +244,12 @@ def get_form_to_add(
             form = _cache.get((url_hash, template), None)
             if form is not None:
                 logger.debug(
-                    f"Loading {form.__class__.__name__!r} from cache - cached with {template!r}"
+                    f"loading route: {form.__class__.__name__!r} from cache - cached with {template!r}"
                 )
                 return form
 
     form = route_info.form.__new__(route_info.form, **properties)
-    logger.debug(f"adding {form.__class__.__name__!r} to cache")
+    logger.debug(f"adding route: {form.__class__.__name__!r} to cache")
     _current_form = _cache[url_hash] = form
     form._routing_props = {
         "title": route_info.title,
@@ -262,7 +263,7 @@ def get_form_to_add(
     form.__init__(**properties)  # this might be slow if it does a bunch of server calls
     if _current_form is not form:
         logger.debug(
-            f"Problem loading {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
+            f"problem loading route: {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
         )
         # and if it was slow, and some navigation happened we should end now
         raise NavigationExit
@@ -303,8 +304,8 @@ def path_matcher(template_info, init_path, url_hash, url_pattern, url_dict):
                 return route_info, dynamic_vars
 
     logger.debug(
-        f"no route form with:\n\turl_pattern={url_pattern!r}\n\turl_keys={list(url_dict.keys())}"
-        f"\n\ttemplate={template_info.form.__name__!r}\n"
+        f"no route form with: url_pattern={url_pattern!r} url_keys={list(url_dict.keys())}"
+        f"template={template_info.form.__name__!r}\n"
         "If this is unexpected perhaps you haven't imported the form correctly"
     )
     load_error_or_raise(f"{url_hash!r} does not exist")
@@ -324,7 +325,7 @@ def update_form_attrs(form):
         document.title = title.format(**url_dict, **getattr(form, "dynamic_vars", {}))
     except Exception:
         raise ValueError(
-            "Error generating the page title. Please check the title argument in the decorator."
+            f"error generating the page title - check the title argument in {type(form).__name__!r} template decorator."
         )
 
 

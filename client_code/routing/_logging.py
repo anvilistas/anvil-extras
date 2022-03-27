@@ -16,7 +16,7 @@ class Logger(_Logger):
         from . import _router
 
         tabs = "  " * len(_router.navigation_context.contexts)
-        msg = msg.replace("\n", "\n" + tabs)
+        msg = msg.replace("\n", "\n" + " " * len(f"{tabs}{self.name}: "))
         return super().get_format_params(tabs=tabs, msg=msg, **params)
 
     def __setattr__(self, attr: str, value) -> None:

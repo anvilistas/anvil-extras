@@ -66,7 +66,7 @@ def on_session_expired(reload_hash=True, allow_cancel=True):
 
 def set_warning_before_app_unload(warning=True):
     """set a warning message before someone tries to navigate away from the app"""
-    logger.debug(f"Setting warning before app unload set to: {warning}")
+    logger.debug(f"setting warning before app unload set to: {warning!r}")
 
     def beforeunload(e):
         e.preventDefault()  # cancel the event
@@ -80,9 +80,10 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
     gotcha: cannot be called from the init function of the the same form in cache
     because the form has not been added to the cache until it has loaded - try putthing it in the form show even instead
     """
-    url_hash = _process_url_arguments(
+    url_args = _process_url_arguments(
         url_hash, url_pattern=url_pattern, url_dict=url_dict
-    )[0]
+    )
+    url_hash = url_args[0]
     logger.debug(f"removing {url_hash!r} from cache")
     cached = _r._cache.pop(url_hash, None)
     if cached is None:
