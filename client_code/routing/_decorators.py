@@ -8,38 +8,25 @@
 from functools import wraps
 
 from . import _router
-from ._utils import RedirectInfo, RouteInfo, TemplateInfo
+from ._utils import RedirectInfo, RouteInfo, TemplateInfo, _as_frozen_str_iterable
 
 __version__ = "2.0.1"
 
 
-def _check_types_common(priority, condition):
+def _check_types_common(path, priority, condition):
     if not isinstance(priority, int):
         raise TypeError("the template priority must be an int")
     if condition is not None and not callable(condition):
         raise TypeError("the condition must be None or a callable")
-
-
-def _make_frozen_set(obj, attr):
-    if isinstance(obj, str):
-        return frozenset((obj,))
-    rv = set()
-    for o in obj:
-        if not isinstance(o, str):
-            raise TypeError(
-                f"expected an iterable of strings or a string for {attr} argument"
-            )
-        rv.add(o)
-    return frozenset(rv)
+    return _as_frozen_str_iterable(path, "path")
 
 
 def template(path="", priority=0, condition=None):
-    _check_types_common(priority, condition)
-    path = _make_frozen_set(path, "path")
+    path = _check_types_common(path, priority, condition)
 
     def template_wrapper(cls):
         info = TemplateInfo(cls, path, condition)
-        _router.add_top_level_info("template", cls, priority, info)
+        _router.add_info("template", cls, priority, info)
 
         cls_init = cls.__init__
 
@@ -69,12 +56,11 @@ def template(path="", priority=0, condition=None):
 
 
 def redirect(path, priority=0, condition=None):
-    _check_types_common(priority, condition)
-    path = _make_frozen_set(path, "path")
+    path = _check_types_common(path, priority, condition)
 
     def redirect_wrapper(fn):
         info = RedirectInfo(fn, path, condition)
-        _router.add_top_level_info("redirect", redirect, priority, info)
+        _router.add_info("redirect", redirect, priority, info)
         return fn
 
     return redirect_wrapper
@@ -89,7 +75,8 @@ def route(url_pattern="", url_keys=[], title=None, full_width_row=False, templat
         raise TypeError(f"url_pattern must be type str not {type(url_pattern)}")
     if not (title is None or isinstance(title, str)):
         raise TypeError(f"title must be type str or None not {type(title)}")
-    url_keys = _make_frozen_set(url_keys, "url_keys")
+    url_keys = _as_frozen_str_iterable(url_keys, "url_keys")
+    template = _as_frozen_str_iterable(template, "template", allow_none=True)
 
     def route_wrapper(cls):
         info = RouteInfo(cls, template, url_pattern, url_keys, title, full_width_row)

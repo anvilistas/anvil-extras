@@ -15,9 +15,9 @@ class Logger(_Logger):
     def get_format_params(self, *, msg, **params):
         from . import _router
 
-        tabs = "  " * len(_router.navigation_context.contexts)
-        msg = msg.replace("\n", "\n" + " " * len(f"{tabs}{self.name}: "))
-        return super().get_format_params(tabs=tabs, msg=msg, **params)
+        indent = "  " * len(_router.navigation_context.contexts)
+        msg = msg.replace("\n", "\n" + " " * len(f"{indent}{self.name}: "))
+        return super().get_format_params(indent=indent, msg=msg, **params)
 
     def __setattr__(self, attr: str, value) -> None:
         if attr == "debug":  # backwards compatability
@@ -25,4 +25,4 @@ class Logger(_Logger):
         return _Logger.__setattr__(self, attr, value)
 
 
-logger = Logger("#routing", format="{tabs}{name}: {msg}", level=INFO)
+logger = Logger("#routing", format="{indent}{name}: {msg}", level=INFO)

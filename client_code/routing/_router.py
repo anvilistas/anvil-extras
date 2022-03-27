@@ -110,9 +110,8 @@ def launch():
 
 def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
     if not _ready:
-        logger.debug(
-            f"routing is not ready or the template has not finished loading: queuing the call {url_hash!r}"
-        )
+        msg = f"routing is not ready or the template has not finished loading: queuing the call {url_hash!r}"
+        logger.debug(msg)
         _queued.append([(url_hash, url_pattern, url_dict), properties])
         return
     if url_hash is None:
@@ -234,6 +233,18 @@ def clear_container():
     get_open_form().content_panel.clear()
 
 
+def check_cached_templates(route_info, url_hash):
+    templates = route_info.template
+    if len(templates) <= 1:
+        return
+    for template in templates:
+        form = _cache.get((url_hash, template), None)
+        if form is not None:
+            msg = f"loading route: {form.__class__.__name__!r} from cache - cached with {template!r}"
+            logger.debug(msg)
+            return form
+
+
 def get_form_to_add(
     template_info, init_path, url_hash, url_pattern, url_dict, properties
 ):
@@ -243,14 +254,9 @@ def get_form_to_add(
     )
 
     # check if path is cached with another template
-    if len(route_info.templates) > 1:
-        for template in route_info.templates:
-            form = _cache.get((url_hash, template), None)
-            if form is not None:
-                logger.debug(
-                    f"loading route: {form.__class__.__name__!r} from cache - cached with {template!r}"
-                )
-                return form
+    form = check_cached_templates(route_info, url_hash)
+    if form is not None:
+        return form
 
     form = route_info.form.__new__(route_info.form, **properties)
     logger.debug(f"adding route: {form.__class__.__name__!r} to cache")
@@ -266,9 +272,8 @@ def get_form_to_add(
     form.dynamic_vars = dynamic_vars
     form.__init__(**properties)  # this might be slow if it does a bunch of server calls
     if _current_form is not form:
-        logger.debug(
-            f"problem loading route: {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
-        )
+        msg = f"problem loading route: {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
+        logger.debug(msg)
         # and if it was slow, and some navigation happened we should end now
         raise NavigationExit
     return form
@@ -328,9 +333,8 @@ def update_form_attrs(form):
     try:
         document.title = title.format(**url_dict, **getattr(form, "dynamic_vars", {}))
     except Exception:
-        raise ValueError(
-            f"error generating the page title - check the title argument in {type(form).__name__!r} template decorator."
-        )
+        msg = f"error generating the page title - check the title argument in {type(form).__name__!r} template decorator."
+        raise ValueError(msg)
 
 
 def add_form_to_container(form):
@@ -365,20 +369,16 @@ def load_error_form():
 
 
 def add_route_info(route_info):
-    logger.debug(
-        "   route registered: (form={form.__name__!r}, url_pattern={url_pattern!r}, url_keys={url_keys}, title={title!r})".format(
-            **route_info._asdict()
-        )
-    )
-    for template in route_info.templates:
+    msg = "   route registered: (form={form.__name__!r}, url_pattern={url_pattern!r}, url_keys={url_keys}, title={title!r}, template={template!r})"
+    logger.debug(msg.format(**route_info._asdict()))
+    for template in route_info.template:
         _routes.setdefault(template, []).append(route_info)
 
 
-def add_top_level_info(info_type, callable_, priority, info):
+def add_info(info_type, callable_, priority, info):
     global _ordered_info, _templates
-    logger.debug(
-        f"{info_type} registered: {repr(info).replace(type(info).__name__, '')}"
-    )
+    msg = f"{info_type} registered: {repr(info).replace(type(info).__name__, '')}"
+    logger.debug(msg)
     if info_type == "template":
         _templates.add(callable_)
     tmp = _ordered_info

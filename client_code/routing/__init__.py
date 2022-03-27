@@ -33,9 +33,8 @@ def reload_page(hard=False):
         logger.debug("hard reload_page called")
         _w.location.reload()
     else:
-        logger.debug(
-            "reload_page called, clearing the cache for this page and reloading"
-        )
+        msg = "reload_page called, clearing the cache for this page and reloading"
+        logger.debug(msg)
         url_hash, url_pattern, url_dict = get_url_components()
         remove_from_cache(url_hash)
         _r.navigate(url_hash, url_pattern, url_dict)
@@ -80,16 +79,14 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
     gotcha: cannot be called from the init function of the the same form in cache
     because the form has not been added to the cache until it has loaded - try putthing it in the form show even instead
     """
-    url_args = _process_url_arguments(
+    url_hash = _process_url_arguments(
         url_hash, url_pattern=url_pattern, url_dict=url_dict
-    )
-    url_hash = url_args[0]
+    )[0]
     logger.debug(f"removing {url_hash!r} from cache")
     cached = _r._cache.pop(url_hash, None)
     if cached is None:
-        logger.debug(
-            f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
-        )
+        msg = f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
+        logger.debug(msg)
 
 
 def get_cache():
@@ -168,26 +165,22 @@ def set_url_hash(
         # but do continue if the url_hash is not in the cache i.e it was manually removed
 
     if set_in_history and not replace_current_url:
-        logger.debug(
-            f"setting url_hash to: '#{url_hash}', adding to top of history stack"
-        )
+        msg = f"setting url_hash to: '#{url_hash}', adding to top of history stack"
         _navigation.pushState(url_hash)
     elif set_in_history and replace_current_url:
-        logger.debug(
-            f"setting url_hash to: '#{url_hash}', replacing current_url, setting in history"
-        )
+        msg = f"setting url_hash to: '#{url_hash}', replacing current_url, setting in history"
         _navigation.replaceState(url_hash)
     elif not set_in_history and replace_current_url:
-        logger.debug(
-            f"setting url_hash to: '#{url_hash}', replacing current_url, NOT setting in history"
-        )
+        msg = f"setting url_hash to: '#{url_hash}', replacing current_url, NOT setting in history"
         _navigation.replaceUrlNotState(url_hash)
+    logger.debug(msg)
 
     if redirect:
-        _r.navigate(url_hash, url_pattern, url_dict, **properties)
-    elif set_in_history and _r._current_form:
+        return _r.navigate(url_hash, url_pattern, url_dict, **properties)
+    if set_in_history and _r._current_form is not None:
         _r._cache[url_hash] = _r._current_form
         # no need to add to cache if not being set in history
+    logger.debug("navigation not triggered, redirect=False")
 
 
 def load_form(*args, **kws):
