@@ -12,10 +12,17 @@ from ..logging import Logger as _Logger
 
 
 class Logger(_Logger):
+    def get_format_params(self, *, msg, **params):
+        from . import _router
+
+        tabs = "  " * len(_router.navigation_context.contexts)
+        msg = msg.replace("\n", "\n" + tabs)
+        return super().get_format_params(tabs=tabs, msg=msg, **params)
+
     def __setattr__(self, attr: str, value) -> None:
         if attr == "debug":  # backwards compatability
             return _Logger.__setattr__(self, "level", DEBUG if value else INFO)
         return _Logger.__setattr__(self, attr, value)
 
 
-logger = Logger("#routing", format="{name}: {msg}", level=INFO)
+logger = Logger("#routing", format="{tabs}{name}: {msg}", level=INFO)

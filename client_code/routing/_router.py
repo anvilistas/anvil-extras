@@ -35,7 +35,7 @@ class navigation_context:
 
     def __enter__(self):
         num_contexts = len(self.contexts)
-        logger.debug(f"entering navigation {num_contexts}")
+        logger.debug(f"entering navigation level: {num_contexts}")
         if not self.contexts:
             self.contexts.append(self)
         elif num_contexts <= 10:
@@ -53,7 +53,7 @@ class navigation_context:
     def __exit__(self, exc_type, *args):
         self.contexts.pop()
         num_contexts = len(self.contexts)
-        logger.debug(f"exiting navigation {num_contexts}")
+        logger.debug(f"exiting navigation level:{num_contexts}")
         if not num_contexts:
             logger.debug("navigation complete\n")
         if exc_type is NavigationExit:
