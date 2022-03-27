@@ -36,7 +36,11 @@ class navigation_context:
 
     @classmethod
     def is_current_context(cls, url_hash):
-        return cls.contexts and cls.contexts[-1].url_hash == url_hash
+        return (
+            cls.contexts
+            and cls.contexts[-1].url_hash == url_hash
+            and _current_form is not None
+        )
 
     def __enter__(self):
         num_contexts = len(self.contexts)
