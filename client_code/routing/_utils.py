@@ -22,6 +22,9 @@ def get_url_components(url_hash=None):
     if url_hash is None:
         # url_hash = anvil.get_url_hash()  #changed since anvil decodes the url_hash
         url_hash = location.hash[1:]  # without the hash
+    elif isinstance(url_hash, str):
+        url_hash = url_hash if not url_hash.startswith("#") else url_hash[1:]
+
     if isinstance(url_hash, dict):
         # this is the case when anvil converts the url hash to a dict automatically
         url_pattern = ""
@@ -98,12 +101,25 @@ def _get_url_hash(url_pattern, url_dict):
     return url_pattern + url_params
 
 
+def _as_frozen_str_iterable(obj, attr, allow_none=False, factory=frozenset):
+    if isinstance(obj, str) or (allow_none and obj is None):
+        return factory([obj])
+    rv = []
+    for o in obj:
+        if not isinstance(o, str):
+            msg = f"expected an iterable of strings or a string for {attr} argument"
+            raise TypeError(msg)
+        rv.append(o)
+    return factory(rv)
+
+
 _RouteInfoBase = namedtuple(
     "route_info",
-    ["form", "templates", "url_pattern", "url_keys", "title", "fwr", "url_parts"],
+    ["form", "template", "url_pattern", "url_keys", "title", "fwr", "url_parts"],
 )
 
 TemplateInfo = namedtuple("template_info", ["form", "path", "condition"])
+RedirectInfo = namedtuple("redirect_info", ["redirect", "path", "condition"])
 
 
 class RouteInfo(_RouteInfoBase):
@@ -113,19 +129,12 @@ class RouteInfo(_RouteInfoBase):
             return part[1:-1], True
         return part, False
 
-    def __new__(cls, form, templates, url_pattern, url_keys, title, fwr, url_parts=()):
+    def __new__(cls, form, template, url_pattern, url_keys, title, fwr, url_parts=()):
         if url_pattern.endswith("/"):
             url_pattern = url_pattern[:-1]
 
-        url_keys = frozenset(url_keys)
-
-        if templates is None or type(templates) is str:
-            templates = (templates,)
-        elif type(templates) is not tuple:
-            templates = tuple(templates)
-
-        url_parts = [cls.as_dynamic_var(part) for part in url_pattern.split("/")]
+        url_parts = tuple(cls.as_dynamic_var(part) for part in url_pattern.split("/"))
 
         return _RouteInfoBase.__new__(
-            cls, form, templates, url_pattern, url_keys, title, fwr, url_parts
+            cls, form, template, url_pattern, url_keys, title, fwr, url_parts
         )

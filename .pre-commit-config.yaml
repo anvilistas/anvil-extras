@@ -31,7 +31,7 @@ repos:
           # these are errors that will be ignored by flake8
           # check out their meaning here
           # https://flake8.pycqa.org/en/latest/user/error-codes.html
-          - "--ignore=E203,E266,E501,W503,F403,F401,E402"
+          - "--ignore=E203,E266,E501,W503,F403,F401,E402,F811"
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.1.13
     hooks:

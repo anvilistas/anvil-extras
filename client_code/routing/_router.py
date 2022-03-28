@@ -13,7 +13,7 @@ from anvil.js.window import document
 
 from ._alert import handle_alert_unload as _handle_alert_unload
 from ._logging import logger
-from ._utils import get_url_components
+from ._utils import TemplateInfo, get_url_components
 
 __version__ = "2.0.1"
 
@@ -22,22 +22,48 @@ class NavigationExit(Exception):
     pass
 
 
-class _StackDepthContext:
-    def __init__(self):
-        self.stack_depth = 0
+class navigation_context:
+    contexts = []
+
+    def __init__(self, url_hash):
+        self.is_stale = False
+        self.url_hash = url_hash
+
+    @classmethod
+    def check_stale(cls):
+        contexts = cls.contexts
+        if contexts and contexts[-1].is_stale:
+            raise NavigationExit
+
+    @classmethod
+    def matches_current_context(cls, url_hash):
+        current = cls.contexts and cls.contexts[-1]
+        return current and current.url_hash == url_hash and not current.is_stale
+
+    @classmethod
+    def mark_all_stale(cls):
+        for context in cls.contexts:
+            context.is_stale = True
 
     def __enter__(self):
-        if self.stack_depth <= 5:
-            self.stack_depth += 1
-            return
-        logger.debug(
-            "**WARNING**"
-            "\nurl_hash redirected too many times without a form load, getting out\ntry setting redirect=False"
-        )
-        raise NavigationExit
+        num_contexts = len(self.contexts)
+        logger.debug(f"entering navigation level: {num_contexts}")
+        self.mark_all_stale()
+        self.contexts.append(self)
+        if num_contexts >= 10:
+            logger.debug(
+                "**WARNING**"
+                "\nurl_hash redirected too many times without a form load, getting out\ntry setting redirect=False"
+            )
+            self.is_stale = True
+        return self
 
     def __exit__(self, exc_type, *args):
-        self.stack_depth -= 1
+        self.contexts.pop()
+        num_contexts = len(self.contexts)
+        logger.debug(f"exiting navigation level: {num_contexts}")
+        if not num_contexts:
+            logger.debug("navigation complete\n")
         if exc_type is NavigationExit:
             return True
 
@@ -60,19 +86,19 @@ class _Cache(dict):
     __getitem__ = _wrap_method(dict.__getitem__)
     __setitem__ = _wrap_method(dict.__setitem__)
     __delitem__ = _wrap_method(dict.__delitem__)
+    __contains__ = _wrap_method(dict.__contains__)
     get = _wrap_method(dict.get)
     pop = _wrap_method(dict.pop)
     setdefault = _wrap_method(dict.setdefault)
 
 
-stack_depth_context = _StackDepthContext()
 default_title = document.title
 
 _current_form = None
 _cache = _Cache()
 _routes = {}
 _templates = set()
-_ordered_templates = {}
+_ordered_info = {}
 _error_form = None
 _ready = False
 _queued = []
@@ -92,36 +118,42 @@ def launch():
 
 def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
     if not _ready:
-        logger.debug(
-            f"routing is not ready or the template has not finished loading: queuing the call {url_hash!r}"
-        )
+        msg = f"routing is not ready or the template has not finished loading: queuing the call {url_hash!r}"
+        logger.debug(msg)
         _queued.append([(url_hash, url_pattern, url_dict), properties])
         return
     if url_hash is None:
         url_hash, url_pattern, url_dict = get_url_components()
-    logger.debug(
-        f"navigation triggered\n\turl_hash    = {url_hash!r}"
-        f"\n\turl_pattern = {url_pattern!r}\n\turl_dict    = {url_dict}"
-    )
+    if navigation_context.matches_current_context(url_hash):
+        return
+
+    msg = f"navigation triggered: url_hash={url_hash!r}, url_pattern={url_pattern!r}, url_dict={url_dict}"
+    logger.debug(msg)
+
     global _current_form
-    with stack_depth_context:
+    with navigation_context(url_hash) as nav_context:
+        # it could be initially stale if there are 10+ active contexts
+        nav_context.check_stale()
         handle_alert_unload()
         handle_form_unload()
-        template_info = load_template(url_pattern)
+        nav_context.check_stale()
+        template_info, init_path = load_template_or_redirect(url_pattern)
         url_args = {
             "url_hash": url_hash,
             "url_pattern": url_pattern,
             "url_dict": url_dict,
         }
         alert_on_navigation(**url_args)
+        nav_context.check_stale()
         clear_container()
         form = _cache.get(url_hash)
         if form is None:
             form = get_form_to_add(
-                template_info, url_hash, url_pattern, url_dict, properties
+                template_info, init_path, url_hash, url_pattern, url_dict, properties
             )
         else:
-            logger.debug(f"{form.__class__.__name__!r} loading from cache")
+            logger.debug(f"loading route: {form.__class__.__name__!r} from cache")
+        nav_context.check_stale()
         _current_form = form
         update_form_attrs(form)
         add_form_to_container(form)
@@ -142,39 +174,64 @@ def handle_form_unload():
 
     with _navigation.PreventUnloading():
         if before_unload():
-            logger.debug(f"stop unload called from {_current_form.__class__.__name__}")
+            msg = f"stop unload called from route: {_current_form.__class__.__name__}"
+            logger.debug(msg)
             _navigation.stopUnload()
             raise NavigationExit
 
 
-def load_template(url_hash):
+def load_template_or_redirect(url_hash):
     global _current_form
     form = get_open_form()
     current_cls = type(form)
     if form is not None and current_cls not in _templates:
         raise NavigationExit  # not using templates
 
-    logger.debug("Checking routing templates")
-    for template_info in chain.from_iterable(_ordered_templates.values()):
-        cls, path, condition = template_info
-        if not url_hash.startswith(path):
+    logger.debug("checking templates and redirects")
+    for info in chain.from_iterable(_ordered_info.values()):
+        callable_, paths, condition = info
+        try:
+            path = next(path for path in paths if url_hash.startswith(path))
+        except StopIteration:
             continue
         if condition is None:
             break
-        elif condition():
+        elif not condition():
+            continue
+        elif type(info) is TemplateInfo:
             break
+        redirect_hash = callable_()
+        if isinstance(redirect_hash, str):
+            if navigation_context.matches_current_context(redirect_hash):
+                # would cause an infinite loop
+                logger.debug("redirect returned current url_hash, ignoring")
+                continue
+
+            from . import set_url_hash
+
+            logger.debug(f"redirecting to url_hash: {redirect_hash!r}")
+
+            set_url_hash(
+                redirect_hash,
+                set_in_history=False,
+                redirect=True,
+                replace_current_url=True,
+            )
+        navigation_context.check_stale()
+
     else:
-        load_error_or_raise(f"No template for {url_hash!r}")
-    if current_cls is cls:
-        logger.debug(f"{cls.__name__!r} routing template unchanged")
-        return template_info
+        load_error_or_raise(f"no template for url_hash={url_hash!r}")
+    if current_cls is callable_:
+        logger.debug(f"unchanged template: {callable_.__name__!r}")
+        return info, path
     else:
-        logger.debug(
-            f"{current_cls.__name__!r} routing template changed to {cls.__name__!r}, exiting this navigation call"
-        )
+        msg = f"changing template: {current_cls.__name__!r} -> {callable_.__name__!r}"
+        logger.debug(msg)
         _current_form = None
-        f = cls()
-        logger.debug(f"form template loaded {cls.__name__!r}, re-navigating")
+        # mark context as stale so that this context is no longer considered the current context
+        navigation_context.mark_all_stale()
+        f = callable_()
+        logger.debug(f"loaded template: {callable_.__name__!r}, re-navigating")
         open_form(f)
         raise NavigationExit
 
@@ -191,24 +248,33 @@ def clear_container():
     get_open_form().content_panel.clear()
 
 
-def get_form_to_add(template_info, url_hash, url_pattern, url_dict, properties):
+def check_cached_templates(route_info, url_hash):
+    templates = route_info.template
+    if len(templates) <= 1:
+        return
+    for template in templates:
+        form = _cache.get((url_hash, template), None)
+        if form is not None:
+            msg = f"loading route: {form.__class__.__name__!r} from cache - cached with {template!r}"
+            logger.debug(msg)
+            return form
+
+
+def get_form_to_add(
+    template_info, init_path, url_hash, url_pattern, url_dict, properties
+):
     global _current_form
     route_info, dynamic_vars = path_matcher(
-        template_info, url_hash, url_pattern, url_dict
+        template_info, init_path, url_hash, url_pattern, url_dict
     )
 
     # check if path is cached with another template
-    if len(route_info.templates) > 1:
-        for template in route_info.templates:
-            form = _cache.get((url_hash, template), None)
-            if form is not None:
-                logger.debug(
-                    f"Loading {form.__class__.__name__!r} from cache - cached with {template!r}"
-                )
-                return form
+    form = check_cached_templates(route_info, url_hash)
+    if form is not None:
+        return form
 
     form = route_info.form.__new__(route_info.form, **properties)
-    logger.debug(f"adding {form.__class__.__name__!r} to cache")
+    logger.debug(f"adding route: {form.__class__.__name__!r} to cache")
     _current_form = _cache[url_hash] = form
     form._routing_props = {
         "title": route_info.title,
@@ -221,9 +287,8 @@ def get_form_to_add(template_info, url_hash, url_pattern, url_dict, properties):
     form.dynamic_vars = dynamic_vars
     form.__init__(**properties)  # this might be slow if it does a bunch of server calls
     if _current_form is not form:
-        logger.debug(
-            f"Problem loading {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
-        )
+        msg = f"problem loading route: {form.__class__.__name__!r}. Another form was during the call to __init__. exiting this navigation"
+        logger.debug(msg)
         # and if it was slow, and some navigation happened we should end now
         raise NavigationExit
     return form
@@ -237,16 +302,16 @@ def load_error_or_raise(msg):
         raise LookupError(msg)
 
 
-def path_matcher(template_info, url_hash, url_pattern, url_dict):
+def path_matcher(template_info, init_path, url_hash, url_pattern, url_dict):
     given_parts = url_pattern.split("/")
     num_given_parts = len(given_parts)
 
     valid_routes = _routes.get(template_info.form.__name__, []) + _routes.get(None, [])
 
     for route_info in valid_routes:
-        if not route_info.url_pattern.startswith(template_info.path):
+        if not route_info.url_pattern.startswith(init_path):
             route_info = route_info._replace(
-                url_pattern=template_info.path + route_info.url_pattern
+                url_pattern=init_path + route_info.url_pattern
             )
         if num_given_parts != len(route_info.url_parts):
             # url pattern CANNOT fit, skip deformatting
@@ -263,8 +328,8 @@ def path_matcher(template_info, url_hash, url_pattern, url_dict):
                 return route_info, dynamic_vars
 
     logger.debug(
-        f"no route form with:\n\turl_pattern={url_pattern!r}\n\turl_keys={list(url_dict.keys())}"
-        f"\n\ttemplate={template_info.form.__name__!r}\n"
+        f"no route form with: url_pattern={url_pattern!r} url_keys={list(url_dict.keys())}"
+        f"template={template_info.form.__name__!r}\n"
         "If this is unexpected perhaps you haven't imported the form correctly"
     )
     load_error_or_raise(f"{url_hash!r} does not exist")
@@ -283,9 +348,8 @@ def update_form_attrs(form):
     try:
         document.title = title.format(**url_dict, **getattr(form, "dynamic_vars", {}))
     except Exception:
-        raise ValueError(
-            "Error generating the page title. Please check the title argument in the decorator."
-        )
+        msg = f"error generating the page title - check the title argument in {type(form).__name__!r} template decorator."
+        raise ValueError(msg)
 
 
 def add_form_to_container(form):
@@ -320,27 +384,22 @@ def load_error_form():
 
 
 def add_route_info(route_info):
-    logger.debug(
-        "   route registered: (form={form.__name__!r}, url_pattern={url_pattern!r}, url_keys={url_keys}, title={title!r})".format(
-            **route_info._asdict()
-        )
-    )
-    for template in route_info.templates:
+    msg = "   route registered: (form={form.__name__!r}, url_pattern={url_pattern!r}, url_keys={url_keys}, title={title!r}, template={template!r})"
+    logger.debug(msg.format(**route_info._asdict()))
+    for template in route_info.template:
         _routes.setdefault(template, []).append(route_info)
 
 
-def add_template_info(cls, priority, template_info):
-    global _ordered_templates, _templates
-    logger.debug(
-        "template registered: (form={form.__name__!r}, path={path!r}, priority={priority}, condition={condition})".format(
-            priority=priority, **template_info._asdict()
-        )
-    )
-    _templates.add(cls)
-    current = _ordered_templates
-    current.setdefault(priority, []).append(template_info)
+def add_info(info_type, callable_, priority, info):
+    global _ordered_info, _templates
+    msg = f"{info_type} registered: {repr(info).replace(type(info).__name__, '')}"
+    logger.debug(msg)
+    if info_type == "template":
+        _templates.add(callable_)
+    tmp = _ordered_info
+    tmp.setdefault(priority, []).append(info)
     ordered = {}
-    for priority in sorted(current, reverse=True):
+    for priority in sorted(tmp, reverse=True):
         # rely on insertion order
-        ordered[priority] = current[priority]
-    _ordered_templates = ordered
+        ordered[priority] = tmp[priority]
+    _ordered_info = ordered

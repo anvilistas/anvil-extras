@@ -11,7 +11,7 @@ from anvil.js import window as _w
 
 from . import _navigation
 from . import _router as _r
-from ._decorators import error_form, route, template
+from ._decorators import error_form, redirect, route, template
 from ._logging import logger
 from ._router import NavigationExit, launch
 from ._utils import (
@@ -33,9 +33,8 @@ def reload_page(hard=False):
         logger.debug("hard reload_page called")
         _w.location.reload()
     else:
-        logger.debug(
-            "reload_page called, clearing the cache for this page and reloading"
-        )
+        msg = "reload_page called, clearing the cache for this page and reloading"
+        logger.debug(msg)
         url_hash, url_pattern, url_dict = get_url_components()
         remove_from_cache(url_hash)
         _r.navigate(url_hash, url_pattern, url_dict)
@@ -66,7 +65,7 @@ def on_session_expired(reload_hash=True, allow_cancel=True):
 
 def set_warning_before_app_unload(warning=True):
     """set a warning message before someone tries to navigate away from the app"""
-    logger.debug(f"Setting warning before app unload set to: {warning}")
+    logger.debug(f"setting warning before app unload set to: {warning!r}")
 
     def beforeunload(e):
         e.preventDefault()  # cancel the event
@@ -86,9 +85,8 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
     logger.debug(f"removing {url_hash!r} from cache")
     cached = _r._cache.pop(url_hash, None)
     if cached is None:
-        logger.debug(
-            f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
-        )
+        msg = f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
+        logger.debug(msg)
 
 
 def get_cache():
@@ -160,31 +158,27 @@ def set_url_hash(
         url_hash == get_url_hash()
         and url_hash in _r._cache
         and _r._current_form is not None
-    ):
+    ) or _r.navigation_context.matches_current_context(url_hash):
         return  # should not continue if url_hash is identical to the addressbar hash!
         # but do continue if the url_hash is not in the cache i.e it was manually removed
 
     if set_in_history and not replace_current_url:
-        logger.debug(
-            f"setting url_hash to: '#{url_hash}', adding to top of history stack"
-        )
+        msg = f"setting url_hash to: '#{url_hash}', adding to top of history stack"
         _navigation.pushState(url_hash)
     elif set_in_history and replace_current_url:
-        logger.debug(
-            f"setting url_hash to: '#{url_hash}', replacing current_url, setting in history"
-        )
+        msg = f"setting url_hash to: '#{url_hash}', replacing current_url, setting in history"
         _navigation.replaceState(url_hash)
     elif not set_in_history and replace_current_url:
-        logger.debug(
-            f"setting url_hash to: '#{url_hash}', replacing current_url, NOT setting in history"
-        )
+        msg = f"setting url_hash to: '#{url_hash}', replacing current_url, NOT setting in history"
         _navigation.replaceUrlNotState(url_hash)
+    logger.debug(msg)
 
     if redirect:
-        _r.navigate(url_hash, url_pattern, url_dict, **properties)
-    elif set_in_history and _r._current_form:
+        return _r.navigate(url_hash, url_pattern, url_dict, **properties)
+    if set_in_history and _r._current_form is not None:
         _r._cache[url_hash] = _r._current_form
         # no need to add to cache if not being set in history
+    logger.debug("navigation not triggered, redirect=False")
 
 
 def load_form(*args, **kws):
