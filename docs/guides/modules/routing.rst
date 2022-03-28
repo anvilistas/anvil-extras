@@ -55,7 +55,7 @@ It only has a navigation bar, header, optional sidebar and a ``content_panel``
     from .ErrorForm import ErrorForm
 
     @routing.template(path="", priority=0, condition=None)
-    class Main(MainTemplate):
+    class MainRouter(MainRouterTemplate):
 
 
 An Anvil app can have multiple template forms.
@@ -64,6 +64,7 @@ check each registered template form in order of priority (highest values first).
 A template form will be loaded as the ``open_form`` only if,
 the current ``url_hash`` starts with the template's path argument **and** either the condition is ``None``
 **or** the condition is a callable that returns ``True``.
+The path argument can be a string or an iterable of strings.
 
 The above example would be the fallback template form.
 This is equivalent to:
@@ -71,7 +72,7 @@ This is equivalent to:
 .. code:: python
 
     @routing.default_template
-    class Main(MainTemplate):
+    class MainRouter(MainRouterTemplate):
 
 
 If you have a different top-level template for the ``admin`` section of your app you might want a second template.
@@ -81,7 +82,7 @@ If you have a different top-level template for the ``admin`` section of your app
     from .. import Globals
 
     @routing.template(path="admin", priority=1, condition=lambda: Globals.admin is not None)
-    class AdminForm(AdminTemplate):
+    class AdminRouterForm(AdminRouterTemplate):
 
 The above code takes advantage of an implied ``Globals`` module that has an ``admin`` attribute.
 If the ``url_hash`` starts with ``admin`` and the ``Globals.admin`` is not ``None`` then this template
@@ -94,7 +95,7 @@ Another example might be a login template
     from .. import Globals
 
     @routing.template(path="", priority=2, condition=lambda: Globals.user is None)
-    class LoginForm(LoginTemplate):
+    class LoginRouterForm(LoginRouterTemplate):
 
 
 Note that ``TemplateForms`` are never cached (unlike ``RouteForms``).
@@ -178,7 +179,7 @@ shows an error message:
 Startup Forms and Startup Modules
 ---------------------------------
 
-If you are using a Startup Module or a Startup Form all the ``TemplateForm``s and ``RouteForm``s must
+If you are using a Startup Module or a Startup Form all the ``TemplateForms`` and ``RouteForms`` must
 be imported otherwise they will not be registered by the ``routing`` module.
 
 If using a Startup module, it is recommended call ``routing.launch()`` after any initial app logic
@@ -219,14 +220,14 @@ Instead
 .. code:: python
 
     # option 1
-    set_url_hash('articles') # anvil's built in method
+    set_url_hash('articles') # anvil's built-in method
 
     # or an empty string to navigate to the home page
     set_url_hash('')
 
     # option 2
     routing.set_url_hash('articles')
-    #routing.set_url_hash() method has some bonus features.
+    #routing.set_url_hash() method has some bonus features and is recommended over the anvil's built-in method
 
 
 With query string parameters:
@@ -276,15 +277,51 @@ e.g. ``foo/article-{id}`` is not valid.
 --------------
 
 
+Redirects
+---------
+
+A redirect is similar to a template in that the arguments are the same.
+
+.. code:: python
+
+    @routing.redirect(path="admin", priority=20, condition: Globals.user is None or not Globals.user["admin"])
+    def redirect_no_admin():
+        # not an admin or not logged in
+        return "login"
+
+    # can also use routing.set_url_hash() to redirect
+    @routing.redirect(path="admin", priority=20, condition=lambda: Globals.user is None or not Globals.user["admin"])
+    def redirect_no_admin():
+        routing.set_url_hash("login", replace_current_url=True, set_in_history=False, redirect=True)
+
+
+
+When used as a decorator, the redirect function will be called if:
+
+- the current ``url_hash`` starts with the redirect ``path``, and
+- the condition returns ``True`` or the condition is ``None``
+
+The redirect function can return a ``url_hash``, which will then trigger a redirect.
+Alternatively, a redirect can use ``routing.set_url_hash()`` to redirect.
+
+Redirects are checked at the same time as templates, in this way a redirect can intercept the current navigation before any templates are loaded.
+
+
 API
 ---
 
 Decorators
 ^^^^^^^^^^
-.. function:: routing.template(path='', priority=0, condition=None)
+.. function:: routing.template(path='', priority=0, condition=None, redirect=None)
 
     Apply this decorator above the top-level Form - ``TemplateForm``.
+
+    - ``path`` should be a string or iterable of strings.
+    - ``priority`` should be an integer.
+    - ``condition`` can be ``None``, or a function that returns ``True`` or ``False``
+
     The ``TemplateForm`` must have a ``content_panel``.
+    It is often could to refer to ``TemplateForm``s with the suffix ``Router`` e.g. ``MainRouter``, ``AdminRotuer``.
     There are two callbacks available to a ``TemplateForm``.
 
     .. method:: on_navitagion(self, **nav_args)
@@ -338,6 +375,16 @@ Decorators
 
         If the ``before_unload`` method is added it will be called whenever the form currently in the ``content_panel`` is about to be removed.
         If any truthy value is returned then unloading will be prevented. See `Form Unloading <#form-unloading>`__.
+
+.. function:: routing.redirect(path, priority=0, condition=None)
+
+    The redirect decorator can decorate a function that will intercept the current navigtation, depending on its ``path``, ``priority`` and ``condition`` arguments.
+
+    - ``path`` can be a string or iterable of strings.
+    - ``priority`` should be an integer - the higher the value the higher the priority.
+    - ``conditon`` should be ``None`` or a callable that returns a ``True`` or ``False``.
+
+    A redirect function can return a ``url_hash`` - which will trigger a redirect, or it can call ``routing.set_url_hash()``.
 
 .. attribute:: routing.error_form
 
@@ -902,20 +949,119 @@ You can avoid this by raising a ``routing.NavigationExit()`` exception in the ``
                 routing.set_url_hash("")
 
 
-Alternatively, you could load the login form as a ``route`` form.
+You may choose to use redirect functions to intercept the navigation.
+
+.. code:: python
+
+    @routing.redirect("", priority=10, condition=lambda: Globals.user is None)
+    def redirect():
+        return "login"
+
+    @routing.redirect("login", priority=10, condition=lambda: Globals.user is not None)
+    def redirect():
+        # we're logged in - don't go to the login form
+        return ""
+
+    @routing.default_template
+    class DashboardRouter(DashboardRouterTemplate):
+        ...
+
+    @routing.template("login", priority=1)
+    class LoginRouter(LoginRouterTemplate):
+        def on_navigation(self, url_hash, **url_args):
+            raise routing.NavigationExit
+            # prevent routing from changing the content panel
+
+        def login_button_click(self, **event_args):
+            Globals.user = anvil.users.login_with_form()
+            routing.set_url_hash("", replace_current_url=True)
+            # let routing decide which template
+
+
+Advanced - redirect back to the url hash that was being accessed
+
+
+.. code:: python
+
+    @routing.redirect("", priority=10, condition=lambda: Globals.user is None)
+    def redirect():
+        current_hash = routing.get_url_hash()
+        routing.set_url_hash("login", current_hash=current_hash, replace_current_url=True, set_in_history=False)
+        # the extra property current_hash passed to the form as a keyword argument
+
+    @routing.redirect("login", priority=10, condition=lambda: Globals.user is not None)
+    def redirect():
+        # we're logged in - don't go to the login form
+        return ""
+
+    @routing.default_template
+    class DashboardRouter(DashboardRouterTemplate):
+        ...
+
+    @routing.template("login", priority=1)
+    class LoginRouter(LoginRouterTemplate):
+        def __init__(self, current_hash="", **properties):
+            self.current = current_hash
+
+        def on_navigation(self, url_hash, **url_args):
+            self.current = url_hash
+            routing.set_url_hash("login", replace_current_url=True, set_in_history=False, redirect=False)
+            raise routing.NavigationExit
+            # prevent routing from changing the content panel
+
+        def login_button_click(self, **event_args):
+            Globals.user = anvil.users.login_with_form()
+            routing.set_url_hash(self.current, replace_current_url=True)
+            # let routing decide which template to load
+
+
+More advanced - to access the current ``url_hash`` that is stored in the browser's history you can use
+``window.history.state.get.url``.
+
+.. code:: python
+
+    @routing.redirect("", priority=10, condition=lambda: Globals.user is None)
+    def redirect():
+        return "login"
+
+    @routing.redirect("login", priority=10, condition=lambda: Globals.user is not None)
+    def redirect():
+        return ""
+
+    @routing.default_template
+    class DashboardRouter(DashboardRouterTemplate):
+        ...
+
+    @routing.template("login", priority=1)
+    class LoginRouter(LoginRouterTemplate):
+        def on_navigation(self, **url_args):
+            routing.set_url_hash("login", replace_current_url=True, set_in_history=False, redirect=False)
+            raise routing.NavigationExit
+            # prevent routing from changing the content panel
+
+        def login_button_click(self, **event_args):
+            Globals.user = anvil.users.login_with_form()
+            from anvil.js.window import history
+            routing.set_url_hash(history.state.url, replace_current_url=True)
+
+
+
+
+Alternatively, you could load the login form as a ``route`` form rather than a template.
 
 
 .. code:: python
 
     @routing.default_template
-    class MainForm(Mainemplate):
+    class MainRouter(MainRouterTemplate):
         def __init__(self, **properties):
             if Globals.users is None:
                 routing.set_url_hash("login") # this logic could also be in a Startup Module
 
         def on_navigation(self, url_hash, **url_args):
             if Globals.user is None and url_hash != "login":
-                raise routing.NavigationExit() # prevent routing from changing the content panel
+                raise routing.NavigationExit()
+                # prevent routing from changing the login route form inside the content panel
 
 
     @routing.route('login')

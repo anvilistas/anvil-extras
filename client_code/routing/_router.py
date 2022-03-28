@@ -13,7 +13,7 @@ from anvil.js.window import document
 
 from ._alert import handle_alert_unload as _handle_alert_unload
 from ._logging import logger
-from ._utils import RedirectInfo, TemplateInfo, get_url_components
+from ._utils import TemplateInfo, get_url_components
 
 __version__ = "2.0.1"
 
@@ -36,7 +36,7 @@ class navigation_context:
             raise NavigationExit
 
     @classmethod
-    def is_current_context(cls, url_hash):
+    def matches_current_context(cls, url_hash):
         current = cls.contexts and cls.contexts[-1]
         return current and current.url_hash == url_hash and not current.is_stale
 
@@ -124,7 +124,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         return
     if url_hash is None:
         url_hash, url_pattern, url_dict = get_url_components()
-    if navigation_context.is_current_context(url_hash):
+    if navigation_context.matches_current_context(url_hash):
         return
 
     msg = f"navigation triggered: url_hash={url_hash!r}, url_pattern={url_pattern!r}, url_dict={url_dict}"
@@ -132,6 +132,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
 
     global _current_form
     with navigation_context(url_hash) as nav_context:
+        # it could be initially stale if there are 10+ active contexts
         nav_context.check_stale()
         handle_alert_unload()
         handle_form_unload()
@@ -173,9 +174,8 @@ def handle_form_unload():
 
     with _navigation.PreventUnloading():
         if before_unload():
-            logger.debug(
-                f"stop unload called from route: {_current_form.__class__.__name__}"
-            )
+            msg = f"stop unload called from route: {_current_form.__class__.__name__}"
+            logger.debug(msg)
             _navigation.stopUnload()
             raise NavigationExit
 
@@ -202,7 +202,9 @@ def load_template_or_redirect(url_hash):
             break
         redirect_hash = callable_()
         if isinstance(redirect_hash, str):
-            if navigation_context.is_current_context(redirect_hash):
+            if navigation_context.matches_current_context(redirect_hash):
+                # would cause an infinite loop
+                logger.debug("redirect returned current url_hash, ignoring")
                 continue
 
             from . import set_url_hash
@@ -226,6 +228,7 @@ def load_template_or_redirect(url_hash):
         msg = f"changing template: {current_cls.__name__!r} -> {callable_.__name__!r}"
         logger.debug(msg)
         _current_form = None
+        # mark context as stale so that this context is no longer considered the current context
         navigation_context.mark_all_stale()
         f = callable_()
         logger.debug(f"loaded template: {callable_.__name__!r}, re-navigating")

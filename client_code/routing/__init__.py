@@ -158,7 +158,7 @@ def set_url_hash(
         url_hash == get_url_hash()
         and url_hash in _r._cache
         and _r._current_form is not None
-    ) or _r.navigation_context.is_current_context(url_hash):
+    ) or _r.navigation_context.matches_current_context(url_hash):
         return  # should not continue if url_hash is identical to the addressbar hash!
         # but do continue if the url_hash is not in the cache i.e it was manually removed
 
