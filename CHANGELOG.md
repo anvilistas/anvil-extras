@@ -9,6 +9,7 @@
 * routing - `@routing.redirect()` decorator added
   https://github.com/anvilistas/anvil-extras/pull/298
 * hashlib module added
+  https://github.com/anvilistas/anvil-extras/pull/301
 
 
 # v2.0.1 16-Mar-2022
