@@ -19,11 +19,11 @@ def digest(algorithm, data):
     ----------
     algorithm : str
         The algorithm to use.
-    data : object
+    data : str or bytes
         The data to digest.
     """
     if not isinstance(data, (bytes, str)):
-        data = str(data).encode("utf-8")
+        raise TypeError("data must be a string or bytes object")
 
     if isinstance(data, str):
         data = data.encode("utf-8")

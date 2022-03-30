@@ -5,10 +5,7 @@ A client module that provides several hashing algorithms.
 Usage
 -----
 The module provides the functions ``sha1``, ``sha256``, ``sha384`` and ``sha512``. Each
-can be called by passing the data to be hashed and will return a hex string.
-
-The data can be any object. If it is anything other than a string or bytes instance, it
-must have ``__str__`` method available.
+can be called by passing the str or bytes object to be hashed and will return a hex string.
 
 e.g.
 
