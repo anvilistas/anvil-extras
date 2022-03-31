@@ -70,3 +70,4 @@ the contributors:
 
 - [Anvil](https://anvil.works)
 - [Osmosis Investment Management](https://osmosisim.com)
+- [Baker Tilly](https://www.bakertilly.com/)
