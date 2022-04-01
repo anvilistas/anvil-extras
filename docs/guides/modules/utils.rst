@@ -41,7 +41,7 @@ relative import to an absolute import.
         def load_form(self, form_name):
             form = self.get_form(form_name)
             self.content_panel.clear()
-            self.content_panel.add_component(form())
+            self.content_panel.add_component(form)
 
 
 Timing
