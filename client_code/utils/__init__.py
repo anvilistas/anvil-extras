@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+import sys
 from functools import lru_cache
 
 __version__ = "2.0.1"
@@ -40,11 +41,12 @@ def import_module(name, package=None):
             if character != ".":
                 break
             level += 1
-        # make sure the package exists
-        __import__(package, {"__package__": None})
+        if package not in sys.modules:
+            # make sure the package exists
+            __import__(package, {"__package__": None})
 
     name = name[level:]
-    mod = __import__(name, globals={"__package__": package}, level=level)
+    mod = __import__(name, {"__package__": package}, level=level)
     attrs = name.split(".")[1:]
     for attr in attrs:
         mod = getattr(mod, attr)
