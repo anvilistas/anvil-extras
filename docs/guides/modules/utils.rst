@@ -5,11 +5,8 @@ Client and server-side utility functions.
 
 
 
-Timing
-------
-
 import_module
-^^^^^^^^^^^^^
+-------------
 
 Very similar to python's ``importlib.import_module`` implementation.
 Use in the same way.
@@ -46,6 +43,9 @@ relative import to an absolute import.
             self.content_panel.clear()
             self.content_panel.add_component(form())
 
+
+Timing
+------
 
 
 timed decorator
