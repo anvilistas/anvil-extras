@@ -40,6 +40,9 @@ def import_module(name, package=None):
             if character != ".":
                 break
             level += 1
+        # make sure the package exists
+        __import__(package, {"__package__": None})
+
     name = name[level:]
     mod = __import__(name, globals={"__package__": package}, level=level)
     attrs = name.split(".")[1:]
