@@ -5,6 +5,45 @@ Client and server-side utility functions.
 
 
 
+import_module
+-------------
+
+Very similar to python's ``importlib.import_module`` implementation.
+Use in the same way.
+
+Takes two arguments, the ``name`` to import, and an optional ``package``.
+
+The 'package' argument is required when performing a relative import. It
+specifies the package to use as the anchor point from which to resolve the
+relative import to an absolute import.
+
+
+**Example implementation:**
+
+.. code-block:: python
+
+    from anvil_extras.utils import import_module
+    from functools import cache
+
+    class MainForm(MainFormTemplate):
+        ...
+
+        def link_click(self, sender, **event_args):
+            self.load_form(sender.tag)
+
+        @cache
+        def get_form(self, form_name):
+            form_module = import_module(f".{form_name}", __package__)
+            form_cls = getattr(form_module, form_name)
+            return form_cls()
+
+
+        def load_form(self, form_name):
+            form = self.get_form(form_name)
+            self.content_panel.clear()
+            self.content_panel.add_component(form)
+
+
 Timing
 ------
 

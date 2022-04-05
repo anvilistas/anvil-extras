@@ -10,6 +10,8 @@
   https://github.com/anvilistas/anvil-extras/pull/298
 * hashlib module added
   https://github.com/anvilistas/anvil-extras/pull/301
+* `utils.import_module`: similar implementation to python's `importlib.import_module`
+  https://github.com/anvilistas/anvil-extras/pull/302
 
 
 # v2.0.1 16-Mar-2022
