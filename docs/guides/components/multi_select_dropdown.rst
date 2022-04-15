@@ -78,6 +78,14 @@ Events
 
     When the selection changes
 
+:opened:
+
+    When the dropdown is opened
+
+:closed:
+
+    When the dropdown is closed
+
 :show:
 
     When the component is shown

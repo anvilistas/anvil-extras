@@ -101,6 +101,8 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
+        self._el.on("shown.bs.select", self._opened)
+        self._el.on("hidden.bs.select", self._closed)
         self.set_event_handler("x-popover-init", self._mk_popover)
         self._init = True
 
@@ -178,8 +180,15 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     spacing_below = _spacing_property("below")
 
     ##### EVENTS #####
-    def change(self, *e):
-        return self.raise_event("change")
+    def _opened(self, *e):
+        self.raise_event("opened")
+
+    def _closed(self, *e):
+        self.raise_event("closed")
+
+    def change(self, e, clickedIndex, isSelected, prev):
+        if clickedIndex is not None:
+            return self.raise_event("change")
 
     def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this

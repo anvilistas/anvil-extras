@@ -23,6 +23,8 @@ properties:
 is_package: true
 events:
 - {name: change, default_event: true, description: when the selected values change}
+- {name: opened, default_event: true, description: when the dropdown menu is opened}
+- {name: closed, default_event: true, description: when the dropdown menu is closed}
 - {name: show, description: when the dropdown is shown}
 - {name: hide, description: when the dropdown is hidden}
 custom_component: true
