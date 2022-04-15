@@ -81,8 +81,8 @@ _trigger_writeback = _Function(
 
 
 def trigger(self: _Component, event: str):
-    """trigger an event on a component, self is an anvil component, event is a component, event is a str or a dictionary
-    if event is a dictionary it should include an event key e.g. {'event': 'keypress', 'which': 13}
+    """trigger an event on a component, self is an anvil component, event is a str or a dictionary
+    if event is a dictionary it should include an 'event' key e.g. {'event': 'keypress', 'which': 13}
     """
     if event == "writeback":
         return _trigger_writeback(self)
