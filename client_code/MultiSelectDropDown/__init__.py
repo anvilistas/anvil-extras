@@ -61,12 +61,12 @@ _defaults = {
 }
 
 
-def _component_property(internal, jquery, fn=None):
+def _component_property(prop, jquery, fn=None):
     def getter(self):
-        return getattr(self, "_" + internal)
+        return self._props[prop]
 
     def setter(self, value):
-        setattr(self, "_" + internal, value)
+        self._props[prop] = value
         value = value if fn is None else fn(value)
         if value:
             self._el.attr(jquery, value)
@@ -77,7 +77,7 @@ def _component_property(internal, jquery, fn=None):
             self._el.selectpicker("refresh")
             self._el.selectpicker("render")
 
-    return property(getter, setter, None, internal)
+    return property(getter, setter, None, prop)
 
 
 class MultiSelectDropDown(MultiSelectDropDownTemplate):
@@ -94,7 +94,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._values = {}
         # Any code you write here will run when the form opens
-        properties = _defaults | properties
+        self._props = properties = _defaults | properties
         properties["items"] = properties["items"] or []
 
         self.init_components(**properties)
