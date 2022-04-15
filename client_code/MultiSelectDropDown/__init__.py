@@ -93,17 +93,21 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         # remove all the script tags before they load into the dom
 
         self._values = {}
+        self._invalid = []
         # Any code you write here will run when the form opens
-        self._props = properties = _defaults | properties
-        properties["items"] = properties["items"] or []
+        self._props = props = _defaults | properties
+        props["items"] = props["items"] or []
+        selected = props.pop("selected", ())
 
-        self.init_components(**properties)
+        self.init_components(**props)
 
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
         self._el.on("shown.bs.select", self._opened)
         self._el.on("hidden.bs.select", self._closed)
         self.set_event_handler("x-popover-init", self._mk_popover)
+        if selected:
+            self.selected = selected
         self._init = True
 
     ##### PROPERTIES #####
@@ -129,7 +133,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     @items.setter
     def items(self, value):
-        selected = self.selected
+        selected = self.selected + self._invalid
         self._el.children().remove()
         options, values = _clean_items(value)
         self._el.append(options)
@@ -150,12 +154,24 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     @selected.setter
     def selected(self, values):
+        FOUND = object()
+
         if not isinstance(values, (list, tuple)):
             values = [values]
+        else:
+            values = list(values)
+
         to_select = []
         for key, val in self._values.items():
-            if val in values:
+            try:
+                idx = values.index(val)
+            except ValueError:
+                pass
+            else:
+                values[idx] = FOUND
                 to_select.append(key)
+
+        self._invalid = [val for val in values if val is not FOUND]
         self._el.selectpicker("val", to_select)
 
     multiple = _component_property("multiple", "multiple")
@@ -181,6 +197,8 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     ##### EVENTS #####
     def _opened(self, *e):
+        # invalidate these since the user has interacted with the component
+        self._invalid = []
         self.raise_event("opened")
 
     def _closed(self, *e):
