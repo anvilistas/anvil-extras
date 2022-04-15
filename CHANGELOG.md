@@ -12,6 +12,12 @@
   https://github.com/anvilistas/anvil-extras/pull/301
 * `utils.import_module`: similar implementation to python's `importlib.import_module`
   https://github.com/anvilistas/anvil-extras/pull/302
+* `MultiSelectDropDown`: add events `opened` and `closed`
+  https://github.com/anvilistas/anvil-extras/issues/279
+
+## Bug Fixes
+* `MultiSelectDropDown`: fix change event should only fire on user interaction
+  https://github.com/anvilistas/anvil-extras/issues/307
 
 
 # v2.0.1 16-Mar-2022
