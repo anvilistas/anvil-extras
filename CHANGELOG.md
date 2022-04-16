@@ -1,5 +1,10 @@
 # Unreleased
 
+## Notable Change
+* `@auto_refreshing` - the original item will now be proxied rather than copied.
+  Changes to the proxied item will make changes to the original item.
+  https://github.com/anvilistas/anvil-extras/pull/311
+
 ## New Features
 * routing - a template argument was added to the `@routing.route` decorator.
   This argument determines which templates a route can be added to.
@@ -18,6 +23,8 @@
 ## Bug Fixes
 * `MultiSelectDropDown`: fix change event should only fire on user interaction
   https://github.com/anvilistas/anvil-extras/issues/307
+* `@auto_refreshing`: support auto_refreshing when the item is not explicitly set
+  https://github.com/anvilistas/anvil-extras/issues/250
 
 
 # v2.0.1 16-Mar-2022
