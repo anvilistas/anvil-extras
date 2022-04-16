@@ -13,10 +13,10 @@ from anvil.server import portable_class
 __version__ = "2.0.1"
 
 
-def wrap_method(meth_name, refresh=False):
+def wrap_method(meth_name, refresh=False, prop=False):
     def wrapped(self, *args, **kws):
         rv = getattr(self._obj, meth_name)
-        if rv is not None:
+        if not prop:
             rv = rv(*args, **kws)
         if refresh:
             self._refresh_data_bindings()
@@ -52,7 +52,7 @@ class ProxyItem:
     values = wrap_method("values")
     items = wrap_method("items")
     __eq__ = wrap_method("__eq__")
-    __hash__ = wrap_method("__hash__")
+    __hash__ = property(wrap_method("__hash__", prop=True))
     __iter__ = wrap_method("__iter__")
     __contains__ = wrap_method("__contains__")
     __len__ = wrap_method("__len__")
