@@ -14,7 +14,7 @@ __version__ = "2.0.1"
 def __dir__():
     return [
         "auto_refreshing",
-        "BindingRefreshDict",
+        "ProxyItem",
         "correct_canvas_resolution",
         "import_module",
         "timed",
@@ -56,6 +56,7 @@ def import_module(name, package=None):
 _imports = {
     "auto_refreshing": "._auto_refreshing",
     "BindingRefreshDict": "._auto_refreshing",
+    "ProxyItem": "._auto_refreshing",
     "correct_canvas_resolution": "._canvas_helpers",
     "timed": "._timed",
     "wait_for_writeback": "._writeback_waiter",
