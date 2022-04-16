@@ -118,19 +118,14 @@ To use it, import the decorator and apply it to the class for a form:
        def __init__(self, **properties):
            self.init_components(**properties)
 
-Now, the form has an ``item`` property which behaves like a dictionary. Whenever a value of that dictionary changes, the form's ``refresh_data_bindings`` method will be called.
+The form's ``item`` property will be proxied.
 
-Note: The ``item`` property will no longer reference the same object. Rather, in the following example, it is as though auto-refresh adds the ``item = dict(item)`` line:
+If your original item was a dictionary, whenever a value of the proxied item changes,
+the form's ``refresh_data_bindings`` method will be called.
 
-.. code-block:: python
+Note that the proxied item will make changes to the original ``item``.
 
-   other_item = {"x": 1}
-   item = other_item
-
-   item = dict(item)
-   item["x"] = 2
-
-As in the above code, with auto-refresh, ``item`` is changed but ``other_item`` is not.
+It shouldn't matter what the original ``item`` is. It could be a dictionary, app_table Row or some other obsucre object.
 
 
 Wait for writeback

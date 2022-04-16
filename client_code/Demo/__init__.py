@@ -28,7 +28,7 @@ class Demo(DemoTemplate):
             chips=["a", "b", "c"],
             text="",
         )
-        self.item = self.default_item
+        self.item = self.default_item.copy()
         self.pivot.items = anvil.http.request(dataset_url, json=True)
         self.init_components(**properties)
 
@@ -48,7 +48,7 @@ class Demo(DemoTemplate):
         self.item["counter"] += 1
 
     def reset_button_click(self, **event_args):
-        self.item = self.default_item
+        self.item = self.default_item.copy()
 
     ###### MULTI SELECT ######
     def multi_select_drop_down_1_change(self, **event_args):
