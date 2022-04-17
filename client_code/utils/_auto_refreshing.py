@@ -13,11 +13,9 @@ from anvil.server import portable_class
 __version__ = "2.0.1"
 
 
-def wrap_method(meth_name, refresh=False, prop=False):
+def wrap_method(meth_name, refresh=False):
     def wrapped(self, *args, **kws):
-        rv = getattr(self._obj, meth_name)
-        if not prop:
-            rv = rv(*args, **kws)
+        rv = getattr(self._obj, meth_name)(*args, **kws)
         if refresh:
             self._refresh_data_bindings()
         return rv
@@ -51,11 +49,24 @@ class ProxyItem:
     keys = wrap_method("keys")
     values = wrap_method("values")
     items = wrap_method("items")
-    __eq__ = wrap_method("__eq__")
-    __hash__ = property(wrap_method("__hash__", prop=True))
-    __iter__ = wrap_method("__iter__")
-    __contains__ = wrap_method("__contains__")
-    __len__ = wrap_method("__len__")
+
+    def __bool__(self):
+        return bool(self._obj)
+
+    def __eq__(self, other):
+        return self._obj == other
+
+    def __iter__(self):
+        return iter(self._obj)
+
+    def __contains__(self, other):
+        return other in self._obj
+
+    def __len__(self):
+        return len(self._obj)
+
+    def __hash__(self):
+        return hash(self._obj)
 
     def __setattr__(self, attr: str, val) -> None:
         if attr in self.__slots__:
