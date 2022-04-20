@@ -7,6 +7,7 @@
 
 import anvil.js as _js
 from anvil import HtmlPanel as _HtmlPanel
+from anvil.js.window import Function as _Function
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
@@ -38,6 +39,18 @@ _html_injector.cdn(f"{prefix}{bs_select_version}/dist/css/bootstrap-select.min.c
 
 
 _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
+
+# because select all buttons don't distinguish between user and code changes
+_Function(
+    """
+const oldChangeAll = $.fn.selectpicker.Constructor.prototype.changeAll;
+function changeAll(status) {
+    oldChangeAll.call(this, status);
+    anvil.call(this.$element, "_user_selected_all", false);
+}
+$.fn.selectpicker.Constructor.prototype.changeAll = changeAll;
+"""
+)()
 
 
 def off_dd_click(e):
@@ -108,6 +121,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.set_event_handler("x-popover-init", self._mk_popover)
         if selected:
             self.selected = selected
+        self._user_selected_all(False)
+        menu = self._el.data("selectpicker")["$menu"]
+        menu.find(".bs-actionsbox").on("click", self._user_selected_all)
         self._init = True
 
     ##### PROPERTIES #####
@@ -205,8 +221,13 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.raise_event("closed")
 
     def change(self, e, clickedIndex, isSelected, prev):
-        if clickedIndex is not None:
-            return self.raise_event("change")
+        if clickedIndex is not None or self._select_all_is_user:
+            self._user_selected_all(False)
+            self.raise_event("change")
+
+    def _user_selected_all(self, e):
+        # either e is False or it's a js event
+        self._select_all_is_user = bool(e)
 
     def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this
