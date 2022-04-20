@@ -1,4 +1,4 @@
-# Unreleased
+# v2.1.0 20-Apr-2022
 
 ## Notable Change
 * `@auto_refreshing` - the original item will now be proxied rather than copied.
@@ -9,7 +9,6 @@
   This behaviour now matches other anvil Components - e.g. changing the `selected_value`
   of a DropDown does **not** fire the DropDown change event.
   https://github.com/anvilistas/anvil-extras/issues/307
-
 
 ## New Features
 * routing - a template argument was added to the `@routing.route` decorator.
@@ -31,7 +30,6 @@
   https://github.com/anvilistas/anvil-extras/issues/307
 * `@auto_refreshing`: support auto_refreshing when the item is not explicitly set
   https://github.com/anvilistas/anvil-extras/issues/250
-
 
 # v2.0.1 16-Mar-2022
 
