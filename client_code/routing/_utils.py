@@ -12,7 +12,7 @@ from anvil.js.window import location
 
 from ._logging import logger
 
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 
 
 def get_url_components(url_hash=None):

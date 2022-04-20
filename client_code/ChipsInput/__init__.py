@@ -12,7 +12,7 @@ from ..Chip import Chip
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import ChipsInputTemplate
 
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 
 _primary = _get_color(None)
 

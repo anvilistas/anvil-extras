@@ -10,7 +10,7 @@ from datetime import date, datetime
 import anvil.js
 from anvil.js import window as _window
 
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 __all__ = ["local_storage", "indexed_db"]
 
 _ForageModule = anvil.js.import_from(
