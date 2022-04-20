@@ -4,6 +4,12 @@
 * `@auto_refreshing` - the original item will now be proxied rather than copied.
   Changes to the proxied item will make changes to the original item.
   https://github.com/anvilistas/anvil-extras/pull/311
+* `MultiSelectDropDown` - the change event will **only** fire with user interaction.
+  Previously also fired when the `selected` property was changed in code.
+  This behaviour now matches other anvil Components - e.g. changing the `selected_value`
+  of a DropDown does **not** fire the DropDown change event.
+  https://github.com/anvilistas/anvil-extras/issues/307
+
 
 ## New Features
 * routing - a template argument was added to the `@routing.route` decorator.
