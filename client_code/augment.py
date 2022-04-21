@@ -34,7 +34,8 @@ def add_event(component: _Component, event: str) -> None:
     _add_event(component, event)
 
     def handler(e):
-        event_args = {"event_type": e.type, "original_event": e}
+        type = e.get("handleObj", {}).get("origType") or e.type
+        event_args = {"event_type": type, "original_event": e}
         if event.startswith("key"):
             event_args |= {
                 "key": e.key,
