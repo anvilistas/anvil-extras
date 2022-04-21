@@ -4,6 +4,10 @@
 * `augment` ensure that `"mouseenter"` is always correct event type in `"hover"` events
   https://github.com/anvilistas/anvil-extras/discussions/319
 
+## Bug Fixes
+* `popovers` fix bug scrolling on mobile
+  https://github.com/anvilistas/anvil-extras/discussions/324
+
 # v2.1.0 20-Apr-2022
 
 ## Notable Change
