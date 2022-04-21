@@ -141,7 +141,7 @@ The ``TimerLogger`` can be used to check times between lines of code.
 
 .. code-block:: python
 
-    from anvil_extras.utils.logging import TimerLogger
+    from anvil_extras.logging import TimerLogger
     from time import sleep
 
     T = TimerLogger("my timer")
@@ -171,7 +171,7 @@ A ``TimerLogger`` can be used with a ``with`` statement (as a context manager).
 
 .. code-block:: python
 
-    from anvil_extras.utils.logging import TimerLogger
+    from anvil_extras.logging import TimerLogger
     from time import sleep
 
     def foo():
@@ -188,7 +188,7 @@ The ``TimerLogger`` can be used as a convenient decorator.
 
 .. code-block:: python
 
-    from anvil_extras.utils.logging import TimerLogger
+    from anvil_extras.logging import TimerLogger
     from time import sleep
 
     @TimerLogger("foo timer")
