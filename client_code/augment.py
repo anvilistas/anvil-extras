@@ -105,7 +105,7 @@ def _get_jquery_for_component(component):
         return _S(_js.get_dom_node(component).firstElementChild)
     elif isinstance(component, _anvil.FileLoader):
         return _S(_js.get_dom_node(component)).find("form")
-    elif isinstance(component, _anvil.CheckBox):
+    elif isinstance(component, (_anvil.CheckBox, _anvil.RadioButton)):
         return _S(_js.get_dom_node(component)).find("input")
     else:
         return _S(_js.get_dom_node(component))
@@ -128,7 +128,7 @@ def datagrid_set_event_handler(self, event, handler):
     if event == "pagination_click":
         _set_pagination_handlers(self, handler)
     else:
-        old_data_grid_event_handler.set_event_handler(self, event, handler)
+        old_data_grid_event_handler(self, event, handler)
 
 
 _DataGrid.set_event_handler = datagrid_set_event_handler
