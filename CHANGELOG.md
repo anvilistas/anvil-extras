@@ -3,6 +3,12 @@
 ## Minor changes
 * `augment` ensure that `"mouseenter"` is always correct event type in `"hover"` events
   https://github.com/anvilistas/anvil-extras/discussions/319
+* `augment` adjust handling of RadioButton to work correctly with the augment module
+  https://github.com/anvilistas/anvil-extras/pull/325
+
+## Bug fixes
+* `augment` - DataGrid's pagination click event prevented other events from being added
+  https://github.com/anvilistas/anvil-extras/pull/325
 
 # v2.1.0 20-Apr-2022
 
