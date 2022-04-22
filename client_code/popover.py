@@ -399,7 +399,7 @@ def _hide_on_scroll(e):
     if (
         _scrolling
         or not _visible_popovers
-        or e.target.closest(".anvil-popover") is not None
+        or (hasattr(e.target, "closest") and e.target.closest(".anvil-popover"))
     ):
         return
 
