@@ -1,3 +1,6 @@
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 # SPDX-License-Identifier: MIT
 #
 # Copyright (c) 2021 The Anvil Extras project team members listed at
@@ -207,6 +210,27 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             "visible-false", not val
         )
         _HtmlPanel.visible.__set__(self, val)
+        
+    @property
+    def width(self):
+      return self._width
+    @width.setter
+    def width(self, value):
+      if value == "":
+        value = None
+      _dropdown = _S(_js.get_dom_node(self))
+      _dropdown_inner = _dropdown.children()
+      if value is not None:
+        if value.replace(".", "").isnumeric():
+          _dropdown.css("width", f"{value}px")
+          _dropdown_inner.css("width", f"{value}px")
+        else:
+          _dropdown.css("width", value)
+          _dropdown_inner.css("width", value)
+      else:
+        _dropdown_inner.css("width", "fit-content")
+        _dropdown.css("width", "fit-content")
+      self._width = value
 
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
@@ -232,6 +256,11 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this
         init_node(self._el.data("selectpicker")["$bsContainer"])
+
+    def form_show(self, **event_args):
+      """This method is called when the HTML panel is shown on the screen"""
+      self.width = self.width
+
 
 
 ##### PRIVATE Functions #####
