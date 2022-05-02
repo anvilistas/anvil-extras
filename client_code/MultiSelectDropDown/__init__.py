@@ -75,6 +75,12 @@ _defaults = {
 
 
 def _component_property(prop, jquery, fn=None):
+    if jquery.startswith("data-"):
+        jquery = jquery.replace("data-", "")
+        set_meth = "data"
+    else:
+        set_meth = "attr"
+
     def getter(self):
         return self._props[prop]
 
@@ -82,13 +88,13 @@ def _component_property(prop, jquery, fn=None):
         self._props[prop] = value
         value = value if fn is None else fn(value)
         if value:
-            self._el.attr(jquery, value)
+            self._el[set_meth](jquery, value)
         else:
-            self._el.attr(jquery, None)
+            self._el[set_meth](jquery, None)
 
         if self._init:
-            self._el.selectpicker("refresh")
-            self._el.selectpicker("render")
+            self._el.selectpicker("destroy")
+            self._el.selectpicker()
 
     return property(getter, setter, None, prop)
 
@@ -129,7 +135,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     ##### PROPERTIES #####
     @property
     def align(self):
-        return self._align
+        return self._props["align"]
 
     @align.setter
     def align(self, value):
@@ -141,32 +147,32 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             width = None
         self._dom_node.style.textAlign = text_align
         self._el.attr("data-width", width)
-        self._align = value
+        self._props["align"] = value
 
     @property
     def items(self):
-        return self._items
+        return self._props["items"]
 
     @items.setter
     def items(self, value):
+        self._props["items"] = value
         selected = self.selected + self._invalid
         self._el.children().remove()
         options, values = _clean_items(value)
         self._el.append(options)
         self._values = values
-        self._items = value
         self.selected = selected
-        self._el.selectpicker("refresh")
-        self._el.selectpicker("render")
+        if self._init:
+            self._el.selectpicker("refresh")
+            self._el.selectpicker("render")
 
     @property
     def selected(self):
-        return list(
-            map(
-                lambda e: self._values[e.value],
-                filter(lambda e: e.value != "", _S("option:selected", self._el)),
-            )
-        )
+        return [
+            self._values[e.value]
+            for e in _S("option:selected", self._el)
+            if e.value != ""
+        ]
 
     @selected.setter
     def selected(self, values):
@@ -191,7 +197,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._el.selectpicker("val", to_select)
 
     multiple = _component_property("multiple", "multiple")
-    # the placeholder is not dynamic - this seems to be a bug in the javascript library
     placeholder = _component_property("placeholder", "title")
     enable_filtering = _component_property("enable_filtering", "data-live-search")
     enabled = _component_property("enabled", "disabled", lambda v: not v)
