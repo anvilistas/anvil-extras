@@ -14,6 +14,10 @@
 * `popovers` fix bug scrolling on mobile
   https://github.com/anvilistas/anvil-extras/discussions/324
 
+## New Features
+* `MultiSelectDropDown`: add `width` property with a default values of `fit-content`
+  https://github.com/anvilistas/anvil-extras/issues/329
+
 # v2.1.0 20-Apr-2022
 
 ## Notable Change
