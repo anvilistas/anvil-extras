@@ -11,7 +11,7 @@ properties:
 - {name: enable_select_all, type: boolean, default_value: false, group: interaction,
   important: false}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
-- {name: width, type: string, default_value: '', group: appearance}
+- {name: width, type: string, default_value: fit-content, group: appearance}
 - {name: spacing_above, type: string, default_value: small, group: layout, important: false}
 - {name: spacing_below, type: string, default_value: small, group: layout, important: false}
 - name: selected
