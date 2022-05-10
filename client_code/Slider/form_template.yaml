@@ -110,7 +110,7 @@ components: []
 container:
   type: HtmlTemplate
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: '<div class="anvil-slider anvil-measure-this" anvil-slot></div>
+    role: null, html: '<div class="anvil-slider" anvil-slot></div>
 
       <script type="module">
 
