@@ -9,6 +9,9 @@
 ## Bug fixes
 * `augment` - DataGrid's pagination click event prevented other events from being added
   https://github.com/anvilistas/anvil-extras/pull/325
+* `MultiSelectDropDown` - all properties are now dynamic and can be updated in code
+  https://github.com/anvilistas/anvil-extras/pull/331
+
 
 ## Bug Fixes
 * `popovers` fix bug scrolling on mobile
