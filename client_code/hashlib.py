@@ -33,7 +33,14 @@ def digest(algorithm, data):
     return hash_array.hex()
 
 
-sha1 = partial(digest, algorithm="SHA-1")
-sha256 = partial(digest, algorithm="SHA-256")
-sha384 = partial(digest, algorithm="SHA-384")
-sha512 = partial(digest, algorithm="SHA-512")
+sha1 = partial(digest, "SHA-1")
+sha256 = partial(digest, "SHA-256")
+sha384 = partial(digest, "SHA-384")
+sha512 = partial(digest, "SHA-512")
+
+if __name__ == "__main__":
+    _ = "Hello world!"
+    sha1(_)
+    sha256(_)
+    sha384(_)
+    sha512(_)
