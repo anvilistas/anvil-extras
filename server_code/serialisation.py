@@ -50,7 +50,10 @@ def _exclusions(table_name, ignore_columns):
     if isinstance(ignore_columns, (list, tuple)):
         return ignore_columns
     elif isinstance(ignore_columns, dict):
-        return ignore_columns[table_name]
+        if table_name in ignore_columns.keys():
+            return ignore_columns[table_name]
+        else:
+            return []
     elif isinstance(ignore_columns, str):
         return [ignore_columns]
     else:
