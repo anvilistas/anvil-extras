@@ -26,7 +26,6 @@ _html_injector.css(
 .anvil-extras-tabs.anvil-role-card {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    margin-bottom: -1px;
 }
 .tabs {
     position: relative;
