@@ -15,6 +15,9 @@ from ._logging import logger
 __version__ = "2.1.0"
 
 
+ANY = object()
+
+
 def get_url_components(url_hash=None):
     """returns  url_hash, url_pattern, url_dict
     this will get the components from the current addressbar url_hash unless you provide a url_hash to decode
@@ -104,6 +107,8 @@ def _get_url_hash(url_pattern, url_dict):
 def _as_frozen_str_iterable(obj, attr, allow_none=False, factory=frozenset):
     if isinstance(obj, str) or (allow_none and obj is None):
         return factory([obj])
+    if obj is ANY:
+        return obj
     rv = []
     for o in obj:
         if not isinstance(o, str):

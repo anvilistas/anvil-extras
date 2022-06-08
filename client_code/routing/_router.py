@@ -13,7 +13,7 @@ from anvil.js.window import document
 
 from ._alert import handle_alert_unload as _handle_alert_unload
 from ._logging import logger
-from ._utils import TemplateInfo, get_url_components
+from ._utils import ANY, TemplateInfo, get_url_components
 
 __version__ = "2.1.0"
 
@@ -324,7 +324,7 @@ def path_matcher(template_info, init_path, url_hash, url_pattern, url_dict):
             elif url_part != given:
                 break
         else:  # no break
-            if set(url_dict) == route_info.url_keys:
+            if set(url_dict) == route_info.url_keys or route_info.url_keys is ANY:
                 return route_info, dynamic_vars
 
     logger.debug(
