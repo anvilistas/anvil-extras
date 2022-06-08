@@ -5,6 +5,8 @@
   https://github.com/anvilistas/anvil-extras/discussions/319
 * `augment` adjust handling of RadioButton to work correctly with the augment module
   https://github.com/anvilistas/anvil-extras/pull/325
+* `routing` - to catch arbirtrary query params in a route use `url_keys=routing.ANY`
+  https://github.com/anvilistas/anvil-extras/issues/342
 
 ## Bug fixes
 * `augment` - DataGrid's pagination click event prevented other events from being added

@@ -726,6 +726,8 @@ This is the correct way:
         #routing provides self.url_dict
 
 
+If you need a catch all for arbirtrary url_keys use ``url_keys=routing.ANY``.
+
 
 Template Form Callbacks
 ^^^^^^^^^^^^^^^^^^^^^^^
