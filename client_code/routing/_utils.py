@@ -105,13 +105,11 @@ def _get_url_hash(url_pattern, url_dict):
 
 
 def _as_frozen_str_iterable(obj, attr, allow_none=False, factory=frozenset):
-    if isinstance(obj, str) or (allow_none and obj is None):
+    if isinstance(obj, str) or (allow_none and obj is None) or obj is ANY:
         return factory([obj])
-    if obj is ANY:
-        return obj
     rv = []
     for o in obj:
-        if not isinstance(o, str):
+        if not isinstance(o, str) and obj is not ANY:
             msg = f"expected an iterable of strings or a string for {attr} argument"
             raise TypeError(msg)
         rv.append(o)

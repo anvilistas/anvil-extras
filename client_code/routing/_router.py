@@ -324,7 +324,15 @@ def path_matcher(template_info, init_path, url_hash, url_pattern, url_dict):
             elif url_part != given:
                 break
         else:  # no break
-            if set(url_dict) == route_info.url_keys or route_info.url_keys is ANY:
+            # rely on dict.keys() being set like
+            url_keys = url_dict.keys()
+            route_keys = route_info.url_keys
+            if url_keys == route_keys:
+                return route_info, dynamic_vars
+            if ANY not in route_keys:
+                continue
+            route_keys -= {ANY}  # route_keys is a frozen set
+            if route_keys.issubset(url_keys):
                 return route_info, dynamic_vars
 
     logger.debug(
