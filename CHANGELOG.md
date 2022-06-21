@@ -15,7 +15,8 @@
   https://github.com/anvilistas/anvil-extras/pull/331
 * `serialisation` - support accelerated tables with linked columns
   https://github.com/anvilistas/anvil-extras/issues/350
-
+* `navigation` - Now handles links with roles defined when setting 'selected'
+  https://github.com/anvilistas/anvil-extras/issues/352
 
 ## Bug Fixes
 * `popovers` fix bug scrolling on mobile
