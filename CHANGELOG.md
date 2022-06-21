@@ -13,6 +13,8 @@
   https://github.com/anvilistas/anvil-extras/pull/325
 * `MultiSelectDropDown` - all properties are now dynamic and can be updated in code
   https://github.com/anvilistas/anvil-extras/pull/331
+* `serialisation` - support accelerated tables with linked columns
+  https://github.com/anvilistas/anvil-extras/issues/350
 
 
 ## Bug Fixes

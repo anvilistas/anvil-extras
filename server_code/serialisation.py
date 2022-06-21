@@ -12,6 +12,7 @@ from . import lazy_module_loader as lazy
 __version__ = "2.1.0"
 
 LINKED_COLUMN_TYPES = ("liveObject", "liveObjectArray", "link_single", "link_multiple")
+LO, LOA, LS, LM = LINKED_COLUMN_TYPES
 FIELD_TYPES = None
 
 
@@ -77,10 +78,13 @@ def _link_columns(columns):
 
         {"liveObject": {"link1", "link2"}, "liveObjectArray": {"multilink"}}
     """
-    return {
+    rv = {
         field_type: {c["name"] for c in columns if c["type"] == field_type}
         for field_type in LINKED_COLUMN_TYPES
     }
+    rv[LS] |= rv[LO]
+    rv[LM] |= rv[LOA]
+    return rv
 
 
 def _basic_schema_definition(table_name, columns, ignore_columns, with_id):
@@ -149,7 +153,7 @@ def _schema_definition(table_name, columns, ignore_columns, linked_tables, with_
                 )
             )
             for column, linked_table in linked_tables[table_name].items()
-            if column in link_columns["liveObject"]
+            if column in link_columns[LS]
         }
         multilinked = {
             column: mm.fields.List(
@@ -166,7 +170,7 @@ def _schema_definition(table_name, columns, ignore_columns, linked_tables, with_
                 )
             )
             for column, linked_table in linked_tables[table_name].items()
-            if column in link_columns["liveObjectArray"]
+            if column in link_columns[LM]
         }
         result = {
             **result,
