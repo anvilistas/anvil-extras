@@ -60,16 +60,25 @@ def go_to(target):
     link.raise_event("click")
 
 
+def _reset_links():
+    for link in _links:
+        if isinstance(link.role, str):
+            link.role = [link.role]
+        try:
+            link.role = [r for r in link.role if r != "selected"]
+        except TypeError:
+            link.role = []
+
+
 def _default_link_click(**event_args):
     """A handler for navigation link click events
     * Clears the role of all links registered in this module
     * Set the calling link's role to 'selected'
     * Calls the relevant action for classic or hash routing
     """
-    for link in _links:
-        link.role = ""
+    _reset_links()
     link = event_args["sender"]
-    link.role = "selected"
+    link.role = ["selected"]
     actions = {"classic": open_form, "hash": set_url_hash}
     kwargs = {}
     if link.tag.routing == "classic":
