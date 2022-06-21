@@ -78,7 +78,7 @@ def _default_link_click(**event_args):
     """
     _reset_links()
     link = event_args["sender"]
-    link.role.append("selected")
+    link.role += ["selected"]
     actions = {"classic": open_form, "hash": set_url_hash}
     kwargs = {}
     if link.tag.routing == "classic":
