@@ -7,8 +7,6 @@
   https://github.com/anvilistas/anvil-extras/pull/325
 * `routing` - to catch arbirtrary query params in a route use `url_keys=[routing.ANY]`
   https://github.com/anvilistas/anvil-extras/issues/342
-* `navigation` - new `set_title` function for custom click handlers
-  https://github.com/anvilistas/anvil-extras/issues/358
 
 ## Bug fixes
 * `augment` - DataGrid's pagination click event prevented other events from being added
@@ -25,6 +23,8 @@
 ## New Features
 * `MultiSelectDropDown`: add `width` property with options for `fit` and `auto` sizing
   https://github.com/anvilistas/anvil-extras/issues/329
+* `navigation` - new `set_title` function for custom click handlers
+  https://github.com/anvilistas/anvil-extras/issues/358
 
 # v2.1.0 20-Apr-2022
 
