@@ -15,7 +15,7 @@ from anvil import js as _js
 from anvil.js.window import Function as _Function
 from anvil.js.window import jQuery as _S
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 
 __all__ = ["add_event", "add_event_handler", "set_event_handler", "trigger"]
 
