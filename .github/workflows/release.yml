@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Add SSH config
@@ -28,5 +28,5 @@ jobs:
           git config --global user.name "GitHubActions"
           git config --global user.email "actions@github.com"
           git remote add anvil "${{ secrets.ANVIL_REPO_URL }}"
-          git push anvil main:published --force
+          git push anvil HEAD:published --force
           git push --tags anvil
