@@ -23,6 +23,8 @@
 ## New Features
 * `MultiSelectDropDown`: add `width` property with options for `fit` and `auto` sizing
   https://github.com/anvilistas/anvil-extras/issues/329
+* `navigation` - new `set_title` function for custom click handlers
+  https://github.com/anvilistas/anvil-extras/issues/358
 
 # v2.1.0 20-Apr-2022
 
