@@ -1,4 +1,4 @@
-# Unreleased
+# v2.1.1 22-Jun-2022
 
 ## Minor changes
 * `augment` ensure that `"mouseenter"` is always correct event type in `"hover"` events
