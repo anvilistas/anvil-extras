@@ -135,3 +135,10 @@ def walk(component_or_components):
     if isinstance(component_or_components, _Component):
         component_or_components = [component_or_components]
     yield from _walker(component_or_components)
+
+
+def _css_length(v):
+    try:
+        return f"{float(v)}px"
+    except (TypeError, ValueError):
+        return v

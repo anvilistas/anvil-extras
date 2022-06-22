@@ -11,7 +11,7 @@ from anvil.js.window import Function as _Function
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 
-from ..utils._component_helpers import _html_injector, _spacing_property
+from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
 
 __version__ = "2.1.0"
@@ -71,7 +71,19 @@ _defaults = {
     "spacing_below": "small",
     "spacing_above": "small",
     "enable_select_all": False,
+    "width": "",
 }
+
+
+def _props_property(prop, setter):
+    def getprop(self):
+        return self._props[prop]
+
+    def setprop(self, val):
+        self._props[prop] = val
+        setter(self, val)
+
+    return property(getprop, setprop, None, prop)
 
 
 def _component_property(prop, jquery, fn=None):
@@ -81,11 +93,7 @@ def _component_property(prop, jquery, fn=None):
     else:
         set_meth = "attr"
 
-    def getter(self):
-        return self._props[prop]
-
     def setter(self, value):
-        self._props[prop] = value
         value = value if fn is None else fn(value)
         if value:
             self._el[set_meth](jquery, value)
@@ -96,7 +104,7 @@ def _component_property(prop, jquery, fn=None):
             self._el.selectpicker("destroy")
             self._el.selectpicker()
 
-    return property(getter, setter, None, prop)
+    return _props_property(prop, setter)
 
 
 class MultiSelectDropDown(MultiSelectDropDownTemplate):
@@ -133,21 +141,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._init = True
 
     ##### PROPERTIES #####
-    @property
-    def align(self):
-        return self._props["align"]
-
-    @align.setter
-    def align(self, value):
-        if value == "full":
-            text_align = None
-            width = "100%"
-        else:
-            text_align = value
-            width = None
-        self._dom_node.style.textAlign = text_align
-        self._el.attr("data-width", width)
-        self._props["align"] = value
+    align = _props_property(
+        "align", lambda s, v: s._dom_node.style.setProperty("text-align", v)
+    )
 
     @property
     def items(self):
@@ -196,6 +192,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._invalid = [val for val in values if val is not FOUND]
         self._el.selectpicker("val", to_select)
 
+    width = _component_property("width", "data-width", _css_length)
     multiple = _component_property("multiple", "multiple")
     placeholder = _component_property("placeholder", "title")
     enable_filtering = _component_property("enable_filtering", "data-live-search")

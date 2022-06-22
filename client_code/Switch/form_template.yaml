@@ -36,7 +36,7 @@ container:
 
       <script type="module">
 
-      import {DesignerSwitch} from "https://deno.land/x/anvil_extras@dev-1.8.2-c/js/designer_components/bundle.min.js";
+      import {DesignerSwitch} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
 
       DesignerSwitch.init();
 

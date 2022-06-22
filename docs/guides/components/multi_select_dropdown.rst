@@ -6,7 +6,7 @@ Properties
 ----------
 :align: String
 
-    ``"left"``, ``"right"``, ``"center"`` or ``"full"``
+    ``"left"``, ``"right"``, ``"center"``
 
 :items: Iterable of Strings, Tuples or Dicts
 
@@ -54,6 +54,13 @@ Properties
 :visible: Boolean
 
     Is the component visible
+
+:width: String | Number
+
+    The default width is 200px. This can be set using any css length.
+    Alternatively set the width to be ``"auto"``, which will adjust the width to be as wide as the largest option.
+    ``"fit"`` (or ``"fit-content"``) will size the dropdown depending on what is selected.
+    Use width ``"100%""`` to make the dropdown fill its container.
 
 :spacing_above: String
 
