@@ -17,10 +17,12 @@
   https://github.com/anvilistas/anvil-extras/issues/350
 * `navigation` - Now handles links with roles defined when setting 'selected'
   https://github.com/anvilistas/anvil-extras/issues/352
-
-## Bug Fixes
 * `popovers` fix bug scrolling on mobile
   https://github.com/anvilistas/anvil-extras/discussions/324
+
+## New Features
+* `MultiSelectDropDown`: add `width` property with options for `fit` and `auto` sizing
+  https://github.com/anvilistas/anvil-extras/issues/329
 
 # v2.1.0 20-Apr-2022
 

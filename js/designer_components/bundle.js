@@ -178,6 +178,7 @@ var DesignerMultiSelectDropDown = class extends DesignerComponent {
     }
     this.picker.attr("title", props["placeholder"] || null);
     this.picker.selectpicker({title: props["placeholder"]});
+    this.picker.data("width", props["width"]);
     this.picker.attr("disabled", props["enabled"] ? null : "");
     this.updateSpacing(props);
     this.updateVisible(props);
@@ -192,6 +193,7 @@ DesignerMultiSelectDropDown.defaults = {
   placeholder: "None Selected",
   enabled: true,
   visible: true,
+  width: "",
   spacing_above: "small",
   spacing_below: "small"
 };
