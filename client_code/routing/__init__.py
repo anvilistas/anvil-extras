@@ -84,8 +84,11 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
         url_hash, url_pattern=url_pattern, url_dict=url_dict
     )[0]
     logger.debug(f"removing {url_hash!r} from cache")
-    cached = _r._cache.pop(url_hash, None)
-    if cached is None:
+    to_remove = [key for key in _r._cache if type(key) is tuple and key[0] == url_hash]
+    for key in to_remove:
+        _r._cache.pop(key, None)
+
+    if not to_remove:
         msg = f"*warning* {url_hash!r} was not found in cache - maybe the form was yet to load"
         logger.debug(msg)
 
