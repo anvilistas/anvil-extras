@@ -102,7 +102,7 @@ def _component_property(prop, jquery, fn=None):
 
         if self._init:
             self._el.selectpicker("destroy")
-            self._el.selectpicker()
+            self._reset()
 
     return _props_property(prop, setter)
 
@@ -128,17 +128,20 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self.init_components(**props)
 
+        self.set_event_handler("x-popover-init", self._mk_popover)
+        self._user_selected_all(False)
+        self._reset()
+        if selected:
+            self.selected = selected
+        self._init = True
+
+    def _reset(self):
         self._el.selectpicker()
         self._el.on("changed.bs.select", self.change)
         self._el.on("shown.bs.select", self._opened)
         self._el.on("hidden.bs.select", self._closed)
-        self.set_event_handler("x-popover-init", self._mk_popover)
-        if selected:
-            self.selected = selected
-        self._user_selected_all(False)
         menu = self._el.data("selectpicker")["$menu"]
         menu.find(".bs-actionsbox").on("click", self._user_selected_all)
-        self._init = True
 
     ##### PROPERTIES #####
     align = _props_property(
