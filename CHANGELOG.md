@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+- `routing` - remove_from_cache will work across templates
+  https://github.com/anvilistas/anvil-extras/issues/367
+
 # v2.1.1 22-Jun-2022
 
 ## Minor changes
