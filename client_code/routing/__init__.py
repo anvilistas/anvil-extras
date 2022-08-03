@@ -84,7 +84,7 @@ def remove_from_cache(url_hash=None, *, url_pattern=None, url_dict=None):
         url_hash, url_pattern=url_pattern, url_dict=url_dict
     )[0]
     logger.debug(f"removing {url_hash!r} from cache")
-    to_remove = [key for key in _r._cache if key[0] == url_hash]
+    to_remove = [key for key in _r._cache if type(key) is tuple and key[0] == url_hash]
     for key in to_remove:
         _r._cache.pop(key, None)
 
