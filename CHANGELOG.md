@@ -1,4 +1,4 @@
-# Unreleased
+# v2.1.2 01-Sep-2022
 
 ## Bug Fixes
 * `routing` - remove_from_cache will work across templates
