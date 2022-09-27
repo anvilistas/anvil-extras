@@ -166,6 +166,7 @@ def set_url_hash(
         return  # should not continue if url_hash is identical to the addressbar hash!
         # but do continue if the url_hash is not in the cache i.e it was manually removed
 
+    msg = ""
     if set_in_history and not replace_current_url:
         msg = f"setting url_hash to: '#{url_hash}', adding to top of history stack"
         _navigation.pushState(url_hash)
@@ -179,9 +180,13 @@ def set_url_hash(
 
     if redirect:
         return _r.navigate(url_hash, url_pattern, url_dict, **properties)
-    if set_in_history and _r._current_form is not None:
-        _r._cache[url_hash] = _r._current_form
+
+    form = _r._current_form
+    if set_in_history and form is not None:
         # no need to add to cache if not being set in history
+        _r._cache[url_hash] = form
+    if form is not None:
+        _r.update_form_attrs(form)
     logger.debug("navigation not triggered, redirect=False")
 
 

@@ -344,6 +344,7 @@ def path_matcher(template_info, init_path, url_hash, url_pattern, url_dict):
 
 
 def update_form_attrs(form):
+    # TODO we should probably upate dynamic_vars as well
     url_hash, url_pattern, url_dict = get_url_components()
     # reapply these before the show event
     form.url_hash = url_hash
