@@ -181,13 +181,16 @@ def set_url_hash(
     if redirect:
         return _r.navigate(url_hash, url_pattern, url_dict, **properties)
 
+    logger.debug("navigation not triggered, redirect=False")
+
     form = _r._current_form
-    if set_in_history and form is not None:
+    if form is None:
+        return
+
+    if set_in_history:
         # no need to add to cache if not being set in history
         _r._cache[url_hash] = form
-    if form is not None:
-        _r.update_form_attrs(form)
-    logger.debug("navigation not triggered, redirect=False")
+    _r.update_form_attrs(form)
 
 
 def load_form(*args, **kws):
