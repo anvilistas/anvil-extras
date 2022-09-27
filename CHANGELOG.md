@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* `routing` - `form.url_dict` will be updated when `redirect=False`
+  https://github.com/anvilistas/anvil-extras/issues/374
+
 # v2.1.2 01-Sep-2022
 
 ## Bug Fixes
