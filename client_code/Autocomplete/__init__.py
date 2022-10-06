@@ -218,7 +218,7 @@ class Autocomplete(AutocompleteTemplate):
 
     def _on_hide(self, **e_args):
         """This method is called when the TextBox is removed from the screen"""
-        _document.body.removeChild(self._lp_node)
+        self._lp_node.remove()
         _S(_window).off("resize", self._reset_position)
 
     def _mk_popover(self, init_node, **event_args):
