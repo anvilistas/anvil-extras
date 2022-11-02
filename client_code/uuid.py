@@ -6,11 +6,16 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 import anvil.js
+from anvil.js import window as _W
 
 __version__ = "2.1.2"
 
-_js_uuid = anvil.js.import_from("https://jspm.dev/uuid@8.3.2")
-_v4, _parse, _validate = _js_uuid.v4, _js_uuid.parse, _js_uuid.validate
+try:
+    _js_uuid = _W.uuid
+    _v4, _parse, _validate = _js_uuid.v4, _js_uuid.parse, _js_uuid.validate
+except AttributeError:
+    _js_uuid = anvil.js.import_from("https://jspm.dev/uuid@8.3.2")
+    _v4, _parse, _validate = _js_uuid.v4, _js_uuid.parse, _js_uuid.validate
 
 
 class UUID(str):
