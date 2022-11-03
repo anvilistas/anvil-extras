@@ -1,4 +1,4 @@
-# Unreleased
+# v2.1.3 03-Nov-2022
 
 ## Minor Changes
 * `uuid` and `storage` will check if `uuid` and `localforage` are aleady installed before importing them from cdn
