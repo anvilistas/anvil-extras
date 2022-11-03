@@ -8,7 +8,7 @@
 import anvil.js
 from anvil.js import window as _W
 
-__version__ = "2.1.2"
+__version__ = "2.1.3"
 
 try:
     _js_uuid = _W.uuid
