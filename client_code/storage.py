@@ -13,11 +13,14 @@ from anvil.js import window as _window
 __version__ = "2.1.2"
 __all__ = ["local_storage", "indexed_db"]
 
-_ForageModule = anvil.js.import_from(
-    "https://cdn.skypack.dev/pin/localforage@v1.10.0-vSTz1U7CF0tUryZh6xTs/mode=imports,min/optimized/localforage.js"
-)
+try:
+    _forage = _window.localforage
+except AttributeError:
+    _ForageModule = anvil.js.import_from(
+        "https://cdn.skypack.dev/pin/localforage@v1.10.0-vSTz1U7CF0tUryZh6xTs/mode=imports,min/optimized/localforage.js"
+    )
+    _forage = _ForageModule.default
 
-_forage = _ForageModule.default
 _forage.dropInstance()
 
 

@@ -1,5 +1,9 @@
 # Unreleased
 
+## Minor Changes
+* `uuid` and `storage` will check if `uuid` and `localforage` are aleady installed before importing them from cdn
+  https://github.com/anvilistas/anvil-extras/pull/381
+
 ## Bug Fixes
 * `routing` - `form.url_dict` will be updated when `redirect=False`
   https://github.com/anvilistas/anvil-extras/issues/374
