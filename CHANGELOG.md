@@ -1,3 +1,11 @@
+# Unreleased
+
+## Deprecations
+
+* `anvil_extras.uuid` module can be replaced wholesale by uuid from stdlib
+  DeprecatedWarning added to `uuid.uuid4()`
+
+
 # v2.1.3 03-Nov-2022
 
 ## Minor Changes

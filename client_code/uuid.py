@@ -8,6 +8,8 @@
 import anvil.js
 from anvil.js import window as _W
 
+from utils._deprecated import deprecated
+
 __version__ = "2.1.3"
 
 try:
@@ -31,6 +33,9 @@ class UUID(str):
         return _parse(self)
 
 
+@deprecated(
+    "anvil_extras.uuid.uuid4() should be replaced with uuid.uuid4() and will be removed in a future version"
+)
 def uuid4():
     """returns a uuid"""
     return UUID(_v4())
