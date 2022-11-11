@@ -7,6 +7,8 @@
 
 from functools import wraps
 
+__version__ = "2.1.3"
+
 
 def deprecated(msg=""):
     def outer(fn):
