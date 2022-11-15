@@ -10,6 +10,9 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+**Version**
+Which version of anvil-extras are you using?
+
 **To Reproduce**
 Steps to reproduce the behaviour (including a clone link when applicable):
 1. Go to '...'
