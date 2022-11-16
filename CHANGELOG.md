@@ -5,6 +5,9 @@
 * `anvil_extras.uuid` module can be replaced wholesale by uuid from stdlib
   DeprecatedWarning added to `uuid.uuid4()`
 
+## Minor Changes
+* Some component properties adjusted to type enum so they can be selected, rather than typed, in the designer
+
 
 # v2.1.3 03-Nov-2022
 

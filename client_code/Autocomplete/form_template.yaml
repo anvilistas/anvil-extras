@@ -17,8 +17,8 @@ properties:
   important: true
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
-- {name: spacing_above, type: string, default_value: small, group: layout, important: false}
-- {name: spacing_below, type: string, default_value: small, group: layout, important: false}
+- {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
+- {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
 - {name: suggest_if_empty, type: boolean, default_value: false}
 - {name: foreground, type: color, default_value: '', default_binding_prop: false,
   group: appearance, important: false, description: Only applies changes to the TextBox}
