@@ -113,6 +113,7 @@ A route form is any form that will be loaded inside a ``TemplateForm``'s
    (think of it as the page name).
 -  The second argument is optional and is any ``url_keys``
    (a list of strings that make up a query strings in the ``url_hash``)
+   (use ``routing.ANY`` to signify optionaly ``url_keys``)
 
 .. code:: python
 
@@ -131,6 +132,18 @@ Or without any ``url_keys``
     from anvil_extras import routing
 
     @routing.route('article')
+    class ArticleForm(ArticleFormTemplate):
+        ...
+
+
+Or with ``url_keys`` where there may be other optional keys
+
+
+.. code:: python
+
+    from anvil_extras import routing
+
+    @routing.route('article', url_keys=["id", routing.ANY])
     class ArticleForm(ArticleFormTemplate):
         ...
 
@@ -921,7 +934,7 @@ You can pass properties to a form by adding them as keyword arguments to ``routi
 .. code:: python
 
     def article_link_click(self, **event_args):
-        routing.set_url_hash(f'article?id={self.item["id"]'}, item=self.item)
+        routing.set_url_hash(f'article?id={self.item["id"]}', item=self.item)
 
 --------------
 
