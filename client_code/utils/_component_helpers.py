@@ -13,7 +13,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 
-__version__ = "2.1.3"
+__version__ = "2.1.4"
 
 _characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
