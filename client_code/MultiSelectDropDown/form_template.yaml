@@ -15,6 +15,7 @@ properties:
   description: use css lengths. \'auto\' sets the width as wide as the largest option, \'fit\' resizes to the selected content}
 - {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
 - {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
+- {name: tag, type: object, group: user data, important: false}
 - name: selected
   type: object
   default_value: null

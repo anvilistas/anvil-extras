@@ -1,3 +1,7 @@
+# Unreleased
+* add `tag` property to custom components
+  https://anvil.works/forum/t/chip-tag-initialization/15461
+
 # v2.1.4 01-Dec-2022
 ## Bug Fixes
 * `routing` - fix `routing.ANY` within `url_keys`
