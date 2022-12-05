@@ -415,6 +415,7 @@ class Slider(SliderTemplate):
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
+    tag = _HtmlPanel.tag
     role = _HtmlPanel.role
 
     ###### METHODS ######

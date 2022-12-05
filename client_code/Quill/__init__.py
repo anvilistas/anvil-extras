@@ -184,6 +184,7 @@ class Quill(QuillTemplate):
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
+    tag = _HtmlPanel.tag
 
     #### QUILL INIT PROPS ####
     toolbar = _quill_init_prop("toolbar")

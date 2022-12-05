@@ -25,6 +25,7 @@ properties:
 - {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
 - {name: sanitize, type: boolean, default_value: true, description: sets the default sanitize behaviour for set_html(),
   group: interaction, important: false}
+- {name: tag, type: object, group: user data, important: false}
 is_package: true
 events:
 - {name: text_change, description: when the quill text changes, default: true}

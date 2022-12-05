@@ -118,6 +118,7 @@ class ChipsInput(ChipsInputTemplate):
         self._reset_placeholder()
 
     visible = _HtmlPanel.visible
+    tag = _HtmlPanel.tag
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
 

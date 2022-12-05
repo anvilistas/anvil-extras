@@ -241,3 +241,4 @@ class Autocomplete(AutocompleteTemplate):
     foreground = _TextBox.foreground
     background = _TextBox.background
     visible = _TextBox.visible
+    tag = _TextBox.tag

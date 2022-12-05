@@ -201,6 +201,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     enable_filtering = _component_property("enable_filtering", "data-live-search")
     enabled = _component_property("enabled", "disabled", lambda v: not v)
     enable_select_all = _component_property("enable_select_all", "data-actions-box")
+    tag = _HtmlPanel.tag
 
     @property
     def visible(self):
