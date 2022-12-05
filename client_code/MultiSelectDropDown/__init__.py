@@ -34,11 +34,13 @@ bs_select_version = "1.13.18"
 prefix = "https://cdn.jsdelivr.net/npm/bootstrap-select@"
 suffix = "/dist/js/bootstrap-select.min"
 
-_html_injector.cdn(f"{prefix}{bs_select_version}/dist/js/bootstrap-select.min.js")
-_html_injector.cdn(f"{prefix}{bs_select_version}/dist/css/bootstrap-select.min.css")
+try:
+    _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
+except AttributeError:
+    _html_injector.cdn(f"{prefix}{bs_select_version}/dist/js/bootstrap-select.min.js")
+    _html_injector.cdn(f"{prefix}{bs_select_version}/dist/css/bootstrap-select.min.css")
+    _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 
-
-_S.fn.selectpicker.Constructor.BootstrapVersion = "3"
 
 # because select all buttons don't distinguish between user and code changes
 _Function(
