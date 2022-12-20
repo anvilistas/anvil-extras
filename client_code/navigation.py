@@ -47,7 +47,7 @@ def set_title(text):
     _title_label.text = text
 
 
-def open_form(form_name, full_width=False, *args, **kwargs):
+def open_form(form_name, *args, full_width=False, **kwargs):
     """Use classic routing to open a registered form"""
     form = get_form(form_name, *args, **kwargs)
     set_title(_forms[form_name]["title"])
