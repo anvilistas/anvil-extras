@@ -2,6 +2,10 @@
 * add `tag` property to custom components
   https://anvil.works/forum/t/chip-tag-initialization/15461
 
+## Bug Fixes
+* `navigation` - Add args and kwargs to `open_form`
+  https://github.com/anvilistas/anvil-extras/pull/393
+
 # v2.1.4 01-Dec-2022
 ## Bug Fixes
 * `routing` - fix `routing.ANY` within `url_keys`
