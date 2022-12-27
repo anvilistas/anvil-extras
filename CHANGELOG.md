@@ -5,6 +5,9 @@
 ## Bug Fixes
 * `navigation` - Add args and kwargs to `open_form`
   https://github.com/anvilistas/anvil-extras/pull/393
+* `storage` - fix serialisation of dictionary values
+  https://github.com/anvilistas/anvil-extras/pull/395
+
 
 # v2.1.4 01-Dec-2022
 ## Bug Fixes

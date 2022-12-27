@@ -46,7 +46,7 @@ def _serialize(obj):
     elif ob_type in (list, tuple):
         return [_serialize(item) for item in obj]
     elif ob_type is dict:
-        return {key: val for key, val in obj.items() if _is_str(key)}
+        return {key: _serialize(val) for key, val in obj.items() if _is_str(key)}
     elif ob_type is datetime:
         return {_SPECIAL + "datetime": obj.isoformat()}
     elif ob_type is date:
