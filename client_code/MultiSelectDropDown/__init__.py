@@ -139,7 +139,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     def _reset(self):
         self._el.selectpicker(
-            {"countSelectedText": lambda *args: self.count_selected_text(*args)}
+            {"countSelectedText": lambda *args: self.format_selected_text(*args)}
         )
         self._el.on("changed.bs.select", self.change)
         self._el.on("shown.bs.select", self._opened)
@@ -147,7 +147,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         menu = self._el.data("selectpicker")["$menu"]
         menu.find(".bs-actionsbox").on("click", self._user_selected_all)
 
-    def count_selected_text(self, count, total):
+    def format_selected_text(self, count, total):
         if count > 3:
             return f"{count} items selected"
         return ", ".join(self.selected_keys)
