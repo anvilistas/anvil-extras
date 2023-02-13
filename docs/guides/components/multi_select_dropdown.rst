@@ -2,6 +2,59 @@ MultiSelectDropdown
 ===================
 A multi select dropdown component with optional search bar
 
+
+Overrides
+---------
+
+.. function:: format_selected_text(self, count, total)
+
+    This method is called when the selection changes and should return a string.
+
+    The default implementation looks like:
+
+    .. code-block:: python
+
+        from anvil_extras import MultiSelectDropdown
+
+        def format_selected_text(self, count, total):
+            if count > 3:
+                return f"{count} items selected"
+            return ", ".join(self.selected_keys)
+
+
+    You can change this by overriding this method.
+
+    You can override it globally by doing the following
+
+    .. code-block:: python
+
+        from anvil_extras import MultiSelectDropdown
+
+        def format_selected_text(self, count, total):
+            if count > 2:
+                return f"{count} items selected of {total}"
+            return ", ".join(self.selected_keys)
+
+        MultiSelectDropdown.format_selected_text = format_selected_text
+
+
+    Alternatively you can change the ``count_selected_text`` method per multiselect instance
+
+    .. code-block:: python
+
+        class Form1(Form1Template):
+            def __init__(self, **properties):
+                ...
+
+                def format_selected_text(count, total):
+                    if count > 3:
+                        return f"{count} items selected"
+                    return ", ".join(self.multi_select_drop_down_1.selected_keys)
+
+                self.multi_select_drop_down_1.format_selected_text = format_selected_text
+
+
+
 Properties
 ----------
 :align: String

@@ -38,6 +38,6 @@ container:
     role: null, html: "<select class=\"select-picker\" \n        multiple \n     \
       \   data-container=\"body\"\n        data-icon-base=\"fa\"\n        data-tick-icon=\"\
       fa-check\"\n        data-show-subtext=\"true\"\n        data-selected-text-format=\"\
-      count > 3\"\n></select>\n<script type=\"module\">\nimport {DesignerMultiSelectDropDown}\
+      count\"\n></select>\n<script type=\"module\">\nimport {DesignerMultiSelectDropDown}\
       \ from \"https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js\"\
       ;\nDesignerMultiSelectDropDown.init();\n</script>"}
