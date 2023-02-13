@@ -203,7 +203,8 @@ class Quill(QuillTemplate):
     def get_html(self):
         """convert the contents of the quill object to html which can be used
         as the content to a RichText editor in 'restricted_html' format
-        Can also be used as a classmethod by calling it with a simple object Quill.to_html(content)"""
+        Can also be used as a classmethod by calling it with a simple object Quill.to_html(content)
+        """
         return self._quill and self._quill.root.innerHTML
 
     def set_html(self, html, sanitize=None):

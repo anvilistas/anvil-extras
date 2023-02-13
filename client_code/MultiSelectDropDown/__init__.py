@@ -302,7 +302,6 @@ def _clean_items(items):
     value_dict = {}
 
     for idx, item in enumerate(items):
-
         if isinstance(item, str):
             option, value = _option_from_str(item, idx)
         elif isinstance(item, (tuple, list)):

@@ -56,7 +56,6 @@ _html_injector.css(
 
 class Autocomplete(AutocompleteTemplate):
     def __init__(self, **properties):
-
         self._active_nodes = []
         self._active = None
         self._active_index = -1
