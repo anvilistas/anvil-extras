@@ -442,7 +442,8 @@ def is_animating(component, include_children=False) -> bool:
 
 def wait_for(animation_or_component, include_children=False):
     """If given an animation equivalent to animateion.wait().
-    If given a component, will wait for all running animations on the component to finish"""
+    If given a component, will wait for all running animations on the component to finish
+    """
     if hasattr(animation_or_component, "finished"):
         _await_promise(animation_or_component.finished)
         return

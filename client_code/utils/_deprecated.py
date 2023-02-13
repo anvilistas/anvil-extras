@@ -12,7 +12,6 @@ __version__ = "2.1.4"
 
 def deprecated(msg=""):
     def outer(fn):
-
         # nonlocal not available
         warned = [False]
 

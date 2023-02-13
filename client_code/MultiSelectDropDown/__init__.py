@@ -138,12 +138,19 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._init = True
 
     def _reset(self):
-        self._el.selectpicker()
+        self._el.selectpicker(
+            {"countSelectedText": lambda *args: self.format_selected_text(*args)}
+        )
         self._el.on("changed.bs.select", self.change)
         self._el.on("shown.bs.select", self._opened)
         self._el.on("hidden.bs.select", self._closed)
         menu = self._el.data("selectpicker")["$menu"]
         menu.find(".bs-actionsbox").on("click", self._user_selected_all)
+
+    def format_selected_text(self, count, total):
+        if count > 3:
+            return f"{count} items selected"
+        return ", ".join(self.selected_keys)
 
     ##### PROPERTIES #####
     align = _props_property(
@@ -166,6 +173,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         if self._init:
             self._el.selectpicker("refresh")
             self._el.selectpicker("render")
+
+    @property
+    def selected_keys(self):
+        return [e.textContent for e in _S("option:selected", self._el) if e.value != ""]
 
     @property
     def selected(self):
@@ -291,7 +302,6 @@ def _clean_items(items):
     value_dict = {}
 
     for idx, item in enumerate(items):
-
         if isinstance(item, str):
             option, value = _option_from_str(item, idx)
         elif isinstance(item, (tuple, list)):

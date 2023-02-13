@@ -1,6 +1,12 @@
 # Unreleased
 * add `tag` property to custom components
   https://anvil.works/forum/t/chip-tag-initialization/15461
+* add `format_selected_text` method override for multi-select-dropdown
+  https://github.com/anvilistas/anvil-extras/issues/398
+
+* add `selected_keys` property for multi-select-dropdown
+  https://github.com/anvilistas/anvil-extras/issues/398
+
 
 ## Bug Fixes
 * `navigation` - Add args and kwargs to `open_form`
