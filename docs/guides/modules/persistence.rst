@@ -129,6 +129,10 @@ display the title and author of the book as a single string:
    assert book.display_text == "Fluent Python by Luciano Ramalho"
 
 
+*NOTE* If you create attributes with leading underscores, they will not form part of
+any update sent to a server function.
+
+
 Methods and Server Functions
 ----------------------------
 Each persisted class will have methods `add`, `update` and `delete` as well as
