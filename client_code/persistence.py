@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2021 anvilistas
-# import anvil.server
 import anvil.server
 
 __version__ = "2.1.4"
