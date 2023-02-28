@@ -126,7 +126,7 @@ class PersistedClass:
         if self._delta and key in self._delta:
             return self._delta[key]
 
-        return dict(self._store).get(key, None)
+        return self._store.get(key, None)
 
     def __getitem__(self, key):
         return getattr(self, key)
