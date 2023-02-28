@@ -81,13 +81,13 @@ class LinkedClass:
 
 
 class PersistedClass:
-    _cache = {}
     key = None
 
     @classmethod
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         cls._snake_name = _snakify(cls.__name__)
+        cls._cache = {}
         for attr, value in cls.__dict__.items():
             try:
                 is_persisted_class = issubclass(value, PersistedClass)
