@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.server
+import anvil.tables
 
 __version__ = "2.1.4"
 
@@ -126,10 +127,16 @@ class PersistedClass:
         if self._delta and key in self._delta:
             return self._delta[key]
 
-        return dict(self._store).get(key, None)
+        try:
+            return self._store[key]
+        except (KeyError, anvil.tables.TableError):
+            raise AttributeError(key)
 
     def __getitem__(self, key):
-        return getattr(self, key)
+        try:
+            return getattr(self, key)
+        except AttributeError:
+            raise KeyError(key)
 
     def __setattr__(self, key, value):
         is_private = key.startswith("_")
