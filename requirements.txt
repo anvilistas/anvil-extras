@@ -1,2 +1,4 @@
+anvil-uplink
 bump2version
+marshmallow
 pytest
