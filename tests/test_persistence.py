@@ -82,12 +82,6 @@ def test_linked_attribute_name_clash():
     assert "Error calling __set_name__" in str(excinfo.value)
 
 
-def test_new_instance(persisted_book):
-    """Test that new instances without a store defined have the expected attributes"""
-    assert persisted_book.title is None
-    assert persisted_book.author_name is None
-
-
 def test_persisted_class_attributes(persisted_book, book_store):
     """Test that persisted class attributes behave as expected"""
     persisted_book._store = book_store
@@ -118,7 +112,7 @@ def test_persisted_class_indexing(persisted_book, book_store):
 
 def test_default_server_functions(persisted_book):
     """Test that crud methods are added to a persisted class"""
-    for key in ["get", "save", "delete"]:
+    for key in ["search", "get", "update", "delete"]:
         assert hasattr(persisted_book, key)
 
 
