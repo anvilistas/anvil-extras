@@ -98,7 +98,7 @@ class PersistedClass:
 
     @classmethod
     def search(cls, lazy=False, *args, **kwargs):
-        rows = anvil.server.call(f"search_{cls.__name__.lower()}", *args, **kwargs)
+        rows = anvil.server.call(f"search_{cls._snake_name}", *args, **kwargs)
         if lazy:
             return (cls(store=row) for row in rows)
 
