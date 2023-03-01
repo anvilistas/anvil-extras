@@ -1,4 +1,8 @@
 # Unreleased
+## Notable Change
+* persistence - Define simple classes for use in client side code and have instances of those classes synchronised with data tables rows.
+
+## Minor Changes
 * add `tag` property to custom components
   https://anvil.works/forum/t/chip-tag-initialization/15461
 * add `format_selected_text` method override for multi-select-dropdown
@@ -7,13 +11,11 @@
 * add `selected_keys` property for multi-select-dropdown
   https://github.com/anvilistas/anvil-extras/issues/398
 
-
 ## Bug Fixes
 * `navigation` - Add args and kwargs to `open_form`
   https://github.com/anvilistas/anvil-extras/pull/393
 * `storage` - fix serialisation of dictionary values
   https://github.com/anvilistas/anvil-extras/pull/395
-
 
 # v2.1.4 01-Dec-2022
 ## Bug Fixes
