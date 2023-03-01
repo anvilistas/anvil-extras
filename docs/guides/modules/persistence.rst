@@ -209,7 +209,9 @@ There are similar methods to update or delete an existing row. Let's create a ne
 
    book.delete()
 
-On the server side, we need `update_book` and `delete_book` functions. The update function must take a data table row and a dict of attribute values as its arguments. The delete function must take a data table row. Neither function needs to return anything:
+As you change an object's attribute values, persistence keeps track of those changes. Calling `update` will send to the server the relevant data table row along with a dict of the changed attribute values. The dict does not contain any attribute whose value has remained unchanged from the underlying row.
+
+So, on the server side, we need `update_book` and `delete_book` functions. The update function must take a data table row and a dict of attribute values as its arguments. The delete function must take a data table row. Neither function needs to return anything:
 
 .. code-block:: python
 
