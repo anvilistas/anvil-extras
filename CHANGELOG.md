@@ -1,4 +1,4 @@
-# Unreleased
+# v2.2.0 01-Mar-2023
 ## Notable Change
 * persistence - Define simple classes for use in client side code and have instances of those classes synchronised with data tables rows.
 
