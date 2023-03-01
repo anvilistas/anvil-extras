@@ -10,7 +10,7 @@ from anvil.js import window as _W
 
 from utils._deprecated import deprecated
 
-__version__ = "2.2.0"
+__version__ = "2.2.1"
 
 try:
     _js_uuid = _W.uuid

@@ -14,7 +14,7 @@ from anvil.js.window import jQuery as _S
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
 
-__version__ = "2.2.0"
+__version__ = "2.2.1"
 
 _html_injector.script(
     """
