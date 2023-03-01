@@ -104,7 +104,7 @@ class PersistedClass:
             return (cls(store=row) for row in rows)
 
         result = [cls(store=row) for row in rows]
-        cls.cache.clear()
+        cls._cache.clear()
         for obj in result:
             cls._cache[getattr(obj, cls.key)] = obj
         return result
