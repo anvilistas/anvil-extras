@@ -8,7 +8,7 @@ import functools
 
 import anvil.users
 
-__version__ = "2.1.4"
+__version__ = "2.2.0"
 
 
 def authentication_required(func):

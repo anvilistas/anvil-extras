@@ -7,7 +7,7 @@
 import anvil.server
 import anvil.tables
 
-__version__ = "2.1.4"
+__version__ = "2.2.0"
 
 
 def _snakify(text):

@@ -7,7 +7,7 @@
 from ..utils._component_helpers import _html_injector
 from ._anvil_designer import MessagePillTemplate
 
-__version__ = "2.1.4"
+__version__ = "2.2.0"
 
 css = """
 .anvil-role-message-pill {
