@@ -1,3 +1,7 @@
+# v2.2.2 02-Mar-2023
+## Bug Fixes
+* Fix attribute handling for new instances
+
 # v2.2.1 01-Mar-2023
 ## Bug Fixes
 * Typo in persistence module fixed
