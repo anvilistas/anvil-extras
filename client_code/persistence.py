@@ -5,7 +5,6 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.server
-import anvil.tables
 
 __version__ = "2.2.2"
 
