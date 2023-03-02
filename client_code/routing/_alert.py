@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "2.2.1"
+__version__ = "2.2.2"
 
 from anvil.js.window import jQuery as _S
 

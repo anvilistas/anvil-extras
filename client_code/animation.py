@@ -9,7 +9,7 @@ from anvil.js import await_promise as _await_promise
 from anvil.js import get_dom_node as _dom_node
 from anvil.js import window as _window
 
-__version__ = "2.2.1"
+__version__ = "2.2.2"
 
 
 class _Easing:
