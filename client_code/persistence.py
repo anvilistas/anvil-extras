@@ -130,13 +130,10 @@ class PersistedClass:
         try:
             return self._store[key]
         except (KeyError, anvil.tables.TableError):
-            raise AttributeError(key)
+            return None
 
     def __getitem__(self, key):
-        try:
-            return getattr(self, key)
-        except AttributeError:
-            raise KeyError(key)
+        return getattr(self, key)
 
     def __setattr__(self, key, value):
         is_private = key.startswith("_")
