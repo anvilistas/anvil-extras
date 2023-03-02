@@ -5,7 +5,6 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.server
-import anvil.tables
 
 __version__ = "2.2.2"
 
@@ -127,9 +126,12 @@ class PersistedClass:
         if self._delta and key in self._delta:
             return self._delta[key]
 
+        # if the _store raises a KeyError
+        # we aren't yet backed by a row object
+        # so return None
         try:
             return self._store[key]
-        except (KeyError, anvil.tables.TableError):
+        except KeyError:
             return None
 
     def __getitem__(self, key):

@@ -136,3 +136,8 @@ def test_linked_class_set(linked_persisted_book):
         linked_persisted_book.author = "test"
 
     assert "Linked Class instance is already set" in str(excinfo.value)
+
+
+def test_non_attributes_in_local_store(persisted_book):
+    assert persisted_book.foo is None
+    assert persisted_book["foo"] is None
