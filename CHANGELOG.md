@@ -1,3 +1,7 @@
+# v2.2.3 03-Mar-2023
+## Bug Fixes
+* Raise TableError when accessing non-existing columns in persisted class
+
 # v2.2.2 02-Mar-2023
 ## Bug Fixes
 * Fix attribute handling for new instances
