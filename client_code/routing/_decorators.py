@@ -10,7 +10,7 @@ from functools import wraps
 from . import _router
 from ._utils import RedirectInfo, RouteInfo, TemplateInfo, _as_frozen_str_iterable
 
-__version__ = "2.2.2"
+__version__ = "2.2.3"
 
 
 def _check_types_common(path, priority, condition):
