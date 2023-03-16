@@ -4,7 +4,7 @@ import pytest
 
 from client_code import persistence as ps
 
-__version__ = "0.0.1"
+__version__ = "2.2.2"
 
 
 @pytest.fixture
