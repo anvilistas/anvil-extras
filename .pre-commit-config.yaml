@@ -40,3 +40,11 @@ repos:
           exclude: "^(docs|tests|__init__.py)"
           args:
               - --detect-license-in-X-top-lines=6
+
+  - repo: local
+    hooks:
+      - id: bumpversion-check
+        name: Bumpversion check
+        entry: ./bumpversion_check.sh
+        language: script
+        types: [python]
