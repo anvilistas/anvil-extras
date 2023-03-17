@@ -40,11 +40,12 @@ def update_version_in_file(file_path, current_version):
 
     version_line = f'__version__ = "{current_version}"'
 
-    if re.search(r'^__version__\s*=\s*"[^"]+"', content, re.MULTILINE):
+    if re.search(r'^__version__\s*=\s*"[^"]+"', content, flags=re.MULTILINE):
         logging.info("    Version found")
         updated_content = re.sub(
-            r'^__version__\s*=\s*"[^"]+"', version_line, content, re.MULTILINE
+            r'^__version__\s*=\s*"[^"]+"', version_line, content, flags=re.MULTILINE
         )
+
     else:
         logging.info("    No version found")
         lines = content.splitlines()
@@ -70,26 +71,19 @@ def update_version_in_file(file_path, current_version):
             logging.info(f"Updated version in {file_path}")
 
 
-def process_files_or_directory(path, current_version, glob_patterns):
+def process_files_or_directory(path, current_version, all_files):
     path = pathlib.Path(path).resolve()
 
     if path.is_file():
         logging.info(f"Processing file: {path}")
-        for pattern in glob_patterns:
-            pattern_path = pathlib.Path(pattern).resolve()
-            logging.info(
-                f"  {fnmatch(str(path), str(pattern_path))} match {pattern_path}"
-            )
-            if fnmatch(str(path), str(pattern_path)):
-                update_version_in_file(str(path), current_version)
-                break
+        if str(path) in all_files:
+            update_version_in_file(str(path), current_version)
     elif path.is_dir():
         logging.info(f"Processing dir: {path}")
-        for pattern in glob_patterns:
-            for file_path in path.glob(pattern):
-                logging.info(f"  {file_path}")
-                if file_path.is_file() and file_path.suffix == ".py":
-                    update_version_in_file(str(file_path), current_version)
+        for file_path in path.glob("**/*.py"):
+            if str(file_path) not in all_files:
+                continue
+            update_version_in_file(str(file_path), current_version)
     else:
         logging.info(f"Error: {path} is not a file or directory")
 
@@ -106,8 +100,12 @@ if __name__ == "__main__":
 
     config_file = args.config
     current_version, glob_patterns = read_bumpversion_config(config_file)
+    # Use the current working directory as the root directory
+    root_dir = pathlib.Path.cwd()
+
+    all_files = [str(p) for pattern in glob_patterns for p in root_dir.glob(pattern)]
 
     for path in args.paths:
         process_files_or_directory(
-            path, current_version=current_version, glob_patterns=glob_patterns
+            path, current_version=current_version, all_files=all_files
         )
