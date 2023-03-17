@@ -40,3 +40,13 @@ repos:
           exclude: "^(docs|tests|__init__.py)"
           args:
               - --detect-license-in-X-top-lines=6
+
+  - repo: local
+    hooks:
+      - id: fix-version
+        name: Fix version
+        entry: python scripts/fix_version.py --config setup.cfg
+        files: '\.py$'
+        language: system
+        pass_filenames: true
+        types: [python]
