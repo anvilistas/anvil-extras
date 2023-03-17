@@ -10,7 +10,6 @@ import logging
 import pathlib
 import re
 from configparser import ConfigParser
-from fnmatch import fnmatch
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
