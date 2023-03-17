@@ -43,8 +43,8 @@ repos:
 
   - repo: local
     hooks:
-      - id: bumpversion-check
-        name: Bumpversion check
-        entry: ./bumpversion_check.sh
-        language: script
+      - id: fix-version
+        name: Fix version
+        entry: python scripts/fix_version.py --config setup.cfg
+        language: system
         types: [python]
