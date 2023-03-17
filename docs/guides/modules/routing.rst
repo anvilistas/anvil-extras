@@ -337,8 +337,8 @@ Decorators
     It is often could to refer to ``TemplateForm``s with the suffix ``Router`` e.g. ``MainRouter``, ``AdminRotuer``.
     There are two callbacks available to a ``TemplateForm``.
 
-    .. method:: on_navitagion(self, **nav_args)
-                on_navitagion(self, url_hash, url_patter, url_dict, unload_form)
+    .. method:: on_navigation(self, **nav_args)
+                on_navigation(self, url_hash, url_patter, url_dict, unload_form)
 
         The ``on_navigation`` method, when added to your ``TemplateForm``, will be called whenever the ``url_hash`` is changed.
         It's a good place to adjust the look of your ``TemplateForm`` if the ``url_hash`` changes. e.g. the selected link in the sidebar.
