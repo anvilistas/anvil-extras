@@ -46,5 +46,7 @@ repos:
       - id: fix-version
         name: Fix version
         entry: python scripts/fix_version.py --config setup.cfg
+        files: '\.py$'
         language: system
+        pass_filenames: true
         types: [python]
