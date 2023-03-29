@@ -1,5 +1,9 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2021 anvilistas
+#
+# Copyright (c) 2021 The Anvil Extras project team members listed at
+# https://github.com/anvilistas/anvil-extras/graphs/contributors
+#
+# This software is published at https://github.com/anvilistas/anvil-extras
 
 from ._types import (
     MISSING,
@@ -36,6 +40,6 @@ from ._zod_error import ZodError, ZodIssueCode
 ParseError = ZodError
 IssueCode = ZodIssueCode
 
-__version__ = "2.2.2"
+__version__ = "2.2.3"
 
 __all__ = []  # it would be dangerous to do import *
