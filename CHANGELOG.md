@@ -1,3 +1,11 @@
+
+# Unreleased
+
+## New Features
+* add zod validation library
+  https://github.com/anvilistas/anvil-extras/pull/406
+
+
 # v2.2.3 03-Mar-2023
 ## Bug Fixes
 * Raise TableError when accessing non-existent columns on persisted class
