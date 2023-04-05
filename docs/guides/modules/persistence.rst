@@ -28,7 +28,7 @@ Using the persistence module, we can now define a class for book objects:
 
 .. code-block:: python
 
-   from anvil_labs.persistence import persisted_class
+   from anvil_extras.persistence import persisted_class
 
 
    @persisted_class
@@ -66,7 +66,7 @@ attribute on our object. Let's include the author's name as an attribute of a bo
 
 .. code-block:: python
 
-   from anvil_labs.persistence import persisted_class, LinkedAttribute
+   from anvil_extras.persistence import persisted_class, LinkedAttribute
 
 
    @persisted_class
@@ -87,7 +87,7 @@ instance of that class as an attribute of a Book:
 
 .. code-block:: python
 
-   from anvil_labs.persistence import persisted_class
+   from anvil_extras.persistence import persisted_class
 
    @persisted_class
    class Author:
@@ -112,7 +112,7 @@ display the title and author of the book as a single string:
 
 .. code-block:: python
 
-   from anvil_labs.persistence import persisted_class, LinkedAttribute
+   from anvil_extras.persistence import persisted_class, LinkedAttribute
 
 
    @persisted_class

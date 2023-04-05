@@ -120,7 +120,7 @@ class PersistedClass:
 
     def __init__(self, store=None, *args, **kwargs):
         self._store = store or {}
-        self._delta = {}
+        self._delta = kwargs
 
     def __getattr__(self, key):
         if self._delta and key in self._delta:
