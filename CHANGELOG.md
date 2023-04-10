@@ -1,10 +1,12 @@
-
-# Unreleased
+# v2.3.0 10-Apr-2023
 
 ## New Features
 * add zod validation library
   https://github.com/anvilistas/anvil-extras/pull/406
 
+## Minor Changes
+* Add use of kwargs in persistent class init method
+  https://github.com/anvilistas/anvil-extras/pull/408
 
 # v2.2.3 03-Mar-2023
 ## Bug Fixes
