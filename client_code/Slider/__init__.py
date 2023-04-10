@@ -11,7 +11,7 @@ from anvil import HtmlPanel as _HtmlPanel
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
-__version__ = "2.2.3"
+__version__ = "2.3.0"
 
 noui_version = "15.4.0"
 
