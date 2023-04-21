@@ -139,10 +139,6 @@ def call_async(fn_or_name, *args, **kws):
     raise TypeError(msg)
 
 
-# Backward compatability - remove at some point
-call_server_async = call_async
-
-
 def wait_for(async_call_object):
     "wait for a non-blocking function to complete its execution"
     if not isinstance(async_call_object, _AsyncCall):
