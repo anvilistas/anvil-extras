@@ -130,7 +130,13 @@ class _AsyncCall:
 
 
 def call_async(fn_or_name, *args, **kws):
-    "call a function, or server function in a non-blocking way"
+    """
+    Call a function or a server function (if a string is provided) in a non-blocking way.
+
+    Parameters
+    ----------
+    fn_or_name: A function or the name of a server function to call.
+    """
     if isinstance(fn_or_name, str):
         return _AsyncCall(_call_s, fn_or_name, *args, **kws)
     if callable(fn_or_name):
@@ -140,7 +146,7 @@ def call_async(fn_or_name, *args, **kws):
 
 
 def wait_for(async_call_object):
-    "wait for a non-blocking function to complete its execution"
+    "Wait for a non-blocking function to complete its execution"
     if not isinstance(async_call_object, _AsyncCall):
         raise TypeError(
             f"expected an AsyncCall object, got {type(async_call_object).__name__}"
