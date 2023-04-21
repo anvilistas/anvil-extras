@@ -148,7 +148,7 @@ def wait_for(async_call_object):
     return async_call_object.await_result()
 
 
-class TimerRef:
+class _AbstractTimerRef:
     def _clear(self, id):
         raise NotImplementedError("implemented by subclasses")
 
@@ -159,11 +159,11 @@ class TimerRef:
         self._clear(self._id)
 
 
-class DeferRef(TimerRef):
+class DeferRef(_AbstractTimerRef):
     _clear = _W.clearTimeout
 
 
-class RepeatRef(TimerRef):
+class RepeatRef(_AbstractTimerRef):
     _clear = _W.clearInterval
 
 
@@ -179,7 +179,7 @@ def cancel(ref):
     """
     if ref is None:
         return
-    if not isinstance(ref, TimerRef):
+    if not isinstance(ref, _AbstractTimerRef):
         msg = "Invalid argumnet to cancel(), expected None or the return value from calling delay/defer"
         raise TypeError(msg)
     return ref.cancel()
