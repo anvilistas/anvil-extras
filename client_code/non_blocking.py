@@ -25,8 +25,9 @@ except AttributeError:
 _deferred = _W.Function(
     "fn",
     """
-const deferred = {status: "PENDING", error: null};
-const p = deferred.promise = new Promise(async (resolve, reject) => {
+const deferred = { status: "PENDING", error: null };
+
+deferred.promise = new Promise(async (resolve, reject) => {
     try {
         resolve(await fn());
         deferred.status = "FULFILLED";
@@ -37,7 +38,7 @@ const p = deferred.promise = new Promise(async (resolve, reject) => {
     }
 });
 
-let handledResult = p;
+let handledResult = deferred.promise;
 let handledError = null;
 
 return Object.assign(deferred, {
@@ -46,14 +47,14 @@ return Object.assign(deferred, {
             // the on_error was already called so provide a dummy handler;
             errorHandler = () => {};
         }
-        handledResult = p.then(resultHandler, errorHandler);
+        handledResult = deferred.promise.then(resultHandler, errorHandler);
         handledError = null;
     },
     on_error(errorHandler) {
         handledError = handledResult.catch(errorHandler);
-        handledResult = p;
+        handledResult = deferred.promise;
     },
-    await_result: async () => await p,
+    await_result: async () => await deferred.promise,
 });
 """,
 )
@@ -128,10 +129,6 @@ class _AsyncCall:
         return f"<non_blocking.AsyncCall{fn_repr}>"
 
 
-# deprecated
-_AsyncCall.wait = _AsyncCall.await_result
-
-
 def call_async(fn_or_name, *args, **kws):
     "call a function, or server function in a non-blocking way"
     if isinstance(fn_or_name, str):
@@ -155,60 +152,9 @@ def wait_for(async_call_object):
     return async_call_object.await_result()
 
 
-_warning = False
-
-
-class _AbstractTimer:
-    _clearer = None
-    _setter = None
-
-    def __init__(self, fn, delay=None):
-        global _warning
-        if not _warning:
-            _warning = True
-            print(
-                "WARNING: Interval and Timeout have been deprecated in favour of repeat() and defer() and will soon be removed."
-                "\nSee latest documentation: https://anvil-labs.readthedocs.io/en/latest/guides/modules/non_blocking.html"
-            )
-        assert callable(
-            fn
-        ), f"the first argument to {type(self).__name__} must be a callable that takes no arguments"
-        self._id = None
-        self._fn = fn
-        self.delay = delay
-
-    @property
-    def delay(self):
-        return self._delay
-
-    @delay.setter
-    def delay(self, value):
-        if value is not None and not isinstance(value, (int, float)):
-            raise TypeError(f"cannot set delay to be of type {type(value).__name__}")
-        self._clearer(self._id)
-        self._delay = value
-        if value is None:
-            return
-        self._id = self._setter(self._fn, value * 1000)
-
-    def clear(self):
-        """Stop the function from executing"""
-        self.delay = None
-
-
-class Interval(_AbstractTimer):
-    _clearer = _W.clearInterval
-    _setter = _W.setInterval
-
-
-class Timeout(_AbstractTimer):
-    _clearer = _W.clearTimeout
-    _setter = _W.setTimeout
-
-
-# ALTERNATIVE IDEA
 class TimerRef:
-    _clear = None
+    def _clear(self, id):
+        raise NotImplementedError("implemented by subclasses")
 
     def __init__(self, id):
         self._id = id

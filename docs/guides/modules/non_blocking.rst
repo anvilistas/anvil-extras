@@ -1,7 +1,21 @@
 NonBlocking
 ===========
 
-Call function in a non-blocking way.
+Call functions in a non-blocking way.
+
+In a blocking execution, the next line of code
+will not be executed until the current line has completed.
+
+In contrast, non-blocking execution allows the next line
+to be executed without waiting for the current line to complete.
+
+.. note::
+
+   This module cannot be used to call server functions simultaneously, as Anvil server calls are queued.
+
+A suitable use case for this library is when you want to perform an action without waiting for a response,
+such as updating a database after making changes on the client side.
+
 
 Examples
 --------
@@ -9,9 +23,8 @@ Examples
 Call a server function
 **********************
 
-After making updates on the client, call a server function to update the database.
-In this example, we don't care about the return.
-
+After updating the client, call a server function to update the database.
+In this example, we don't care about the return value.
 
 .. code-block:: python
 
@@ -22,11 +35,15 @@ In this example, we don't care about the return.
         self.open_form("Form1")
 
     def update_database(self):
-        # Unlike anvil.server.call we do not wait for the call to return
+        # Unlike anvil.server.call, we do not wait for the call to return
         call_async("update", self.item)
 
 
-If you care about the return value, you can provide handlers.
+Handle return values and errors
+*******************************
+
+If you want to handle the return value or any errors,
+you can provide result and error handlers.
 
 .. code-block:: python
 
@@ -55,9 +72,8 @@ repeat
 ******
 
 Call a function repeatedly using the ``repeat()`` function.
-After each interval seconds the function will be called.
-To end or cancel the repeated call use the ``cancel`` method.
-
+The function will be called after each specified interval in seconds.
+To end or cancel the repeated call, use the ``cancel`` method.
 
 .. code-block:: python
 
@@ -79,7 +95,7 @@ defer
 *****
 
 Call a function after a set period of time using the ``defer()`` function.
-To ``cancel`` the deferred call, use the ``cancel()`` method.
+To cancel the deferred call, use the ``cancel()`` method.
 
 .. code-block:: python
 
@@ -114,7 +130,7 @@ API
 
     Returns an ``AsyncCall`` object. The *fn* will be called in a non-blocking way.
 
-    If the first argument is a string then the server function with name *fn_name* will be called in a non-blocking way.
+    If the first argument is a string, then the server function with the name *fn_name* will be called in a non-blocking way.
 
 .. function:: wait_for(async_call_object)
 
@@ -122,7 +138,7 @@ API
 
 .. class:: AsyncCall
 
-    Don't call this directly, instead use the above functions.
+    Don't instantiate this class directly; instead, use the functions above.
 
     .. method:: on_result(self, result_handler, error_handler=None)
 
@@ -142,57 +158,55 @@ API
     .. method:: await_result(self)
 
         Waits for the non-blocking call to finish executing and returns the result.
-        Or raises an exception if the non-blocking call raised an exception.
+        Raises an exception if the non-blocking call raised an exception.
 
     .. property:: result
 
-        If the non-blocking call has not yet completed, raise a ``RuntimeError``.
+        If the non-blocking call has not yet completed, raises a ``RuntimeError``.
 
-        If the non_blocking call has completed returns the result.
-        Or raises an exception if the non-blocking call raised an exception.
+        If the non-blocking call has completed, returns the result.
+        Raises an exception if the non-blocking call raised an exception.
 
     .. property:: error
 
-        If the non-blocking call has not yet completed, raise a ``RuntimeError``.
+        If the non-blocking call has not yet completed, raises a ``RuntimeError``.
 
-        If the non-blocking call raised an exception the exception raised can be accessed using the ``error`` property.
+        If the non-blocking call raised an exception, the exception raised can be accessed using the ``error`` property.
         The error will be ``None`` if the non-blocking call returned a result.
 
-    .. property:: set_status
+    .. property:: status
 
-        One of ``"PENDING"``, ``"FULFILLED"``, ``"REJECTED"``
+        One of ``"PENDING"``, ``"FULFILLED"``, ``"REJECTED"``.
 
 
 .. function:: cancel(ref)
 
     Cancel an active call to ``delay`` or ``defer``.
-    The first argument should be ``None`` or the the return value from a call to ``delay`` or ``defer``.
+    The first argument should be ``None`` or the return value from a call to ``delay`` or ``defer``.
 
     Calling ``cancel(ref)`` is equivalent to ``ref.cancel()``.
     You may wish to use ``cancel(ref)`` if you start with a placeholder ``ref`` equal to ``None``.
     See the ``defer`` example above.
 
-
 .. function:: repeat(fn, interval)
 
-    Repeatedly call a function with a set interval (in seconds)
+    Repeatedly call a function with a set interval (in seconds).
 
-    ``fn`` should be a callable that takes no args.
-    ``interval`` should be an ``int`` or ``float`` representing the time in seconds between function calls.
+    - ``fn`` should be a callable that takes no arguments.
+    - ``interval`` should be an ``int`` or ``float`` representing the time in seconds between function calls.
 
     The function is called in a non-blocking way.
 
     A call to ``repeat`` returns a ``RepeatRef`` object that has a ``.cancel()`` method.
 
-    Calling the ``.cancel()`` method will stop the next call repeated call from executing.
-
+    Calling the ``.cancel()`` method will stop the next repeated call from executing.
 
 .. function:: defer(fn, delay)
 
     Defer a function call after a set period of time has elapsed (in seconds).
 
-    ``fn`` should be a callable that takes no args.
-    ``delay`` should be an ``int`` or ``float`` representing the time in seconds.
+    - ``fn`` should be a callable that takes no arguments.
+    - ``delay`` should be an ``int`` or ``float`` representing the time in seconds.
 
     The function is called in a non-blocking way.
     A call to ``defer`` returns a ``DeferRef`` object that has a ``.cancel()`` method.
