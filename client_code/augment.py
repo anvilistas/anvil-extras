@@ -31,6 +31,10 @@ def add_event(component: _Component, event: str) -> None:
     """
     if not isinstance(event, str):
         raise TypeError("event must be type str and not " + type(event))
+
+    if _has_native_event(component, event):
+        return
+
     _add_event(component, event)
 
     def handler(e):
@@ -111,12 +115,23 @@ def _get_jquery_for_component(component):
         return _S(_js.get_dom_node(component))
 
 
+# TODO this is hacking with anvil internals
 _add_event = _Function(
     "self",
-    "event",
+    "eventName",
     """
     self = PyDefUtils.unwrapOrRemapToPy(self);
-    self._anvil.eventTypes[event] = self._anvil.eventTypes[event] || {name: event};
+    self._anvil.eventTypes[eventName] = self._anvil.eventTypes[eventName] || {name: eventName, $augmented: true};
+""",
+)
+
+_has_native_event = _Function(
+    "self",
+    "eventName",
+    """
+    self = PyDefUtils.unwrapOrRemapToPy(self);
+    const eventDescriptor = self._anvil.eventTypes[eventName];
+    return eventDescriptor && !eventDescriptor.$augmented;
 """,
 )
 

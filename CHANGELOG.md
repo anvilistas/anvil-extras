@@ -4,6 +4,10 @@
 * Add non-blocking module
   https://github.com/anvilistas/anvil-extras/pull/411
 
+## Bug Fixes
+* augment - adding event handler like click to a button will no longer fire twice
+  https://github.com/anvilistas/anvil-extras/pull/412
+
 # v2.3.0 10-Apr-2023
 
 ## New Features
