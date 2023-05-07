@@ -7,6 +7,9 @@
 ## Bug Fixes
 * augment - adding event handler like click to a button will no longer fire twice
   https://github.com/anvilistas/anvil-extras/pull/412
+* autocomplete - fix suggestions position on mobile in M3 design
+  https://github.com/anvilistas/anvil-extras/issues/413
+
 
 # v2.3.0 10-Apr-2023
 
