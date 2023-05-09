@@ -157,12 +157,14 @@ class Autocomplete(AutocompleteTemplate):
         self._lp_node.scrollTop = 0
 
     def _reset_position(self, *e):
-        box = self._dom_node.getBoundingClientRect()
-        body = _document.body.getBoundingClientRect()
+        rect = self._dom_node.getBoundingClientRect()
+        root_rect = _document.documentElement.getBoundingClientRect()
+        body_rect = _document.body.getBoundingClientRect()
+        fixed_offset_top = body_rect.top - root_rect.top
         lp_node = self._lp_node
-        lp_node.style.left = f"{box.left - body.left}px"
-        lp_node.style.top = f"{box.bottom - body.top + 5}px"
-        lp_node.style.width = f"{box.width}px"
+        lp_node.style.left = f"{rect.left - body_rect.left}px"
+        lp_node.style.top = f"{rect.bottom - body_rect.top + fixed_offset_top + 5}px"
+        lp_node.style.width = f"{rect.width}px"
 
     ###### INTERNAL EVENTS ######
     def _on_keydown(self, e):
