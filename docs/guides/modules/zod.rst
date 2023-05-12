@@ -24,7 +24,7 @@ Creating a simple string schema
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     # create a schema
     schema = z.string()
@@ -45,7 +45,7 @@ Creating a typed_dict schema
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     # create a schema
     user = z.typed_dict({
@@ -61,7 +61,7 @@ Primitives
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     z.string()
     z.integer()
@@ -85,7 +85,7 @@ Literals
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     tuna = z.literal("tuna")
     empty_str = z.literal("")
@@ -196,7 +196,7 @@ A zod number accepts either integer or float.
 
 .. code-block:: python
 
-    from anvil_labs.zod import z
+    from anvil_extras.zod import z
 
     age = z.number(
         required_error="Age is required",
@@ -207,7 +207,7 @@ Zod includes a handful of number-specific validations.
 
 .. code-block:: python
 
-    from anvil_labs.zod import z
+    from anvil_extras.zod import z
 
     z.number().gt(5)
     z.number().ge(5)  # greater than or equal to, alias .min(5)
@@ -251,7 +251,7 @@ Dates and Datetimes
 
 .. code-block:: python
 
-    from anvil_labs.zod import z
+    from anvil_extras.zod import z
     from datetime import date
 
     z.date().safe_parse(date.today())  # success: True
@@ -310,7 +310,7 @@ Enums
 
 .. code-block:: python
 
-    from anvil_labs.zod import z
+    from anvil_extras.zod import z
 
     FishEnum = z.enum(["Salmon", "Tuna", "Trout"])
 
@@ -335,7 +335,7 @@ In other words, something optional can also be None.
 
 .. code-block:: python
 
-    from anvil_labs.zod import z
+    from anvil_extras.zod import z
 
     schema = z.optional(z.string())
 
@@ -372,7 +372,7 @@ We chose ``typed_dict`` since it matches Python's ``typing.TypedDict``.
 
 .. code-block:: python
 
-    from anvil_labs.zod import z
+    from anvil_extras.zod import z
 
     # all properties are required by default
     Dog = z.typed_dict({
@@ -414,7 +414,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             # all properties are required by default
             Dog = z.typed_dict({
@@ -461,7 +461,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             Recipe = z.typed_dict({
                 "id": z.string(),
@@ -483,7 +483,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             Recipe = z.typed_dict({
                 "id": z.string(),
@@ -509,7 +509,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             User = z.typed_dict({
                 "email": z.string(),
@@ -561,7 +561,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             User = z.typed_dict({
                 "email": z.string(),
@@ -593,7 +593,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             Person = z.typed_dict({
                 "name": z.string(),
@@ -640,7 +640,7 @@ API
 
         .. code-block:: python
 
-            from anvil_labs.zod import z
+            from anvil_extras.zod import z
 
             Person = z.typed_dict({
                 "name": z.string(),
@@ -790,7 +790,7 @@ Additional API
 
         .. code-block:: python
 
-            from anvil_labs import zod as z
+            from anvil_extras import zod as z
 
             # optional custom error message
             non_empty_strings = z.string().array().nonempty(
@@ -817,7 +817,7 @@ A variadic ("rest") argument can be added with the ``.rest`` method.
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     variadic_tuple = z.tuple([z.string()]).rest(z.number())
     result = variadic_tuple.parse(["hello", 1, 2, 3])]
@@ -887,7 +887,7 @@ Recursive types
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     Category = z.lazy(lambda:
         z.typed_dict({
@@ -927,7 +927,7 @@ This is useful to validate inputs against classes.
 
 .. code-block:: python
 
-    from anvil_labs import zod as z
+    from anvil_extras import zod as z
 
     class Test:
         def __init__(self, name: str):
