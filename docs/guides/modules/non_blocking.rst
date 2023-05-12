@@ -101,25 +101,25 @@ To cancel the deferred call, use the ``cancel()`` method.
 
     from anvil_extras import non_blocking
 
-    pending = []
+    class Form1(Form1Template):
+        def __init__(self, **properties):
+            ...
+            self.deferred_search = None
 
-    def do_save():
-        global pending
-        pending, saves = [], pending
-        if not saves:
-            return
-        anvil.server.call_s("save", saves)
+        def update_search_results(self):
+            search_results = anvil.server.call_s("search_results", self.search_box.text)
+            # do something with search_results
 
-    deferred_save = None
+        def search_box_change(self, **event_args):
+            # cancel the existing deferred_search
+            non_blocking.cancel(self.deferred_search)
+            self.deferred_search = non_blocking.defer(self.update_search_results, 0.3)
 
-    def on_save(saves):
-        global pending, deferred_save
-        non_blocking.cancel(deferred_save)
-        # we could also use deferred_save.cancel() but we start with None
-        pending.extend(saves)
-        deferred_save = non_blocking.defer(do_save, 1)
 
-    # calling on_save() repeatedly will cancel the current do_save deferred call and create a new one
+In this example we call ``self.update_search_results()`` only when the user has stopped typing for 0.3 seconds.
+If the user starts typing again before 0.3 seconds is up, the deferred call is cancelled.
+This prevents us calling the server too often.
+
 
 
 API
