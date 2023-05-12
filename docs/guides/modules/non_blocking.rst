@@ -28,7 +28,7 @@ In this example, we don't care about the return value.
 
 .. code-block:: python
 
-    from anvil_labs.non_blocking import call_async
+    from anvil_extras.non_blocking import call_async
 
     def button_click(self, **event_args):
         self.update_database()
@@ -47,7 +47,7 @@ you can provide result and error handlers.
 
 .. code-block:: python
 
-    from anvil_labs.non_blocking import call_async
+    from anvil_extras.non_blocking import call_async
 
     def handle_result(self, res):
         print(res)
@@ -77,7 +77,7 @@ To end or cancel the repeated call, use the ``cancel`` method.
 
 .. code-block:: python
 
-    from anvil_labs import non_blocking
+    from anvil_extras import non_blocking
 
     i = 0
     def do_heartbeat():
@@ -99,7 +99,7 @@ To cancel the deferred call, use the ``cancel()`` method.
 
 .. code-block:: python
 
-    from anvil_labs import non_blocking
+    from anvil_extras import non_blocking
 
     pending = []
 
