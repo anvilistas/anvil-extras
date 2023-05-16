@@ -92,7 +92,7 @@ class _AsyncCall:
 
     @property
     def result(self):
-        """If the function call is not complete, returns a Promise
+        """If the function call is not complete, raises a RuntimeError
         If the function call is complete:
         Returns: the return value from the function call
         Raises: the error raised by the function call
