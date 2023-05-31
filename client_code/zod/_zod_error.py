@@ -5,6 +5,8 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
+import anvil.server
+
 from .helpers import dict_util
 
 __version__ = "2.3.0"
@@ -61,7 +63,7 @@ def _mapper(issue):
     return issue.get("message", "unknown")
 
 
-class ZodError(Exception):
+class ZodError(anvil.server.AnvilWrappedError):
     def __init__(self, issues):
         self.issues = issues
         self._formatted = None
@@ -115,3 +117,5 @@ class ZodError(Exception):
 
 
 ZodError.__name__ = "ParseError"
+
+anvil.server._register_exception_type("anvil_extras.zod.ParseError", ZodError)
