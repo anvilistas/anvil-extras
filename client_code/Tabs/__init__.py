@@ -31,7 +31,7 @@ _html_injector.css(
     position: relative;
     overflow-x: auto;
     overflow-y: hidden;
-    height: 48px;
+    height: auto;
     width: 100%;
     background-color: var(--background, inherit);
     margin: 0 auto;
@@ -57,10 +57,13 @@ _html_injector.css(
     height: 100%;
     padding: 0 24px;
     font-size: 14px;
-    text-overflow: ellipsis;
     overflow: hidden;
     -webkit-transition: color .28s ease, background-color .28s ease;
     transition: color .28s ease, background-color .28s ease
+}
+.tabs .tab a > .link-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .tabs .tab a:focus,.tabs .tab a:focus.active {
     background-color: rgb(var(--color), 0.2);
