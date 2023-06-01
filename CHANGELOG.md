@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/pull/412
 * autocomplete - fix suggestions position on mobile in M3 design
   https://github.com/anvilistas/anvil-extras/issues/413
+* tabs - tweak css for better mobile experience
+  https://github.com/anvilistas/anvil-extras/issues/421
 
 
 # v2.3.0 10-Apr-2023
