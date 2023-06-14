@@ -4,7 +4,7 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 
 css = """ .anvil-role-progress-track, .anvil-role-progress-indicator {
     display: block;

@@ -12,7 +12,7 @@ from ..helpers import ZodParsedType
 from ..helpers.parse_util import ErrorMapContext
 from ..helpers.util import join
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 
 
 def error_map(issue, _ctx: ErrorMapContext):

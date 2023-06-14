@@ -23,7 +23,7 @@ from anvil.js.window import jQuery as _S
 
 from .utils._component_helpers import walk as _walk
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 
 __all__ = [
     "popover",
