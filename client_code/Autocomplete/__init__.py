@@ -224,6 +224,7 @@ class Autocomplete(AutocompleteTemplate):
         except Exception:
             pass
         _S(_window).off("resize", self._reset_position)
+        self._nodes = {}
 
     def _mk_popover(self, init_node, **event_args):
         init_node(self._lp_node)
@@ -236,6 +237,8 @@ class Autocomplete(AutocompleteTemplate):
     @suggestions.setter
     def suggestions(self, val):
         self._data = val
+        if self._active is not None:
+            self._populate()
 
     text = _TextBox.text
     placeholder = _TextBox.placeholder
