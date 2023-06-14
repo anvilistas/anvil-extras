@@ -11,7 +11,8 @@
   https://github.com/anvilistas/anvil-extras/issues/413
 * tabs - tweak css for better mobile experience
   https://github.com/anvilistas/anvil-extras/issues/421
-
+* autocomplete - changing the suggestions will force the UI to change
+  https://github.com/anvilistas/anvil-extras/issues/426
 
 # v2.3.0 10-Apr-2023
 
