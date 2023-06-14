@@ -1,4 +1,4 @@
-# Unreleased
+# v2.4.0 14-Jun-2023
 
 ## New Features
 * Add non-blocking module
