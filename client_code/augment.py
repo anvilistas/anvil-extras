@@ -77,16 +77,7 @@ def remove_event_handler(component: _Component, event: str, func: _Callable) -> 
     component.remove_event_handler(event, func)
 
 
-_trigger_writeback = _Function(
-    "self",
-    """
-    self = PyDefUtils.unwrapOrRemapToPy(self);
-    const mapPropToWriteback = (p) => () => PyDefUtils.suspensionFromPromise(self._anvil.dataBindingWriteback(self, p.name));
-    const customPropsToWriteBack = (self._anvil.customComponentProperties || []).filter(p => p.allow_binding_writeback).map(mapPropToWriteback);
-    const builtinPropsToWriteBack = self._anvil.propTypes.filter(p => p.allowBindingWriteback).map(mapPropToWriteback);
-    return Sk.misceval.chain(Sk.builtin.none.none$, ...customPropsToWriteBack, ...builtinPropsToWriteBack);
-""",
-)
+_warning_writeback = False
 
 
 def trigger(self: _Component, event: str):
@@ -94,7 +85,13 @@ def trigger(self: _Component, event: str):
     if event is a dictionary it should include an 'event' key e.g. {'event': 'keypress', 'which': 13}
     """
     if event == "writeback":
-        return _trigger_writeback(self)
+        global _warning_writeback
+        if not _warning_writeback:
+            _warning_writeback = True
+            print(
+                "DEPRECATED: trigger('writeback') is deprecated - instead use self.raise_event('x-anvil-write-back-<property>')"
+            )
+        return
     if isinstance(event, dict):
         event = _S.Event(event["event"], event)
     event = "mouseenter mouseleave" if event == "hover" else event
