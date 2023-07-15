@@ -1,3 +1,9 @@
+# Unreleased
+
+## Deprecated
+* `trigger('writeback')` is deprecated: use `self.raise_event('x-anvil-write-back-<prop>')`
+  https://github.com/anvilistas/anvil-extras/pull/432
+
 # v2.4.0 14-Jun-2023
 
 ## New Features
