@@ -11,12 +11,27 @@ properties:
   description: The current active tab, important: false}
 - {name: role, type: string, default_value: null, description: This component works well with the card role. Place a card below or above the tabs component,
   group: appearance, important: true}
-- {name: align, type: enum, options: [left, center, right], default_value: left, description: align tab text left center or right,
-  group: text, important: false}
+- name: align
+  type: enum
+  options: [left, center, right]
+  default_value: left
+  description: align tab text left center or right
+  group: text
+  important: false
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
 - {name: tag, type: object, group: user data, important: false}
-- {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: none, group: layout, important: false}
-- {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: none, group: layout, important: false}
+- name: spacing_above
+  type: enum
+  options: [none, small, medium, large]
+  default_value: none
+  group: layout
+  important: false
+- name: spacing_below
+  type: enum
+  options: [none, small, medium, large]
+  default_value: none
+  group: layout
+  important: false
 - {name: bold, type: boolean, default_value: null, group: text, important: false}
 - {name: font_size, type: string, default_value: null, group: text, important: false}
 - {name: italic, type: boolean, default_value: null, group: text, important: false}
