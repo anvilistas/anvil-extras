@@ -9,6 +9,8 @@ class UnitTestComponent(UnitTestComponentTemplate):
         self.init_components(**properties)
 
         self.test_modules = test_modules
+        self.lbl_test_title.role = configs['title_role']
+        self.btn_all_tests.role = configs['btn_role']
 
         self.test_config = []
         mod_cnt = 0
