@@ -1,9 +1,9 @@
-from ._anvil_designer import TestComponentTemplate
+from ._anvil_designer import UnitTestComponentTemplate
 import anvil
 import unittest
 
 
-class TestComponent(TestComponentTemplate):
+class UnitTestComponent(UnitTestComponentTemplate):
     def __init__(self, test_modules, configs, **properties):
         # Set Form properties and Data Bindings.
         self.init_components(**properties)

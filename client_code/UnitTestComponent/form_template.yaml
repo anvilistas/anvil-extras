@@ -30,7 +30,7 @@ components:
     name: lbl_success
     layout_properties: {}
 - type: RepeatingPanel
-  properties: {item_template: TestComponent.ModuleTemplate}
+  properties: {item_template: UnitTestComponent.ModuleTemplate}
   name: rp_modules
   layout_properties: {grid_position: 'WAKCNI,UNBWVW'}
 is_package: true
