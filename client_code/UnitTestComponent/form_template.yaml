@@ -3,7 +3,7 @@ container:
   properties: {col_widths: '{}'}
 components:
 - type: Label
-  properties: {role: headline, align: left, tooltip: '', border: '', foreground: '',
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '',
     visible: true, text: Test Code, font_size: null, font: '', spacing_above: small,
     icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
     underline: false, icon: ''}
@@ -15,7 +15,7 @@ components:
   layout_properties: {grid_position: 'WEIDQQ,ENPAKG'}
   components:
   - type: Button
-    properties: {role: filled-button, align: left, tooltip: '', border: '', enabled: true,
+    properties: {role: null, align: left, tooltip: '', border: '', enabled: true,
       foreground: '', visible: true, text: Run All Tests, font_size: null, font: '',
       spacing_above: small, icon_align: left, spacing_below: small, italic: false,
       background: '', bold: false, underline: false, icon: ''}
