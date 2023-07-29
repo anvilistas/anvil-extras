@@ -4,11 +4,11 @@ import unittest
 
 
 class UnitTestComponent(UnitTestComponentTemplate):
-    def __init__(self, test_modules, configs, **properties):
+    def __init__(self, configs, **properties):
         # Set Form properties and Data Bindings.
         self.init_components(**properties)
 
-        self.test_modules = test_modules
+        self.test_modules = configs['test_modules']
         self.lbl_test_title.role = configs['title_role']
         self.btn_all_tests.role = configs['btn_role']
 
