@@ -14,13 +14,15 @@ class UnitTestComponent(UnitTestComponentTemplate):
 
         self.test_config = []
         mod_cnt = 0
-        for mod in self.test_modules:
-            module_ref = self.test_modules[mod]
+        for module_ref in self.test_modules:
             classlist = self.get_test_classes(module_ref)
             self.test_config.append(
-                {'name': 'Module: ' + mod, 'ref': module_ref, 'children': [],
-                 'card_role': configs['card_roles'][0], 'btn_role': configs['btn_role'],
-                 'check_size': configs['check_size']}
+                {
+                    'name': 'Module: ' + getattr(module_ref, '__name__').split('.')[-1],
+                    'ref': module_ref, 'children': [],
+                    'card_role': configs['card_roles'][0],
+                    'btn_role': configs['btn_role'],
+                    'check_size': configs['check_size']}
             )
             
             for testclass in classlist:
