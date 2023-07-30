@@ -1,7 +1,6 @@
 from ._anvil_designer import ModuleTemplateTemplate
 import anvil
 from .ClassTemplate import ClassTemplate
-import unittest
 
 
 class ModuleTemplate(ModuleTemplateTemplate):
@@ -28,7 +27,6 @@ class ModuleTemplate(ModuleTemplateTemplate):
     def btn_run_test_click(self, **event_args):
         """This method is called when the button is clicked"""
         with anvil.Notification("Test " + self.item['name'] + ' running...'):
-            print(self.item['ref'])
             for testclass in self.item['children']:
                 tc = testclass['ref']()
                 tc.main()

@@ -2,6 +2,7 @@ from ._anvil_designer import ClassTemplateTemplate
 import anvil
 from .TestTemplate import TestTemplate
 
+
 class ClassTemplate(ClassTemplateTemplate):
     def __init__(self, **properties):
         # Set Form properties and Data Bindings.
@@ -27,7 +28,6 @@ class ClassTemplate(ClassTemplateTemplate):
     def btn_run_test_click(self, **event_args):
         """This method is called when the button is clicked"""
         with anvil.Notification("Test " + self.item['name'] + ' running...'):
-            print(self.item['ref'])
             tc = self.item['ref']()
             tc.main()
             print('Test ' + self.item['name'] + ' was a success!')
