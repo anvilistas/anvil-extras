@@ -15,14 +15,30 @@ properties:
 - {name: modules, type: object, default_value: null, default_binding_prop: false,
   description: This can be set at runtime and must include all modules. The toolbar can be set separately,
   important: false}
-- {name: theme, type: enum, options: [snow, bubble], default_value: snow, default_binding_prop: false, description: snow or bubble - check quill for the difference - cannot be updated once set,
-  group: appearance, important: false}
+- name: theme
+  type: enum
+  options: [snow, bubble]
+  default_value: snow
+  default_binding_prop: false
+  description: snow or bubble - check quill for the difference - cannot be updated once set
+  group: appearance
+  important: false
 - {name: placeholder, type: string, default_value: '', default_binding_prop: false,
   description: The text to display when there is not content, important: false}
 - {name: content, type: string, default_binding_prop: false, description: A json-able object you can store as simple object in a data table cell. Use get_contents to interact with the quill delta object directly.,
   default_value: null, important: false}
-- {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
-- {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
+- name: spacing_above
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
+- name: spacing_below
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
 - {name: sanitize, type: boolean, default_value: true, description: sets the default sanitize behaviour for set_html(),
   group: interaction, important: false}
 - {name: tag, type: object, group: user data, important: false}

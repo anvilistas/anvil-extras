@@ -34,8 +34,18 @@ properties:
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
 - {name: tag, type: object, group: user data, important: false}
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
-- {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
-- {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
+- name: spacing_above
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
+- name: spacing_below
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
 - {name: pips, type: boolean, default_value: false, description: Sets whether the slider has pips (ticks),
   group: pips, important: false}
 - {name: pips_mode, type: string, default_value: '', description: '''range'', ''steps'',

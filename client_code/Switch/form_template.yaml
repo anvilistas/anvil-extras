@@ -10,8 +10,18 @@ properties:
 - {name: italic, type: boolean, default_value: null, group: text, important: false}
 - {name: text_pre, type: string, default_value: '', group: text, important: true}
 - {name: text_post, type: string, default_value: '', group: text, important: true}
-- {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
-- {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
+- name: spacing_above
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
+- name: spacing_below
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
 - {name: tooltip, type: string, default_value: '', group: tooltip, important: false}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
 - {name: tag, type: object, group: user data, important: false}

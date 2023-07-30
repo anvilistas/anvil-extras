@@ -1,5 +1,10 @@
 properties:
-- {name: align, type: enum, options: [left, center, right], default_value: left, group: text, important: true}
+- name: align
+  type: enum
+  options: [left, center, right]
+  default_value: left
+  group: text
+  important: true
 - {name: items, type: 'text[]', default_value: null, description: 'If set at runtime
     can use a list of tuples, (str, value) pairs. Or a list of dicts with keys: ''key'',
     ''value'', ''icon'', ''title'', ''enabled''', important: true}
@@ -11,10 +16,20 @@ properties:
 - {name: enable_select_all, type: boolean, default_value: false, group: interaction,
   important: false}
 - {name: visible, type: boolean, default_value: true, group: appearance, important: true}
-- {name: width, type: string, default_value: '', group: appearance,
-  description: use css lengths. \'auto\' sets the width as wide as the largest option, \'fit\' resizes to the selected content}
-- {name: spacing_above, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
-- {name: spacing_below, type: enum, options: [none, small, medium, large], default_value: small, group: layout, important: false}
+- {name: width, type: string, default_value: '', group: appearance, description: use css lengths. \'auto\' sets the width as wide as the largest option,
+  \'fit\' resizes to the selected content: null}
+- name: spacing_above
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
+- name: spacing_below
+  type: enum
+  options: [none, small, medium, large]
+  default_value: small
+  group: layout
+  important: false
 - {name: tag, type: object, group: user data, important: false}
 - name: selected
   type: object
