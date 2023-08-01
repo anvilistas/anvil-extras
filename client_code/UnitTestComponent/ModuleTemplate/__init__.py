@@ -28,9 +28,10 @@ class ModuleTemplate(ModuleTemplateTemplate):
 
     def btn_run_test_click(self, **event_args):
         """This method is called when the button is clicked"""
-        with anvil.Notification("Test " + self.item['name'] + ' running...'):
-            for testclass in self.item['children']:
-                tc = testclass['ref']()
-                tc.main()
-            print('Test ' + self.item['name'] + ' was a success!')
-            self.lbl_success.visible = True
+        testclasses = self.rp_classes.get_components()
+        for testclass in testclasses:
+            test_cp = testclass.get_components()[0]
+            test_fp = test_cp.get_components()[0]
+            test_btn = test_fp.get_components()[0]
+            test_btn.raise_event('click')
+        self.lbl_success.visible = True

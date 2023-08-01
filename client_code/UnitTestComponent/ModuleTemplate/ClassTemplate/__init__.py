@@ -21,16 +21,18 @@ class ClassTemplate(ClassTemplateTemplate):
         self.cp_module.add_component(self.fp_runs)
         self.add_component(self.cp_module)
 
-        self.rp_classes = anvil.RepeatingPanel(item_template=TestTemplate)
-        self.rp_classes.items = self.item['children']
-        self.cp_module.add_component(self.rp_classes)
+        self.rp_methods = anvil.RepeatingPanel(item_template=TestTemplate)
+        self.rp_methods.items = self.item['children']
+        self.cp_module.add_component(self.rp_methods)
 
         self.btn_run.set_event_handler('click', self.btn_run_test_click)
 
     def btn_run_test_click(self, **event_args):
         """This method is called when the button is clicked"""
-        with anvil.Notification("Test " + self.item['name'] + ' running...'):
-            tc = self.item['ref']()
-            tc.main()
-            print('Test ' + self.item['name'] + ' was a success!')
-            self.lbl_success.visible = True
+        testmethods = self.rp_methods.get_components()
+        for test in testmethods:
+            test_cp = test.get_components()[0]
+            test_fp = test_cp.get_components()[0]
+            test_btn = test_fp.get_components()[0]
+            test_btn.raise_event('click')
+        self.lbl_success.visible = True

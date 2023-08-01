@@ -57,10 +57,10 @@ class UnitTestComponent(UnitTestComponentTemplate):
 
     def btn_all_tests_click(self, **event_args):
         """This method is called when the button is clicked"""
-        with anvil.Notification("All tests running..."):
-            for mod in self.test_config:
-                for testclass in mod['children']:
-                    tc = testclass['ref']()
-                    tc.main()
-            print('All tests were a success!')
-            self.lbl_success.visible = True
+        testmodules = self.rp_modules.get_components()
+        for mod in testmodules:
+            test_cp = mod.get_components()[0]
+            test_fp = test_cp.get_components()[0]
+            test_btn = test_fp.get_components()[0]
+            test_btn.raise_event('click')
+        self.lbl_success.visible = True
