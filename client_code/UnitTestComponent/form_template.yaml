@@ -35,3 +35,5 @@ components:
   layout_properties: {grid_position: 'WAKCNI,UNBWVW'}
 is_package: true
 custom_component: true
+properties:
+- {name: test_modules, type: object, default_binding_prop: true, description: Test modules}
