@@ -7,28 +7,40 @@
 
 __version__ = "2.4.0"
 
-from anvil.js.window import jQuery as _S
+import anvil
+
+active_alerts = []
 
 
 def handle_alert_unload() -> bool:
-    """
-    if there is an active alert which is not dismissible then navigation is prevented
-    return value indicates whether this function took control of the on_navigation
-    """
-    current_alerts = _S(".modal")
-    for alert_modal in current_alerts:
-        alert_modal = _S(alert_modal)
-        data = alert_modal.data("bs.modal")
-        if data is None:
-            continue
-        elif not data.isShown:
-            continue
-        elif data.options and data.options.backdrop != "static":
-            # bootstrap alerts have a backdrop of static when not dismissible
-            alert_modal.modal("hide")
-        else:
+    for alert in active_alerts:
+        if alert.blocking:
             from . import _navigation
 
             _navigation.stopUnload()
             return True
+        else:
+            alert.content.raise_event("x-close-alert")
+
     return False
+
+
+class ActiveAlert:
+    def __init__(self, content, blocking):
+        self.content = content
+        self.blocking = blocking
+
+    def __enter__(self):
+        active_alerts.append(self)
+
+    def __exit__(self, *args):
+        global active_alerts
+        active_alerts = [x for x in active_alerts if x is not self]
+
+
+def alert(content, *args, dismissible=True, **kws):
+    if type(content) is str:
+        content = anvil.Label(text=content)
+
+    with ActiveAlert(content, blocking=not dismissible):
+        return anvil.alert(content, *args, dismissible=dismissible, **kws)
