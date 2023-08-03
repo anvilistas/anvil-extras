@@ -8,6 +8,7 @@
 __version__ = "2.4.0"
 
 import anvil
+from anvil import alert as anvil_alert
 
 active_alerts = []
 
@@ -43,4 +44,4 @@ def alert(content, *args, dismissible=True, **kws):
         content = anvil.Label(text=content)
 
     with ActiveAlert(content, blocking=not dismissible):
-        return anvil.alert(content, *args, dismissible=dismissible, **kws)
+        return anvil_alert(content, *args, dismissible=dismissible, **kws)
