@@ -13,7 +13,7 @@ active_alerts = []
 
 
 def handle_alert_unload() -> bool:
-    for alert in active_alerts:
+    for alert in reversed(active_alerts):
         if alert.blocking:
             from . import _navigation
 
