@@ -1,3 +1,11 @@
+# Unreleased
+
+## Bug Fixes
+* routing was no longer dismissing alerts on navigation
+  you will now need to use `routing.alert` in place of `anvil.alert` for an alert to be dismissed on navigation
+  non-dismissible alerts will block the navigation
+  https://github.com/anvilistas/anvil-extras/pull/437
+
 # v2.4.0 14-Jun-2023
 
 ## New Features
