@@ -6,6 +6,10 @@
   non-dismissible alerts will block the navigation
   https://github.com/anvilistas/anvil-extras/pull/437
 
+## Minor Changes
+* wait_for_writeback is now written in pure python
+  https://github.com/anvilistas/anvil-extras/pull/431
+
 # v2.4.0 14-Jun-2023
 
 ## New Features
