@@ -18,11 +18,25 @@ _active_writebacks = []
 
 class _Deferred:
     def init_promise(self, resolve, reject):
-        self.resolve = resolve
-        self.reject = reject
+        self._resolve = resolve
+        if not self._pending:
+            resolve()
 
     def __init__(self):
-        self.promise = _window.Promise(self.init_promise)
+        self._promise = None
+        self._resolve = None
+        self._pending = True
+
+    @property
+    def promise(self):
+        if self._promise is None:
+            self._promise = _window.Promise(self.init_promise)
+        return self._promise
+
+    def resolve(self, value=None):
+        self._pending = False
+        if self._resolve is not None:
+            self._resolve(value)
 
 
 class _WritebackWaiter:
@@ -30,12 +44,12 @@ class _WritebackWaiter:
         self.deferred = _Deferred()
 
     def __enter__(self):
-        _active_writebacks.append(self.deferred.promise)
+        _active_writebacks.append(self.deferred)
 
     def __exit__(self, exc, *args):
         global _active_writebacks
-        promise = self.deferred.promise
-        _active_writebacks = [p for p in _active_writebacks if p is not promise]
+        deferred = self.deferred
+        _active_writebacks = [d for d in _active_writebacks if d is not deferred]
         self.deferred.resolve()
 
 
@@ -56,7 +70,7 @@ def wait_for_writeback(fn):
     @_wraps(fn)
     def wrapper(self, *args, **kws):
         _sleep(0)
-        _window.Promise.allSettled(_active_writebacks)
+        _window.Promise.allSettled([d.promise for d in _active_writebacks])
         return fn(self, *args, **kws)
 
     return wrapper
