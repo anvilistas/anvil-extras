@@ -93,3 +93,19 @@ def error_form(cls):
     cls._route_props = {"title": None, "layout_props": {}}
     _router._error_form = cls
     return cls
+
+
+def lazy_route(
+    url_pattern="", url_keys=[], title=None, full_width_row=False, template=None
+):
+    route_wrapper = route(url_pattern, url_keys, title, full_width_row, template)
+
+    def wrapper(fn):
+        class Lazy:
+            def __new__(cls, **properties):
+                form_class = fn()
+                return form_class.__new__(form_class, **properties)
+
+        return route_wrapper(Lazy)
+
+    return wrapper
