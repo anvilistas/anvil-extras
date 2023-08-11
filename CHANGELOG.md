@@ -1,5 +1,9 @@
 # Unreleased
 
+## New Features
+* `routing.lazy_route` - allows you to lazily load Forms whilst using routing
+  https://github.com/anvilistas/anvil-extras/pull/442
+
 ## Bug Fixes
 * routing was no longer dismissing alerts on navigation
   you will now need to use `routing.alert` in place of `anvil.alert` for an alert to be dismissed on navigation
