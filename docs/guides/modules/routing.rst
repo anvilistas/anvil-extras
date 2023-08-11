@@ -400,7 +400,7 @@ Decorators
             from ..ArticleForm import ArticleForm
             return ArticleForm
 
-    This decorator allows you to lazyily load Forms. When using ``@routing.route`` all Forms that are routes must be imported before the app starts.
+    This decorator allows you to lazily load Forms. When using ``@routing.route`` all Forms that are routes must be imported before the app starts.
     This is fine for most small applications, but as your application grows you may find that executing all the code for all the Forms is slow.
     The ``lazy_route`` decorator should decorate a function that imports the Form and returns it.
 
