@@ -106,6 +106,7 @@ def lazy_route(
                 form_class = fn()
                 return form_class.__new__(form_class, **properties)
 
-        return route_wrapper(Lazy)
+        route_wrapper(Lazy)
+        return fn
 
     return wrapper
