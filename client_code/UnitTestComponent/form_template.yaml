@@ -29,6 +29,13 @@ components:
       icon: 'fa:check-circle'}
     name: lbl_success
     layout_properties: {}
+  - type: Label
+    properties: {role: null, align: left, tooltip: '', border: '', foreground: '#9e1e15',
+      visible: false, text: '', font_size: 30, font: '', spacing_above: small, icon_align: left,
+      spacing_below: small, italic: false, background: '', bold: false, underline: false,
+      icon: 'fa:exclamation-circle'}
+    name: lbl_fail
+    layout_properties: {}
 - type: RepeatingPanel
   properties: {item_template: UnitTestComponent.ModuleTemplate}
   name: rp_modules

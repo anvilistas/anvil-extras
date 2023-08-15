@@ -63,4 +63,8 @@ class UnitTestComponent(UnitTestComponentTemplate):
             test_fp = test_cp.get_components()[0]
             test_btn = test_fp.get_components()[0]
             test_btn.raise_event('click')
-        self.lbl_success.visible = True
+            fail_icon = test_fp.get_components()[3]
+            if fail_icon.visible:
+                self.lbl_fail.visible = True
+        if not self.lbl_fail.visible:
+            self.lbl_success.visible = True
