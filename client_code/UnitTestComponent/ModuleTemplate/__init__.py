@@ -12,9 +12,9 @@ class ModuleTemplate(ModuleTemplateTemplate):
         self.btn_run = anvil.Button(role=self.item['btn_role'], text=self.item['name'])
         self.lbl_doc = anvil.Label(text=self.item['ref'].__doc__)
         self.lbl_success = anvil.Label(icon='fa:check-circle', foreground='#4f7a28',
-                                       visible=False, font_size=self.item['check_size'])
+                                       visible=False, font_size=self.item['icon_size'])
         self.lbl_fail = anvil.Label(icon='fa:exclamation-circle', foreground='#9e1e15',
-                                    visible=False, font_size=self.item['check_size'])
+                                    visible=False, font_size=self.item['icon_size'])
         self.fp_runs.add_component(self.btn_run)
         self.fp_runs.add_component(self.lbl_doc)
         self.fp_runs.add_component(self.lbl_success)

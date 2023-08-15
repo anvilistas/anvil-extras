@@ -34,14 +34,15 @@ class Demo(DemoTemplate):
         self.item = self.default_item.copy()
         self.pivot.items = anvil.http.request(dataset_url, json=True)
         self.init_components(**properties)
-        test_configs = {
-            'test_modules': [test_unittest],
-            'card_roles': [None, None, None],
-            'check_size': 30,
-            'btn_role': None,
-            'title_role': None
-        }
-        self.add_component(UnitTestComponent(test_configs))
+        self.add_component(
+            UnitTestComponent(
+                test_modules=[test_unittest],
+                card_roles=[None, None, None],
+                icon_size=30,
+                btn_role=None,
+                title_role=None
+            )
+        )
 
     def timer_1_tick(self, **event_args):
         if self.progress <= 1:
