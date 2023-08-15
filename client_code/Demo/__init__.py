@@ -6,11 +6,10 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.http
 
-from ..utils import auto_refreshing
-from ._anvil_designer import DemoTemplate
 from .. import test_unittest
 from ..UnitTestComponent import UnitTestComponent
-
+from ..utils import auto_refreshing
+from ._anvil_designer import DemoTemplate
 
 __version__ = "2.4.0"
 dataset_url = "https://pivottable.js.org/examples/mps.json"
@@ -40,7 +39,7 @@ class Demo(DemoTemplate):
                 card_roles=[None, None, None],
                 icon_size=30,
                 btn_role=None,
-                title_role=None
+                title_role=None,
             )
         )
 
