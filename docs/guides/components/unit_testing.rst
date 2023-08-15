@@ -11,15 +11,14 @@ Here's an example of a client side test module called ``test_unittest``:
 .. code-block:: python
     """This is a test module."""
     import unittest
-    import anvil.server
-    import time
+
 
     class TestClass(unittest.TestCase):
         """This is a testclass"""
 
         def test_method_1(self):
             """Test Method 1."""
-            assert(True)
+            assert (True)
 
 Recommended to use this component in code like so in your 'home' form:
 
