@@ -9,6 +9,7 @@ Define your unit tests on the client side using the ``unittest`` module which is
 Here's an example of a client side test module called ``test_unittest``:
 
 .. code-block:: python
+
     """This is a test module."""
     import unittest
 
@@ -20,10 +21,11 @@ Here's an example of a client side test module called ``test_unittest``:
             """Test Method 1."""
             assert (True)
 
-Recommended to use this component in code like so in your 'home' form:
+It is recommended to use this component in code like so in your 'home' form:
 
 .. code-block:: python
 
+    import anvil
     from anvil_extras.UnitTestComponent import UnitTestComponent
 
     class HomeForm(HomeFormTemplate):
