@@ -449,6 +449,14 @@ List of Methods
     Note that any additional properties will only be passed to a form
     if it is the first time the form has loaded and/or it is **not** loaded from cache.
 
+.. function:: routing.alert(content, *args, **kws)
+
+    Use in place of ``anvil.alert``. If you use ``anvil.alert`` then alerts will not close when the user navigates.
+    This is probably not what you want. When using ``routing.alert`` any alert that is ``dismissible`` will close when the user navigates.
+    Any non-dismissible alert will block the navigation.
+
+    You may want to do ``import anvil; anvil.alert = routing.alert`` as the first line in a startup module to override ``anvil.alert`` across your app.
+
 
 .. function:: routing.get_url_components(url_hash=None)
 
