@@ -22,10 +22,6 @@ class TestClass(unittest.TestCase):
         """Test Method 2"""
         pass
 
-    def test_method_fail(self):
-        """Test that will fail."""
-        assert False
-
     def test_method_final(self):
         """Final passing test."""
         pass
