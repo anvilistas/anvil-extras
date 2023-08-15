@@ -8,7 +8,7 @@ class TestClass(unittest.TestCase):
 
     def test_method_1(self):
         """Test Method 1."""
-        pass
+        assert(True)
 
     def test_method_2(self):
         """Test Method 2"""
