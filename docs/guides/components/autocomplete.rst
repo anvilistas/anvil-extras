@@ -13,6 +13,11 @@ Properties
 
     If True then autocomplete will show all options when the textbox is empty
 
+:filter_mode: "contains" | "startswith"
+
+    contains: the autocomplete component will filter if a suggestion contains the search term.
+    startswith: the autocomplete component will filter if a suggestions starts with the search term.
+
 Events
 ------
 

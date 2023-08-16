@@ -61,6 +61,8 @@ class Autocomplete(AutocompleteTemplate):
         self._active_index = -1
         self._link_height = 0
         self._nodes = {}
+        self._filter_mode = None
+        self._filter_fn = self._filter_contains
 
         self.init_components(**properties)
 
@@ -84,6 +86,14 @@ class Autocomplete(AutocompleteTemplate):
         self._reset_position = self._reset_position
 
     ###### PRIVATE METHODS ######
+    @staticmethod
+    def _filter_contains(text, search):
+        return text.lower().find(search)
+
+    @staticmethod
+    def _filter_startswith(text, search):
+        return 0 if text.lower().startswith(search) else -1
+
     def _populate(self):
         prev_active = self._active
         self._reset_autocomplete()
@@ -94,9 +104,10 @@ class Autocomplete(AutocompleteTemplate):
             return
 
         n = len(search_term)
+        filter_fn = self._filter_fn
 
         def get_node_with_emph(text):
-            i = text.lower().find(search_term)
+            i = filter_fn(text, search_term)
             if i == -1:
                 return False
             node = self._get_node(text)
@@ -239,6 +250,18 @@ class Autocomplete(AutocompleteTemplate):
         self._data = val
         if self._active is not None:
             self._populate()
+
+    @property
+    def filter_mode(self):
+        return self._filter_mode
+
+    @filter_mode.setter
+    def filter_mode(self, value):
+        self._filter_mode = value
+        if value == "startswith":
+            self._filter_fn = self._filter_startswith
+        else:
+            self._filter_fn = self._filter_contains
 
     text = _TextBox.text
     placeholder = _TextBox.placeholder
