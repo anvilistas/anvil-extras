@@ -1,6 +1,8 @@
 # Unreleased
 
 ## New Features
+* `routing.lazy_route` - allows you to lazily load Forms whilst using routing
+  https://github.com/anvilistas/anvil-extras/pull/442
 * Autocompletion: adds filter_mode property - either contains or startswith
   https://github.com/anvilistas/anvil-extras/discussions/444
 

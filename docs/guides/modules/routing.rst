@@ -389,6 +389,22 @@ Decorators
         If the ``before_unload`` method is added it will be called whenever the form currently in the ``content_panel`` is about to be removed.
         If any truthy value is returned then unloading will be prevented. See `Form Unloading <#form-unloading>`__.
 
+.. function:: routing.lazy_route(url_pattern, url_keys=[], title=None, full_width_row=False, template=None)
+
+    .. code:: python
+
+        from anvil_extras import routing
+
+        @routing.lazy_route('article', url_keys=['id', routing.ANY], title="Article-{id} | RoutingExample")
+        def article_route():
+            from ..ArticleForm import ArticleForm
+            return ArticleForm
+
+    This decorator allows you to lazily load Forms. When using ``@routing.route`` all Forms that are routes must be imported before the app starts.
+    This is fine for most small applications, but as your application grows you may find that executing all the code for all the Forms is slow.
+    The ``lazy_route`` decorator should decorate a function that imports the Form and returns it.
+
+
 .. function:: routing.redirect(path, priority=0, condition=None)
 
     The redirect decorator can decorate a function that will intercept the current navigtation, depending on its ``path``, ``priority`` and ``condition`` arguments.
