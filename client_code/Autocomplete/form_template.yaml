@@ -5,7 +5,9 @@ container:
 is_package: true
 custom_component: true
 properties:
-- {name: suggestions, type: 'text[]', default_value: null}
+- name: suggestions
+  type: text[]
+  default_value: []
 - {name: placeholder, type: string, default_value: ''}
 - name: text
   type: string
@@ -35,6 +37,11 @@ properties:
   group: appearance, important: false, description: Only applies changes to the TextBox}
 - {name: background, type: color, default_value: '', default_binding_prop: false,
   description: Only applies changes to the TextBox, group: appearance, important: false}
+- name: filter_mode
+  type: enum
+  default_value: contains
+  options: [contains, startswith]
+  description: How the autocompletion should filter suggestions
 events:
 - {name: change}
 - {name: suggestion_clicked}
