@@ -139,11 +139,20 @@ def build_menu(container, items, with_title=True):
         _links.append(link)
         visibility = link.tag.visibility
         if visibility is None:
-            link.visible = True
+            link.visible = not link.tag.condition
         else:
             link.visible = False
             _register_visibility(container, link, visibility)
         container.add_component(link)
+    check_conditions()
+
+
+def check_conditions():
+    for link in _links:
+        condition = link.tag.condition
+        if condition is None:
+            continue
+        link.visible = bool(condition())
 
 
 def navigation_link(
@@ -153,6 +162,7 @@ def navigation_link(
     title=None,
     on_click=None,
     visibility=None,
+    condition=None,
     **kwargs,
 ):
     """Create a link instance
@@ -170,6 +180,8 @@ def navigation_link(
       event handler to call when clicked
     visibility
       a dict mapping the names of events to either True or False
+    condition
+      a callable to determine whether a link is visible or not
     kwargs
       will be passed the Link constructor
     """
@@ -182,6 +194,7 @@ def navigation_link(
     link.tag.target = target
     link.tag.visibility = visibility
     link.tag.title = title
+    link.tag.condition = condition
     if on_click is None:
         link.set_event_handler("click", _default_link_click)
     else:
