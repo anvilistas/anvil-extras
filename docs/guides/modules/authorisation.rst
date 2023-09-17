@@ -61,5 +61,24 @@ function is called and raises an error if not:
 You can pass either a single string or a list of strings to the decorator. The function
 will only be called if the logged in user has ALL the permissions listed.
 
-Notes:
-* The order of the decorators matters. `anvil.server.callable` must come before either of the authorisation module decorators.
+
+API
+---
+
+.. function:: authentication_required(fn)
+
+    Use as a decorator for any server function that requires a logged in user
+
+.. function:: authorisation_required(permissions)
+
+    Use as a decorator above a server function
+    permissions should be a string or iterable of strings
+
+
+.. function:: has_permission(permissions)
+
+    Returns True/False on whether a user is logged in and has valid permissions
+
+.. function:: check_permissions(permissions)
+
+    Raises a ValueError if there is no user or the user does not have valid permissions
