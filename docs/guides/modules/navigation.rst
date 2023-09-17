@@ -77,9 +77,10 @@ Menu definition
 
 Each item in the dict needs the ``'text'`` and ``'target'`` keys as a minimum. It may also include ``'title'``, ``'full_width'`` and ``'visibility'`` keys:
 
+ * 'title' can be a string or None. Determines the page title.
  * 'full_width' can be True or False to indicate whether the target form should be opened with 'full_width_row' or not. (Only valid with ``"classic"`` mode - see routing documentation for ``full_width_row`` if using ``"hash"`` mode)
  * 'visibility' can be a dict mapping an anvil event to either True or False to indicate whether the link should be made visible when that event is raised.
- * 'title': optional, can be a string or None. Sets the page title.
+ * 'condition' can be a callable that returns a bool. Use in conjunction with ``check_conditions()`` (see below)
 
  All other keys in the menu dict are passed to the Link constructor.
 
@@ -160,3 +161,59 @@ You can emulate clicking a menu link using the ``go_to`` function, which takes a
 .. code-block:: python
 
     navigation.go_to("contact")
+
+
+Conditional menu items
+++++++++++++++++++++++
+
+If you have conditions to determine whether a menu item should be shown you can use the condition key in menu definition
+
+.. code-block:: python
+
+    from functools import partial
+
+    def is_logged_in():
+        return anvil.users.get_user() is not None
+
+    def has_permission(permission):
+        user = anvil.users.get_user()
+        if user is None:
+            return False
+
+        if isinstance(permissions, str):
+            required_permissions = set([permissions])
+        else:
+            required_permissions = set(permissions)
+
+        user_permissions = set(permission["name"]
+                                for role in user["roles"]
+                                    for permission in role["permissions"])
+
+        return required_permissions.issubset(user_permissions)
+
+    is_admin = partial("admin")
+
+
+    from anvil_extras import navigation
+
+    menu = [
+        {"text": "Home", "target": "home"},
+        {"text": "Dashboard", "target": "dashboard", "condition": is_logged_in},
+        {"text": "Admin", "target": "admin", "condition": is_admin}
+    ]
+
+    class Main(MainTemplate):
+        def __init__(**properties):
+            ...
+            navigation.build_menu(self.menu_panel, menu)
+
+        def login_button_clicked(self, **event_args):
+            user = anvil.users.login_with_form()
+            navigation.check_conditions()
+
+        def logout_button_clicked(self, **event_args):
+            anvil.users.logout()
+            navigation.check_conditions()
+
+
+Note in the above example you might want to use a cached user since ``anvil.users.get_user()`` will require a round trip to the server, i.e. one server call per condition.
