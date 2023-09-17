@@ -5,6 +5,10 @@
   https://github.com/anvilistas/anvil-extras/pull/442
 * Autocompletion: adds filter_mode property - either contains or startswith
   https://github.com/anvilistas/anvil-extras/discussions/444
+* navigation - ``set_mode("hash")`` can be used to set the default navigation mode to hash routing
+  https://github.com/anvilistas/anvil-extras/discussions/458
+* navigation - menu definition can include ``title``, rather than registering a form with a title
+  https://github.com/anvilistas/anvil-extras/discussions/453
 
 ## Bug Fixes
 * routing was no longer dismissing alerts on navigation
