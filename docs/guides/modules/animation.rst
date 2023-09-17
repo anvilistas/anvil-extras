@@ -1,39 +1,39 @@
 Animation
 =========
-A wrapper around the `Web Animations API <https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API>`_
+A wrapper around the `Web Animations API <https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API>`_.
 
 Interfaces
 ----------
 .. class:: Animation(component, effect)
 
-    An Animation object will be returned from the ``Effect.animate()`` method and the :attr:`animate()` function.
-    Provides playback control for an animation.
+    An Animation object is returned from the ``Effect.animate()`` method and the :attr:`animate()` function.
+    It provides playback control for an animation.
 
-.. class:: Effect(transiton, **effect_timing_options)
+.. class:: Effect(transition, **effect_timing_options)
 
     A combination of a :class:`Transition` object and timing options.
-    An effect can be used to animate an Anvil Component with its ``.animate()`` method.
-    ``effect_timing_options`` are equivalent to those listed at `EffectTiming <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_
-    The ``effect_timing_options`` have identical defaults to those listed at `MDN <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_,
-    except ``duration``, which defaults to ``333ms``.
+    An effect can be used to animate an Anvil Component via its ``.animate()`` method.
+    The ``effect_timing_options`` are equivalent to those listed at `EffectTiming <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_.
+    These options have identical defaults to those listed on `MDN <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_,
+    except for ``duration``, which defaults to ``333ms``.
 
 .. class:: Transition(**css_frames)
 
-    A dictionary-based class. Each key should be a CSS/ `transform <https://developer.mozilla.org/en-US/docs/Web/CSS/transform>`_ property in camelCase with a list of frames.
+    A dictionary-based class. Each key should be a CSS/ `transform <https://developer.mozilla.org/en-US/docs/Web/CSS/transform>`_ property in camelCase, with a list of frames.
     Each frame in the list represents a style to hit during the animation.
-    The first value in the list is where the animation starts and the final value is where the animation ends.
+    The first value in the list is where the animation starts, and the final value is where the animation ends.
     See :any:`Pre-computed Transitions<transition-examples>` for examples.
 
-    Unlike the Web Animations API the ``transform`` CSS property can be written as separate properties.
+    Unlike the Web Animations API, the ``transform`` CSS property can be written as separate properties.
 
-    e.g. ``transform=["translateX(0) scale(0)", "translateX(100%) scale(1)"]`` becomes ``Transform(scale=[0, 1], translateX=[0, "100%"])``.
+    e.g. ``transform=["translateX(0) scale(0)", "translateX(100%) scale(1)"]`` becomes ``Transition(scale=[0, 1], translateX=[0, "100%"])``.
 
-    A limitation of this approach is that all transform based properties must have the same number of frames.
+    A limitation of this approach is that all transform-based properties must have the same number of frames.
 
     The Web Animations API uses a `keyframes object <https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats>`_ in place of the anvil_extras Transition object.
-    A keyframes object is typically a dictionary of lists or list of dictionaries.
+    A keyframes object is typically a dictionary of lists or a list of dictionaries.
     Any ``transition`` argument in the ``anvil_extras.animate`` module can be replaced with a keyframes object.
-    i.e. if you find an animation example on the web you can use its keyframes object directly without having to convert it to a :class:`Transition` object.
+    i.e. if you find an animation example on the web, you can use its keyframes object directly without having to convert it to a :class:`Transition` object.
 
 
 .. function:: animate(component, transition, **timing_options)
@@ -45,13 +45,13 @@ Interfaces
 Examples
 --------
 
-Animate on show
+Animate on Show
 ***************
 
 Use the show event to animate an Anvil Component.
-This could could also be at the end of an ``__init__`` function after any expensive operations.
+This could also be at the end of an ``__init__`` function, after any expensive operations are complete.
 
-Creating an :class:`Effect` allows the effect to be re-used by multiple components.
+Creating a :class:`Effect` allows the effect to be re-used by multiple components.
 
 .. code-block:: python
 
@@ -64,7 +64,7 @@ Creating an :class:`Effect` allows the effect to be re-used by multiple componen
         effect.animate(self.card)
 
 
-Alternatively use :attr:`animate` with a :class:`Transition` and timing options.
+Alternatively, use :attr:`animate` with a :class:`Transition` and timing options.
 
 .. code-block:: python
 
@@ -73,11 +73,10 @@ Alternatively use :attr:`animate` with a :class:`Transition` and timing options.
     def card_show(self, **event_args):
         animate(self.card, fade_in, duration=500)
 
-
-Animate on remove
+Animate on Remove
 *****************
 
-When a component is removed we need to wait for an animation to complete before removing it.
+When a component is removed, we need to wait for the animation to complete before removing it.
 
 .. code-block:: python
 
@@ -85,10 +84,9 @@ When a component is removed we need to wait for an animation to complete before 
 
     leave_effect = Effect(fade_out, duration=500, easing=Easing.ease_out)
 
-
     def button_click(self, **event_args):
         if self.card.parent is not None:
-            # we can't do this in the hide event because we're already off the screen!
+            # We can't do this in the hide event because we're already off the screen!
             leave_effect.animate(self.card).wait()
             self.card.remove_from_parent()
 
@@ -112,11 +110,11 @@ Transitions can be combined with the `|` operator. They will be merged like dict
             self.card.remove_from_parent()
 
 
-Animate on visible change
-*************************
+Animate on Visibility Change
+****************************
 
-Some work is needed to animate a Component when the visibility property changes.
-A helper function might look something like.
+Some work is needed to animate a component when the `visible` property changes.
+A helper function might look something like this:
 
 .. code-block:: python
 
@@ -130,8 +128,8 @@ A helper function might look something like.
 
         is_visible = component.visible
         if not is_visible:
-            # set this now because we need it on the screen to measure its height
-            # if you have a show event for this component - it may also fire
+            # Set this now because we need it on the screen to measure its height.
+            # If you have a show event for this component, it may also fire.
             component.visible = True
             direction = "normal"
         else:
@@ -141,10 +139,9 @@ A helper function might look something like.
         animate(component, t, duration=900, direction=direction)
 
         if is_visible:
-            # we're animating - wait for the animation to finish before setting visible to False
+            # We're animating — wait for the animation to finish before setting `visible` to False.
             wait_for(component) # equivalent to animation.wait() or wait_for(animation)
             component.visible = False
-
 
 
 Swap Elements
@@ -152,15 +149,15 @@ Swap Elements
 
 Swapping elements requires us to animate from one component to another.
 We wait for the animation to finish.
-Then, remove the components and add them back in their new positions.
-Removing and adding components happens quickly so that the user only sees the components switching places.
+Then, we remove the components and add them back in their new positions.
+Removing and adding components happen quickly, so the user only sees the components switching places.
 
 .. code-block:: python
 
     from anvil_extras.animation import animate
 
     def button_click(self, **event_args):
-        # animate wait then remove and re-add
+        # Animate, wait, then remove and re-add.
         components = self.linear_panel.get_components()
         c0, c1 = components[0], components[1]
         animate(c0, end_at=c1)
@@ -171,18 +168,16 @@ Removing and adding components happens quickly so that the user only sees the co
         self.linear_panel.add_component(c1, index=0)
 
 
-
-An alternative version would get the positions of the components.
-Then remove and add the components to their new positions.
-Finally animating the components starting from whence they came to their new positions.
-
+An alternative version would obtain the positions of the components.
+Then, remove and add the components to their new positions.
+Finally, animate the components, starting from their original positions to their new ones.
 
 .. code-block:: python
 
     from anvil_extras.animation import animate, get_bounding_rect, is_animating
 
     def button_click(self, **event_args):
-        # get positions, remove, change positions, reverse animate
+        # Get positions, remove, change positions, reverse animate.
         components = self.linear_panel.get_components()
         c0, c1 = components[0], components[1]
         if is_animating(c0) or is_animating(c1):
@@ -196,10 +191,10 @@ Finally animating the components starting from whence they came to their new pos
         animate(c1, start_at=p1)
 
 
+Switching Positions in a RepeatingPanel
+***************************************
 
-Switch positions might be useful in a RepatingPanel.
-Here's what that code might look like.
-
+Here's what that code might look like:
 
 .. code-block:: python
 
@@ -210,15 +205,14 @@ Here's what that code might look like.
             ...
             self.repeating_panel_1.set_event_handler('x-swap', self.swap)
 
-
         def swap(self, component, is_up, **event_args):
-            """this event is raised by a child component"""
+            """This event is raised by a child component."""
             items = self.repeating_panel_1.items
             components = self.repeating_panel_1.get_components()
             i = components.index(component)
             j = i - 1 if is_up else i + 1
             if j < 0:
-                # we can't go negative
+                # We can't go negative.
                 return
             c1 = component
             try:
@@ -253,62 +247,59 @@ Full API
 
 .. function:: is_animating(component, include_children=False)
 
-    Returns a boolean as to whether the component is animating.
-    If ``include_children`` is set to ``True`` all child elements will also be checked.
+    Returns a boolean indicating whether the component is animating.
+    If ``include_children`` is set to ``True``, all child elements will also be checked.
 
 .. function:: wait_for(component_or_animation, include_children=False)
 
-    If given an animation equivalent to ``animation.wait()``.
-    If given a component, will wait for all running animations on the component to finish.
-    If ``include_children`` is set to ``True`` all child elements will be waited for.
-
+    If given an animation, this is equivalent to ``animation.wait()``.
+    If given a component, this function will wait for all running animations on the component to finish.
+    If ``include_children`` is set to ``True``, all child elements will also be waited for.
 
 .. function:: animate(component, transition=None, start_at=None, end_at=None, use_ghost=False, **effect_timing_options)
     :noindex:
 
-    ``component``: an anvil Component or Javascript HTMLElement
+    ``component``: an Anvil Component or Javascript HTMLElement
 
     ``transition``: Transition object
 
-    ``effect_timing_options``: `various options <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_ to change the behaviour of the animation e.g. ``duration=500``.
+    ``effect_timing_options``: `various options <https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming>`_ to change the behavior of the animation, e.g., ``duration=500``.
 
-    ``use_ghost``: when set to ``True``, will animate a ghost element (i.e. a visual copy).
-    Using a ghost element will allow the component to be animated outside of its container
+    ``use_ghost``: When set to ``True``, a ghost element (i.e. a visual copy) will be animated.
+    Using a ghost element allows the component to be animated outside of its container.
 
-    ``start_at``, ``end_at``: Can be set to a ``Component`` or ``DOMRect`` (i.e. a computed position of a component from ``get_bounding_rect``)
-    If either ``start_at`` or ``end_at`` are set this will determine the start/end position of the animation
-    If one value is set and the other omitted the omitted value will be assumed to be the current position of the component.
+    ``start_at``, ``end_at``: Can be set to a ``Component`` or ``DOMRect`` (i.e. a computed position of a component from ``get_bounding_rect``).
+    If either ``start_at`` or ``end_at`` are set, this will determine the start/end position of the animation.
+    If one value is set and the other is omitted, the omitted value will be assumed to be the current position of the component.
     A ghost element is always used when ``start_at`` / ``end_at`` are set.
 
 .. function:: get_bounding_rect(component)
 
     Returns a ``DOMRect`` object. A convenient way to get the ``height``, ``width``, ``x``, ``y`` values of a *component*.
-    Where the ``x``, ``y`` are the absolute positions on the page from the top left corner.
-
+    Where the ``x``, ``y`` are the absolute positions on the page from the top-left corner.
 
 .. class:: Transition(cssProp0=list[str], cssProp1=list[str], transformProp0=list[str], offset=list[int | float])
     :noindex:
 
-    Takes CSS/transform property names as keyword arguments and each value should be a list of frames for that property.
-    The number of frames must match across all transform based properties.
+    Takes CSS/transform property names as keyword arguments, and each value should be a list of frames for that property.
+    The number of frames must match across all transform-based properties.
 
     ``fly_right = Transition(translateX=[0, "100%"], scale=[1, 0], opacity=[0, 0.25, 1])``
         is valid since opacity is not a transform property.
 
-
-    ``slide_right = Trnasition(translateX=[0, "100%"], scale=[1, 0.75, 0])``
-        is invalid since the ``scale`` and ``translateX`` are transform properties with mismatched frame lengths.
+    ``slide_right = Transition(translateX=[0, "100%"], scale=[1, 0.75, 0])``
+        is invalid since ``scale`` and ``translateX`` are transform properties with mismatched frame lengths.
 
     Each frame in the list of frames represents a CSS value to be applied across the transition.
-    Typically the first value is the start of the transition and the last value is the end.
-    Lists can be more than 2 values, in which case the transition will be split across the values evenly.
-    You can customize the even split by setting an offset that has values from 0 to 1
+    Typically, the first value is the start of the transition, and the last value is the end.
+    Lists can be more than 2 values; in this case, the transition will be split across the values evenly.
+    You can customize the even split by setting an offset that has values from 0 to 1.
 
     ``fade_in_slow = Transition(opacity=[0, 0.25, 1], offset=[0, 0.75, 1])``
 
-    Transition objects can be combined with the ``|`` operator (which behaves like merging dictionaries)
-    ``t = reversed(slide_right) | zoom_in | fade_in | Transtion.height_in(component)``
-    If two transitions have mismatched frame lengths for transform properties this will fail.
+    Transition objects can be combined with the ``|`` operator, which behaves like merging dictionaries.
+    ``t = reversed(slide_right) | zoom_in | fade_in | Transition.height_in(component)``
+    If two transitions have mismatched frame lengths for transform properties, this will fail.
 
     .. classmethod:: height_out(cls, component)
 
@@ -330,7 +321,7 @@ Full API
 
         Returns a Transition with all frames reversed for each property.
 
-.. class:: Effect(transition, **effect_timing_options):
+.. class:: Effect(transition, **effect_timing_options)
     :noindex:
 
     Create an effect that can later be used to animate a component.
@@ -340,20 +331,18 @@ Full API
     .. method:: animate(self, component, use_ghost=False)
         :noindex:
 
-        animate a component using an effect object.
-        If ``use_ghost`` is ``True`` a ghost element will be animated.
+        Animate a component using an effect object.
+        If ``use_ghost`` is ``True``, a ghost element will be animated.
         Returns an Animation instance.
 
     .. method:: getKeyframes(self, component)
-
         Returns the computed keyframes that make up this effect. Can be used in place of the ``transition`` argument in other functions.
 
     .. method:: getTiming(self, component)
-
         Returns the EffectTiming object associated with this effect.
 
+.. class:: Animation(component, effect)
 
-.. class:: Animation(component, effect):
     :noindex:
 
     An Animation object will be returned from the ``Effect.animate()`` method and the ``animate()`` function.
@@ -361,19 +350,19 @@ Full API
 
     .. method:: cancel(self)
 
-        abort animation playback
+        Aborts animation playback.
 
     .. method:: commitStyles(self)
 
-        Commits the end styling state of an animation to the element
+        Commits the end styling state of an animation to the element.
 
     .. method:: finish(self)
 
-        Seeks the end of an animation
+        Seeks the end of an animation.
 
     .. method:: pause(self)
 
-        Suspends playing of an animation
+        Suspends playing of an animation.
 
     .. method:: play(self)
 
@@ -381,46 +370,43 @@ Full API
 
     .. method:: persist(self)
 
-        Explicitly persists an animation, when it would otherwise be removed.
+        Explicitly persists an animation when it would otherwise be removed.
 
     .. method:: reverse(self)
 
-        Reverses playback direction and plays
+        Reverses playback direction and plays.
 
     .. method:: updatePlaybackRate(self, playback_rate)
 
-        The new speed to set. A positive number (to speed up or slow down the animation), a negative number (to reverse), or zero (to pause).
+        Sets the new speed. A positive number speeds up or slows down the animation; a negative number reverses it, and zero pauses it.
 
     .. method:: wait(self)
 
-        Animations are not blocking. Call the wait function to wait for an animation to finish in a blocking way
+        Animations are not blocking. Call the wait function to wait for an animation to finish in a blocking way.
 
     .. attribute:: playbackRate
 
-        gets or sets the playback rate
+        Gets or sets the playback rate.
 
     .. attribute:: onfinish
 
-        set a callback for when the animation finishes
+        Sets a callback for when the animation finishes.
 
     .. attribute:: oncancel
-
-        set a callback for when the animation is cancelled
+        Sets a callback for when the animation is canceled.
 
     .. attribute:: onremove
-
-        set a callback for when the animation is removed
-
+        Sets a callback for when the animation is removed.
 
 .. attribute:: Easing
 
-    An Enum like instance with some common easing values.
+    An Enum-like instance with some common easing values.
 
-    ``Easing.ease``, ``Easing.ease_in``, ``Easing.ease_out``, ``Easing.ease_in_out`` and ``Easing.linear``.
+    ``Easing.ease``, ``Easing.ease_in``, ``Easing.ease_out``, ``Easing.ease_in_out``, and ``Easing.linear``.
 
-    .. method:: cubic_bezier(po, p1, p2, p3)
+    .. method:: cubic_bezier(p0, p1, p2, p3)
 
-        Create a ``cubic_bezier`` easing value from 4 numerical values.
+        Creates a ``cubic_bezier`` easing value from 4 numerical values.
 
 
 .. _transition-examples:
