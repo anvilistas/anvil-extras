@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/discussions/458
 * navigation - menu definition can include ``title``, rather than registering a form with a title
   https://github.com/anvilistas/anvil-extras/discussions/453
+* navigation - set menu item visibility using conditions defined in the menu definition
+  https://github.com/anvilistas/anvil-extras/pull/460
 
 ## Bug Fixes
 * routing was no longer dismissing alerts on navigation
