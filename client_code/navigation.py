@@ -139,7 +139,7 @@ def build_menu(container, items, with_title=True):
         _links.append(link)
         visibility = link.tag.visibility
         if visibility is None:
-            link.visible = True
+            link.visible = not link.tag.condition
         else:
             link.visible = False
             _register_visibility(container, link, visibility)
