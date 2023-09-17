@@ -102,18 +102,30 @@ _ordered_info = {}
 _error_form = None
 _ready = False
 _queued = []
+_force_launch = False
 
 
 def launch():
-    global _ready
+    global _force_launch, _ready
     _ready = True
-    if not _queued:
-        return navigate()
 
-    # only run the last _queued navigation
-    url_args, properties = _queued.pop()
+    template_instance = get_open_form()
+    current_template = type(template_instance)
+
+    if template_instance is None or current_template not in _templates:
+        _force_launch = True
+
+    if _queued:
+        # only run the last _queued navigation
+        url_args, properties = _queued.pop()
+    else:
+        url_args, properties = (), {}
+
     _queued.clear()
-    navigate(*url_args, **properties)
+    try:
+        navigate(*url_args, **properties)
+    finally:
+        _force_launch = False
 
 
 def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
@@ -181,10 +193,14 @@ def handle_form_unload():
 
 
 def load_template_or_redirect(url_hash):
-    global _current_form
-    form = get_open_form()
-    current_cls = type(form)
-    if form is not None and current_cls not in _templates:
+    global _current_form, _force_launch
+    template_instance = get_open_form()
+    current_template = type(template_instance)
+    if (
+        template_instance is not None
+        and current_template not in _templates
+        and not _force_launch
+    ):
         raise NavigationExit  # not using templates
 
     logger.debug("checking templates and redirects")
@@ -221,11 +237,11 @@ def load_template_or_redirect(url_hash):
 
     else:
         load_error_or_raise(f"no template for url_hash={url_hash!r}")
-    if current_cls is callable_:
+    if current_template is callable_:
         logger.debug(f"unchanged template: {callable_.__name__!r}")
         return info, path
     else:
-        msg = f"changing template: {current_cls.__name__!r} -> {callable_.__name__!r}"
+        msg = f"changing template: {current_template.__name__!r} -> {callable_.__name__!r}"
         logger.debug(msg)
         _current_form = None
         # mark context as stale so that this context is no longer considered the current context
