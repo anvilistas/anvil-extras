@@ -79,7 +79,7 @@ class Transition(dict):
         for key, val in transitions.items():
             assert (
                 type(val) is list or type(val) is tuple
-            ), "all tranistion must be lists"
+            ), "all transitions must be lists"
             if key not in _transforms:
                 continue
             t_keys.add(key)
