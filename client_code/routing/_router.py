@@ -112,8 +112,7 @@ def launch():
     template_instance = get_open_form()
     current_template = type(template_instance)
 
-    if template_instance is None or current_template not in _templates:
-        _force_launch = True
+    _force_launch = template_instance is None or current_template not in _templates
 
     if _queued:
         # only run the last _queued navigation
