@@ -53,7 +53,7 @@ Menu
         navigation.build_menu(self.menu_panel, menu)
         self.init_components(**properties)
 
-The above code will add 'Home' and 'About' links to the menu, which will open registered forms named with names ``"home"`` and ``"about"`` respectively.
+The above code will add 'Home' and 'About' links to the menu, which will open registered forms with names ``"home"`` and ``"about"`` respectively.
 If using ``"hash"`` mode, then the links will set the url hash to ``"home"`` and ``"about"``
 
 
