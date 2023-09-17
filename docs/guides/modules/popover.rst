@@ -196,3 +196,12 @@ Alternatively you could dynamically insert the container component in your MainF
         def __init__(self, **event_args):
             content_div = anvil.js.get_dom_node(self).querySelector(".content")
             content_div.appendChild(popover_container)
+
+
+Popover on disabled components
+------------------------------
+
+It is not possible to use a popover on a disabled component.
+This is because there are no pointer events on disabled components and so events like hover won't fire.
+If you need a popover on a disabled component wrap the component in something like a ``FlowPanel`` or ``LinearPanel``
+and add the popover to the container instead.
