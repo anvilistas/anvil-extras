@@ -72,10 +72,12 @@ In ``"classic"`` mode, in order for a form to act as a target of a menu link, it
       def __init__(self, **properties):
         self.init_components(**properties)
 
+In ``"hash"`` mode, forms will need to be registered with the routing module. See the docs for routing.
+
 Menu definition
 +++++++++++++++
 
-Each item in the dict needs the ``'text'`` and ``'target'`` keys as a minimum. It may also include ``'title'``, ``'full_width'`` and ``'visibility'`` keys:
+Each item in the dict needs the ``'text'`` and ``'target'`` keys as a minimum. It may also include ``'title'``, ``'full_width'``, ``'visibility'`` and ``'condition'`` keys:
 
  * 'title' can be a string or None. Determines the page title.
  * 'full_width' can be True or False to indicate whether the target form should be opened with 'full_width_row' or not. (Only valid with ``"classic"`` mode - see routing documentation for ``full_width_row`` if using ``"hash"`` mode)
