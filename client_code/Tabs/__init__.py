@@ -129,7 +129,7 @@ class Tabs(TabsTemplate):
         if isinstance(props["font_size"], str) and props["font_size"].isdigit():
             props["font_size"] = int(props["font_size"])
 
-        self._prev = props["active_tab_index"]
+        self._prev = props["active_tab_index"] or 0
 
         props_to_init = {
             "tab_titles": props["tab_titles"],
@@ -207,7 +207,7 @@ class Tabs(TabsTemplate):
 
     @active_tab_index.setter
     def active_tab_index(self, index):
-        self._set_indicator(index)
+        self._set_indicator(index or 0)
 
     @property
     def foreground(self):
