@@ -219,3 +219,11 @@ If you have conditions to determine whether a menu item should be shown you can 
 
 
 Note in the above example you might want to use a cached user since ``anvil.users.get_user()`` will require a round trip to the server, i.e. one server call per condition.
+
+
+View Transitions
+++++++++++++++++
+
+The navigation module will add a transition to page changes by default.
+The transition is a simple fade in fade out and uses the browser ``ViewTransition`` api.
+To remove this behaviour set ``navigation.use_transitions(False)``

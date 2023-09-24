@@ -1286,3 +1286,13 @@ working example)
 
 *NB:* When used on a specific ``Route Form`` this should be used in
 conjunction with the ``before_unload`` method (see above).
+
+
+--------------
+
+View Transitions
+^^^^^^^^^^^^^^^^
+
+The routing module will add a transition to page changes by default.
+The transition is a simple fade in fade out and uses the browser ``ViewTransition`` api.
+To remove this behaviour set ``routing.use_transitions(False)``
