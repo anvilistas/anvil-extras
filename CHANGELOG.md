@@ -13,6 +13,8 @@
   https://github.com/anvilistas/anvil-extras/discussions/453
 * navigation - set menu item visibility using conditions defined in the menu definition
   https://github.com/anvilistas/anvil-extras/pull/460
+* view transitions - routing and navigation use a transition on page changes (can be turned off)
+  https://github.com/anvilistas/anvil-extras/pull/465
 
 ## Bug Fixes
 * routing was no longer dismissing alerts on navigation
