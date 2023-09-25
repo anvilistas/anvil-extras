@@ -7,7 +7,7 @@
 
 from time import sleep
 
-from anvil.js.window import document
+from anvil.js.window import document, setTimeout
 
 from ._deferred import Deferred
 
@@ -58,6 +58,7 @@ class ViewTransition:
             )
             _transition = self.transition
             sleep(0)
+            setTimeout(self.resolve, 100)
         return self
 
     def __exit__(self, *exc_args):
