@@ -9,6 +9,7 @@ __version__ = "2.4.0"
 
 from anvil.js import window as _w
 
+from ..utils._view_transition import use_transitions
 from . import _navigation
 from . import _router as _r
 from ._alert import alert

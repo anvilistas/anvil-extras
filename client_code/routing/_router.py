@@ -11,6 +11,7 @@ from itertools import chain
 from anvil import get_open_form, open_form
 from anvil.js.window import document
 
+from ..utils._view_transition import ViewTransition
 from ._alert import handle_alert_unload as _handle_alert_unload
 from ._logging import logger
 from ._utils import ANY, TemplateInfo, get_url_components
@@ -156,7 +157,6 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         }
         alert_on_navigation(**url_args)
         nav_context.check_stale()
-        clear_container()
         form = _cache.get(url_hash)
         if form is None:
             form = get_form_to_add(
@@ -164,10 +164,12 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
             )
         else:
             logger.debug(f"loading route: {form.__class__.__name__!r} from cache")
-        nav_context.check_stale()
-        _current_form = form
-        update_form_attrs(form)
-        add_form_to_container(form)
+        with ViewTransition(form):
+            clear_container()
+            nav_context.check_stale()
+            _current_form = form
+            update_form_attrs(form)
+            add_form_to_container(form)
         alert_form_loaded(form=form, **url_args)
 
 

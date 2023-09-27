@@ -11,32 +11,11 @@ from time import sleep as _sleep
 from anvil import Component as _Component
 from anvil.js import window as _window
 
+from ._deferred import Deferred as _Deferred
+
 __version__ = "2.4.0"
 
 _active_writebacks = []
-
-
-class _Deferred:
-    def init_promise(self, resolve, reject):
-        self._resolve = resolve
-        if not self._pending:
-            resolve()
-
-    def __init__(self):
-        self._promise = None
-        self._resolve = None
-        self._pending = True
-
-    @property
-    def promise(self):
-        if self._promise is None:
-            self._promise = _window.Promise(self.init_promise)
-        return self._promise
-
-    def resolve(self, value=None):
-        self._pending = False
-        if self._resolve is not None:
-            self._resolve(value)
 
 
 class _WritebackWaiter:

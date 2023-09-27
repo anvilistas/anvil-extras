@@ -6,6 +6,8 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil import Label, Link, get_open_form, set_url_hash
 
+from .utils._view_transition import ViewTransition, use_transitions
+
 __version__ = "2.4.0"
 
 # A dict mapping a form's name to a further dict with the form's class and title
@@ -65,11 +67,12 @@ def set_title(text):
 def open_form(form_name, *args, full_width=False, **kwargs):
     """Use classic routing to open a registered form"""
     form = get_form(form_name, *args, **kwargs)
-    title = _forms[form_name]["title"]
-    if title is not None:
-        set_title(title)
-    get_open_form().content_panel.clear()
-    get_open_form().content_panel.add_component(form, full_width_row=full_width)
+    with ViewTransition(form):
+        title = _forms[form_name]["title"]
+        if title is not None:
+            set_title(title)
+        get_open_form().content_panel.clear()
+        get_open_form().content_panel.add_component(form, full_width_row=full_width)
 
 
 def go_to(target):
