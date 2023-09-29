@@ -107,6 +107,32 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::before {
 """
 _html_injector.css(css)
 
+_remove_props = ["allow_indeterminate", "text", "underline"]
+
+_include_props = [
+    {
+        "name": "checked_color",
+        "type": "color",
+        "default_value": None,
+        "group": "appearance",
+        "important": False,
+    },
+    {
+        "name": "text_pre",
+        "type": "string",
+        "default_value": "",
+        "group": "text",
+        "important": True,
+    },
+    {
+        "name": "text_post",
+        "type": "string",
+        "default_value": "",
+        "group": "text",
+        "important": True,
+    },
+]
+
 
 class Switch(CheckBox):
     def __init__(self, checked_color=primary, text_pre="", text_post="", **properties):
@@ -157,3 +183,17 @@ class Switch(CheckBox):
         self._textnode_post.textContent = value
 
     text = text_post  # override the CheckBox property
+
+    def _anvil_get_design_info_(self, *args, **kws):
+        design_info = super()._anvil_get_design_info_(*args, **kws)
+        props = design_info.get("propertyDescriptions", [])
+        props = [p for p in props if p.get("name") not in _remove_props]
+        props = _include_props + props
+        design_info["propertyDescriptions"] = props
+        return design_info
+
+    def _anvil_set_property_values_(self, updates):
+        # we probably won't need this
+        for attr, val in updates.items():
+            setattr(self, attr, val)
+        return {attr: getattr(self, attr) for attr in updates}
