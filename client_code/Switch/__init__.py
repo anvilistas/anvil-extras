@@ -10,6 +10,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 
 from ..utils._component_helpers import _get_rgb, _html_injector
+from ._anvil_designer import SwitchTemplate
 
 __version__ = "2.4.0"
 
@@ -108,7 +109,7 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::before {
 _html_injector.css(css)
 
 
-class Switch(CheckBox):
+class Switch(SwitchTemplate):
     def __init__(self, checked_color=primary, text_pre="", text_post="", **properties):
         dom_node = self._dom_node = _get_dom_node(self)
         dom_node.querySelector(".checkbox").classList.add("switch")
@@ -130,6 +131,19 @@ class Switch(CheckBox):
         label.append(self._textnode_post)
 
         self.checked_color = checked_color or primary
+        self.init_components(**properties)
+
+    checked = CheckBox.checked
+    enabled = CheckBox.enabled
+    foreground = CheckBox.foreground
+    background = CheckBox.background
+    font_size = CheckBox.font_size
+    bold = CheckBox.bold
+    italic = CheckBox.italic
+    spacing_above = CheckBox.spacing_above
+    spacing_below = CheckBox.spacing_below
+    tooltip = CheckBox.tooltip
+    visible = CheckBox.visible
 
     @property
     def checked_color(self):
