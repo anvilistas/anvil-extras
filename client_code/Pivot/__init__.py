@@ -79,7 +79,7 @@ class Pivot(PivotTemplate):
         options = {
             value: self.pivot_options[key] for key, value in self.option_names.items()
         }
-        _jquery(self.pivot_node).pivotUI(self.items, options)
+        _jquery(self.pivot_node).pivotUI(self.items or [], options)
 
     def form_show(self, **event_args):
         if not self.pivot_initiated:
