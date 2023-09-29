@@ -99,6 +99,21 @@ _defaults = {
     "font_size": None,
 }
 
+from anvil.js import window
+
+ResizeObserver = window.get("ResizeObserver")
+if ResizeObserver is None:
+
+    class ResizeObserver:
+        def __init__(self, *args):
+            pass
+
+        def observe(self, node):
+            pass
+
+        def disconnect(self):
+            pass
+
 
 def _apply_to_links(prop):
     def getter(self):
@@ -115,6 +130,7 @@ def _apply_to_links(prop):
 class Tabs(TabsTemplate):
     def __init__(self, **properties):
         #### set up dom nodes
+        self._shown = False
         dom_node = self._dom_node = anvil.js.get_dom_node(self)
         dom_node.style.padding = "0"
         dom_node.classList.add("anvil-extras-tabs")
@@ -142,10 +158,16 @@ class Tabs(TabsTemplate):
         }
 
         self.init_components(**props_to_init)
-        # do this on the link element incase the user has already set the form show event
-        link_0 = self.get_components()[0]
-        if link_0:
-            link_0.set_event_handler("show", lambda **e: self._set_indicator())
+        self._ro = ResizeObserver(lambda *e: self._set_indicator())
+
+    def _on_show(self, **event_args):
+        if self._shown:
+            return
+        self._ro.observe(self._dom_node)
+
+    def _on_hide(self, **event_args):
+        self._shown = False
+        self._ro.disconnect()
 
     def _raise_tab_click(self, sender, tab_index, **event_args):
         self._set_indicator(tab_index)
