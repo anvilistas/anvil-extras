@@ -17,18 +17,27 @@ _html_injector.css(ProgressBar.css)
 
 
 class Indeterminate(IndeterminateTemplate):
-    def __init__(self, track_colour, indicator_colour, **properties):
-        dom_node = get_dom_node(self)
-        dom_node.style.setProperty("background-color", indicator_colour)
-
-        indicator_id = _get_dom_node_id(self.indicator_panel)
-        css = f"""
-#{indicator_id}:before {{
-  background-color: {track_colour}
-}}
-"""
-        _html_injector.css(css)
+    def __init__(self, **properties):
+        self.dom_node = get_dom_node(self)
+        self._props = properties
         self.role = "progress-track"
         self.indicator_panel.role = "indeterminate-progress-indicator"
-        self.indicator_panel.background = indicator_colour
         self.init_components(**properties)
+
+    @property
+    def track_colour(self):
+        return self._props.get("track_colour")
+
+    @track_colour.setter
+    def track_colour(self, value):
+        self._props["track_colour"] = value
+        self.dom_node.style.setProperty("--anvil-extras-track-colour", value)
+
+    @property
+    def indicator_colour(self):
+        return self._props.get("indicator_colour")
+
+    @indicator_colour.setter
+    def indicator_colour(self, value):
+        self._props["indicator_colour"] = value
+        self.dom_node.style.setProperty("background-color", value)
