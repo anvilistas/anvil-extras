@@ -179,15 +179,19 @@ class Tabs(TabsTemplate):
         )
 
     def _set_indicator(self, tab_index=None):
+        animate = tab_index is not None
         tab_index = tab_index if tab_index is not None else self._prev
 
         for i, node in enumerate(self._link_nodes):
             node.classList.toggle("active", i == tab_index)
 
         left, right = (0, 90) if tab_index <= self._prev else (90, 0)
-        self._indicator.style.transition = (
-            f"left 300ms ease-out {left}ms, right 300ms ease-out {right}ms"
-        )
+        if animate:
+            self._indicator.style.transition = (
+                f"left 300ms ease-out {left}ms, right 300ms ease-out {right}ms"
+            )
+        else:
+            self._indicator.style.transition = ""
 
         self._prev = tab_index
         link_node = self._link_nodes[tab_index]
