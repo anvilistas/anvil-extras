@@ -17,6 +17,8 @@
   https://github.com/anvilistas/anvil-extras/pull/465
 
 ## Bug Fixes
+* pivot - don't fail if self.items is not set
+  https://github.com/anvilistas/anvil-extras/pull/468
 * routing was no longer dismissing alerts on navigation
   you will now need to use `routing.alert` in place of `anvil.alert` for an alert to be dismissed on navigation
   non-dismissible alerts will block the navigation
