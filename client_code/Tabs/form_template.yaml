@@ -63,3 +63,4 @@ container:
       default\"></li>\n  <li class=\"indicator\"></li>\n</ul>\n<script type=\"module\"\
       >\nimport {DesignerTabs} from \"https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js\"\
       ;\nDesignerTabs.init();\n</script>\n\n\n"}
+  event_bindings: {show: _on_show, hide: _on_hide}

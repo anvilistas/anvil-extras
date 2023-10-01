@@ -23,6 +23,8 @@
   you will now need to use `routing.alert` in place of `anvil.alert` for an alert to be dismissed on navigation
   non-dismissible alerts will block the navigation
   https://github.com/anvilistas/anvil-extras/pull/437
+* tabs - ensure the selected tab indicator adjusts when the tab component changes size
+  https://github.com/anvilistas/anvil-extras/pull/467
 
 ## Minor Changes
 * wait_for_writeback is now written in pure python
