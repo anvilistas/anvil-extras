@@ -39,6 +39,7 @@ css = """ .anvil-role-progress-track, .anvil-role-progress-indicator {
   content: '';
   -webkit-animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  background-color: var(--anvil-extras-track-colour);
 }
 
 @-webkit-keyframes running-progress {
