@@ -1,4 +1,4 @@
-# Unreleased
+# v2.5.0 3-Oct-2023
 
 ## New Features
 * authorisation - adds `check_permissions` and `has_permission` functions
