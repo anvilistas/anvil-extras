@@ -186,8 +186,13 @@ class Switch(CheckBox):
 
     def _anvil_get_design_info_(self, *args, **kws):
         design_info = super()._anvil_get_design_info_(*args, **kws)
-        props = design_info.get("propertyDescriptions", [])
+        prop_key = (
+            "propertyDescriptions"
+            if "propertyDescriptions" in design_info
+            else "properties"
+        )
+        props = design_info.get(prop_key, [])
         props = [p for p in props if p.get("name") not in _remove_props]
         props = _include_props + props
-        design_info["propertyDescriptions"] = props
+        design_info[prop_key] = props
         return design_info
