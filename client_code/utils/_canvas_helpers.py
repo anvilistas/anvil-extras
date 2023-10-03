@@ -9,7 +9,7 @@ from anvil import Canvas as _Canvas
 from anvil.js import get_dom_node as _dom_node
 from anvil.js import window as _window
 
-__version__ = "2.4.0"
+__version__ = "2.5.0"
 
 
 def correct_canvas_resolution(canvas):

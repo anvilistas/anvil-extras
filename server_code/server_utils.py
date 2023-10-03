@@ -4,6 +4,6 @@
 # https://github.com/anvilistas/anvil-extras/graphs/contributors
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
-__version__ = "2.4.0"
+__version__ = "2.5.0"
 
 from .utils._timed import timed
