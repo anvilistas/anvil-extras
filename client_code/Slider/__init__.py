@@ -11,6 +11,11 @@ from anvil import HtmlPanel as _HtmlPanel
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
+try:
+    from anvil.designer import in_designer
+except ImportError:
+    in_designer = False
+
 __version__ = "2.4.0"
 
 noui_version = "15.4.0"
@@ -181,21 +186,44 @@ def _get_formatter(formatspec: str) -> dict:
     return {"from": from_format, "to": to_format, "format_spec": formatspec}
 
 
-def _prop_getter(prop, fget=None):
-    return lambda self: self._props[prop] if fget is None else fget(self._props[prop])
+def _prop_getter(prop):
+    return lambda self: self._props[prop]
 
 
-def _slider_prop(prop, fset=None, fget=None):
+def _in_designer_setter(self):
+    self._dom_node.replaceChildren(self._slider_node)
+    try:
+        self._parse_props()
+        self._create_slider()
+    except Exception as e:
+        self._report_designer_error(e)
+
+
+def _slider_prop(prop):
     def setter(self, value):
-        value = value if fset is None else fset(value)
         self._props[prop] = value
+        if in_designer:
+            return _in_designer_setter(self)
         if prop == "format":
+            value = _get_formatter(value)
+            self._parsed_props["format"] = value
             pips = self._make_pips()
             self._slider.updateOptions({prop: value, "pips": pips})
         else:
             self._slider.updateOptions({prop: value})
 
-    return property(_prop_getter(prop, fget), setter)
+    return property(_prop_getter(prop), setter)
+
+
+def _slider_parse_prop(prop):
+    def setter(self, value):
+        self._props[prop] = value
+        if in_designer:
+            return _in_designer_setter(self)
+        parsed = _parse(value, prop == "pips")
+        self._slider.updateOptions({prop: parsed})
+
+    return property(_prop_getter(prop), setter)
 
 
 def _color_prop(prop, var_name, default=None):
@@ -219,11 +247,14 @@ def _css_length_prop(prop, var_name, default):
 
 def _min_max_prop(prop):
     def getter(self):
-        return self._props["range"][prop]
+        return self._parsed_props["range"][prop]
 
     def setter(self, value):
-        r = self._props["range"]
+        r = self._parsed_props["range"]
         r[prop] = value
+        self._props["range"] = r
+        if in_designer:
+            return _in_designer_setter(self)
         self._slider.updateOptions({"range": r})
 
     return property(getter, setter)
@@ -272,6 +303,25 @@ _defaults = {
     "role": None,
 }
 
+_always = (
+    "color",
+    "enabled",
+    "spacing_above",
+    "spacing_below",
+    "bar_height",
+    "handle_size",
+    "role",
+)
+
+_if_false = ("enabled", "visible")
+_if_true = ("formatted_value", "formatted_values", "value", "values")
+
+_error_msg = """
+<div class='invalid-component'>
+<i class="glyphicon glyphicon-remove"></i>
+<div class="err">{}</div></div>
+"""
+
 
 class Slider(SliderTemplate):
     def __init__(self, **properties):
@@ -287,6 +337,24 @@ class Slider(SliderTemplate):
 
         props = self._props = _defaults | properties
 
+        self._slider = None
+        try:
+            self._parse_props()
+            self._create_slider()
+        except Exception as e:
+            if in_designer:
+                self._report_designer_error(e)
+            else:
+                raise e
+
+        ###### PROPS TO INIT ######
+        always = {p: props[p] for p in _always}
+        if_true = {p: props[p] for p in _if_true if props[p] is not None}
+        if_false = {p: props[p] for p in _if_false if not props[p]}
+        self.init_components(**always, **if_false, **if_true)
+
+    def _parse_props(self):
+        props = self._props.copy()
         for prop in (
             "start",
             "connect",
@@ -299,36 +367,25 @@ class Slider(SliderTemplate):
 
         props["range"] = props["range"] or {"min": props["min"], "max": props["max"]}
         props["format"] = _get_formatter(props["format"] or ".2f")
+        self._parsed_props = props
 
+    def _create_slider(self):
         pips = self._make_pips()
         self._toggle_has_pips(pips)
+        if self._slider is not None:
+            self._slider.destroy()
         try:
-            self._slider = _Slider.create(self._slider_node, props | {"pips": pips})
+            self._slider = _Slider.create(
+                self._slider_node, self._parsed_props | {"pips": pips}
+            )
         except Exception as e:
+            if type(e) is anvil.js.ExternalError:
+                e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
         ###### EVENTS ######
         self._slider.on("slide", lambda a, h, *e: self.raise_event("slide", handle=h))
         self._slider.on("change", lambda a, h, *e: self.raise_event("change", handle=h))
-
-        ###### PROPS TO INIT ######
-        always = {
-            p: props[p]
-            for p in (
-                "color",
-                "spacing_above",
-                "spacing_below",
-                "bar_height",
-                "handle_size",
-            )
-        }
-        if_true = {
-            p: props[p]
-            for p in ("formatted_value", "formatted_values", "value", "values", "role")
-            if props[p] is not None
-        }
-        if_false = {p: props[p] for p in ("enabled", "visible") if not props[p]}
-        self.init_components(**always, **if_false, **if_true)
 
     ###### VALUE PROPERTIES ######
     def _value_setter(self, val):
@@ -354,19 +411,17 @@ class Slider(SliderTemplate):
     ###### noUiSlider PROPS ######
     connect = _slider_prop("connect")  # not dynamic
     behaviour = _slider_prop("behaviour")  # not dynamic
-    margin = _slider_prop("margin")
-    padding = _slider_prop("padding")
-    limit = _slider_prop("limit")
-    step = _slider_prop("step")
-    start = _slider_prop("start")
-    range = _slider_prop("range")
+    margin = _slider_parse_prop("margin")
+    padding = _slider_parse_prop("padding")
+    limit = _slider_parse_prop("limit")
+    step = _slider_parse_prop("step")
+    start = _slider_parse_prop("start")
+    range = _slider_parse_prop("range")
     min = _min_max_prop("min")
     max = _min_max_prop("max")
     tooltips = _slider_prop("tooltips")
     animate = _slider_prop("animate")
-    format = _slider_prop(
-        "format", fset=lambda s: _get_formatter(s), fget=lambda d: d["format_spec"]
-    )
+    format = _slider_prop("format")
 
     ###### PIPS PROPS ######
     pips = _pips_prop("pips")
@@ -379,7 +434,7 @@ class Slider(SliderTemplate):
         self._dom_node.classList.toggle("has-pips", bool(pips))
 
     def _make_pips(self):
-        props = self._props
+        props = self._parsed_props
         pips = props["pips"]
         if not pips:
             return None
@@ -422,3 +477,6 @@ class Slider(SliderTemplate):
     def reset(self):
         self._slider.reset()
         self.raise_event("x-writeback")
+
+    def _report_designer_error(self, e):
+        self._dom_node.innerHTML = _error_msg.format(str(e))

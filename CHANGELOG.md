@@ -29,6 +29,8 @@
   https://github.com/anvilistas/anvil-extras/pull/467
 
 ## Minor Changes
+* Slider - improve behaviour in the designer
+  https://github.com/anvilistas/anvil-extras/pull/472
 * wait_for_writeback is now written in pure python
   https://github.com/anvilistas/anvil-extras/pull/431
 * Switch - improve designer behaviour
