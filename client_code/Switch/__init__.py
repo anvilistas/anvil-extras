@@ -107,6 +107,40 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::before {
 """
 _html_injector.css(css)
 
+_remove_props = ["allow_indeterminate", "text", "underline"]
+
+_include_props = [
+    {
+        "name": "checked_color",
+        "type": "color",
+        "default_value": None,
+        "group": "appearance",
+        "important": False,
+    },
+    {
+        "name": "text_pre",
+        "type": "string",
+        "default_value": "",
+        "group": "text",
+        "important": True,
+    },
+    {
+        "name": "text_post",
+        "type": "string",
+        "default_value": "",
+        "group": "text",
+        "important": True,
+    },
+]
+
+
+def _clean_props(props):
+    props = [p for p in props if p.get("name") not in _remove_props]
+    return _include_props + props
+
+
+_prop_descriptions = _clean_props(getattr(CheckBox, "_anvil_properties_", []))
+
 
 class Switch(CheckBox):
     def __init__(self, checked_color=primary, text_pre="", text_post="", **properties):
@@ -157,3 +191,16 @@ class Switch(CheckBox):
         self._textnode_post.textContent = value
 
     text = text_post  # override the CheckBox property
+
+    _anvil_properties_ = _prop_descriptions
+
+    def _anvil_get_design_info_(self, *args, **kws):
+        design_info = super()._anvil_get_design_info_(*args, **kws)
+        prop_key = (
+            "propertyDescriptions"
+            if "propertyDescriptions" in design_info
+            else "properties"
+        )
+        props = design_info.get(prop_key, [])
+        design_info[prop_key] = _clean_props(props)
+        return design_info
