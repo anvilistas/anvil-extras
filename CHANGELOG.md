@@ -31,6 +31,8 @@
 ## Minor Changes
 * wait_for_writeback is now written in pure python
   https://github.com/anvilistas/anvil-extras/pull/431
+* Switch - improve designer behaviour
+  https://github.com/anvilistas/anvil-extras/pull/470
 
 # v2.4.0 14-Jun-2023
 
