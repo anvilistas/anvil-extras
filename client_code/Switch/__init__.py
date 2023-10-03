@@ -191,9 +191,3 @@ class Switch(CheckBox):
         props = _include_props + props
         design_info["propertyDescriptions"] = props
         return design_info
-
-    def _anvil_set_property_values_(self, updates):
-        # we probably won't need this
-        for attr, val in updates.items():
-            setattr(self, attr, val)
-        return {attr: getattr(self, attr) for attr in updates}
