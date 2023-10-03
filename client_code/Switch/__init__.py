@@ -134,6 +134,14 @@ _include_props = [
 ]
 
 
+def _clean_props(props):
+    props = [p for p in props if p.get("name") not in _remove_props]
+    return _include_props + props
+
+
+_prop_descriptions = _clean_props(getattr(CheckBox, "_anvil_properties_", []))
+
+
 class Switch(CheckBox):
     def __init__(self, checked_color=primary, text_pre="", text_post="", **properties):
         dom_node = self._dom_node = _get_dom_node(self)
@@ -184,6 +192,8 @@ class Switch(CheckBox):
 
     text = text_post  # override the CheckBox property
 
+    _anvil_properties_ = _prop_descriptions
+
     def _anvil_get_design_info_(self, *args, **kws):
         design_info = super()._anvil_get_design_info_(*args, **kws)
         prop_key = (
@@ -192,7 +202,5 @@ class Switch(CheckBox):
             else "properties"
         )
         props = design_info.get(prop_key, [])
-        props = [p for p in props if p.get("name") not in _remove_props]
-        props = _include_props + props
-        design_info[prop_key] = props
+        design_info[prop_key] = _clean_props(props)
         return design_info
