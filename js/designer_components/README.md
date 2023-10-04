@@ -1,5 +1,7 @@
 # Let's create a Designer Component
 
+This Document is legacy. All Custom Components can now be [Designer Components](https://anvil.works/forum/t/new-beta-drag-and-drop-designer/18844).
+
 
 ## Intro
 
