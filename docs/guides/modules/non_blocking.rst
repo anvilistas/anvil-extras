@@ -178,6 +178,11 @@ API
 
         One of ``"PENDING"``, ``"FULFILLED"``, ``"REJECTED"``.
 
+    .. property:: promise
+
+        Returns a JavaScript Promise that resolves to the value from the function call
+
+
 
 .. function:: cancel(ref)
 
