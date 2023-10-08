@@ -1,34 +1,36 @@
 # Unreleased
 
 ## Bug Fixes
-- routing - fix rendering slow loading pages
+* routing - fix rendering slow loading pages
   https://github.com/anvilistas/anvil-extras/pull/501
-- logging - add missing date format parameter
+* logging - add missing date format parameter
   https://github.com/anvilistas/anvil-extras/pull/502
-- logging - fix critical error message displays as warning
+* logging - fix critical error message displays as warning
   https://github.com/anvilistas/anvil-extras/pull/505
 
 ## Minor Changes
-- tabs - add better support for using faded colors e.g. `tabs.active_background = "#2196F344"`
+* tabs - add better support for using faded colors e.g. `tabs.active_background = "#2196F344"`
   https://github.com/anvilistas/anvil-extras/pull/483
-- augment - use python implementation
+* augment - use python implementation
   https://github.com/anvilistas/anvil-extras/pull/488
+* non-blocking: add a getter to expose the raw javascript promise
+  https://github.com/anvilistas/anvil-extras/pull/475
 
 ## Deprecations
-- augment - trigger("writeback") is now deprecated - use the native version instead `raise_event('x-anvil-write-back-<property-name>)`
+* augment - trigger("writeback") is now deprecated - use the native version instead `raise_event('x-anvil-write-back-<property-name>)`
   https://github.com/anvilistas/anvil-extras/issues/429
 
 
 # v2.5.4 15-Nov-2023
 
 ## Enhancements
-- Tabs - adds active_background property
+* Tabs - adds active_background property
   https://github.com/anvilistas/anvil-extras/issues/481
 
 ## Bug Fixes
-- storage - fix a bug in ios when indexed db accessed in a webworker and closed
+* storage - fix a bug in ios when indexed db accessed in a webworker and closed
   https://github.com/anvilistas/anvil-extras/discussions/484
-- routing - preserve properties when changing templates
+* routing - preserve properties when changing templates
   https://github.com/anvilistas/anvil-extras/discussions/486
 
 
