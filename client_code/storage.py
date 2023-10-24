@@ -27,6 +27,7 @@ _forage.dropInstance()
 _Proxy = type(_window)
 _Object = _window.Object
 _NoneType = type(None)
+_Array = type(_window.Array())
 
 _SPECIAL = "$$anvil-extras$$:"
 
@@ -70,7 +71,7 @@ def _special_deserialize(key, value):
 def _deserialize(obj):
     """convert simple proxy objects (and nested simple proxy objects) to dictionaries"""
     ob_type = type(obj)
-    if ob_type is list:
+    if ob_type in (list, _Array):
         return [_deserialize(item) for item in obj]
     elif ob_type is _Proxy and obj.__class__ == _Object:
         # Then we're a simple proxy object
