@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "2.5.0"
+__version__ = "2.5.1"
 
 
 def err_to_obj(message):
