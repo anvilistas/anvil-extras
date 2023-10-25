@@ -44,7 +44,7 @@ def _serialize(obj):
     ob_type = type(obj)
     if ob_type in (str, int, float, bool, _NoneType, bytes):
         return obj
-    elif ob_type in (list, tuple):
+    elif ob_type in (list, tuple, _Array):
         return [_serialize(item) for item in obj]
     elif ob_type is dict:
         return {key: _serialize(val) for key, val in obj.items() if _is_str(key)}
