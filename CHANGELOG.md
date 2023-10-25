@@ -1,4 +1,4 @@
-# v2.5.1 25-Oct-2023
+# v2.5.2 25-Oct-2023
 * storage - fix bug with deserializing
 
 
