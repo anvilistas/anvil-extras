@@ -194,6 +194,9 @@ class Switch(CheckBox):
 
     _anvil_properties_ = _prop_descriptions
 
+    def _anvil_get_interactions_(self):
+        return []
+
     def _anvil_get_design_info_(self, *args, **kws):
         design_info = super()._anvil_get_design_info_(*args, **kws)
         prop_key = (
@@ -203,4 +206,5 @@ class Switch(CheckBox):
         )
         props = design_info.get(prop_key, [])
         design_info[prop_key] = _clean_props(props)
+        design_info["interactions"] = []
         return design_info
