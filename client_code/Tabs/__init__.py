@@ -66,13 +66,17 @@ _html_injector.css(
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.tabs .tab a:focus,.tabs .tab a.active {
-    background-color: rgb(var(--active-bg));
+.tabs .tab a:focus,.tabs .tab a:focus.active {
+    --fallback-bg: var(--color),0.2;
+    background-color: rgb(var(--active-bg, var(--fallback-bg)));
     outline: none
 }
 .tabs .tab a:hover,.tabs .tab a.active {
     background-color: transparent;
     color: rgb(var(--color));
+}
+.tabs .tab a:hover,.tabs .tab a.active {
+    background-color: rgb(var(--active-bg));
 }
 .tabs .indicator {
     position: absolute;
@@ -88,7 +92,7 @@ _defaults = {
     "align": "left",
     "tab_titles": [],
     "active_tab_index": 0,
-    "active_background": f"{_get_rgb(_primary_color)},0.2",
+    "active_background": _primary_color,
     "spacing_above": "none",
     "spacing_below": "none",
     "foreground": "",
@@ -142,7 +146,6 @@ class Tabs(TabsTemplate):
         self._indicator = self._tabs_node.querySelector(".indicator")
 
         props = self._props = _defaults | properties
-        props["active_background"] = props["active_background"] or _primary_color
 
         # annoying font_size property
         if isinstance(props["font_size"], str) and props["font_size"].isdigit():
@@ -246,7 +249,7 @@ class Tabs(TabsTemplate):
     @active_background.setter
     def active_background(self, value):
         self._props["active_background"] = value
-        self._dom_node.style.setProperty("--active-bg", _get_rgb(value))
+        self._dom_node.style.setProperty("--active-bg", value and _get_rgb(value))
 
     @property
     def foreground(self):
