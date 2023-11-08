@@ -15,6 +15,7 @@ from ..utils._component_helpers import (
     _get_color,
     _get_rgb,
     _html_injector,
+    _primary_color,
     _spacing_property,
 )
 from ._anvil_designer import TabsTemplate
@@ -65,8 +66,8 @@ _html_injector.css(
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.tabs .tab a:focus,.tabs .tab a:focus.active {
-    background-color: rgb(var(--color), 0.2);
+.tabs .tab a:focus,.tabs .tab a.active {
+    background-color: rgb(var(--active-bg));
     outline: none
 }
 .tabs .tab a:hover,.tabs .tab a.active {
@@ -87,6 +88,7 @@ _defaults = {
     "align": "left",
     "tab_titles": [],
     "active_tab_index": 0,
+    "active_background": f"{_get_rgb(_primary_color)},0.2",
     "spacing_above": "none",
     "spacing_below": "none",
     "foreground": "",
@@ -140,6 +142,7 @@ class Tabs(TabsTemplate):
         self._indicator = self._tabs_node.querySelector(".indicator")
 
         props = self._props = _defaults | properties
+        props["active_background"] = props["active_background"] or _primary_color
 
         # annoying font_size property
         if isinstance(props["font_size"], str) and props["font_size"].isdigit():
@@ -153,6 +156,7 @@ class Tabs(TabsTemplate):
             "spacing_below": props["spacing_below"],
             "foreground": props["foreground"],
             "background": props["background"],
+            "active_background": props["active_background"],
             "role": props["role"],
             "visible": props["visible"],
         }
@@ -234,6 +238,15 @@ class Tabs(TabsTemplate):
     @active_tab_index.setter
     def active_tab_index(self, index):
         self._set_indicator(index or 0)
+
+    @property
+    def active_background(self):
+        return self._props["active_background"]
+
+    @active_background.setter
+    def active_background(self, value):
+        self._props["active_background"] = value
+        self._dom_node.style.setProperty("--active-bg", _get_rgb(value))
 
     @property
     def foreground(self):
