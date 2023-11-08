@@ -75,7 +75,7 @@ css = """
     transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease, transform 0.1s ease, -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
 }
 .switch label .lever:before {
-    background-color: rgb(var(--color), 0.15);
+    background-color: rgb(var(--color) / 0.15);
 }
 .switch label .lever:after {
     background-color: #F1F1F1;
@@ -86,7 +86,7 @@ input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before,
 input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::before {
     -webkit-transform: scale(2.4);
     transform: scale(2.4);
-    background-color: rgb(var(--color), 0.15);
+    background-color: rgb(var(--color) / 0.15);
 }
 input[type=checkbox]:not(:disabled) ~ .lever:active:before,
 input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::before {

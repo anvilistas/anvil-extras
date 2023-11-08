@@ -66,7 +66,7 @@ _html_injector.css(
     white-space: nowrap;
 }
 .tabs .tab a:focus,.tabs .tab a:focus.active {
-    --fallback-bg: var(--color),0.2;
+    --fallback-bg: var(--color) / 0.2;
     background-color: rgb(var(--active-bg, var(--fallback-bg)));
     outline: none
 }
@@ -81,7 +81,7 @@ _html_injector.css(
     position: absolute;
     bottom: 0;
     height: 3px;
-    background-color: rgb(var(--color), 0.4);
+    background-color: rgb(var(--color) / 0.4);
     will-change: left, right;
 }
 """

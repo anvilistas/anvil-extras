@@ -124,6 +124,7 @@ components:
     spacing_above: none
     spacing_below: none
     italic: false
+    active_background: '#2196F344'
     background: ''
     bold: false
   name: tabs_1
