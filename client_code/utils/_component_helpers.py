@@ -21,8 +21,6 @@ window.anvilExtras = window.get("anvilExtras", {})
 window.anvilExtras["injectedHtml"] = window.anvilExtras.get("injectedHtml", {})
 _injectedHtml = window.anvilExtras["injectedHtml"]
 
-_primary_color = None
-
 
 class HTMLInjector:
     def _is_injected(self, text, type):
