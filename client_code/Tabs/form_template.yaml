@@ -9,6 +9,7 @@ properties:
   important: true
 - {name: active_tab_index, type: number, default_value: 0, default_binding_prop: true,
   description: The current active tab, important: false}
+- {name: active_background, type: color, default_value: '', important: true, group: appearance}
 - {name: role, type: string, default_value: null, description: This component works well with the card role. Place a card below or above the tabs component,
   group: appearance, important: true}
 - name: align

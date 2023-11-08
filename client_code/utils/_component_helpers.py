@@ -107,14 +107,16 @@ def _spacing_property(a_b):
     return property(getter, setter, None, a_b)
 
 
-_primary = _app.theme_colors.get("Primary 500", "#2196F3")
+_primary_color = (window.document.querySelector("meta[name=theme-color]") or {}).get(
+    "content", "#2196F3"
+)
 
 
 def _get_color(value):
     if not value:
-        return _primary
+        return _primary_color
     elif value.startswith("theme:"):
-        return _app.theme_colors.get(value.replace("theme:", ""), _primary)
+        return _app.theme_colors.get(value.replace("theme:", ""), _primary_color)
     else:
         return value
 

@@ -66,12 +66,16 @@ _html_injector.css(
     white-space: nowrap;
 }
 .tabs .tab a:focus,.tabs .tab a:focus.active {
-    background-color: rgb(var(--color), 0.2);
+    --fallback-bg: var(--color),0.2;
+    background-color: rgb(var(--active-bg, var(--fallback-bg)));
     outline: none
 }
 .tabs .tab a:hover,.tabs .tab a.active {
     background-color: transparent;
     color: rgb(var(--color));
+}
+.tabs .tab a:hover,.tabs .tab a.active {
+    background-color: rgb(var(--active-bg));
 }
 .tabs .indicator {
     position: absolute;
@@ -87,6 +91,7 @@ _defaults = {
     "align": "left",
     "tab_titles": [],
     "active_tab_index": 0,
+    "active_background": "",
     "spacing_above": "none",
     "spacing_below": "none",
     "foreground": "",
@@ -153,6 +158,7 @@ class Tabs(TabsTemplate):
             "spacing_below": props["spacing_below"],
             "foreground": props["foreground"],
             "background": props["background"],
+            "active_background": props["active_background"],
             "role": props["role"],
             "visible": props["visible"],
         }
@@ -234,6 +240,15 @@ class Tabs(TabsTemplate):
     @active_tab_index.setter
     def active_tab_index(self, index):
         self._set_indicator(index or 0)
+
+    @property
+    def active_background(self):
+        return self._props["active_background"]
+
+    @active_background.setter
+    def active_background(self, value):
+        self._props["active_background"] = value
+        self._dom_node.style.setProperty("--active-bg", value and _get_rgb(value))
 
     @property
     def foreground(self):
