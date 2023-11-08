@@ -14,6 +14,10 @@ Properties
 
     Which tab should be active.
 
+:active_tab_background: color
+
+    the background of the active tab.
+
 :foreground: color
     the color of the highlight and text. Defaults to ``"theme:Primary 500"``
 
