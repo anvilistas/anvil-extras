@@ -15,7 +15,6 @@ from ..utils._component_helpers import (
     _get_color,
     _get_rgb,
     _html_injector,
-    _primary_color,
     _spacing_property,
 )
 from ._anvil_designer import TabsTemplate
@@ -92,7 +91,7 @@ _defaults = {
     "align": "left",
     "tab_titles": [],
     "active_tab_index": 0,
-    "active_background": _primary_color,
+    "active_background": "",
     "spacing_above": "none",
     "spacing_below": "none",
     "foreground": "",
