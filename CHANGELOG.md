@@ -1,6 +1,11 @@
+# Unreleased
+
+## Enhancements
+- Tabs - adds active_background property
+  https://github.com/anvilistas/anvil-extras/issues/481
+
 # v2.5.2 25-Oct-2023
 * storage - fix bug with deserializing
-
 
 # v2.5.0 3-Oct-2023
 
