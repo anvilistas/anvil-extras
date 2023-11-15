@@ -5,6 +5,8 @@
   https://github.com/anvilistas/anvil-extras/issues/481
 
 ## Bug Fixes
+- storage - fix a bug in ios when indexed db accessed in a webworker and closed
+  https://github.com/anvilistas/anvil-extras/discussions/484
 - routing - preserve properties when changing templates
   https://github.com/anvilistas/anvil-extras/discussions/486
 

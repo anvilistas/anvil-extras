@@ -8,6 +8,7 @@
 from datetime import date, datetime
 
 import anvil.js
+from anvil.js import ExternalError
 from anvil.js import window as _window
 
 __version__ = "2.5.3"
@@ -87,6 +88,30 @@ def _deserialize(obj):
         return obj
 
 
+def wrap_with_retry(fn):
+    def wrapper(*args, **kws):
+        try:
+            return fn(*args, **kws)
+        except ExternalError:
+            try:
+                return fn(*args, **kws)
+            except ExternalError:
+                raise
+
+    return wrapper
+
+
+class RetryStoreWrapper:
+    def __init__(self, store):
+        self._store = store
+
+    def __getattr__(self, name):
+        maybe_method = getattr(self._store, name)
+        if callable(maybe_method):
+            return wrap_with_retry(maybe_method)
+        return maybe_method
+
+
 class StorageWrapper:
     _driver = None
     _stores = None
@@ -108,13 +133,14 @@ class StorageWrapper:
             return known_stores[store_name]
 
         store = object.__new__(cls)
-        store._store = _forage.createInstance(
+        forage_store = _forage.createInstance(
             {
                 "storeName": store_name,
                 "driver": [cls._driver, f"fail{cls._driver}"],
                 "name": "anvil_extras",
             }
         )
+        store._store = RetryStoreWrapper(forage_store)
         store._name = store_name
         known_stores[store_name] = store
         return store
