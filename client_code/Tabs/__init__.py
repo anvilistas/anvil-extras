@@ -19,7 +19,7 @@ from ..utils._component_helpers import (
 )
 from ._anvil_designer import TabsTemplate
 
-__version__ = "2.5.3"
+__version__ = "2.5.4"
 
 _html_injector.css(
     """

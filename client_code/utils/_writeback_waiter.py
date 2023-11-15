@@ -13,7 +13,7 @@ from anvil.js import window as _window
 
 from ._deferred import Deferred as _Deferred
 
-__version__ = "2.5.3"
+__version__ = "2.5.4"
 
 _active_writebacks = []
 
