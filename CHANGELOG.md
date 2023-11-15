@@ -4,6 +4,10 @@
 - Tabs - adds active_background property
   https://github.com/anvilistas/anvil-extras/issues/481
 
+## Bug Fixes
+- routing - preserve properties when changing templates
+  https://github.com/anvilistas/anvil-extras/discussions/486
+
 # v2.5.2 25-Oct-2023
 * storage - fix bug with deserializing
 
