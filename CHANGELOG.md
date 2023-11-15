@@ -1,4 +1,4 @@
-# Unreleased
+# v2.5.4 15-Nov-2023
 
 ## Enhancements
 - Tabs - adds active_background property
