@@ -149,7 +149,9 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         handle_alert_unload()
         handle_form_unload()
         nav_context.check_stale()
-        template_info, init_path = load_template_or_redirect(url_pattern)
+        template_info, init_path = load_template_or_redirect(
+            url_hash, url_pattern, url_dict, properties
+        )
         url_args = {
             "url_hash": url_hash,
             "url_pattern": url_pattern,
@@ -193,7 +195,7 @@ def handle_form_unload():
             raise NavigationExit
 
 
-def load_template_or_redirect(url_hash):
+def load_template_or_redirect(url_hash, url_pattern, url_dict, properties):
     global _current_form, _force_launch
     template_instance = get_open_form()
     current_template = type(template_instance)
@@ -249,6 +251,7 @@ def load_template_or_redirect(url_hash):
         navigation_context.mark_all_stale()
         f = callable_()
         logger.debug(f"loaded template: {callable_.__name__!r}, re-navigating")
+        _queued.append([(url_hash, url_pattern, url_dict), properties])
         open_form(f)
         raise NavigationExit
 
