@@ -15,6 +15,8 @@ from anvil import DataGrid as _DataGrid
 from anvil import js as _js
 from anvil.js.window import jQuery as _S
 
+from .utils._deprecated import deprecated
+
 __version__ = "2.5.4"
 
 __all__ = ["add_event", "add_event_handler", "set_event_handler", "trigger"]
@@ -78,16 +80,11 @@ def remove_event_handler(component: _Component, event: str, func: _Callable) -> 
     component.remove_event_handler(event, func)
 
 
-_warned = {"writeback": False}
-
-
+@deprecated(
+    "trigger('writeback') is no longer supported\nYou can now trigger a writeback using component.raise_event('x-anvil-write-back-<property>')"
+)
 def _trigger_writeback(self):
-    if _warned["writeback"]:
-        return
-    _warned["writeback"] = True
-    print(
-        "Deprecated: trigger('writeback') is no longer supported\nYou can now trigger a writeback using component.raise_event('x-anvil-write-back-<property>')"
-    )
+    return
 
 
 def trigger(self: _Component, event: str):
@@ -124,7 +121,6 @@ _remap = set()
 _native = set()
 
 
-# TODO this is hacking with anvil internals
 def _add_event(self, event_name):
     key = (type(self), event_name)
     if key in _native or key in _remap:
