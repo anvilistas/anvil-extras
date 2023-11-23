@@ -1,3 +1,14 @@
+# Unreleased
+
+## Minor Changes
+- augment - use python implementation
+  https://github.com/anvilistas/anvil-extras/pull/488
+
+## Deprecations
+- augment - trigger("writeback") is now deprecated - use the native version instead `raise_event('x-anvil-write-back-<property-name>)`
+  https://github.com/anvilistas/anvil-extras/issues/429
+
+
 # v2.5.4 15-Nov-2023
 
 ## Enhancements
@@ -9,6 +20,7 @@
   https://github.com/anvilistas/anvil-extras/discussions/484
 - routing - preserve properties when changing templates
   https://github.com/anvilistas/anvil-extras/discussions/486
+
 
 # v2.5.2 25-Oct-2023
 * storage - fix bug with deserializing

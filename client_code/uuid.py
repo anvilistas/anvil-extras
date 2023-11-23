@@ -8,7 +8,7 @@
 import anvil.js
 from anvil.js import window as _W
 
-from utils._deprecated import deprecated
+from .utils._deprecated import deprecated
 
 __version__ = "2.5.4"
 
