@@ -134,23 +134,29 @@ def _add_event(self, event_name):
         self.remove_event_handler(event_name, _noop)
 
 
+@_cache
+def _get_handler(fn, event):
+    @_wraps(fn)
+    def wrap_handler(*args, **kws):
+        kws["event_name"] = event
+        return fn(*args, **kws)
+
+    return wrap_handler
+
+
 def wrap_event_method(method):
     old_method = getattr(_Component, method)
 
     @_wraps(old_method)
     def wrapped(self, event, *args, **kws):
         key = (type(self), event)
-        remapped = _prefix + event if key in _remap else event
+        if key not in _remap:
+            return old_method(self, event, *args, **kws)
+
+        remapped = _prefix + event
 
         if len(args) == 1 and callable(args[0]):
-            fn = args[0]
-
-            @_wraps(fn)
-            def wrap_handler(*args, **kws):
-                kws["event_name"] = event
-                return fn(*args, **kws)
-
-            args = [wrap_handler]
+            args = [_get_handler(args[0], event)]
 
         return old_method(self, remapped, *args, **kws)
 
