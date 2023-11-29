@@ -5,7 +5,6 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from functools import cache as _cache
 from functools import partial as _partial
 from functools import wraps as _wraps
 
@@ -13,6 +12,7 @@ import anvil as _anvil
 from anvil import Component as _Component
 from anvil import DataGrid as _DataGrid
 from anvil import js as _js
+from anvil.js.window import WeakMap as _WeakMap
 from anvil.js.window import jQuery as _S
 
 from .utils._deprecated import deprecated
@@ -24,10 +24,27 @@ __all__ = ["add_event", "add_event_handler", "set_event_handler", "trigger"]
 _Callable = type(lambda: None)
 _prefix = "x-augmented-"
 
+# because Skulpt doesn't have a WeakMap and js WeakMap preserves identity of methods
+_wm = _WeakMap()
+
+
+def _weak_cache_event(fn):
+    @_wraps(fn)
+    def wrapper(instance, event: str):
+        event_map = _wm.get(instance)
+        if event_map is None:
+            _wm.set(instance, {})
+            event_map = _wm.get(instance)
+        if event not in event_map:
+            event_map[event] = fn(instance, event)
+        return event_map[event]
+
+    return wrapper
+
 
 # use cache so we don't add the same event to the component multiple times
 # we only need to add the event once and use anvil architecture to raise the event
-@_cache
+@_weak_cache_event
 def add_event(component: _Component, event: str) -> None:
     """component: (instantiated) anvil component
     event: str - any jquery event string
@@ -134,7 +151,7 @@ def _add_event(self, event_name):
         self.remove_event_handler(event_name, _noop)
 
 
-@_cache
+@_weak_cache_event
 def _get_handler(fn, event):
     @_wraps(fn)
     def wrap_handler(*args, **kws):
