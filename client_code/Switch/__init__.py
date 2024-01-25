@@ -145,7 +145,7 @@ _prop_descriptions = _clean_props(getattr(CheckBox, "_anvil_properties_", []))
 class Switch(CheckBox):
     def __init__(self, checked_color=primary, text_pre="", text_post="", **properties):
         dom_node = self._dom_node = _get_dom_node(self)
-        dom_node.querySelector(".checkbox").classList.add("switch")
+        dom_node.firstElementChild.classList.add("switch")
 
         span = dom_node.querySelector("span")
         span.classList.add("lever")
@@ -196,15 +196,3 @@ class Switch(CheckBox):
 
     def _anvil_get_interactions_(self):
         return []
-
-    def _anvil_get_design_info_(self, *args, **kws):
-        design_info = super()._anvil_get_design_info_(*args, **kws)
-        prop_key = (
-            "propertyDescriptions"
-            if "propertyDescriptions" in design_info
-            else "properties"
-        )
-        props = design_info.get(prop_key, [])
-        design_info[prop_key] = _clean_props(props)
-        design_info["interactions"] = []
-        return design_info
