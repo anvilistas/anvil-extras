@@ -30,10 +30,8 @@ class navigation_context:
         self.is_stale = False
         self.url_hash = url_hash
 
-    @classmethod
-    def check_stale(cls):
-        contexts = cls.contexts
-        if contexts and contexts[-1].is_stale:
+    def check_stale(self):
+        if self.is_stale:
             raise NavigationExit
 
     @classmethod
@@ -150,7 +148,7 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
         handle_form_unload()
         nav_context.check_stale()
         template_info, init_path = load_template_or_redirect(
-            url_hash, url_pattern, url_dict, properties
+            url_hash, url_pattern, url_dict, properties, nav_context
         )
         url_args = {
             "url_hash": url_hash,
@@ -195,7 +193,7 @@ def handle_form_unload():
             raise NavigationExit
 
 
-def load_template_or_redirect(url_hash, url_pattern, url_dict, properties):
+def load_template_or_redirect(url_hash, url_pattern, url_dict, properties, nav_context):
     global _current_form, _force_launch
     template_instance = get_open_form()
     current_template = type(template_instance)
@@ -236,7 +234,7 @@ def load_template_or_redirect(url_hash, url_pattern, url_dict, properties):
                 redirect=True,
                 replace_current_url=True,
             )
-        navigation_context.check_stale()
+        nav_context.check_stale()
 
     else:
         load_error_or_raise(f"no template for url_hash={url_hash!r}")
