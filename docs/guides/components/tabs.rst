@@ -14,7 +14,7 @@ Properties
 
     Which tab should be active.
 
-:active_tab_background: color
+:active_background: color
 
     the background of the active tab.
 
