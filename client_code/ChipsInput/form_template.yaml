@@ -22,6 +22,7 @@ properties:
 - {name: tag, type: object, group: user data, important: false}
 - {name: primary_placeholder, type: string, default_value: Enter a Tag, description: placeholder when there are no chips}
 - {name: secondary_placeholder, type: string, default_value: +Tag, description: placeholder when there are chips}
+- {name: can_add, type: boolean, default_value: true, important: true, description: whether chips can be added by the textbox}
 is_package: true
 events:
 - {name: chips_changed, default_event: true, description: when a chip is added or removed}

@@ -103,7 +103,10 @@ class ChipsInput(ChipsInputTemplate):
         if list(value) == self._chips:
             return
         self._chips = []
-        self.clear(slot="chips")
+        if self.can_add:
+            self.clear(slot="chips")
+        else:
+            self.clear()
 
         seen = set()
         for chip_text in value:
