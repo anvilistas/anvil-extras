@@ -1,5 +1,9 @@
 # Unreleased
 
+## Bug Fixes
+- routing - fix rendering slow loading pages
+  https://github.com/anvilistas/anvil-extras/pull/501
+
 ## Minor Changes
 - augment - use python implementation
   https://github.com/anvilistas/anvil-extras/pull/488
