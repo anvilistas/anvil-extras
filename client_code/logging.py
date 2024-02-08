@@ -68,6 +68,7 @@ class Logger:
             "name": self.name,
             "time": now.time(),
             "datetime": now,
+            "date": now.date(),
             "level": _get_level_name(level),
             "msg": msg,
             **params,
