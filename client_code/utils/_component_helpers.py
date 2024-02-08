@@ -125,9 +125,13 @@ def _get_rgb(value):
     value = _get_color(value)
     if value.startswith("#"):
         value = value[1:]
-        value = ",".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
+        tmp = " ".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
+        if len(value) == 8:
+            alpha = str(int(value[6:], 16) / 256)
+            tmp += " / " + alpha
+        value = tmp
     elif value.startswith("rgb") and value.endswith(")"):
-        value = value[value.find("("), -1]
+        value = value[value.find("(") + 1 : -1]
     else:
         raise ValueError(
             f"expected a hex value, theme color or rgb value, not, {value}"
