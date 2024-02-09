@@ -5,6 +5,8 @@
   https://github.com/anvilistas/anvil-extras/pull/501
 - logging - add missing date format parameter
   https://github.com/anvilistas/anvil-extras/pull/502
+- logging - fix critical error message displays as warning
+  https://github.com/anvilistas/anvil-extras/pull/505
 
 ## Minor Changes
 - tabs - add better support for using faded colors e.g. `tabs.active_background = "#2196F344"`

@@ -100,7 +100,7 @@ class Logger:
 
     def critical(self, msg):
         """always outputs a message"""
-        self.log(WARNING, msg)
+        self.log(CRITICAL, msg)
 
     def __repr__(self):
         return (
