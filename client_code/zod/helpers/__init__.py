@@ -9,7 +9,7 @@ from datetime import date, datetime
 from .parse_util import MISSING
 from .util import enum
 
-__version__ = "2.5.4"
+__version__ = "2.5.5"
 
 
 # Adjusted for python

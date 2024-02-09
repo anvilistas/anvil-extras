@@ -9,7 +9,7 @@ from anvil.tables import app_tables
 
 from . import lazy_module_loader as lazy
 
-__version__ = "2.5.4"
+__version__ = "2.5.5"
 
 LINKED_COLUMN_TYPES = ("liveObject", "liveObjectArray", "link_single", "link_multiple")
 LO, LOA, LS, LM = LINKED_COLUMN_TYPES
