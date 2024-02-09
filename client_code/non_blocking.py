@@ -111,6 +111,15 @@ class _AsyncCall:
         """Returns: 'PENDING', 'FULFILLED', 'REJECTED'"""
         return self._deferred.status
 
+    @property
+    def promise(self):
+        """Returns: JavaScript Promise that resolves to the value from the function call"""
+        return _W.Promise(
+            lambda resolve, reject: resolve(
+                self._deferred.promise.then(lambda r: r.value)
+            )
+        )
+
     def on_result(self, result_handler, error_handler=None):
         error_handler = error_handler and _report(error_handler)
         result_handler = _Result.unwrap(_report(result_handler))
