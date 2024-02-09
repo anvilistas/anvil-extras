@@ -1,4 +1,4 @@
-# Unreleased
+# v2.5.5 09-Feb-2024
 
 ## Bug Fixes
 * routing - fix rendering slow loading pages
