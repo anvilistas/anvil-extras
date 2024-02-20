@@ -4,6 +4,10 @@
 * multiselect - fix visible False property in the designer
   https://github.com/anvilistas/anvil-extras/issues/510
 
+## Minor Changes
+* designer hints - add some designer hints to components
+  https://github.com/anvilistas/anvil-extras/pull/512
+
 # v2.6.0 09-Feb-2024
 
 ## Bug Fixes

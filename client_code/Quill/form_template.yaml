@@ -1,8 +1,8 @@
 properties:
 - {name: enabled, type: boolean, default_value: true, default_binding_prop: true,
-  group: interaction, important: true}
+  group: interaction, important: true, designer_hint: enabled}
 - {name: visible, type: boolean, default_value: true, default_binding_prop: false,
-  group: appearance, important: true}
+  group: appearance, important: true, designer_hint: visible}
 - {name: height, type: string, default_value: '150', default_binding_prop: false,
   description: If auto_expand is set to True this will be the min_height. otherwise it'll be the fixed height,
   group: height, important: false}
