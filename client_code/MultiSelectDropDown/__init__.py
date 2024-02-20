@@ -74,7 +74,10 @@ _defaults = {
     "spacing_above": "small",
     "enable_select_all": False,
     "width": "",
+    "visible": True,
 }
+
+visible_false_classes = ["visible-false", "anvil-visible-false"]
 
 
 def _props_property(prop, setter):
@@ -113,6 +116,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def __init__(self, **properties):
         # Set Form properties and Data Bindings.
         self._init = False
+        self._selectPicker = None
 
         self._dom_node = _js.get_dom_node(self)
         _S_dom_node = _S(self._dom_node)
@@ -144,8 +148,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._el.on("changed.bs.select", self.change)
         self._el.on("shown.bs.select", self._opened)
         self._el.on("hidden.bs.select", self._closed)
-        menu = self._el.data("selectpicker")["$menu"]
+        self._selectPicker = self._el.data("selectpicker")
+        menu = self._selectPicker["$menu"]
         menu.find(".bs-actionsbox").on("click", self._user_selected_all)
+        self.visible = self.visible
 
     def format_selected_text(self, count, total):
         if count > 3:
@@ -216,17 +222,17 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     enable_select_all = _component_property("enable_select_all", "data-actions-box")
     tag = _HtmlPanel.tag
 
-    @property
-    def visible(self):
-        return _HtmlPanel.visible.__get__(self, type(self))
-
-    @visible.setter
-    def visible(self, val):
-        self._el.data("selectpicker")["$bsContainer"].toggleClass(
-            "visible-false", not val
-        )
+    def _set_visible(self, val):
         _HtmlPanel.visible.__set__(self, val)
+        selectPicker = self._selectPicker
+        if not selectPicker:
+            return
+        container = selectPicker["$bsContainer"]
+        visible_false = not val
+        for cs in visible_false_classes:
+            container.toggleClass(cs, visible_false)
 
+    visible = _props_property("visible", _set_visible)
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
 

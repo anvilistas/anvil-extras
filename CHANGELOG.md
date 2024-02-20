@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* multiselect - fix visible False property in the designer
+  https://github.com/anvilistas/anvil-extras/issues/510
+
 # v2.6.0 09-Feb-2024
 
 ## Bug Fixes
