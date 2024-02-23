@@ -136,12 +136,12 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self.set_event_handler("x-popover-init", self._mk_popover)
         self._user_selected_all(False)
-        self._reset()
-        if selected:
-            self.selected = selected
+        self._reset(selected)
         self._init = True
 
-    def _reset(self):
+    def _reset(self, selected=None):
+        if self._init:
+            selected = self.selected
         self._el.selectpicker(
             {"countSelectedText": lambda *args: self.format_selected_text(*args)}
         )
@@ -152,6 +152,8 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         menu = self._selectPicker["$menu"]
         menu.find(".bs-actionsbox").on("click", self._user_selected_all)
         self.visible = self.visible
+        if selected:
+            self.selected = selected
 
     def format_selected_text(self, count, total):
         if count > 3:
