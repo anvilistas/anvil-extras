@@ -3,6 +3,8 @@
 ## Bug Fixes
 * multiselect - fix visible False property in the designer
   https://github.com/anvilistas/anvil-extras/issues/510
+* multiselect - fix toggling enabled property loses selected state
+  https://github.com/anvilistas/anvil-extras/issues/513
 
 ## Minor Changes
 * designer hints - add some designer hints to components
