@@ -7,8 +7,24 @@
 import functools
 
 import anvil.users
+from anvil.tables import app_tables
 
 __version__ = "2.6.1"
+
+_default_mode = "classic"
+
+
+def _validate_mode(mode):
+    if mode not in ("classic", "usermap"):
+        raise ValueError(
+            "The authorisation mode can only be 'classic' or 'usermap'"
+        )
+
+
+def set_mode(mode):
+    global _default_mode
+    _validate_mode(mode)
+    _default_mode = mode
 
 
 def authentication_required(func):
@@ -35,6 +51,16 @@ def has_permission(permissions):
     else:
         required_permissions = set(permissions)
 
+    if _default_mode == 'classic':
+        user_permissions = has_permission_classic(user)
+    else:
+        user_permissions = has_permission_usermap(user)
+
+    return required_permissions.issubset(user_permissions)
+
+
+def has_permission_classic(user):
+    """Returns user_permissions set for classic mode."""
     try:
         user_permissions = set(
             permission["name"]
@@ -43,9 +69,21 @@ def has_permission(permissions):
         )
     except TypeError:
         return False
+    return user_permissions
 
-    return required_permissions.issubset(user_permissions)
 
+def has_permission_usermap(user):
+    """Returns user_permissions set for usermap mode."""
+    usermap = app_tables.usermap.get(user=user)
+    try:
+        user_permissions = set(
+            permission["name"]
+            for role in usermap["roles"]
+            for permission in role["permissions"]
+        )
+    except TypeError:
+        return False
+    return user_permissions
 
 def check_permissions(permissions):
     """Checks a users permissions, raises ValueError if user does not have permissions"""
