@@ -16,9 +16,7 @@ _default_mode = "classic"
 
 def _validate_mode(mode):
     if mode not in ("classic", "usermap"):
-        raise ValueError(
-            "The authorisation mode can only be 'classic' or 'usermap'"
-        )
+        raise ValueError("The authorisation mode can only be 'classic' or 'usermap'")
 
 
 def set_mode(mode):
@@ -51,7 +49,7 @@ def has_permission(permissions):
     else:
         required_permissions = set(permissions)
 
-    if _default_mode == 'classic':
+    if _default_mode == "classic":
         user_permissions = has_permission_classic(user)
     else:
         user_permissions = has_permission_usermap(user)
@@ -84,6 +82,7 @@ def has_permission_usermap(user):
     except TypeError:
         return False
     return user_permissions
+
 
 def check_permissions(permissions):
     """Checks a users permissions, raises ValueError if user does not have permissions"""
