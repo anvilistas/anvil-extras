@@ -14,19 +14,22 @@ __version__ = "2.6.1"
 config = {"get_roles_row": None}
 
 
-def _validate_mode(mode):
-    if mode not in ("classic", "usermap"):
-        raise ValueError("The authorisation mode can only be 'classic' or 'usermap'")
-
-
-def set_mode(mode):
-    global _default_mode
-    _validate_mode(mode)
-    _default_mode = mode
-
 def set_config(**kwargs):
     if "get_roles_row" in kwargs:
         set_user_roles_getter(kwargs["get_roles_row"])
+
+
+def set_user_roles_getter(option):
+    if option is None:
+        config["get_roles_row"] = None
+    elif callable(option):  # row object
+        config["get_roles_row"] = option
+    elif isinstance(option, str):  # table name
+        config["get_roles_row"] = lambda user: getattr(app_tables, option).get(
+            user=user
+        )
+    else:
+        raise TypeError("set_user_roles_getter: option is not valid.")
 
 
 def authentication_required(func):
@@ -53,39 +56,16 @@ def has_permission(permissions):
     else:
         required_permissions = set(permissions)
 
-    if _default_mode == "classic":
-        user_permissions = has_permission_classic(user)
-    else:
-        user_permissions = has_permission_usermap(user)
+    try:
+        user_permissions = set(
+            permission["name"]
+            for role in config["get_roles_row"]
+            for permission in role["permissions"]
+        )
+    except TypeError:
+        return False
 
     return required_permissions.issubset(user_permissions)
-
-
-def has_permission_classic(user):
-    """Returns user_permissions set for classic mode."""
-    try:
-        user_permissions = set(
-            permission["name"]
-            for role in user["roles"]
-            for permission in role["permissions"]
-        )
-    except TypeError:
-        return False
-    return user_permissions
-
-
-def has_permission_usermap(user):
-    """Returns user_permissions set for usermap mode."""
-    usermap = app_tables.usermap.get(user=user)
-    try:
-        user_permissions = set(
-            permission["name"]
-            for role in usermap["roles"]
-            for permission in role["permissions"]
-        )
-    except TypeError:
-        return False
-    return user_permissions
 
 
 def check_permissions(permissions):
@@ -97,24 +77,6 @@ def check_permissions(permissions):
     fail = "Authentication" if user is None else "Authorisation"
 
     raise ValueError(f"{fail} required")
-
-
-
-
-
-def set_user_roles_getter(option):
-    if option is None:
-        config["get_roles_row"] = None
-    elif callable(option):
-        config["get_roles_row"] = option
-    elif isinstance(option, str):
-        config["get_roles_row"] = lambda user: getattr(app_tables, option).get(
-            user=user
-        )
-    elif ...:  # option is app_table
-        config["get_roles_row"] = lambda user: option.get(user=user)
-    else:
-        raise TypeError(...)
 
 
 def authorisation_required(permissions):
