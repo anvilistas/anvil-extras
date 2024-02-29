@@ -11,7 +11,9 @@ from anvil.tables import app_tables
 
 __version__ = "2.6.1"
 
-config = {"get_roles_row": lambda user: app_tables.users.get(user=user)["roles"]}
+config = {
+    "get_roles_row": lambda user: app_tables.users.get(user=user)["roles"]
+}
 
 
 def set_config(**kwargs):
