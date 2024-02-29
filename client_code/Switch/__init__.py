@@ -35,7 +35,7 @@ css = """
     height: 0;
 }
 .switch label input[type=checkbox]:checked+.lever {
-    background-color: rgba(var(--color), .5);
+    background-color: rgba(var(--color) / .5);
 }
 .switch label input[type=checkbox]:checked+.lever:after,
 .switch label input[type=checkbox]:checked+.lever:before {

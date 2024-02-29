@@ -16,7 +16,8 @@ properties:
   default_value: small
   group: layout
   important: false
-- {name: visible, type: boolean, default_value: true, group: appearance, important: false, designer_hint: visible}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: false,
+  designer_hint: visible}
 - {name: tag, type: object, group: user data, important: false}
 is_package: true
 events:

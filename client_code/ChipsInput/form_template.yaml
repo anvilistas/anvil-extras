@@ -18,7 +18,8 @@ properties:
   default_value: small
   group: layout
   important: false
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true,
+  designer_hint: visible}
 - {name: tag, type: object, group: user data, important: false}
 - {name: primary_placeholder, type: string, default_value: Enter a Tag, description: placeholder when there are no chips}
 - {name: secondary_placeholder, type: string, default_value: +Tag, description: placeholder when there are chips}
