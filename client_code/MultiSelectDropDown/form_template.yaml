@@ -12,10 +12,12 @@ properties:
 - {name: enable_filtering, type: boolean, default_value: null, group: interaction,
   important: false}
 - {name: multiple, type: boolean, default_value: true, group: interaction, important: false}
-- {name: enabled, type: boolean, default_value: true, group: interaction, important: true, designer_hint: enabled}
+- {name: enabled, type: boolean, default_value: true, group: interaction, important: true,
+  designer_hint: enabled}
 - {name: enable_select_all, type: boolean, default_value: false, group: interaction,
   important: false}
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true,
+  designer_hint: visible}
 - {name: width, type: string, default_value: '', group: appearance, description: use css lengths. \'auto\' sets the width as wide as the largest option,
   \'fit\' resizes to the selected content: null}
 - name: spacing_above

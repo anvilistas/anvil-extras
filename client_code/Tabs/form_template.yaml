@@ -20,7 +20,8 @@ properties:
   group: text
   important: false
   designer_hint: align-horizontal
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true,
+  designer_hint: visible}
 - {name: tag, type: object, group: user data, important: false}
 - name: spacing_above
   type: enum
@@ -34,9 +35,11 @@ properties:
   default_value: none
   group: layout
   important: false
-- {name: bold, type: boolean, default_value: null, group: text, important: false, designer_hint: font-bold}
+- {name: bold, type: boolean, default_value: null, group: text, important: false,
+  designer_hint: font-bold}
 - {name: font_size, type: string, default_value: null, group: text, important: false}
-- {name: italic, type: boolean, default_value: null, group: text, important: false, designer_hint: font-italic}
+- {name: italic, type: boolean, default_value: null, group: text, important: false,
+  designer_hint: font-italic}
 - {name: font, type: string, default_value: '', group: text, important: false}
 is_package: true
 events:
