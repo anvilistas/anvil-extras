@@ -20,13 +20,13 @@ def set_config(**kwargs):
 
 
 def set_user_roles_getter(option):
+    user = anvil.users.get_user()
     if option is None:
-        config["get_roles_row"] = None
+        config["get_roles_row"] = app_tables.users.get(user=user)['roles']
     elif callable(option):  # row object
-        config["get_roles_row"] = option
+        config["get_roles_row"] = option['roles']
     elif isinstance(option, str):  # table name
-        user = anvil.users.get_user()
-        config["get_roles_row"] = getattr(app_tables, option).get(user=user)
+        config["get_roles_row"] = getattr(app_tables, option).get(user=user)['roles']
         print(config["get_roles_row"])
     else:
         raise TypeError("set_user_roles_getter: option is not valid.")
