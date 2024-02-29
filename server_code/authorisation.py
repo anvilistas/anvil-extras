@@ -24,6 +24,10 @@ def set_mode(mode):
     _validate_mode(mode)
     _default_mode = mode
 
+def set_config(**kwargs):
+    if "get_roles_row" in kwargs:
+        set_user_roles_getter(kwargs["get_roles_row"])
+
 
 def authentication_required(func):
     """A decorator to ensure only a valid user can call a server function"""
@@ -95,9 +99,7 @@ def check_permissions(permissions):
     raise ValueError(f"{fail} required")
 
 
-def set_config(**kwargs):
-    if "get_roles_row" in kwargs:
-        set_user_roles_getter(kwargs["get_roles_row"])
+
 
 
 def set_user_roles_getter(option):
