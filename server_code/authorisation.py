@@ -21,7 +21,7 @@ def set_config(**kwargs):
 
 def set_user_roles_getter(option):
     if option is None:
-        config["get_roles_row"] = lambda user: app_tables.users.get(user=user)["roles"]
+        config["get_roles_row"] = lambda user: anvil.users.get_user()["roles"]
     elif isinstance(option, str):  # table name
         config["get_roles_row"] = lambda user: getattr(app_tables, option).get(
             user=user
