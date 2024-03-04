@@ -15,6 +15,8 @@
 ## Minor Changes
 * designer hints - add some designer hints to components
   https://github.com/anvilistas/anvil-extras/pull/512
+* authorisation - added config option to choose table name
+  https://github.com/anvilistas/anvil-extras/pull/516
 
 # v2.6.0 09-Feb-2024
 
