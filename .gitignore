@@ -11,3 +11,4 @@ __pycache__
 yarn.lock
 yarn-error.log
 .yarnrc.yml
+.DS_Store

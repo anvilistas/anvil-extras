@@ -9,18 +9,10 @@ Installation
 You will need to setup the Users and Data Table services in your app:
 
   * Ensure that you have added the 'Users' service to your app
-
-Classic Mode (requires changes to Users table):
   * In the 'Data Tables' service, add:
   	* a table named 'permissions' with a text column named 'name'
 	* a table named 'roles' with a text column named 'name' and a 'link to table'column named 'permissions' that links to multiple rows of the permissions table
-	* a new 'link to table' column in the Users table named 'roles' that links to multiple rows of the 'roles' table
-
-Custom Mode (no changes to Users table):
-  * In the 'Data Tables' service, add:
-  	* a table named 'permissions' with a text column named 'name'
-	* a table named 'roles' with a text column named 'name' and a 'link to table'column named 'permissions' that links to multiple rows of the permissions table
-	* a table with a 'link to table' column named 'user' that links to a single row of the 'users' table and a 'link to table' column named 'roles' that links to multiple rows of the 'roles' table
+	* a new 'link to table' column in the Users table named 'roles' that links to multiple rows of the 'roles' table (This behaviour is configurable - see below)
 
 Usage
 -----
@@ -30,8 +22,7 @@ Users and Permissions
 
 * Add entries to the permissions table. (e.g. 'can_view_stuff', 'can_edit_sensitive_thing')
 * Add entries to the roles table (e.g. 'admin') with links to the relevant permissions
-* Classic mode: In the Users table, link users to the relevant roles
-* Custom mode: Set the table name where the user is linked to roles
+* In the Users table, link users to the relevant roles
 
 Server Functions
 ++++++++++++++++
@@ -61,10 +52,6 @@ function is called and raises an error if not:
 
     import anvil.server
     from anvil_extras.authorisation import authorisation_required
-    from anvil_extras import authorisation
-
-    # optional - set the table name with roles column (default: users table)
-    authorisation.set_config(get_roles_row="usermap")
 
     @anvil.server.callable
     @authorisation_required("can_edit_sensitive_thing")
@@ -74,6 +61,24 @@ function is called and raises an error if not:
 You can pass either a single string or a list of strings to the decorator. The function
 will only be called if the logged in user has ALL the permissions listed.
 
+Configuration Options
++++++++++++++++++++++
+Certain default behaviour is configurable.
+
+By default the user's table expects a 'roles' column, that links to multiple rows of the 'roles' table.
+Alternatively you can create a table that maps a user to linked rows of the role's table, avoiding adding extra columns to the user's table.
+
+* Create a table called 'usermap' with a column 'user' and a column 'roles'.
+* the 'user' column is a link to a row in the user's table. The 'roles' column is a link to multiple rows from the 'roles' table.
+
+.. code-block:: python
+
+    import anvil.server
+    from anvil_extras.authorisation
+
+    authorisation.set_config(get_roles="usermap")
+
+Now the authorisation module will use the 'usermap' table to get roles for a user.
 
 API
 ---
@@ -95,3 +100,7 @@ API
 .. function:: check_permissions(permissions)
 
     Raises a ValueError if there is no user or the user does not have valid permissions
+
+.. function:: set_config(**kwargs)
+
+    Sets custom configuration of this module. Accepts get_roles='table_name' as a keyword argument.
