@@ -27,7 +27,7 @@ def _set_user_roles_getter(option):
             "roles"
         ]
     else:
-        raise TypeError("set_user_roles_getter: option is not valid.")
+        raise TypeError("get_roles: option is not valid.")
 
 
 def authentication_required(func):
