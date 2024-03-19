@@ -1,6 +1,8 @@
 # Unreleased
 
 ## Bug Fixes
+* routing - fix initialisation of history state
+  https://github.com/anvilistas/anvil-extras/discussions/519
 * multiselect - fix visible False property in the designer
   https://github.com/anvilistas/anvil-extras/issues/510
 * multiselect - fix toggling enabled property loses selected state
