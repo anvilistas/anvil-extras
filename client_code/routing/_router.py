@@ -170,6 +170,8 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
             _current_form = form
             update_form_attrs(form)
             add_form_to_container(form)
+        # if the form_show was slow don't fire the on_form_load callback
+        nav_context.check_stale()
         alert_form_loaded(form=form, **url_args)
 
 

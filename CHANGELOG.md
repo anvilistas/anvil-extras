@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/issues/513
 * switch - fix lever color when switch is checked
   https://github.com/anvilistas/anvil-extras/pull/517
+* routing - fix on_form_load might fire stale value if form_show event is slow
+  https://github.com/anvilistas/anvil-extras/discussions/521
 
 ## Minor Changes
 * designer hints - add some designer hints to components
