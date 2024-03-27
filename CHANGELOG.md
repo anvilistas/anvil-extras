@@ -1,4 +1,4 @@
-# Unreleased
+# v2.6.1 27-Mar-2024
 
 ## Bug Fixes
 * routing - fix initialisation of history state
