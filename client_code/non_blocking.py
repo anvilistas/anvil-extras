@@ -11,7 +11,7 @@ from anvil.js import report_exceptions as _report
 from anvil.js import window as _W
 from anvil.server import call_s as _call_s
 
-__version__ = "2.6.0"
+__version__ = "2.6.1"
 
 try:
     # just for a nice repr by default
