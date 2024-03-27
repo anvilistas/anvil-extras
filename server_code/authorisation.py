@@ -7,8 +7,27 @@
 import functools
 
 import anvil.users
+from anvil.tables import app_tables
 
 __version__ = "2.6.1"
+
+config = {"get_roles": lambda user: user["roles"]}
+
+
+def set_config(**kwargs):
+    if "get_roles" in kwargs:
+        _set_user_roles_getter(kwargs["get_roles"])
+
+
+def _set_user_roles_getter(option):
+    if option is None:
+        config["get_roles"] = lambda user: user["roles"]
+    elif isinstance(option, str):  # table name
+        config["get_roles"] = lambda user: getattr(app_tables, option).get(user=user)[
+            "roles"
+        ]
+    else:
+        raise TypeError("get_roles: option is not valid.")
 
 
 def authentication_required(func):
@@ -38,7 +57,7 @@ def has_permission(permissions):
     try:
         user_permissions = set(
             permission["name"]
-            for role in user["roles"]
+            for role in config["get_roles"](user)
             for permission in role["permissions"]
         )
     except TypeError:
