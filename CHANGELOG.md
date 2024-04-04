@@ -4,6 +4,10 @@
 * authorisation - added config option to avoid adding a roles column to the users table
   https://github.com/anvilistas/anvil-extras/pull/516
 
+## Bug Fixes
+* persistence - fix get method
+  https://github.com/anvilistas/anvil-extras/issues/523
+
 
 # v2.6.1 27-Mar-2024
 

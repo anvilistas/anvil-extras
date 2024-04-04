@@ -113,7 +113,7 @@ class PersistedClass:
         try:
             return cls._cache[key]
         except KeyError:
-            row = anvil.server.call(f"get_{cls._snake_name}", {cls.key: key})
+            row = anvil.server.call(f"get_{cls._snake_name}", **{cls.key: key})
             obj = cls(store=row)
             cls._cache[key] = obj
             return obj
