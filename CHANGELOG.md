@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* persistence - fix get method
+  https://github.com/anvilistas/anvil-extras/issues/523
+
 # v2.6.1 27-Mar-2024
 
 ## Bug Fixes
