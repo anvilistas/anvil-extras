@@ -7,6 +7,8 @@
 ## Bug Fixes
 * persistence - fix get method
   https://github.com/anvilistas/anvil-extras/issues/523
+* MultiSelect - fix an issue with multiselect on the self hosted app server
+  https://github.com/anvilistas/anvil-extras/issues/525
 
 
 # v2.6.1 27-Mar-2024

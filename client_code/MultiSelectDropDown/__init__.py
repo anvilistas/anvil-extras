@@ -70,6 +70,7 @@ _defaults = {
     "enable_filtering": False,
     "multiple": True,
     "enabled": True,
+    "items": None,
     "spacing_below": "small",
     "spacing_above": "small",
     "enable_select_all": False,
