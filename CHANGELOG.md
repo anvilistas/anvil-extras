@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/issues/523
 * MultiSelect - fix an issue with multiselect on the self hosted app server
   https://github.com/anvilistas/anvil-extras/issues/525
+* routing - fix redirect with None conditions
+  https://github.com/anvilistas/anvil-extras/pull/532
 
 
 # v2.6.1 27-Mar-2024
