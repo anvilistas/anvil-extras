@@ -213,13 +213,17 @@ def load_template_or_redirect(url_hash, url_pattern, url_dict, properties, nav_c
             path = next(path for path in paths if url_hash.startswith(path))
         except StopIteration:
             continue
+
         if condition is None:
-            break
+            pass
         elif not condition():
             continue
-        elif type(info) is TemplateInfo:
+
+        if type(info) is TemplateInfo:
             break
+
         redirect_hash = callable_()
+
         if isinstance(redirect_hash, str):
             if navigation_context.matches_current_context(redirect_hash):
                 # would cause an infinite loop
@@ -239,7 +243,9 @@ def load_template_or_redirect(url_hash, url_pattern, url_dict, properties, nav_c
         nav_context.check_stale()
 
     else:
+        # if no break
         load_error_or_raise(f"no template for url_hash={url_hash!r}")
+
     if current_template is callable_:
         logger.debug(f"unchanged template: {callable_.__name__!r}")
         return info, path
