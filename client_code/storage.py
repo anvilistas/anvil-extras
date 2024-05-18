@@ -43,7 +43,7 @@ def _is_str(key):
 def _serialize(obj):
     # we won't support subclasses of builtins so just check type is
     ob_type = type(obj)
-    if ob_type in (str, int, float, bool, _NoneType, bytes):
+    if ob_type in (str, int, float, bool, _NoneType, bytes, _Proxy):
         return obj
     elif ob_type in (list, tuple, _Array):
         return [_serialize(item) for item in obj]
