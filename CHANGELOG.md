@@ -3,6 +3,7 @@
 ## Enhancements
 * authorisation - added config option to avoid adding a roles column to the users table
   https://github.com/anvilistas/anvil-extras/pull/516
+* storage - proxyobjects are passed to the underlying storage so that those implementing the serializable interface can be stored
 
 ## Bug Fixes
 * persistence - fix get method
