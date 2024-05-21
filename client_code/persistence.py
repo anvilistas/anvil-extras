@@ -50,6 +50,9 @@ class LinkedAttribute:
         if not instance._store:
             return None
 
+        if not instance._store[self._linked_column]:
+            return None
+
         return instance._store[self._linked_column][self._linked_attr]
 
     def __set__(self, instance, value):

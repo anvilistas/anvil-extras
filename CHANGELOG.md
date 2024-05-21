@@ -8,6 +8,8 @@
 ## Bug Fixes
 * persistence - fix get method
   https://github.com/anvilistas/anvil-extras/issues/523
+* persistence - fix handling of Linked Attributes with no row
+  https://github.com/anvilistas/anvil-extras/issues/534
 * MultiSelect - fix an issue with multiselect on the self hosted app server
   https://github.com/anvilistas/anvil-extras/issues/525
 * routing - fix redirect with None conditions
