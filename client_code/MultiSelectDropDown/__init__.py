@@ -261,6 +261,19 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         # this is a bit of a hack - we're using the libraries private methods for this
         init_node(self._el.data("selectpicker")["$bsContainer"])
 
+    def _form_hide(self, **event_args):
+        try:
+            # this is a bit of a hack
+            # we need to remove the open class from the selectpicker
+            # otherwise the dropdown might remain open when the form is hidden
+            # this can happen if the form closes without the user interacting with the page
+            # e.g. if the form is closed by clicking the browser's back button
+            data = self._el.data("selectpicker")
+            data["$newElement"].removeClass("open")
+            data["$bsContainer"].removeClass("open")
+        except AttributeError:
+            pass
+
 
 ##### PRIVATE Functions #####
 

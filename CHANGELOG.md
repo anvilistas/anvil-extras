@@ -16,6 +16,8 @@
   https://github.com/anvilistas/anvil-extras/issues/525
 * routing - fix redirect with None conditions
   https://github.com/anvilistas/anvil-extras/pull/532
+* MultiSelect - fix an issue where the dropdown menu would remain open when the form is hidden
+  https://github.com/anvilistas/anvil-extras/issues/536
 
 
 # v2.6.1 27-Mar-2024
