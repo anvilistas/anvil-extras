@@ -1,9 +1,10 @@
-# Unreleased
+# v2.6.2 13-Jun-2024
 
-## Enhancements
+## Minor Changes
 * authorisation - added config option to avoid adding a roles column to the users table
   https://github.com/anvilistas/anvil-extras/pull/516
 * storage - proxyobjects are passed to the underlying storage so that those implementing the serializable interface can be stored
+  https://github.com/anvilistas/anvil-extras/pull/533
 
 ## Bug Fixes
 * Slider - allow connect and behaviour to be set at runtime
