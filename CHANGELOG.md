@@ -6,6 +6,8 @@
 * storage - proxyobjects are passed to the underlying storage so that those implementing the serializable interface can be stored
 
 ## Bug Fixes
+* Slider - allow connect and behaviour to be set at runtime
+  https://github.com/anvilistas/anvil-extras/issues/538
 * persistence - fix get method
   https://github.com/anvilistas/anvil-extras/issues/523
 * persistence - fix handling of Linked Attributes with no row

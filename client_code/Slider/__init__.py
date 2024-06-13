@@ -190,20 +190,26 @@ def _prop_getter(prop):
     return lambda self: self._props[prop]
 
 
-def _in_designer_setter(self):
+def _recreate_slider(self):
     self._dom_node.replaceChildren(self._slider_node)
+    values = self.values
     try:
         self._parse_props()
         self._create_slider()
+        if not in_designer:
+            self.values = values
     except Exception as e:
-        self._report_designer_error(e)
+        if in_designer:
+            self._report_designer_error(e)
+        else:
+            raise e
 
 
-def _slider_prop(prop):
+def _slider_prop(prop, recreate=False):
     def setter(self, value):
         self._props[prop] = value
-        if in_designer:
-            return _in_designer_setter(self)
+        if in_designer or recreate:
+            return _recreate_slider(self)
         if prop == "format":
             value = _get_formatter(value)
             self._parsed_props["format"] = value
@@ -219,7 +225,7 @@ def _slider_parse_prop(prop):
     def setter(self, value):
         self._props[prop] = value
         if in_designer:
-            return _in_designer_setter(self)
+            return _recreate_slider(self)
         parsed = _parse(value, prop == "pips")
         self._slider.updateOptions({prop: parsed})
 
@@ -254,7 +260,7 @@ def _min_max_prop(prop):
         r[prop] = value
         self._props["range"] = r
         if in_designer:
-            return _in_designer_setter(self)
+            return _recreate_slider(self)
         self._slider.updateOptions({"range": r})
 
     return property(getter, setter)
@@ -409,8 +415,8 @@ class Slider(SliderTemplate):
     formatted_values = property(_formatted_values, _value_setter)
 
     ###### noUiSlider PROPS ######
-    connect = _slider_prop("connect")  # not dynamic
-    behaviour = _slider_prop("behaviour")  # not dynamic
+    connect = _slider_prop("connect", True)
+    behaviour = _slider_prop("behaviour", True)
     margin = _slider_parse_prop("margin")
     padding = _slider_parse_prop("padding")
     limit = _slider_parse_prop("limit")
