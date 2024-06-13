@@ -51,6 +51,7 @@ custom_component: true
 components: []
 container:
   type: HtmlTemplate
+  event_bindings: {hide: _form_hide}
   properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
     role: null, html: "<select class=\"select-picker\" \n        multiple \n     \
       \   data-container=\"body\"\n        data-icon-base=\"fa\"\n        data-tick-icon=\"\
