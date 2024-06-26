@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* multiselect - fix bug where enable_selct_all was not being set correctly
+  https://anvil.works/forum/t/anvil-extras-2-6/21252/4
+
 # v2.6.2 13-Jun-2024
 
 ## Minor Changes
