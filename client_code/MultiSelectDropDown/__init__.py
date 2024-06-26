@@ -178,10 +178,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         options, values = _clean_items(value)
         self._el.append(options)
         self._values = values
-        self.selected = selected
         if self._init:
             self._el.selectpicker("refresh")
             self._el.selectpicker("render")
+            self.selected = selected
 
     @property
     def selected_keys(self):
