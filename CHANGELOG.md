@@ -1,5 +1,8 @@
 # Unreleased
 
+## Minor Changes
+* persistence - add reset method
+  https://github.com/anvilistas/anvil-extras/pull/542
 ## Bug Fixes
 * multiselect - fix bug where enable_selct_all was not being set correctly
   https://anvil.works/forum/t/anvil-extras-2-6/21252/4

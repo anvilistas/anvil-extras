@@ -169,6 +169,9 @@ class PersistedClass:
         anvil.server.call(f"delete_{self._snake_name}", self._store, *args, **kwargs)
         self._delta.clear()
 
+    def reset(self):
+        self._delta.clear()
+
 
 def persisted_class(cls):
     """A decorator for a class with a persistence mechanism"""
