@@ -3,6 +3,8 @@
 ## Bug Fixes
 * multiselect - fix bug where enable_selct_all was not being set correctly
   https://anvil.works/forum/t/anvil-extras-2-6/21252/4
+* non-blocking - fix catching exceptions when accessing a non-blocking promise
+  https://github.com/anvilistas/anvil-extras/pull/543
 
 # v2.6.2 13-Jun-2024
 
