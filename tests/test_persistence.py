@@ -64,6 +64,15 @@ def linked_persisted_book(book_store):
     return Book(book_store)
 
 
+@pytest.fixture
+def douglas_adams():
+    @ps.persisted_class
+    class Author:
+        pass
+
+    return Author({"name": "Douglas Adams"})
+
+
 def test_linked_attribute(book, book_store):
     """Test that the LinkedAttribute class works independently of persisted_class"""
     assert book.author_name == "Luciano Ramalho"
@@ -130,12 +139,10 @@ def test_linked_class(linked_persisted_book):
     assert linked_persisted_book.author.name == "Luciano Ramalho"
 
 
-def test_linked_class_set(linked_persisted_book):
-    """Test that attempting to change a linked class instance raises an error"""
-    with pytest.raises(AttributeError) as excinfo:
-        linked_persisted_book.author = "test"
-
-    assert "Linked Class instance is already set" in str(excinfo.value)
+def test_linked_class_set(linked_persisted_book, douglas_adams):
+    """Test that changing a linked class instance behaves as expected"""
+    linked_persisted_book.author = douglas_adams
+    assert linked_persisted_book.author.name == "Douglas Adams"
 
 
 def test_non_attributes_in_local_store(persisted_book):
