@@ -77,9 +77,7 @@ class LinkedClass:
         )
 
     def __set__(self, instance, value):
-        raise AttributeError(
-            "Linked Class instance is already set and cannot be changed"
-        )
+        instance._delta[self._linked_column] = value._store
 
 
 class PersistedClass:
