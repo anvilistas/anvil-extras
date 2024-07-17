@@ -72,12 +72,23 @@ class LinkedClass:
         if instance is None:
             return self
 
+        if instance._delta and self._linked_column in instance._delta:
+            return self._cls(
+                instance._delta[self._linked_column], *self._args, **self._kwargs
+            )
         return self._cls(
             instance._store[self._linked_column], *self._args, **self._kwargs
         )
 
+        store = (
+            instance._delta
+            if instance._delta and self._linked_column in instance._delta
+            else instance._store
+        )
+        return self._cls(store[self._linked_column], *self._args, **self._kwargs)
+
     def __set__(self, instance, value):
-        instance._delta[self._linked_column] = value._store
+        instance._delta[self._linked_column] = self._cls(value._store)
 
 
 class PersistedClass:
