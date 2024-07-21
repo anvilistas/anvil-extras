@@ -17,10 +17,8 @@ properties:
   binding_writeback_events: [suggestion_clicked]
   group: text
   important: true
-- {name: enabled, type: boolean, default_value: true, group: interaction, important: true,
-  designer_hint: enabled}
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true,
-  designer_hint: visible}
+- {name: enabled, type: boolean, default_value: true, group: interaction, important: true, designer_hint: enabled}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
 - name: spacing_above
   type: enum
   options: [none, small, medium, large]
@@ -35,10 +33,8 @@ properties:
   important: false
 - {name: tag, type: object, group: user data, important: false}
 - {name: suggest_if_empty, type: boolean, default_value: false}
-- {name: foreground, type: color, default_value: '', default_binding_prop: false,
-  group: appearance, important: false, description: Only applies changes to the TextBox}
-- {name: background, type: color, default_value: '', default_binding_prop: false,
-  description: Only applies changes to the TextBox, group: appearance, important: false}
+- {name: foreground, type: color, default_value: '', default_binding_prop: false, group: appearance, important: false, description: Only applies changes to the TextBox}
+- {name: background, type: color, default_value: '', default_binding_prop: false, description: Only applies changes to the TextBox, group: appearance, important: false}
 - name: filter_mode
   type: enum
   default_value: contains

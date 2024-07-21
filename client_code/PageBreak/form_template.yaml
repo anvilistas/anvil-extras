@@ -1,12 +1,31 @@
 container:
   type: HtmlTemplate
-  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: "<!--\nBased on the snippet at https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5\n\
-      -->\n<div class=\"break-container\" style=\"overflow: hidden;\">\n  <div style=\"\
-      page-break-after:always;\"></div>\n  <div class=\"margin-element\" style=\"\
-      margin-top: 0px;\"></div>\n</div>\n\n<style>\n  .break-container {\n    border:\
-      \ 1px solid grey;\n  }\n  @media print {\n    .break-container {\n      border-color:\
-      \ transparent !important;\n    }\n  }\n</style>\n"}
+  properties:
+    tooltip: ''
+    background: ''
+    foreground: ''
+    border: ''
+    visible: true
+    role: null
+    html: |
+      <!--
+      Based on the snippet at https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5
+      -->
+      <div class="break-container" style="overflow: hidden;">
+        <div style="page-break-after:always;"></div>
+        <div class="margin-element" style="margin-top: 0px;"></div>
+      </div>
+
+      <style>
+        .break-container {
+          border: 1px solid grey;
+        }
+        @media print {
+          .break-container {
+            border-color: transparent !important;
+          }
+        }
+      </style>
 components: []
 is_package: true
 custom_component: true

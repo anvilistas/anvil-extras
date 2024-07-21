@@ -1,17 +1,14 @@
 properties:
 - {name: background, type: color, default_value: null, group: appearance, important: false}
-- {name: foreground, type: color, default_value: null, description: This should be a hex value or a theme color,
-  group: appearance, important: false}
+- {name: foreground, type: color, default_value: null, description: This should be a hex value or a theme color, group: appearance, important: false}
 - name: tab_titles
   type: text[]
   default_value: [Tab 1, Tab 2, Tab 3]
   description: Each line should be a new tab title
   important: true
-- {name: active_tab_index, type: number, default_value: 0, default_binding_prop: true,
-  description: The current active tab, important: false}
+- {name: active_tab_index, type: number, default_value: 0, default_binding_prop: true, description: The current active tab, important: false}
 - {name: active_background, type: color, default_value: '', important: true, group: appearance}
-- {name: role, type: string, default_value: null, description: This component works well with the card role. Place a card below or above the tabs component,
-  group: appearance, important: true}
+- {name: role, type: string, default_value: null, description: This component works well with the card role. Place a card below or above the tabs component, group: appearance, important: true}
 - name: align
   type: enum
   options: [left, center, right]
@@ -20,8 +17,7 @@ properties:
   group: text
   important: false
   designer_hint: align-horizontal
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true,
-  designer_hint: visible}
+- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
 - {name: tag, type: object, group: user data, important: false}
 - name: spacing_above
   type: enum
@@ -35,11 +31,9 @@ properties:
   default_value: none
   group: layout
   important: false
-- {name: bold, type: boolean, default_value: null, group: text, important: false,
-  designer_hint: font-bold}
+- {name: bold, type: boolean, default_value: null, group: text, important: false, designer_hint: font-bold}
 - {name: font_size, type: string, default_value: null, group: text, important: false}
-- {name: italic, type: boolean, default_value: null, group: text, important: false,
-  designer_hint: font-italic}
+- {name: italic, type: boolean, default_value: null, group: text, important: false, designer_hint: font-italic}
 - {name: font, type: string, default_value: '', group: text, important: false}
 is_package: true
 events:
@@ -63,9 +57,22 @@ components:
   layout_properties: {slot: default}
 container:
   type: HtmlTemplate
-  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: null, html: "<ul class=\"tabs\">\n  <li class=\"tab\" anvil-slot-repeat=\"\
-      default\"></li>\n  <li class=\"indicator\"></li>\n</ul>\n<script type=\"module\"\
-      >\nimport {DesignerTabs} from \"https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js\"\
-      ;\nDesignerTabs.init();\n</script>\n\n\n"}
+  properties:
+    tooltip: ''
+    background: ''
+    foreground: ''
+    border: ''
+    visible: true
+    role: null
+    html: |+
+      <ul class="tabs">
+        <li class="tab" anvil-slot-repeat="default"></li>
+        <li class="indicator"></li>
+      </ul>
+      <script type="module">
+      import {DesignerTabs} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
+      DesignerTabs.init();
+      </script>
+
+
   event_bindings: {show: _on_show, hide: _on_hide}

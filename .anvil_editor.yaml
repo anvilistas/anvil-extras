@@ -63,3 +63,5 @@ unique_ids:
   assets:
     loading-spinner.js: GNN5BGLOS3BHSXWTHXXQUT5BPTJQEUXA
     theme.css: S5NWY72JOUFUHCDRRQX7DV3C5CKF4TGN
+  scripts:
+    fix_version: 5BGFRM42HGM3ODXODMOUG2DFE7CTUZOM

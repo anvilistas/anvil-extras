@@ -1,6 +1,5 @@
 properties:
-- {name: checked, type: boolean, default_value: false, default_binding_prop: true,
-  important: true, allow_binding_writeback: true}
+- {name: checked, type: boolean, default_value: false, default_binding_prop: true, important: true, allow_binding_writeback: true}
 - {name: checked_color, type: color, default_value: null, group: appearance, important: false}
 - {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
 - {name: foreground, type: color, default_value: null, group: appearance, important: false}
@@ -33,22 +32,22 @@ events:
 custom_component: true
 components:
 - type: CheckBox
-  properties: {role: switch, align: left, tooltip: '', border: '', enabled: true,
-    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-    spacing_below: small, italic: false, background: '', bold: false, checked: true,
-    underline: false}
+  properties: {role: switch, align: left, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, spacing_below: small, italic: false, background: '', bold: false, checked: true, underline: false}
   name: check_box_1
   layout_properties: {slot: default}
   event_bindings: {change: check_box_1_change}
 container:
   type: HtmlTemplate
-  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
-    role: switch, html: '<div class="anvil-extras-switch"></div>
-
+  properties:
+    tooltip: ''
+    background: ''
+    foreground: ''
+    border: ''
+    visible: true
+    role: switch
+    html: |-
+      <div class="anvil-extras-switch"></div>
       <script type="module">
-
       import {DesignerSwitch} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-
       DesignerSwitch.init();
-
-      </script>'}
+      </script>
