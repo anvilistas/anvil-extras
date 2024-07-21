@@ -3,10 +3,7 @@ container:
   properties: {col_widths: '{}'}
 components:
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: MessagePill, font_size: null, font: '', spacing_above: small, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: MessagePill, font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_4
   layout_properties: {grid_position: 'SGJRUD,FWDVZW'}
 - type: form:MessagePill
@@ -26,10 +23,7 @@ components:
   name: message_pill_4
   layout_properties: {grid_position: 'CNITUV,WYNUFR'}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: IndeterminateProgressBar, font_size: null, font: '', spacing_above: large,
-    icon_align: left, spacing_below: none, italic: false, background: '', bold: true,
-    underline: false, icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: IndeterminateProgressBar, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: none, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_1
   layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
 - type: form:ProgressBar.Indeterminate
@@ -37,10 +31,7 @@ components:
   name: indeterminate_progress_bar_1
   layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: ProgressBar, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: none, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: ProgressBar, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: none, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_1_copy
   layout_properties:
     col_widths: {}
@@ -50,10 +41,7 @@ components:
   name: progress_bar
   layout_properties: {grid_position: 'TUUBRI,CREBNE'}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Auto Refresh, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Auto Refresh, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_3
   layout_properties: {grid_position: 'YBVZRV,XCMOTC'}
 - type: FlowPanel
@@ -62,18 +50,12 @@ components:
   layout_properties: {grid_position: 'MBIOXI,WEKBGG'}
   components:
   - type: Button
-    properties: {role: null, align: center, tooltip: Rest counts, border: '', enabled: true,
-      foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-      icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
-      underline: false, icon: 'fa:refresh'}
+    properties: {role: null, align: center, tooltip: Rest counts, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:refresh'}
     name: reset_button
     layout_properties: {grid_position: 'YBVZRV,XBXDIA'}
     event_bindings: {click: reset_button_click}
   - type: Button
-    properties: {role: null, align: center, tooltip: Decrease tally, border: '', enabled: true,
-      foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-      icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
-      underline: false, icon: 'fa:minus'}
+    properties: {role: null, align: center, tooltip: Decrease tally, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:minus'}
     name: minus_button
     layout_properties: {grid_position: 'WYANSY,GEJTSR'}
     event_bindings: {click: minus_button_click}
@@ -84,10 +66,7 @@ components:
     data_bindings:
     - {property: text, code: 'self.item[''tally'']'}
   - type: Button
-    properties: {role: null, align: center, tooltip: Increase tally, border: '', enabled: true,
-      foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-      icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
-      underline: false, icon: 'fa:plus'}
+    properties: {role: null, align: center, tooltip: Increase tally, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:plus'}
     name: plus_button
     layout_properties: {}
     event_bindings: {click: plus_button_click}
@@ -96,17 +75,13 @@ components:
     name: label_5
     layout_properties: {grid_position: 'YBVZRV,HFMSBF'}
     data_bindings:
-    - {property: text, code: 'f"These buttons have been clicked {self.item[''counter'']}
-        times"'}
+    - {property: text, code: 'f"These buttons have been clicked {self.item[''counter'']} times"'}
 - type: Timer
   properties: {interval: 0.1}
   name: timer_1
   event_bindings: {tick: timer_1_tick}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Tabs Component, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Tabs Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_3_copy_4
   layout_properties:
     col_widths: {}
@@ -131,40 +106,27 @@ components:
   layout_properties: {grid_position: 'ADKQXK,NWEGOM'}
   event_bindings: {tab_click: tabs_1_tab_click}
 - type: ColumnPanel
-  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true,
-    wrap_on: mobile, col_spacing: medium, spacing_above: none, col_widths: '{}', spacing_below: small,
-    background: ''}
+  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true, wrap_on: mobile, col_spacing: medium, spacing_above: none, col_widths: '{}', spacing_below: small, background: ''}
   name: tabs_panel
   layout_properties: {grid_position: 'ZNFPXX,RTVBWV'}
   components:
   - type: Label
-    properties: {role: null, align: center, tooltip: '', border: '', foreground: '',
-      visible: true, text: Tab 1 is visible, font_size: 18, font: '', spacing_above: large,
-      icon_align: left, spacing_below: large, italic: false, background: '', bold: false,
-      underline: false, icon: ''}
+    properties: {role: null, align: center, tooltip: '', border: '', foreground: '', visible: true, text: Tab 1 is visible, font_size: 18, font: '', spacing_above: large, icon_align: left, spacing_below: large, italic: false, background: '', bold: false, underline: false, icon: ''}
     name: tabs_label
     layout_properties: {grid_position: 'BXXKLU,CAESOP'}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Switch Component, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Switch Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_3_copy_3
   layout_properties:
     col_widths: {}
     grid_position: RDPMGN,GEQMNU
 - type: form:Switch
-  properties: {tooltip: '', enabled: true, foreground: null, text_post: 'on', visible: true,
-    font_size: 14, spacing_above: small, checked_color: '', spacing_below: small,
-    italic: true, text_pre: 'off', background: '', bold: true, checked: true}
+  properties: {tooltip: '', enabled: true, foreground: null, text_post: 'on', visible: true, font_size: 14, spacing_above: small, checked_color: '', spacing_below: small, italic: true, text_pre: 'off', background: '', bold: true, checked: true}
   name: switch_1
   layout_properties: {grid_position: 'MZQIRA,PWAOPO', width: 54}
   event_bindings: {}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Multi Select Dropdown, font_size: null, font: '', spacing_above: large,
-    icon_align: left, spacing_below: small, italic: false, background: '', bold: true,
-    underline: false, icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Multi Select Dropdown, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_3_copy
   layout_properties:
     col_widths: {}
@@ -184,38 +146,27 @@ components:
   layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
   event_bindings: {change: multi_select_drop_down_1_change}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Quill Editor, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Quill Editor, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_3_copy_2
   layout_properties:
     col_widths: {}
     grid_position: FBTNBP,PVGRIB
 - type: form:Quill
-  properties: {readonly: false, height: '150', placeholder: hi there, toolbar: true,
-    enabled: true, visible: true, auto_expand: true, content: '', spacing_above: small,
-    spacing_below: small, theme: snow}
+  properties: {readonly: false, height: '150', placeholder: hi there, toolbar: true, enabled: true, visible: true, auto_expand: true, content: '', spacing_above: small, spacing_below: small, theme: snow}
   name: quill
   layout_properties:
     col_widths: {}
     grid_position: XFUXGM,KNTPBT
   event_bindings: {text_change: quill_text_change}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Autocomplete Component, font_size: null, font: '', spacing_above: large,
-    icon_align: left, spacing_below: small, italic: false, background: '', bold: true,
-    underline: false, icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Autocomplete Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_4_copy_3
   layout_properties:
     col_widths: {}
     grid_position: WJJWDU,YMUSBV
 - type: form:Autocomplete
   properties:
-    suggestions: [Anvil, AT&T, Adobe, Airbnb, Alphabet, Amazon, Apple, Broadcom, Charter Communications,
-      Cisco, Comcast, Facebook, IBM, Intel, Intuit, Mastercard, Microsoft, Netflix,
-      Nvidia, Oracle, PayPal, Qualcomm, Salesforce, ServiceNow, Square, T-Mobile US,
-      Texas Instruments, Verizon, Visa, Zoom]
+    suggestions: [Anvil, AT&T, Adobe, Airbnb, Alphabet, Amazon, Apple, Broadcom, Charter Communications, Cisco, Comcast, Facebook, IBM, Intel, Intuit, Mastercard, Microsoft, Netflix, Nvidia, Oracle, PayPal, Qualcomm, Salesforce, ServiceNow, Square, T-Mobile US, Texas Instruments, Verizon, Visa, Zoom]
     placeholder: ''
     text: ''
     enabled: true
@@ -225,25 +176,17 @@ components:
     suggest_if_empty: true
   name: autocomplete_1
   layout_properties: {grid_position: 'YVFANF,BPSWYI'}
-  event_bindings: {pressed_enter: autocomplete_event, lost_focus: autocomplete_event,
-    focus: autocomplete_event, suggestion_clicked: autocomplete_event}
+  event_bindings: {pressed_enter: autocomplete_event, lost_focus: autocomplete_event, focus: autocomplete_event, suggestion_clicked: autocomplete_event}
   data_bindings:
   - {property: text, code: 'self.item[''text'']', writeback: true}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Slider Component, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Slider Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_4_copy
   layout_properties:
     col_widths: {}
     grid_position: NHJHEA,GPPVWA
 - type: form:Slider
-  properties: {pips_mode: positions, min: 0, tooltips: true, margin: null, pips_stepped: true,
-    pips: true, pips_values: '0, 25, 50, 75, 100', max: 100, padding: '', enabled: true,
-    pips_density: 5, limit: null, animate: true, visible: true, connect: 'False, True,
-      False', start: '20, 50', behaviour: tap, spacing_above: medium, spacing_below: medium,
-    color: '#FF9800', format: '£{:.2f}', step: 5}
+  properties: {pips_mode: positions, min: 0, tooltips: true, margin: null, pips_stepped: true, pips: true, pips_values: '0, 25, 50, 75, 100', max: 100, padding: '', enabled: true, pips_density: 5, limit: null, animate: true, visible: true, connect: 'False, True, False', start: '20, 50', behaviour: tap, spacing_above: medium, spacing_below: medium, color: '#FF9800', format: '£{:.2f}', step: 5}
   name: slider
   layout_properties:
     col_widths: {}
@@ -261,10 +204,7 @@ components:
   - {property: text, code: 'self.slider.formatted_values[0]', writeback: true}
   event_bindings: {pressed_enter: slider_textbox_enter}
 - type: Button
-  properties: {role: null, align: full, tooltip: '', border: '', enabled: true, foreground: '',
-    visible: true, text: RESET, font_size: null, font: '', spacing_above: small, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: false, underline: false,
-    icon: 'fa:refresh'}
+  properties: {role: null, align: full, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: RESET, font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:refresh'}
   name: slider_button_reset
   layout_properties:
     col_widths: {}
@@ -280,58 +220,39 @@ components:
   - {property: text, code: 'self.slider.formatted_values[1]', writeback: true}
   event_bindings: {pressed_enter: slider_textbox_enter}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Slider Component - with custom pips - see code, font_size: null, font: '',
-    spacing_above: large, icon_align: left, spacing_below: large, italic: false, background: '',
-    bold: true, underline: false, icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Slider Component - with custom pips - see code, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: large, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_4_copy_2
   layout_properties:
     col_widths: {}
     grid_position: VGOMRT,ISPGIW
 - type: form:Slider
-  properties: {role: '', pips_mode: count, min: -5, tooltips: true, margin: null,
-    pips_stepped: false, pips: true, pips_values: '5', max: 5, padding: '', enabled: true,
-    pips_density: -1, limit: null, animate: false, visible: true, connect: lower,
-    start: '0', behaviour: tap, handle_size: '', spacing_above: small, spacing_below: small,
-    bar_height: '', color: null, format: .1f, step: 1}
+  properties: {role: '', pips_mode: count, min: -5, tooltips: true, margin: null, pips_stepped: false, pips: true, pips_values: '5', max: 5, padding: '', enabled: true, pips_density: -1, limit: null, animate: false, visible: true, connect: lower, start: '0', behaviour: tap, handle_size: '', spacing_above: small, spacing_below: small, bar_height: '', color: null, format: .1f, step: 1}
   name: slider_agree
   layout_properties: {grid_position: 'CVTVHB,QMZPRB'}
   event_bindings: {change: slider_agree_change}
   data_bindings:
   - {property: formatted_value, code: 'self.item[''agree'']', writeback: true}
 - type: Button
-  properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
-    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-    icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
-    underline: false, icon: 'fa:minus'}
+  properties: {role: null, align: center, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:minus'}
   name: slider_down
   layout_properties:
     col_widths: {}
     grid_position: SKFJND,QWVXHQ
   event_bindings: {click: slider_down_click}
 - type: Button
-  properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
-    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-    icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
-    underline: false, icon: 'fa:refresh'}
+  properties: {role: null, align: center, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:refresh'}
   name: slider_reset
   layout_properties: {grid_position: 'SKFJND,GTGWKT'}
   event_bindings: {click: slider_reset_click}
 - type: Button
-  properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
-    foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small,
-    icon_align: left, spacing_below: small, italic: false, background: '', bold: false,
-    underline: false, icon: 'fa:plus'}
+  properties: {role: null, align: center, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:plus'}
   name: slider_up
   layout_properties:
     col_widths: {}
     grid_position: SKFJND,KWGACE
   event_bindings: {click: slider_up_click}
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Chips, font_size: null, font: '', spacing_above: large, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Chips, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_3_copy_5
   layout_properties:
     col_widths: {}
@@ -356,10 +277,7 @@ components:
     col_widths: {}
     grid_position: STFSBF,BYBVXR
 - type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true,
-    text: Pivot Component, font_size: null, font: '', spacing_above: small, icon_align: left,
-    spacing_below: small, italic: false, background: '', bold: true, underline: false,
-    icon: ''}
+  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Pivot Component, font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
   name: label_6
   layout_properties: {grid_position: 'WHHTUU,ICVIKX'}
 - type: form:Pivot
