@@ -4,11 +4,15 @@
 * persistence - add reset method
   https://github.com/anvilistas/anvil-extras/pull/542
 * persistence - add set behaviour for linked classes
+
 ## Bug Fixes
 * multiselect - fix bug where enable_selct_all was not being set correctly
   https://anvil.works/forum/t/anvil-extras-2-6/21252/4
 * non-blocking - fix catching exceptions when accessing a non-blocking promise
   https://github.com/anvilistas/anvil-extras/pull/543
+* multiselect - fix select all buttons overlapping when using width=fit
+  https://github.com/anvilistas/anvil-extras/issues/545
+
 
 # v2.6.2 13-Jun-2024
 
