@@ -28,6 +28,8 @@ jQuery.fn.offset = function() {
 """
 )
 
+_html_injector.css(".bs-actionsbox { min-width: max-content; }")
+
 
 # If we update this - check the form_hide/form_show behaviour still works
 bs_select_version = "1.13.18"
