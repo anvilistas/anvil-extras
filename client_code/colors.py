@@ -259,6 +259,7 @@ M3_DEFAULT_SCHEMES = {
     },
 }
 
+
 class Manager:
     def __init__(self, schemes=None):
         self.schemes = schemes or M3_DEFAULT_SCHEMES
