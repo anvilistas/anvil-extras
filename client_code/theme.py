@@ -269,12 +269,38 @@ M3_DEFAULT_SCHEMES = {
 }
 
 
-class Manager:
-    def __init__(self, schemes=None):
+class Colours:
+    def __init__(self, schemes=None, default_scheme=None, default_variant=None):
         self.schemes = schemes or M3_DEFAULT_SCHEMES
+        self._scheme = default_scheme or tuple(self.schemes.keys())[0]
+        self._variant = default_variant or tuple(self.schemes[self._scheme].keys())[0]
+        self._set_scheme(self.scheme, self.variant)
 
-    def set_scheme(self, scheme, variant):
+    def _set_scheme(self, scheme, variant):
         try:
             anvil.app.theme_colors.update(self.schemes[scheme][variant])
         except KeyError:
             raise ValueError(f"{scheme} {variant} is not defined.")
+
+    def set_scheme(self, scheme, variant):
+        self._set_scheme(scheme, variant)
+        self._scheme = scheme
+        self._variant = variant
+
+    @property
+    def scheme(self):
+        return self._scheme
+
+    @scheme.setter
+    def scheme(self, scheme):
+        self._set_scheme(scheme, self.variant)
+        self._scheme = scheme
+
+    @property
+    def variant(self):
+        return self._variant
+
+    @variant.setter
+    def variant(self, variant):
+        self._set_scheme(self.scheme, variant)
+        self._variant = variant
