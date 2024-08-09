@@ -1,7 +1,7 @@
 # Unreleased
 
 ## New Features
-* colors module - Define and switch between color schemes via code
+* theme module - Define and switch between colour schemes via code
   https://github.com/anvilistas/anvil-extras/pull/551
 
 ## Minor Changes
