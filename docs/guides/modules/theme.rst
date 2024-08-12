@@ -1,22 +1,22 @@
 Theme
 =====
-Define colour schemes for your app and switch between them easily.
+Define color schemes for your app and switch between them easily.
 
-The module includes the definition of the anvil standard Material Design colour schemes and those are used as the default. You can also define your own colour schemes and use them in the same way.
+The module includes the definition of the anvil standard Material Design color schemes and those are used as the default. You can also define your own color schemes and use them in the same way.
 
 Examples
 --------
-Create an instance of the `theme.Colours` class:
+Create an instance of the `theme.Colors` class:
 
 .. code-block:: python
 
     from anvil_extras import theme
 
-    colours = theme.Colours()
+    colors = theme.Colors()
 
-By default, that instance will have a `schemes` attribute that contains the standard Material Design colour schemes.
+By default, that instance will have a `schemes` attribute that contains the standard Material Design color schemes.
 
-You can use the instance to set the colour scheme of your app to either the 'light' or 'dark' variant of one of those standard schemes.
+You can use the instance to set the color scheme of your app to either the 'light' or 'dark' variant of one of those standard schemes.
 
 When the object is instantiated, it will set the current scheme to the first defined scheme - 'Material' in this case - and the variant to the first defined within that scheme - 'dark' in this case.
 
@@ -26,34 +26,34 @@ You can change those defaults by passing arguments to the constructor. e.g. to s
 
     from anvil_extras import theme
 
-    colours = theme.Colours(scheme="Manarola", variant="dark")
+    colors = theme.Colors(scheme="Manarola", variant="dark")
 
 
-You can then use the your `Colours` instance to set the colour scheme or variant of your app at any time:
+You can then use the your `Colors` instance to set the color scheme or variant of your app at any time:
 
 .. code-block:: python
 
-   colours.scheme = "Mykonos"
-   colours.variant = "light"
+   colors.scheme = "Mykonos"
+   colors.variant = "light"
 
 If your scheme has two variants, you can toggle between them:
 
 .. code-block:: python
 
-   colours.toggle()
+   colors.toggle()
 
 If you want to set both the scheme and variant at the same time, you can use the `set_scheme` method:
 
 .. code-block:: python
 
-    colours.set_scheme("Material", "dark")
+    colors.set_scheme("Material", "dark")
 
 .. code-block:: python
 
-    colours.set_scheme("Material", "dark")
+    colors.set_scheme("Material", "dark")
 
-You can define your own colour schemes and use them in the same way. For a material
-design scheme, follow the `Creating a custom Material Design 3 colour scheme <https://anvil.works/docs/how-to/creating-material-3-colour-scheme>`_ docs.
+You can define your own color schemes and use them in the same way. For a material
+design scheme, follow the `Creating a custom Material Design 3 color scheme <https://anvil.works/docs/how-to/creating-material-3-color-scheme>`_ docs.
 
 .. code-block:: python
 
@@ -100,6 +100,6 @@ design scheme, follow the `Creating a custom Material Design 3 colour scheme <ht
         }
    }
 
-   colours = theme.Colours(schemes=my_schemes)
-   colours.scheme = "scheme_two"
-   colours.variant = "light"
+   colors = theme.Colors(schemes=my_schemes)
+   colors.scheme = "scheme_two"
+   colors.variant = "light"

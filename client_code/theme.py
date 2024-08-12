@@ -269,7 +269,7 @@ M3_DEFAULT_SCHEMES = {
 }
 
 
-class Colours:
+class Colors:
     def __init__(self, schemes=None, scheme=None, variant=None):
         self.schemes = schemes or M3_DEFAULT_SCHEMES
         self._scheme = scheme or tuple(self.schemes.keys())[0]
