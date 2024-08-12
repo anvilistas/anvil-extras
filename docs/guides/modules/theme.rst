@@ -26,7 +26,7 @@ You can change those defaults by passing arguments to the constructor. e.g. to s
 
     from anvil_extras import theme
 
-    colours = theme.Colours(default_scheme="Manarola", default_variant="dark")
+    colours = theme.Colours(scheme="Manarola", variant="dark")
 
 
 You can then use the your `Colours` instance to set the colour scheme or variant of your app at any time:

@@ -270,10 +270,10 @@ M3_DEFAULT_SCHEMES = {
 
 
 class Colours:
-    def __init__(self, schemes=None, default_scheme=None, default_variant=None):
+    def __init__(self, schemes=None, scheme=None, variant=None):
         self.schemes = schemes or M3_DEFAULT_SCHEMES
-        self._scheme = default_scheme or tuple(self.schemes.keys())[0]
-        self._variant = default_variant or tuple(self.variants[0])
+        self._scheme = scheme or tuple(self.schemes.keys())[0]
+        self._variant = variant or tuple(self.variants[0])
         self._set_scheme(self.scheme, self.variant)
 
     def _set_scheme(self, scheme, variant):
