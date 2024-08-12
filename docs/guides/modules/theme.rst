@@ -36,6 +36,12 @@ You can then use the your `Colours` instance to set the colour scheme or variant
    colours.scheme = "Mykonos"
    colours.variant = "light"
 
+If your scheme has two variants, you can toggle between them:
+
+.. code-block:: python
+
+   colours.toggle()
+
 If you want to set both the scheme and variant at the same time, you can use the `set_scheme` method:
 
 .. code-block:: python

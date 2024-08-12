@@ -273,7 +273,7 @@ class Colours:
     def __init__(self, schemes=None, default_scheme=None, default_variant=None):
         self.schemes = schemes or M3_DEFAULT_SCHEMES
         self._scheme = default_scheme or tuple(self.schemes.keys())[0]
-        self._variant = default_variant or tuple(self.schemes[self._scheme].keys())[0]
+        self._variant = default_variant or tuple(self.variants[0])
         self._set_scheme(self.scheme, self.variant)
 
     def _set_scheme(self, scheme, variant):
@@ -286,6 +286,10 @@ class Colours:
         self._set_scheme(scheme, variant)
         self._scheme = scheme
         self._variant = variant
+
+    @property
+    def variants(self):
+        return tuple(self.schemes[self._scheme].keys())
 
     @property
     def scheme(self):
@@ -304,3 +308,7 @@ class Colours:
     def variant(self, variant):
         self._set_scheme(self.scheme, variant)
         self._variant = variant
+
+    def toggle_variant(self):
+        current = self.variants.index(self.variant)
+        self.variant = self.variants(not current)
