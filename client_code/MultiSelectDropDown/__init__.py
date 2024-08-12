@@ -140,6 +140,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.set_event_handler("x-popover-init", self._mk_popover)
         self._user_selected_all(False)
         self._reset(selected)
+        self._el.selectpicker("refresh")
         self._init = True
 
     def _reset(self, selected=None):

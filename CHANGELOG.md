@@ -12,6 +12,8 @@
   https://github.com/anvilistas/anvil-extras/pull/543
 * multiselect - fix select all buttons overlapping when using width=fit
   https://github.com/anvilistas/anvil-extras/issues/545
+* mulitselect - fix bug where properties were not being set correctly
+  https://github.com/anvilistas/anvil-extras/issues/554
 
 
 # v2.6.2 13-Jun-2024
