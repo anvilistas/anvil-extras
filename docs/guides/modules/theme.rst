@@ -50,15 +50,15 @@ If you want to set both the scheme and variant at the same time, you can use the
 
 .. code-block:: python
 
-    color_manager.set_scheme("Material", "dark")
+    colours.set_scheme("Material", "dark")
 
-You can define your own color schemes and use them in the same way. For a material
+You can define your own colour schemes and use them in the same way. For a material
 design scheme, follow the `Creating a custom Material Design 3 colour scheme <https://anvil.works/docs/how-to/creating-material-3-colour-scheme>`_ docs.
 
 .. code-block:: python
 
    my_schemes = {
-        scheme_one: {
+        "scheme_one": {
             "light": {
                 "primary": "#ff0000",
                 "secondary": "#00ff00",
@@ -78,7 +78,7 @@ design scheme, follow the `Creating a custom Material Design 3 colour scheme <ht
                 "divider": "#444444",
             }
         },
-        scheme_two: {
+        "scheme_two": {
             "light": {
                 "primary": "#ff0000",
                 "secondary": "#00ff00",
