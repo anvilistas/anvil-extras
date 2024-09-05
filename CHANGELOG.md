@@ -1,3 +1,10 @@
+# Unreleased
+
+## Bug Fixes
+* popover - fix bug where popovers could not be used on forms using layouts
+  https://github.com/anvilistas/anvil-extras/issues/553
+
+
 # v2.7.0 05-Sep-2024
 
 ## New Features
