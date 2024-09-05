@@ -1,8 +1,10 @@
-# Unreleased
+# v2.7.0 05-Sep-2024
 
 ## New Features
 * theme module - Define and switch between colour schemes via code
   https://github.com/anvilistas/anvil-extras/pull/551
+* quill - implement get_markdown()
+  https://github.com/anvilistas/anvil-extras/pull/557
 
 ## Minor Changes
 * persistence - add reset method
@@ -20,10 +22,6 @@
   https://github.com/anvilistas/anvil-extras/issues/554
 * augment - fix bug where event couldn't be used as a raise_event kw
   https://anvil.works/forum/t/tabulator-multiple-value-error-on-row-click/22158/9
-
-## New Features
-* quill - implement get_markdown()
-  https://github.com/anvilistas/anvil-extras/pull/557
 
 
 # v2.6.2 13-Jun-2024
