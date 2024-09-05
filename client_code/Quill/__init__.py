@@ -9,6 +9,7 @@ from anvil import HtmlPanel as _HtmlPanel
 from anvil import RichText as _RT
 from anvil import Spacer as _Spacer
 from anvil.js import get_dom_node as _get_dom_node
+from anvil.js import import_from as _import_from
 from anvil.js import window as _window
 
 from ..utils._component_helpers import _html_injector, _spacing_property
@@ -68,6 +69,7 @@ def _quill_init_prop(propname):
 
 class Quill(QuillTemplate):
     _quill = None  # otherwise we get a recursion error from __getattr__
+    _deltaToMarkdown = None
 
     def __init__(self, **properties):
         # Set Form properties and Data Bindings.
@@ -195,10 +197,11 @@ class Quill(QuillTemplate):
 
     #### ANVIL METHODS ####
     def get_markdown(self):
-        """Not yet implemented"""
-        # https://github.com/frysztak/quill-delta-to-markdown/tree/master/src
-        # https://github.com/leforestier/yattag
-        raise NotImplementedError("get_markdown() has not yet been implemented")
+        if Quill._deltaToMarkdown is None:
+            mod = _import_from("https://esm.sh/quill-delta-to-markdown@0.6.0")
+            Quill._deltaToMarkdown = mod.deltaToMarkdown
+        contents = self.get_contents()
+        return Quill._deltaToMarkdown(contents.ops)
 
     def get_html(self):
         """convert the contents of the quill object to html which can be used
