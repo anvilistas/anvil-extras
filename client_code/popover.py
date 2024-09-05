@@ -261,6 +261,18 @@ def _check_warnings(has_popover, component):
         _warnings["has_parent"] = True
 
 
+def _add_fake_container_to_open_form(fake_container):
+    open_form = _anvil.get_open_form()
+    if open_form is None:
+        return
+
+    while isinstance(open_form, _anvil.WithLayout):
+        open_form = open_form.layout
+
+    if isinstance(open_form, _anvil.Container):
+        return open_form.add_component(fake_container)
+
+
 def _add_transition_behaviour(component, popper_element, popper_id):
     # clean up our previous event handlers
     popper_element.off(
@@ -281,9 +293,8 @@ def _add_transition_behaviour(component, popper_element, popper_id):
     def fire_show_event(e):
         if component is None:
             return
-        open_form = _anvil.get_open_form()
-        if open_form is not None and fake_container.parent is None:
-            open_form.add_component(fake_container)
+        if fake_container.parent is None:
+            _add_fake_container_to_open_form(fake_container)
         if component.parent is None:
             # we add the component to a Container component
             # this doesn't really add it to the dom
