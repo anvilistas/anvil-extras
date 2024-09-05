@@ -19,6 +19,10 @@
 * mulitselect - fix bug where properties were not being set correctly
   https://github.com/anvilistas/anvil-extras/issues/554
 
+## New Features
+* quill - implement get_markdown()
+  https://github.com/anvilistas/anvil-extras/pull/557
+
 
 # v2.6.2 13-Jun-2024
 
