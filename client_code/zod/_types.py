@@ -31,7 +31,7 @@ from .helpers.parse_util import (
     is_valid,
 )
 
-__version__ = "2.7.0"
+__version__ = "2.7.1"
 
 any_ = any
 isinstance_ = isinstance
