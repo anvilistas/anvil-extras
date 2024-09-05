@@ -18,6 +18,8 @@
   https://github.com/anvilistas/anvil-extras/issues/545
 * mulitselect - fix bug where properties were not being set correctly
   https://github.com/anvilistas/anvil-extras/issues/554
+* augment - fix bug where event couldn't be used as a raise_event kw
+  https://anvil.works/forum/t/tabulator-multiple-value-error-on-row-click/22158/9
 
 ## New Features
 * quill - implement get_markdown()
