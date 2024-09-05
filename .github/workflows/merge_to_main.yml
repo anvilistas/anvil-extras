@@ -30,5 +30,4 @@ jobs:
           git tag -l 'v'
           git tag -l 'v' | xargs -I {} git push anvil --delete {}
           git tag -l 'v' | xargs -I {} git push anvil {}
-          git push --tags anvil
           git push anvil main:master --force
