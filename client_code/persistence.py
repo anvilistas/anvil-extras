@@ -6,7 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.server
 
-__version__ = "2.6.2"
+__version__ = "2.7.0"
 
 
 def _snakify(text):
