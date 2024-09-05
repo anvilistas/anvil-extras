@@ -27,5 +27,4 @@ jobs:
           git config --global user.name "GitHubActions"
           git config --global user.email "actions@github.com"
           git remote add anvil "${{ secrets.ANVIL_REPO_URL }}"
-          git push --tags anvil
           git push anvil main:master --force
