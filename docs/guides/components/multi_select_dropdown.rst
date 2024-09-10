@@ -14,7 +14,7 @@ Overrides
 
     .. code-block:: python
 
-        from anvil_extras import MultiSelectDropdown
+        from anvil_extras.MultiSelectDropDown import MultiSelectDropDown
 
         def format_selected_text(self, count, total):
             if count > 3:
@@ -28,7 +28,7 @@ Overrides
 
     .. code-block:: python
 
-        from anvil_extras import MultiSelectDropdown
+        from anvil_extras.MultiSelectDropDown import MultiSelectDropDown
 
         def format_selected_text(self, count, total):
             if count > 2:
