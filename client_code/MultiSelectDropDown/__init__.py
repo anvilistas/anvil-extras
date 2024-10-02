@@ -138,6 +138,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.init_components(**props)
 
         self.set_event_handler("x-popover-init", self._mk_popover)
+        self.set_event_handler("x-popover-destroy", self._mk_popover)
         self._user_selected_all(False)
         self._reset(selected)
         self._el.selectpicker("refresh")
