@@ -6,13 +6,18 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 from anvil.js import import_from
-from anvil.js.window import window
+from anvil.js.window import window as _W
 
-# https://floating-ui.com/
-# can't import from cdn, load js file in assets and import from there
 __version__ = "2.7.1"
 
-fui = import_from("https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.5.3/+esm")
+try:
+    # support preloaded FloatingUIDOM
+    FloatingUIDOM = _W.FloatingUIDOM
+except AttributeError:
+    # https://floating-ui.com/
+    FloatingUIDOM = import_from(
+        "https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.10/+esm"
+    )
 
 _static_arrow_position = {
     "top": "bottom",
@@ -50,17 +55,17 @@ def auto_update(
 
     def update(*args):
         middleware = [
-            fui.offset(offset),
-            fui.flip(),
-            fui.shift(shift),
-            fui.hide(hide),
-            fui.size(size_middleware()),
+            FloatingUIDOM.offset(offset),
+            FloatingUIDOM.flip(),
+            FloatingUIDOM.shift(shift),
+            FloatingUIDOM.hide(hide),
+            FloatingUIDOM.size(size_middleware()),
         ]
 
         if arrow:
-            middleware.append(fui.arrow({"element": arrow}))
+            middleware.append(FloatingUIDOM.arrow({"element": arrow}))
 
-        rv = fui.computePosition(
+        rv = FloatingUIDOM.computePosition(
             reference_el,
             floating_el,
             {
@@ -95,4 +100,4 @@ def auto_update(
         floating_el.classList.remove("left", "right", "top", "bottom")
         floating_el.classList.add(main_axis)
 
-    return fui.autoUpdate(reference_el, floating_el, update)
+    return FloatingUIDOM.autoUpdate(reference_el, floating_el, update)

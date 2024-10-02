@@ -64,7 +64,7 @@ css = """
     background-clip: padding-box;
     border: 1px solid var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-radius: 6px;
-    box-shadow: 0 5px 10px var(--ae-popover-border, rgba(0, 0, 0, 0.2));
+    box-shadow: var(--ae-popover-shadow, 0 5px 10px var(--ae-popover-border, rgba(0, 0, 0, 0.2)));
 }
 .ae-popover-title {
     padding: 8px 14px;
