@@ -4,6 +4,12 @@
 * popover - fix bug where popovers could not be used on forms using layouts
   https://github.com/anvilistas/anvil-extras/issues/553
 
+## Breaking Changes
+* popover - rewritten without bootstrap, now uses floating-ui
+  `dismiss_on_scroll` is deprecated
+  class names on the popover element have changed
+  https://github.com/anvilistas/anvil-extras/pull/563
+
 
 # v2.7.0 05-Sep-2024
 
