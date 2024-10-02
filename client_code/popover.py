@@ -142,26 +142,6 @@ css = """
 _html_injector.css(css)
 
 
-# TODO
-# - [x] use title and other properties in the template
-# - [x] ensure delay is correctly supported
-# - [x] ensure max width works
-# - [x] think about scroll
-# - [x] document click handler
-# - [x] container argument
-# - [x] behaviours - click, manual etc
-# - [x] sticky hover
-# - [x] styles (inc max-width)
-# - [x] dual strategies for hover - if we are on the screen because we were clicked, hover doesn't remove us
-# - [ ] see if it works with mantine - even a little bit
-# - [ ] classnames - document this
-# - [x] warnings
-# - [x] warn about scroll no longer supported
-# - [x] possibly ignore container argument
-# - [x] x-init-popover
-# - [x] fix delay
-
-
 class _State:
     visible = "visible"
     hidden = "hidden"
@@ -191,7 +171,7 @@ def _is_on_screen(component):
     while parent is not None:
         if parent is open_form:
             return True
-        parent = component.parent
+        parent = parent.parent
 
     return False
 
@@ -433,6 +413,8 @@ class Popover:
 
         if self.poppee.parent is None:
             self.fake_container.add_component(self.poppee)
+
+        if self.dom_content.firstChild is None:
             self.dom_content.append(_anvil.js.get_dom_node(self.poppee))
 
         el = _get_popper_element(self.popper)
@@ -484,6 +466,10 @@ class Popover:
         self.cleanup()
         self.setup_dom()
 
+        self.clear_timeouts()
+
+        self.dom_popover.style.display = "block"
+
         self.cleanup = fui.auto_update(
             _get_popper_element(self.popper),
             self.dom_popover,
@@ -491,9 +477,6 @@ class Popover:
             arrow=self.dom_arrow,
         )
 
-        self.clear_timeouts()
-
-        self.dom_popover.style.display = "block"
         delay = self.delay["show"] if e else 0
         self.timeouts.append(_W.setTimeout(self.animate_in, delay))
         self.timeouts.append(_W.setTimeout(self.on_shown, delay + self.animation_ms))
@@ -536,13 +519,19 @@ class Popover:
 
     def destroy(self):
         # remove all event listeners
-        self.popper.remove_event_handler("x-anvil-page-shown", self.handle_mount)
-        self.popper.remove_event_handler("x-anvil-page-hidden", self.handle_cleanup)
+        self.clear_timeouts()
+        try:
+            self.popper.remove_event_handler("x-anvil-page-shown", self.handle_mount)
+            self.popper.remove_event_handler("x-anvil-page-hidden", self.handle_cleanup)
+        except Exception:
+            pass
+
         if _is_on_screen(self.popper):
             self.handle_cleanup()
 
         # remove us from the popper map
         _popper_map.delete(self.popper)
+        _visible_popovers.pop(self.id, None)
         self.on_hidden()
 
     def is_visible(self):

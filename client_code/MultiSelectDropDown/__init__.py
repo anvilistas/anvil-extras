@@ -263,7 +263,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this
-        init_node(self._el.data("selectpicker")["$bsContainer"])
+        init_node(self._el.data("selectpicker")["$bsContainer"][0])
 
     def _form_hide(self, **event_args):
         try:
