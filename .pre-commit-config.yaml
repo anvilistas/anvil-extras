@@ -1,12 +1,12 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
   - repo: https://github.com/psf/black
-    rev: 24.8.0 # Replace by any tag/version: https://github.com/psf/black/tags
+    rev: 24.10.0 # Replace by any tag/version: https://github.com/psf/black/tags
     hooks:
       - id: black
         args: # arguments to configure black
