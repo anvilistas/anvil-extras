@@ -63,8 +63,6 @@ class ChipsInput(ChipsInputTemplate):
 
         dom_node = self._dom_node = _get_dom_node(self)
         dom_node.classList.add("anvil-extras-chips-input")
-        dom_node.querySelector(".chips-input-placeholder").remove()
-        dom_node.querySelector("script").remove()
         self.temp_chip.remove_from_parent()
 
         properties = _defaults | properties

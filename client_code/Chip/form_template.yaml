@@ -8,19 +8,7 @@ components:
   properties: {align: left, background: '', bold: false, border: '', col_spacing: medium, col_widths: '', font: '', font_size: null, foreground: 'rgba(0,0,0,0.6)', icon: '', icon_align: left, italic: false, role: null, spacing_above: none, spacing_below: none, text: ✕, tooltip: '', underline: false, url: '', visible: true, wrap_on: mobile}
   type: Link
 container:
-  properties:
-    background: ''
-    border: ''
-    foreground: ''
-    html: |
-      <div class="chip-placeholder"></div>
-      <script type="module">
-      import {DesignerChip} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerChip.init();
-      </script>
-    role: null
-    tooltip: ''
-    visible: true
+  properties: {background: '', border: '', foreground: '', html: '', role: null, tooltip: '', visible: true}
   type: HtmlTemplate
 custom_component: true
 events:

@@ -140,9 +140,8 @@ class Tabs(TabsTemplate):
         dom_node.style.padding = "0"
         dom_node.classList.add("anvil-extras-tabs")
 
-        self._tabs_node = dom_node.querySelector(".tabs")
-        dom_node.removeChild(dom_node.querySelector("script"))
-        self._indicator = self._tabs_node.querySelector(".indicator")
+        self._tabs_node = self.dom_nodes["ae-tabs"]
+        self._indicator = self.dom_nodes["ae-indicator"]
 
         props = self._props = _defaults | properties
 

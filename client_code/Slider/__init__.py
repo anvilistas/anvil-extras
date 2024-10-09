@@ -335,12 +335,7 @@ class Slider(SliderTemplate):
         dom_node = self._dom_node = anvil.js.get_dom_node(self)
         dom_node.classList.add("anvil-slider-container")
 
-        self._slider_node = dom_node.querySelector(".anvil-slider")
-        # remove the script to stop them loading
-        while dom_node.firstElementChild:
-            dom_node.removeChild(dom_node.firstElementChild)
-        dom_node.append(self._slider_node)
-
+        self._slider_node = self.dom_nodes["anvil-slider"]
         props = self._props = _defaults | properties
 
         self._slider = None

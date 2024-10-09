@@ -62,8 +62,6 @@ _defaults = {
 class Chip(ChipTemplate):
     def __init__(self, **properties):
         dom_node = self._dom_node = _get_dom_node(self)
-        dom_node.querySelector("script").remove()
-        dom_node.querySelector(".chip-placeholder").remove()
         dom_node.addEventListener("click", lambda e: self.raise_event("click"))
         dom_node.classList.add("anvil-extras-chip")
         dom_node.tabIndex = 0
