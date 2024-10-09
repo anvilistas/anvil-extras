@@ -20,8 +20,8 @@ class Indeterminate(IndeterminateTemplate):
     def __init__(self, **properties):
         self.dom_node = get_dom_node(self)
         self._props = properties
-        self.role = "progress-track"
-        self.indicator_panel.role = "indeterminate-progress-indicator"
+        self.role = "ae-progress-track"
+        self.indicator_panel.role = "ae-indeterminate-progress-indicator"
         self.init_components(**properties)
 
     @property

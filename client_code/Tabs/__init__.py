@@ -23,11 +23,11 @@ __version__ = "2.7.1"
 
 _html_injector.css(
     """
-.anvil-extras-tabs.anvil-role-card {
+.ae-tabs.anvil-role-card {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
 }
-.tabs {
+.ae-tabs {
     position: relative;
     overflow-x: auto;
     overflow-y: hidden;
@@ -40,7 +40,7 @@ _html_injector.css(
     display: flex;
     z-index: 1;
 }
-.tabs .tab {
+.ae-tabs .ae-tab {
     flex-grow: 1;
     display: inline-block;
     text-align: center;
@@ -50,7 +50,7 @@ _html_injector.css(
     margin: 0;
     text-transform: uppercase
 }
-.tabs .tab a {
+.ae-tabs .ae-tab a {
     color: rgba(var(--color),0.7);
     display: block;
     width: 100%;
@@ -61,23 +61,23 @@ _html_injector.css(
     -webkit-transition: color .28s ease, background-color .28s ease;
     transition: color .28s ease, background-color .28s ease
 }
-.tabs .tab a > .link-text {
+.ae-tabs .ae-tab a > span {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.tabs .tab a:focus,.tabs .tab a:focus.active {
+.ae-tabs .ae-tab a:focus,.ae-tabs .ae-tab a:focus.ae-tab-active {
     --fallback-bg: var(--color) / 0.2;
     background-color: rgb(var(--active-bg, var(--fallback-bg)));
     outline: none
 }
-.tabs .tab a:hover,.tabs .tab a.active {
+.ae-tabs .ae-tab a:hover,.ae-tabs .ae-tab a.ae-tab-active {
     background-color: transparent;
     color: rgb(var(--color));
 }
-.tabs .tab a:hover,.tabs .tab a.active {
+.ae-tabs .ae-tab a:hover,.ae-tabs .ae-tab a.ae-tab-active {
     background-color: rgb(var(--active-bg));
 }
-.tabs .indicator {
+.ae-tabs .ae-tab-indicator {
     position: absolute;
     bottom: 0;
     height: 3px;
@@ -141,7 +141,7 @@ class Tabs(TabsTemplate):
         dom_node.classList.add("anvil-extras-tabs")
 
         self._tabs_node = self.dom_nodes["ae-tabs"]
-        self._indicator = self.dom_nodes["ae-indicator"]
+        self._indicator = self.dom_nodes["ae-tab-indicator"]
 
         props = self._props = _defaults | properties
 
@@ -188,7 +188,7 @@ class Tabs(TabsTemplate):
         tab_index = tab_index if tab_index is not None else self._prev
 
         for i, node in enumerate(self._link_nodes):
-            node.classList.toggle("active", i == tab_index)
+            node.classList.toggle("ae-tab-active", i == tab_index)
 
         left, right = (0, 90) if tab_index <= self._prev else (90, 0)
         if animate:

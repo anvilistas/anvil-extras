@@ -24,9 +24,9 @@ _html_injector.cdn(
     f"https://cdn.jsdelivr.net/npm/nouislider@{noui_version}/dist/nouislider.min.css"
 )
 
-BAR_HEIGHT = "--slider-height"
-BAR_COLOR = "--slider-bar_color"
-HANDLE_SIZE = "--slider-handle-size"
+BAR_HEIGHT = "--ae-slider-height"
+BAR_COLOR = "--ae-slider-bar_color"
+HANDLE_SIZE = "--ae-slider-handle-size"
 
 
 _html_injector.css(

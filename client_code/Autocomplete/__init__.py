@@ -21,10 +21,10 @@ __version__ = "2.7.1"
 
 _html_injector.css(
     """
-.anvil-role-autocomplete {
+.anvil-role-ae-autocomplete {
     padding: 0 !important;
 }
-.anvil-role-autocomplete {
+.anvil-role-ae-autocomplete {
     position: absolute;
     transform: scaleX(1) scaleY(1);
     opacity: 1;
@@ -38,16 +38,16 @@ _html_injector.css(
     z-index: 3001;
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
 }
-.anvil-role-autocomplete.visible-false {
+.anvil-role-ae-autocomplete.visible-false, .anvil-role-ae-autocomplete.anvil-visible-false {
     transform: scaleX(0) scaleY(0);
     opacity: 0;
     display: block !important;
     transition: all 200ms ease;
 }
-.anvil-role-autocomplete a {
+.anvil-role-ae-autocomplete a {
     padding: 7px 16px;
 }
-.anvil-role-autocomplete a:hover, .anvil-role-autocomplete a.anvil-role-active {
+.anvil-role-ae-autocomplete a:hover, .anvil-role-ae-autocomplete a.anvil-role-ae-autocomplete-active {
     background-color: #eee;
 }
 """
@@ -67,7 +67,7 @@ class Autocomplete(AutocompleteTemplate):
         self.init_components(**properties)
 
         self._lp = _LinearPanel(
-            role="autocomplete",
+            role="ae-autocomplete",
             spacing_above="none",
             spacing_below="none",
             visible=False,
@@ -129,7 +129,7 @@ class Autocomplete(AutocompleteTemplate):
         try:
             self._active_index = self._active_nodes.index(prev_active)
             self._active = prev_active
-            self._active.role = "active"
+            self._active.role = "ae-autocomplete-active"
         except ValueError:
             pass
 
@@ -202,7 +202,7 @@ class Autocomplete(AutocompleteTemplate):
         if self._active is not None:
             self._active.role = None
         if new_active is not None:
-            new_active.role = "active"
+            new_active.role = "ae-autocomplete-active"
             self._link_height = (
                 self._link_height or _get_dom_node(new_active).clientHeight
             )

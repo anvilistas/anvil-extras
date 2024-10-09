@@ -14,9 +14,9 @@ container:
     border: ''
     foreground: ''
     html: |
-      <ul anvil-name="ae-tabs" class="tabs">
-        <li class="tab" anvil-slot-repeat="default"></li>
-        <li anvil-name="ae-indicator" class="indicator"></li>
+      <ul anvil-name="ae-tabs" class="ae-tabs">
+        <li class="ae-tab" anvil-slot-repeat="default"></li>
+        <li anvil-name="ae-tab-indicator" class="ae-tab-indicator"></li>
       </ul>
     role: null
     tooltip: ''

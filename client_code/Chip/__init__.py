@@ -32,14 +32,11 @@ _html_injector.css(
     position: relative;
 }
 
-.anvil-extras-chip i.anvil-component-icon.left {
+.anvil-extras-chip i.anvil-component-icon {
     font-size: 1.5rem;
 }
 .anvil-extras-chip a {
     user-select: none;
-}
-.anvil-extras-chip a .link-text {
-    padding: 0 !important;
 }
 .anvil-extras-chip span {
     padding: 0 !important;
