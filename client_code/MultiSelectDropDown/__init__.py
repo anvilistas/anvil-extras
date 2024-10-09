@@ -138,6 +138,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.init_components(**props)
 
         self.set_event_handler("x-popover-init", self._mk_popover)
+        self.set_event_handler("x-popover-destroy", self._mk_popover)
         self._user_selected_all(False)
         self._reset(selected)
         self._el.selectpicker("refresh")
@@ -262,7 +263,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     def _mk_popover(self, init_node, **event_args):
         # this is a bit of a hack - we're using the libraries private methods for this
-        init_node(self._el.data("selectpicker")["$bsContainer"])
+        init_node(self._el.data("selectpicker")["$bsContainer"][0])
 
     def _form_hide(self, **event_args):
         try:

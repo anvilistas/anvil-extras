@@ -1,14 +1,14 @@
-services:
-- source: /runtime/services/tables.yml
-  client_config: {}
-  server_config: {}
-startup: {type: form, module: Demo}
-package_name: anvil_extras
 allow_embedding: false
-name: anvil_extras
-runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null}
-metadata: {}
-startup_form: Demo
-native_deps: {head_html: ''}
 db_schema: {}
+metadata: {}
+name: anvil_extras
+native_deps: {head_html: ''}
+package_name: anvil_extras
 renamed: true
+runtime_options: {client_version: '3', server_spec: null, server_version: python3-full, version: 2}
+services:
+- client_config: {}
+  server_config: {}
+  source: /runtime/services/tables.yml
+startup: {module: Demo, type: form}
+startup_form: Demo
