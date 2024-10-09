@@ -9,21 +9,7 @@ components:
   properties: {align: left, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', hide_text: false, italic: false, placeholder: +Tag, role: null, spacing_above: none, spacing_below: small, text: '', tooltip: '', type: text, underline: false, visible: true}
   type: TextBox
 container:
-  properties:
-    background: ''
-    border: ''
-    foreground: ''
-    html: |
-      <div class="chips-input-placeholder"></div>
-      <div class="chip-slot" anvil-slot-repeat="chips"></div>
-
-      <script type="module">
-      import {DesignerChipsInput} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerChipsInput.init();
-      </script>
-    role: null
-    tooltip: ''
-    visible: true
+  properties: {background: '', border: '', foreground: '', html: <div class="chip-slot" anvil-slot-repeat="chips"></div>, role: null, tooltip: '', visible: true}
   type: HtmlTemplate
 custom_component: true
 events:

@@ -24,17 +24,17 @@ _html_injector.cdn(
     f"https://cdn.jsdelivr.net/npm/nouislider@{noui_version}/dist/nouislider.min.css"
 )
 
-BAR_HEIGHT = "--slider-height"
-BAR_COLOR = "--slider-bar_color"
-HANDLE_SIZE = "--slider-handle-size"
+BAR_HEIGHT = "--ae-slider-height"
+BAR_COLOR = "--ae-slider-bar_color"
+HANDLE_SIZE = "--ae-slider-handle-size"
 
 
 _html_injector.css(
     f"""
-.anvil-slider-container {{
+.ae-slider-container {{
   padding: 10px 0;
 }}
-.anvil-slider-container.has-pips {{
+.ae-slider-container.has-pips {{
   padding-bottom: 40px;
 }}
 .anvil-container-overflow, .anvil-panel-col {{
@@ -333,14 +333,9 @@ class Slider(SliderTemplate):
     def __init__(self, **properties):
         # Any code you write here will run when the form opens.
         dom_node = self._dom_node = anvil.js.get_dom_node(self)
-        dom_node.classList.add("anvil-slider-container")
+        dom_node.classList.add("ae-slider-container")
 
-        self._slider_node = dom_node.querySelector(".anvil-slider")
-        # remove the script to stop them loading
-        while dom_node.firstElementChild:
-            dom_node.removeChild(dom_node.firstElementChild)
-        dom_node.append(self._slider_node)
-
+        self._slider_node = self.dom_nodes["ae-slider"]
         props = self._props = _defaults | properties
 
         self._slider = None

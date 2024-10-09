@@ -8,17 +8,17 @@ container:
       <!--
       Based on the snippet at https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5
       -->
-      <div class="break-container" style="overflow: hidden;">
+      <div anvil-name="ae-page-break-container" class="ae-break-container" style="overflow: hidden;">
         <div style="page-break-after:always;"></div>
-        <div class="margin-element" style="margin-top: 0px;"></div>
+        <div anvil-name="ae-page-break-margin-element" style="margin-top: 0px;"></div>
       </div>
 
       <style>
-        .break-container {
+        .ae-break-container {
           border: 1px solid grey;
         }
         @media print {
-          .break-container {
+          .ae-break-container {
             border-color: transparent !important;
           }
         }

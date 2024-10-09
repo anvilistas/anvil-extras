@@ -1,18 +1,6 @@
 components: []
 container:
-  properties:
-    background: ''
-    border: ''
-    foreground: ''
-    html: |-
-      <div class="anvil-slider" anvil-slot></div>
-      <script type="module">
-      import {DesignerSlider} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerSlider.init();
-      </script>
-    role: null
-    tooltip: ''
-    visible: true
+  properties: {background: '', border: '', foreground: '', html: <div anvil-name="ae-slider" class="ae-slider" anvil-slot></div>, role: null, tooltip: '', visible: true}
   type: HtmlTemplate
 custom_component: true
 events:
