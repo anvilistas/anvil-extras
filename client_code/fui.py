@@ -42,7 +42,7 @@ def auto_update(
     *,
     placement="bottom",
     strategy="absolute",
-    offset=11,
+    offset=None,
     shift={"padding": 5},
     hide={"padding": 15},
     arrow=None,
@@ -52,6 +52,8 @@ def auto_update(
     if using arrow, arrow should be an HTMLElement
     call this function in x-anvil-page-added
     call the cleanup in x-anvil-page-removed"""
+
+    offset = 11 if arrow else 4
 
     def update(*args):
         middleware = [

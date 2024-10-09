@@ -65,6 +65,11 @@ css = """
     border: 1px solid var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-radius: 6px;
     box-shadow: var(--ae-popover-shadow, 0 5px 10px var(--ae-popover-border, rgba(0, 0, 0, 0.2)));
+    display: flex;
+}
+.ae-popover-container {
+    display: flex;
+    flex-direction: column;
 }
 .ae-popover-title {
     padding: 8px 14px;
@@ -76,11 +81,12 @@ css = """
 }
 .ae-popover-content {
     padding: 9px 14px;
+    min-height: 0;
 }
-.ae-popover > .ae-arrow {
+.ae-popover-container > .ae-arrow {
     border-width: 11px;
 }
-.ae-popover > .ae-arrow, .ae-popover > .ae-arrow:after {
+.ae-popover-container > .ae-arrow, .ae-popover-container > .ae-arrow:after {
     position: absolute;
     display: block;
     width: 0;
@@ -88,49 +94,49 @@ css = """
     border-color: transparent;
     border-style: solid;
 }
-.ae-popover.left > .ae-arrow {
+.ae-popover.left > .ae-popover-container > .ae-arrow {
     border-right-width: 0;
     border-left-color: var(--ae-popover-border, rgba(0, 0, 0, 0.2));
 }
-.ae-popover.right > .ae-arrow {
+.ae-popover.right > .ae-popover-container > .ae-arrow {
     border-right-color: var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-left-width: 0;
 }
-.ae-popover.bottom > .ae-arrow {
+.ae-popover.bottom > .ae-popover-container > .ae-arrow {
     border-top-width: 0;
     border-bottom-color: var(--ae-popover-border, rgba(0, 0, 0, 0.2));
 }
-.ae-popover.top > .ae-arrow {
+.ae-popover.top > .ae-popover-container > .ae-arrow {
     border-top-color: var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-bottom-width: 0;
 }
 
-.ae-popover > .ae-arrow:after {
+.ae-popover > .ae-popover-container > .ae-arrow:after {
     content: "";
     border-width: 10px;
 }
-.ae-popover.right > .ae-arrow:after {
+.ae-popover.right > .ae-popover-container > .ae-arrow:after {
     bottom: -10px;
     left: 1px;
     content: " ";
     border-right-color: var(--ae-popover-bg, #fff);
     border-left-width: 0;
 }
-.ae-popover.left > .ae-arrow:after {
+.ae-popover.left > .ae-popover-container > .ae-arrow:after {
     right: 1px;
     bottom: -10px;
     content: " ";
     border-right-width: 0;
     border-left-color: var(--ae-popover-bg, #fff);
 }
-.ae-popover.top > .ae-arrow:after {
+.ae-popover.top > .ae-popover-container > .ae-arrow:after {
     bottom: 1px;
     margin-left: -10px;
     content: " ";
     border-top-color: var(--ae-popover-bg, #fff);
     border-bottom-width: 0;
 }
-.ae-popover.bottom > .ae-arrow:after {
+.ae-popover.bottom >  .ae-popover-container > .ae-arrow:after {
     top: 1px;
     margin-left: -10px;
     content: " ";
@@ -184,7 +190,11 @@ def _get_root():
     return f
 
 
-_VALID_PLACEMENTS = ("top", "right", "bottom", "left")
+_VALID_MAIN = ("top", "right", "bottom", "left", "bottom")
+_VALID_SECONDARY = ("", "-start", "-end")
+_VALID_PLACEMENTS = tuple(
+    f"{main}{secondary}" for main in _VALID_MAIN for secondary in _VALID_SECONDARY
+)
 _VALID_TRIGGERS = ("click", "hover", "focus", "stickyhover")
 
 
@@ -210,6 +220,7 @@ class Popover:
         auto_dismiss=True,
         dismiss_on_scroll=None,
         container=None,
+        arrow=True,
     ):
         _popper_map.set(popper, self)
 
@@ -220,6 +231,7 @@ class Popover:
         self.poppee = poppee
 
         self.title = title
+        self.arrow = arrow
 
         if not isinstance(placement, str):
             raise TypeError("placement must be a string")
@@ -288,12 +300,17 @@ class Popover:
         self.init_popover(d)
         d.role = "tooltip"
 
+        c = _document.createElement("div")
+        c.className = "ae-popover-container"
+        d.append(c)
+
         arrow = _document.createElement("div")
-        d.append(arrow)
-        arrow.className = "ae-arrow"
+        if self.arrow:
+            c.append(arrow)
+            arrow.className = "ae-arrow"
 
         title = _document.createElement("div")
-        d.append(title)
+        c.append(title)
         if self.title:
             title.textContent = self.title
         else:
@@ -301,7 +318,7 @@ class Popover:
         title.className = "ae-popover-title"
 
         content = _document.createElement("div")
-        d.append(content)
+        c.append(content)
         content.className = "ae-popover-content"
 
         self.dom_popover = d
@@ -309,10 +326,15 @@ class Popover:
         self.dom_arrow = arrow
 
     def init_popover(self, element):
+        element = _anvil.js.get_dom_node(element)
         element.setAttribute("ae-popover", "")
         element.setAttribute("ae-popover-id", self.id)
 
     def cleanup_popover(self, element):
+        try:
+            element = _anvil.js.get_dom_node(element)
+        except TypeError:
+            pass
         element.removeAttribute("ae-popover")
         element.removeAttribute("ae-popover-id")
 
@@ -468,18 +490,19 @@ class Popover:
 
         self.clear_timeouts()
 
-        self.dom_popover.style.display = "block"
+        self.dom_popover.style.display = ""
 
         self.cleanup = fui.auto_update(
             _get_popper_element(self.popper),
             self.dom_popover,
             placement=self.placement,
-            arrow=self.dom_arrow,
+            arrow=self.dom_arrow if self.arrow else None,
         )
 
         delay = self.delay["show"] if e else 0
         self.timeouts.append(_W.setTimeout(self.animate_in, delay))
         self.timeouts.append(_W.setTimeout(self.on_shown, delay + self.animation_ms))
+        self.poppee.raise_event("x-popover-show")
 
     def on_hidden(self):
         self.dom_popover.style.display = "none"
@@ -507,6 +530,7 @@ class Popover:
         delay = self.delay["hide"] if e else 0
         self.timeouts.append(_W.setTimeout(self.animate_out, delay))
         self.timeouts.append(_W.setTimeout(self.on_hidden, delay + self.animation_ms))
+        self.poppee.raise_event("x-popover-hide")
 
     def shown(self):
         return self.state == _State.visible
@@ -552,8 +576,9 @@ def popover(
     delay={"show": 100, "hide": 100},
     max_width=None,
     auto_dismiss=True,
-    dismiss_on_scroll=True,
+    dismiss_on_scroll=None,
     container=None,
+    arrow=True,
 ):
     """should be called by a button or link
     content - either text or an anvil component or Form
@@ -606,6 +631,7 @@ def popover(
         auto_dismiss=auto_dismiss,
         dismiss_on_scroll=dismiss_on_scroll,
         container=container,
+        arrow=arrow,
     )
 
 
@@ -626,18 +652,31 @@ def pop(self, behavior):
     return execute()
 
 
+def get_all_parent_popover_ids(target):
+    parent_ids = []
+    current_element = target
+
+    while current_element and current_element.tagName.lower() != "body":
+        if current_element.hasAttribute("ae-popover-id"):
+            try:
+                popover_id = int(current_element.getAttribute("ae-popover-id"))
+                parent_ids.append(popover_id)
+            except (ValueError, TypeError):
+                # Skip if the attribute is not a valid integer
+                pass
+        current_element = current_element.parentElement
+
+    return parent_ids
+
+
 def _hide_popovers_on_outside_click(e):
     target = e.target
-    nearest_id = None
-    if target.hasAttribute("ae-popover"):
-        nearest_id = int(target.getAttribute("ae-popover-id"))
-    else:
-        nearest = target.closest("[ae-popover]")
-        if nearest is not None:
-            nearest_id = int(nearest.getAttribute("ae-popover-id"))
-    # use copy since the dict changes size during iteration
+    parent_ids = get_all_parent_popover_ids(target)
+
+    # Use a copy since the dict changes size during iteration
     for popover_id, popper in _visible_popovers.copy().items():
-        if nearest_id == popover_id:
+        if popover_id in parent_ids:
+            # Skip hiding popovers that are parents of the clicked element
             continue
 
         popover = _popper_map.get(popper)
