@@ -1,291 +1,291 @@
-container:
-  type: ColumnPanel
-  properties: {col_widths: '{}'}
 components:
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: MessagePill, font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
+- layout_properties: {grid_position: 'SGJRUD,FWDVZW'}
   name: label_4
-  layout_properties: {grid_position: 'SGJRUD,FWDVZW'}
-- type: form:MessagePill
-  properties: {level: info, message: MessagePill with level 'info'}
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: MessagePill, tooltip: '', underline: false, visible: true}
+  type: Label
+- layout_properties: {grid_position: 'ZNPMZP,WQEHXP'}
   name: message_pill_1
-  layout_properties: {grid_position: 'ZNPMZP,WQEHXP'}
-- type: form:MessagePill
-  properties: {level: success, message: MessagePill with level 'success'}
+  properties: {level: info, message: MessagePill with level 'info'}
+  type: form:MessagePill
+- layout_properties: {grid_position: 'XCQIYO,BMGHER'}
   name: message_pill_2
-  layout_properties: {grid_position: 'XCQIYO,BMGHER'}
-- type: form:MessagePill
-  properties: {level: warning, message: MessagePill with level 'warning'}
+  properties: {level: success, message: MessagePill with level 'success'}
+  type: form:MessagePill
+- layout_properties: {grid_position: 'GUSGTP,SSRSAE'}
   name: message_pill_3
-  layout_properties: {grid_position: 'GUSGTP,SSRSAE'}
-- type: form:MessagePill
-  properties: {level: error, message: MessagePill with level 'error'}
+  properties: {level: warning, message: MessagePill with level 'warning'}
+  type: form:MessagePill
+- layout_properties: {grid_position: 'CNITUV,WYNUFR'}
   name: message_pill_4
-  layout_properties: {grid_position: 'CNITUV,WYNUFR'}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: IndeterminateProgressBar, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: none, italic: false, background: '', bold: true, underline: false, icon: ''}
+  properties: {level: error, message: MessagePill with level 'error'}
+  type: form:MessagePill
+- layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
   name: label_1
-  layout_properties: {grid_position: 'PNDPSW,JQKZOF'}
-- type: form:ProgressBar.Indeterminate
-  properties: {}
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: none, text: IndeterminateProgressBar, tooltip: '', underline: false, visible: true}
+  type: Label
+- layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
   name: indeterminate_progress_bar_1
-  layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: ProgressBar, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: none, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_1_copy
-  layout_properties:
+  properties: {}
+  type: form:ProgressBar.Indeterminate
+- layout_properties:
     col_widths: {}
     grid_position: YOHVQO,NLYAQR
-- type: form:ProgressBar.Determinate
-  properties: {track_colour: '#b3d4fc', indicator_colour: '#1976D2', progress: 0.5}
+  name: label_1_copy
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: none, text: ProgressBar, tooltip: '', underline: false, visible: true}
+  type: Label
+- layout_properties: {grid_position: 'TUUBRI,CREBNE'}
   name: progress_bar
-  layout_properties: {grid_position: 'TUUBRI,CREBNE'}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Auto Refresh, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
+  properties: {indicator_colour: '#1976D2', progress: 0.5, track_colour: '#b3d4fc'}
+  type: form:ProgressBar.Determinate
+- layout_properties: {grid_position: 'YBVZRV,XCMOTC'}
   name: label_3
-  layout_properties: {grid_position: 'YBVZRV,XCMOTC'}
-- type: FlowPanel
-  properties: {}
-  name: flow_panel_1
-  layout_properties: {grid_position: 'MBIOXI,WEKBGG'}
-  components:
-  - type: Button
-    properties: {role: null, align: center, tooltip: Rest counts, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:refresh'}
-    name: reset_button
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Auto Refresh, tooltip: '', underline: false, visible: true}
+  type: Label
+- components:
+  - event_bindings: {click: reset_button_click}
     layout_properties: {grid_position: 'YBVZRV,XBXDIA'}
-    event_bindings: {click: reset_button_click}
-  - type: Button
-    properties: {role: null, align: center, tooltip: Decrease tally, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:minus'}
-    name: minus_button
+    name: reset_button
+    properties: {align: center, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:refresh', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: Rest counts, underline: false, visible: true}
+    type: Button
+  - event_bindings: {click: minus_button_click}
     layout_properties: {grid_position: 'WYANSY,GEJTSR'}
-    event_bindings: {click: minus_button_click}
-  - type: Label
-    properties: {}
+    name: minus_button
+    properties: {align: center, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:minus', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: Decrease tally, underline: false, visible: true}
+    type: Button
+  - data_bindings:
+    - {code: 'self.item[''tally'']', property: text}
+    layout_properties: {}
     name: label_2
-    layout_properties: {}
-    data_bindings:
-    - {property: text, code: 'self.item[''tally'']'}
-  - type: Button
-    properties: {role: null, align: center, tooltip: Increase tally, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:plus'}
-    name: plus_button
-    layout_properties: {}
-    event_bindings: {click: plus_button_click}
-  - type: Label
     properties: {}
-    name: label_5
+    type: Label
+  - event_bindings: {click: plus_button_click}
+    layout_properties: {}
+    name: plus_button
+    properties: {align: center, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:plus', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: Increase tally, underline: false, visible: true}
+    type: Button
+  - data_bindings:
+    - {code: 'f"These buttons have been clicked {self.item[''counter'']} times"', property: text}
     layout_properties: {grid_position: 'YBVZRV,HFMSBF'}
-    data_bindings:
-    - {property: text, code: 'f"These buttons have been clicked {self.item[''counter'']} times"'}
-- type: Timer
-  properties: {interval: 0.1}
+    name: label_5
+    properties: {}
+    type: Label
+  layout_properties: {grid_position: 'MBIOXI,WEKBGG'}
+  name: flow_panel_1
+  properties: {}
+  type: FlowPanel
+- event_bindings: {tick: timer_1_tick}
   name: timer_1
-  event_bindings: {tick: timer_1_tick}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Tabs Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_3_copy_4
-  layout_properties:
+  properties: {interval: 0.1}
+  type: Timer
+- layout_properties:
     col_widths: {}
     grid_position: XYBAWW,UZLMNM
-- type: form:Tabs
+  name: label_3_copy_4
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Tabs Component, tooltip: '', underline: false, visible: true}
+  type: Label
+- event_bindings: {tab_click: tabs_1_tab_click}
+  layout_properties: {grid_position: 'ADKQXK,NWEGOM'}
+  name: tabs_1
   properties:
-    role: ''
-    align: left
-    tab_titles: [Tab 1, Tab 2, Tab 3]
-    active_tab_index: 0
-    foreground: '#2196F3'
-    visible: true
-    font_size: ''
-    font: ''
-    spacing_above: none
-    spacing_below: none
-    italic: false
     active_background: '#2196F344'
+    active_tab_index: 0
+    align: left
     background: ''
     bold: false
-  name: tabs_1
-  layout_properties: {grid_position: 'ADKQXK,NWEGOM'}
-  event_bindings: {tab_click: tabs_1_tab_click}
-- type: ColumnPanel
-  properties: {role: null, tooltip: '', border: '', foreground: '', visible: true, wrap_on: mobile, col_spacing: medium, spacing_above: none, col_widths: '{}', spacing_below: small, background: ''}
-  name: tabs_panel
-  layout_properties: {grid_position: 'ZNFPXX,RTVBWV'}
-  components:
-  - type: Label
-    properties: {role: null, align: center, tooltip: '', border: '', foreground: '', visible: true, text: Tab 1 is visible, font_size: 18, font: '', spacing_above: large, icon_align: left, spacing_below: large, italic: false, background: '', bold: false, underline: false, icon: ''}
+    font: ''
+    font_size: ''
+    foreground: '#2196F3'
+    italic: false
+    role: ''
+    spacing_above: none
+    spacing_below: none
+    tab_titles: [Tab 1, Tab 2, Tab 3]
+    visible: true
+  type: form:Tabs
+- components:
+  - layout_properties: {grid_position: 'BXXKLU,CAESOP'}
     name: tabs_label
-    layout_properties: {grid_position: 'BXXKLU,CAESOP'}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Switch Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_3_copy_3
-  layout_properties:
+    properties: {align: center, background: '', bold: false, border: '', font: '', font_size: 18, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: large, text: Tab 1 is visible, tooltip: '', underline: false, visible: true}
+    type: Label
+  layout_properties: {grid_position: 'ZNFPXX,RTVBWV'}
+  name: tabs_panel
+  properties: {background: '', border: '', col_spacing: medium, col_widths: '{}', foreground: '', role: null, spacing_above: none, spacing_below: small, tooltip: '', visible: true, wrap_on: mobile}
+  type: ColumnPanel
+- layout_properties:
     col_widths: {}
     grid_position: RDPMGN,GEQMNU
-- type: form:Switch
-  properties: {tooltip: '', enabled: true, foreground: null, text_post: 'on', visible: true, font_size: 14, spacing_above: small, checked_color: '', spacing_below: small, italic: true, text_pre: 'off', background: '', bold: true, checked: true}
-  name: switch_1
+  name: label_3_copy_3
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Switch Component, tooltip: '', underline: false, visible: true}
+  type: Label
+- event_bindings: {}
   layout_properties: {grid_position: 'MZQIRA,PWAOPO', width: 54}
-  event_bindings: {}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Multi Select Dropdown, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_3_copy
-  layout_properties:
+  name: switch_1
+  properties: {background: '', bold: true, checked: true, checked_color: '', enabled: true, font_size: 14, foreground: null, italic: true, spacing_above: small, spacing_below: small, text_post: 'on', text_pre: 'off', tooltip: '', visible: true}
+  type: form:Switch
+- layout_properties:
     col_widths: {}
     grid_position: FIUEYU,YFELUZ
-- type: form:MultiSelectDropDown
+  name: label_3_copy
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Multi Select Dropdown, tooltip: '', underline: false, visible: true}
+  type: Label
+- event_bindings: {change: multi_select_drop_down_1_change}
+  layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
+  name: multi_select_drop_down_1
   properties:
     align: left
     enable_filtering: true
-    placeholder: None Selected
     enabled: true
     items: [foo, bar, '---', eggs, spam]
-    visible: true
+    multiple: true
+    placeholder: None Selected
     spacing_above: small
     spacing_below: small
-    multiple: true
-  name: multi_select_drop_down_1
-  layout_properties: {grid_position: 'UMZOFV,UZZMKN'}
-  event_bindings: {change: multi_select_drop_down_1_change}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Quill Editor, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_3_copy_2
-  layout_properties:
+    visible: true
+  type: form:MultiSelectDropDown
+- layout_properties:
     col_widths: {}
     grid_position: FBTNBP,PVGRIB
-- type: form:Quill
-  properties: {readonly: false, height: '150', placeholder: hi there, toolbar: true, enabled: true, visible: true, auto_expand: true, content: '', spacing_above: small, spacing_below: small, theme: snow}
-  name: quill
+  name: label_3_copy_2
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Quill Editor, tooltip: '', underline: false, visible: true}
+  type: Label
+- event_bindings: {text_change: quill_text_change}
   layout_properties:
     col_widths: {}
     grid_position: XFUXGM,KNTPBT
-  event_bindings: {text_change: quill_text_change}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Autocomplete Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_4_copy_3
-  layout_properties:
+  name: quill
+  properties: {auto_expand: true, content: '', enabled: true, height: '150', placeholder: hi there, readonly: false, spacing_above: small, spacing_below: small, theme: snow, toolbar: true, visible: true}
+  type: form:Quill
+- layout_properties:
     col_widths: {}
     grid_position: WJJWDU,YMUSBV
-- type: form:Autocomplete
+  name: label_4_copy_3
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Autocomplete Component, tooltip: '', underline: false, visible: true}
+  type: Label
+- data_bindings:
+  - {code: 'self.item[''text'']', property: text, writeback: true}
+  event_bindings: {focus: autocomplete_event, lost_focus: autocomplete_event, pressed_enter: autocomplete_event, suggestion_clicked: autocomplete_event}
+  layout_properties: {grid_position: 'YVFANF,BPSWYI'}
+  name: autocomplete_1
   properties:
-    suggestions: [Anvil, AT&T, Adobe, Airbnb, Alphabet, Amazon, Apple, Broadcom, Charter Communications, Cisco, Comcast, Facebook, IBM, Intel, Intuit, Mastercard, Microsoft, Netflix, Nvidia, Oracle, PayPal, Qualcomm, Salesforce, ServiceNow, Square, T-Mobile US, Texas Instruments, Verizon, Visa, Zoom]
-    placeholder: ''
-    text: ''
     enabled: true
-    visible: true
+    placeholder: ''
     spacing_above: small
     spacing_below: small
     suggest_if_empty: true
-  name: autocomplete_1
-  layout_properties: {grid_position: 'YVFANF,BPSWYI'}
-  event_bindings: {pressed_enter: autocomplete_event, lost_focus: autocomplete_event, focus: autocomplete_event, suggestion_clicked: autocomplete_event}
-  data_bindings:
-  - {property: text, code: 'self.item[''text'']', writeback: true}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Slider Component, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_4_copy
-  layout_properties:
+    suggestions: [Anvil, AT&T, Adobe, Airbnb, Alphabet, Amazon, Apple, Broadcom, Charter Communications, Cisco, Comcast, Facebook, IBM, Intel, Intuit, Mastercard, Microsoft, Netflix, Nvidia, Oracle, PayPal, Qualcomm, Salesforce, ServiceNow, Square, T-Mobile US, Texas Instruments, Verizon, Visa, Zoom]
+    text: ''
+    visible: true
+  type: form:Autocomplete
+- layout_properties:
     col_widths: {}
     grid_position: NHJHEA,GPPVWA
-- type: form:Slider
-  properties: {pips_mode: positions, min: 0, tooltips: true, margin: null, pips_stepped: true, pips: true, pips_values: '0, 25, 50, 75, 100', max: 100, padding: '', enabled: true, pips_density: 5, limit: null, animate: true, visible: true, connect: 'False, True, False', start: '20, 50', behaviour: tap, spacing_above: medium, spacing_below: medium, color: '#FF9800', format: '£{:.2f}', step: 5}
-  name: slider
+  name: label_4_copy
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Slider Component, tooltip: '', underline: false, visible: true}
+  type: Label
+- data_bindings:
+  - {code: 'self.item[''values'']', property: values, writeback: true}
+  event_bindings: {change: slider_change, slide: slider_slide}
   layout_properties:
     col_widths: {}
     grid_position: SUVLYR,ZJPVFX
-  data_bindings:
-  - {property: values, code: 'self.item[''values'']', writeback: true}
-  event_bindings: {change: slider_change, slide: slider_slide}
-- type: TextBox
-  properties: {}
-  name: text_box_left
+  name: slider
+  properties: {animate: true, behaviour: tap, color: '#FF9800', connect: 'False, True, False', enabled: true, format: '£{:.2f}', limit: null, margin: null, max: 100, min: 0, padding: '', pips: true, pips_density: 5, pips_mode: positions, pips_stepped: true, pips_values: '0, 25, 50, 75, 100', spacing_above: medium, spacing_below: medium, start: '20, 50', step: 5, tooltips: true, visible: true}
+  type: form:Slider
+- data_bindings:
+  - {code: 'self.slider.formatted_values[0]', property: text, writeback: true}
+  event_bindings: {pressed_enter: slider_textbox_enter}
   layout_properties:
     col_widths: {}
     grid_position: UEQKRF,WIUEFV
-  data_bindings:
-  - {property: text, code: 'self.slider.formatted_values[0]', writeback: true}
-  event_bindings: {pressed_enter: slider_textbox_enter}
-- type: Button
-  properties: {role: null, align: full, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: RESET, font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:refresh'}
-  name: slider_button_reset
+  name: text_box_left
+  properties: {}
+  type: TextBox
+- event_bindings: {click: slider_button_reset_click}
   layout_properties:
     col_widths: {}
     grid_position: UEQKRF,JQRAMC
-  event_bindings: {click: slider_button_reset_click}
-- type: TextBox
-  properties: {}
-  name: text_box_right
+  name: slider_button_reset
+  properties: {align: full, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:refresh', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: RESET, tooltip: '', underline: false, visible: true}
+  type: Button
+- data_bindings:
+  - {code: 'self.slider.formatted_values[1]', property: text, writeback: true}
+  event_bindings: {pressed_enter: slider_textbox_enter}
   layout_properties:
     col_widths: {}
     grid_position: UEQKRF,SGIMVH
-  data_bindings:
-  - {property: text, code: 'self.slider.formatted_values[1]', writeback: true}
-  event_bindings: {pressed_enter: slider_textbox_enter}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Slider Component - with custom pips - see code, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: large, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_4_copy_2
-  layout_properties:
+  name: text_box_right
+  properties: {}
+  type: TextBox
+- layout_properties:
     col_widths: {}
     grid_position: VGOMRT,ISPGIW
-- type: form:Slider
-  properties: {role: '', pips_mode: count, min: -5, tooltips: true, margin: null, pips_stepped: false, pips: true, pips_values: '5', max: 5, padding: '', enabled: true, pips_density: -1, limit: null, animate: false, visible: true, connect: lower, start: '0', behaviour: tap, handle_size: '', spacing_above: small, spacing_below: small, bar_height: '', color: null, format: .1f, step: 1}
-  name: slider_agree
-  layout_properties: {grid_position: 'CVTVHB,QMZPRB'}
+  name: label_4_copy_2
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: large, text: Slider Component - with custom pips - see code, tooltip: '', underline: false, visible: true}
+  type: Label
+- data_bindings:
+  - {code: 'self.item[''agree'']', property: formatted_value, writeback: true}
   event_bindings: {change: slider_agree_change}
-  data_bindings:
-  - {property: formatted_value, code: 'self.item[''agree'']', writeback: true}
-- type: Button
-  properties: {role: null, align: center, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:minus'}
-  name: slider_down
+  layout_properties: {grid_position: 'CVTVHB,QMZPRB'}
+  name: slider_agree
+  properties: {animate: false, bar_height: '', behaviour: tap, color: null, connect: lower, enabled: true, format: .1f, handle_size: '', limit: null, margin: null, max: 5, min: -5, padding: '', pips: true, pips_density: -1, pips_mode: count, pips_stepped: false, pips_values: '5', role: '', spacing_above: small, spacing_below: small, start: '0', step: 1, tooltips: true, visible: true}
+  type: form:Slider
+- event_bindings: {click: slider_down_click}
   layout_properties:
     col_widths: {}
     grid_position: SKFJND,QWVXHQ
-  event_bindings: {click: slider_down_click}
-- type: Button
-  properties: {role: null, align: center, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:refresh'}
-  name: slider_reset
+  name: slider_down
+  properties: {align: center, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:minus', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: '', underline: false, visible: true}
+  type: Button
+- event_bindings: {click: slider_reset_click}
   layout_properties: {grid_position: 'SKFJND,GTGWKT'}
-  event_bindings: {click: slider_reset_click}
-- type: Button
-  properties: {role: null, align: center, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: 'fa:plus'}
-  name: slider_up
+  name: slider_reset
+  properties: {align: center, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:refresh', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: '', underline: false, visible: true}
+  type: Button
+- event_bindings: {click: slider_up_click}
   layout_properties:
     col_widths: {}
     grid_position: SKFJND,KWGACE
-  event_bindings: {click: slider_up_click}
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Chips, font_size: null, font: '', spacing_above: large, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
-  name: label_3_copy_5
-  layout_properties:
+  name: slider_up
+  properties: {align: center, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', icon: 'fa:plus', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: '', underline: false, visible: true}
+  type: Button
+- layout_properties:
     col_widths: {}
     grid_position: VFWOQD,VIUOBZ
-- type: form:ChipsInput
+  name: label_3_copy_5
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: large, spacing_below: small, text: Chips, tooltip: '', underline: false, visible: true}
+  type: Label
+- data_bindings:
+  - {code: 'self.item[''chips'']', property: chips, writeback: true}
+  event_bindings: {chips_changed: chips_1_chips_changed}
+  layout_properties: {grid_position: 'KHIAAV,YQLEWH'}
+  name: chips_1
   properties:
     chips: [foo, bar]
-    spacing_below: small
-    spacing_above: small
-    visible: true
     primary_placeholder: Enter a tag
     secondary_placeholder: +Tag
-  name: chips_1
-  layout_properties: {grid_position: 'KHIAAV,YQLEWH'}
-  event_bindings: {chips_changed: chips_1_chips_changed}
-  data_bindings:
-  - {property: chips, code: 'self.item[''chips'']', writeback: true}
-- type: Spacer
-  properties: {height: 277}
-  name: spacer_1_copy_3
-  layout_properties:
+    spacing_above: small
+    spacing_below: small
+    visible: true
+  type: form:ChipsInput
+- layout_properties:
     col_widths: {}
     grid_position: STFSBF,BYBVXR
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Pivot Component, font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: true, underline: false, icon: ''}
+  name: spacer_1_copy_3
+  properties: {height: 277}
+  type: Spacer
+- layout_properties: {grid_position: 'WHHTUU,ICVIKX'}
   name: label_6
-  layout_properties: {grid_position: 'WHHTUU,ICVIKX'}
-- type: form:Pivot
-  properties:
-    rows: [Province]
-    columns: [Party]
-    values: ''
-    aggregator: Count
+  properties: {align: left, background: '', bold: true, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: Pivot Component, tooltip: '', underline: false, visible: true}
+  type: Label
+- layout_properties: {grid_position: 'HIYTRU,YYRQCD'}
   name: pivot
-  layout_properties: {grid_position: 'HIYTRU,YYRQCD'}
+  properties:
+    aggregator: Count
+    columns: [Party]
+    rows: [Province]
+    values: ''
+  type: form:Pivot
+container:
+  properties: {col_widths: '{}'}
+  type: ColumnPanel
 is_package: true

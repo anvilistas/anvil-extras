@@ -13,6 +13,7 @@ __version__ = "2.7.1"
 dataset_url = "https://pivottable.js.org/examples/mps.json"
 
 
+
 #### AUTO REFRESING - the item property updates components
 @auto_refreshing
 class Demo(DemoTemplate):

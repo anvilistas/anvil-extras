@@ -1,48 +1,48 @@
 container:
-  type: TextBox
+  event_bindings: {hide: _on_hide, show: _on_show}
   properties: {}
-  event_bindings: {show: _on_show, hide: _on_hide}
-is_package: true
+  type: TextBox
 custom_component: true
-properties:
-- name: suggestions
-  type: text[]
-  default_value: []
-- {name: placeholder, type: string, default_value: ''}
-- name: text
-  type: string
-  default_value: ''
-  allow_binding_writeback: true
-  default_binding_prop: true
-  binding_writeback_events: [suggestion_clicked]
-  group: text
-  important: true
-- {name: enabled, type: boolean, default_value: true, group: interaction, important: true, designer_hint: enabled}
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
-- name: spacing_above
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- name: spacing_below
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- {name: tag, type: object, group: user data, important: false}
-- {name: suggest_if_empty, type: boolean, default_value: false}
-- {name: foreground, type: color, default_value: '', default_binding_prop: false, group: appearance, important: false, description: Only applies changes to the TextBox}
-- {name: background, type: color, default_value: '', default_binding_prop: false, description: Only applies changes to the TextBox, group: appearance, important: false}
-- name: filter_mode
-  type: enum
-  default_value: contains
-  options: [contains, startswith]
-  description: How the autocompletion should filter suggestions
 events:
 - {name: change}
 - {name: suggestion_clicked}
-- {name: pressed_enter, default_event: true}
+- {default_event: true, name: pressed_enter}
 - {name: focus}
 - {name: lost_focus}
+is_package: true
+properties:
+- default_value: []
+  name: suggestions
+  type: text[]
+- {default_value: '', name: placeholder, type: string}
+- allow_binding_writeback: true
+  binding_writeback_events: [suggestion_clicked]
+  default_binding_prop: true
+  default_value: ''
+  group: text
+  important: true
+  name: text
+  type: string
+- {default_value: true, designer_hint: enabled, group: interaction, important: true, name: enabled, type: boolean}
+- {default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_above
+  options: [none, small, medium, large]
+  type: enum
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- {group: user data, important: false, name: tag, type: object}
+- {default_value: false, name: suggest_if_empty, type: boolean}
+- {default_binding_prop: false, default_value: '', description: Only applies changes to the TextBox, group: appearance, important: false, name: foreground, type: color}
+- {default_binding_prop: false, default_value: '', description: Only applies changes to the TextBox, group: appearance, important: false, name: background, type: color}
+- default_value: contains
+  description: How the autocompletion should filter suggestions
+  name: filter_mode
+  options: [contains, startswith]
+  type: enum
