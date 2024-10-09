@@ -39,7 +39,7 @@ css = """ .anvil-role-ae-progress-track, .anvil-role-ae-progress-indicator {
   content: '';
   -webkit-animation: ae-running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   animation: ae-running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  background-color: var(--anvil-extras-track-colour);
+  background-color: var(--ae-track-colour);
 }
 
 @-webkit-keyframes ae-running-progress {

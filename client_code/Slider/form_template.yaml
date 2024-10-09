@@ -1,6 +1,6 @@
 components: []
 container:
-  properties: {background: '', border: '', foreground: '', html: <div anvil-name="anvil-slider" class="anvil-slider" anvil-slot></div>, role: null, tooltip: '', visible: true}
+  properties: {background: '', border: '', foreground: '', html: <div anvil-name="ae-slider" class="ae-slider" anvil-slot></div>, role: null, tooltip: '', visible: true}
   type: HtmlTemplate
 custom_component: true
 events:

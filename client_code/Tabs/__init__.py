@@ -23,7 +23,7 @@ __version__ = "2.7.1"
 
 _html_injector.css(
     """
-.ae-tabs.anvil-role-card {
+.ae-tabs-container.anvil-role-card {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -138,7 +138,7 @@ class Tabs(TabsTemplate):
         self._shown = False
         dom_node = self._dom_node = anvil.js.get_dom_node(self)
         dom_node.style.padding = "0"
-        dom_node.classList.add("anvil-extras-tabs")
+        dom_node.classList.add("ae-tabs-container")
 
         self._tabs_node = self.dom_nodes["ae-tabs"]
         self._indicator = self.dom_nodes["ae-tab-indicator"]

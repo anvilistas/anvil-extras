@@ -31,7 +31,7 @@ class Indeterminate(IndeterminateTemplate):
     @track_colour.setter
     def track_colour(self, value):
         self._props["track_colour"] = value
-        self.dom_node.style.setProperty("--anvil-extras-track-colour", value)
+        self.dom_node.style.setProperty("--ae-track-colour", value)
 
     @property
     def indicator_colour(self):

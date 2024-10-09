@@ -19,7 +19,7 @@ _primary = _get_color(None)
 
 _html_injector.css(
     """
-.anvil-extras-chips-input input {
+.ae-chips-input input {
     box-shadow: none !important;
     border: none !important;
     padding: 7px 0 !important;
@@ -27,7 +27,7 @@ _html_injector.css(
     flex: 1;
     min-width: 50px;
 }
-.anvil-extras-chips-input{
+.ae-chips-input{
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -62,7 +62,7 @@ class ChipsInput(ChipsInputTemplate):
         input_node.addEventListener("keydown", self._chip_input_key_down)
 
         dom_node = self._dom_node = _get_dom_node(self)
-        dom_node.classList.add("anvil-extras-chips-input")
+        dom_node.classList.add("ae-chips-input")
         self.temp_chip.remove_from_parent()
 
         properties = _defaults | properties

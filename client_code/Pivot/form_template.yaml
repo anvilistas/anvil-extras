@@ -1,7 +1,7 @@
 components: []
 container:
   event_bindings: {show: form_show}
-  properties: {background: '', border: '', foreground: '', html: <div anvil-name="anvil-extras-pivot" class="anvil-extras-pivot"></div>, role: null, tooltip: '', visible: true}
+  properties: {background: '', border: '', foreground: '', html: <div anvil-name="ae-pivot" class="ae-pivot"></div>, role: null, tooltip: '', visible: true}
   type: HtmlTemplate
 custom_component: true
 is_package: true

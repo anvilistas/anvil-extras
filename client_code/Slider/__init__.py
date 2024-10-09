@@ -31,10 +31,10 @@ HANDLE_SIZE = "--ae-slider-handle-size"
 
 _html_injector.css(
     f"""
-.anvil-slider-container {{
+.ae-slider-container {{
   padding: 10px 0;
 }}
-.anvil-slider-container.has-pips {{
+.ae-slider-container.has-pips {{
   padding-bottom: 40px;
 }}
 .anvil-container-overflow, .anvil-panel-col {{
@@ -333,9 +333,9 @@ class Slider(SliderTemplate):
     def __init__(self, **properties):
         # Any code you write here will run when the form opens.
         dom_node = self._dom_node = anvil.js.get_dom_node(self)
-        dom_node.classList.add("anvil-slider-container")
+        dom_node.classList.add("ae-slider-container")
 
-        self._slider_node = self.dom_nodes["anvil-slider"]
+        self._slider_node = self.dom_nodes["ae-slider"]
         props = self._props = _defaults | properties
 
         self._slider = None
