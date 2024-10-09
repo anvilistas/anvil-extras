@@ -159,3 +159,33 @@ def _css_length(v):
         return f"{float(v)}px"
     except (TypeError, ValueError):
         return v
+
+
+def _ensure_role_is_list(role):
+    if role is None:
+        return []
+
+    if isinstance(role, str):
+        return [role]
+
+    return role
+
+
+def _add_roles(self, roles):
+    current_roles = _ensure_role_is_list(self.role)
+    new_roles = _ensure_role_is_list(roles)
+
+    for role in new_roles:
+        if role not in current_roles:
+            current_roles.append(role)
+
+    self.role = current_roles
+
+
+def _remove_roles(self, roles):
+    current_roles = _ensure_role_is_list(self.role)
+    roles_to_remove = _ensure_role_is_list(roles)
+
+    updated_roles = [role for role in current_roles if role not in roles_to_remove]
+
+    self.role = updated_roles
