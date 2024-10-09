@@ -205,5 +205,4 @@ class ChipsInput(ChipsInputTemplate):
     @staticmethod
     def _set_focus(chip, val):
         chip.background = _primary if val else ""
-        chip.chip_label.foreground = "#fff" if val else ""
-        chip.close_link.foreground = "#fff" if val else ""
+        chip.foreground = "#fff" if val else ""
