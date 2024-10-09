@@ -7,64 +7,155 @@
 
 import anvil.js as _js
 from anvil import HtmlPanel as _HtmlPanel
-from anvil.js.window import Function as _Function
 from anvil.js.window import document as _document
-from anvil.js.window import jQuery as _S
 
+from ..popover import pop, popover
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
+from .DropDown import DropDown
+from .Option import Option
 
 __version__ = "2.7.1"
 
-_html_injector.script(
-    """
-var orig_offset = jQuery.fn.offset
-jQuery.fn.offset = function() {
-    if (!this[0].isConnected) {
-        return 0; // prevent warning in output
-    }
-    return orig_offset.call(this);
+_css = """
+.anvil-role-ae-ms-btn > button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
-"""
-)
 
-_html_injector.css(".bs-actionsbox { min-width: max-content; }")
-
-
-# If we update this - check the form_hide/form_show behaviour still works
-bs_select_version = "1.13.18"
-prefix = "https://cdn.jsdelivr.net/npm/bootstrap-select@"
-suffix = "/dist/js/bootstrap-select.min"
-
-try:
-    _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
-except AttributeError:
-    _html_injector.cdn(f"{prefix}{bs_select_version}/dist/js/bootstrap-select.min.js")
-    _html_injector.cdn(f"{prefix}{bs_select_version}/dist/css/bootstrap-select.min.css")
-    _S.fn.selectpicker.Constructor.BootstrapVersion = "3"
-
-
-# because select all buttons don't distinguish between user and code changes
-_Function(
-    """
-const oldChangeAll = $.fn.selectpicker.Constructor.prototype.changeAll;
-function changeAll(status) {
-    oldChangeAll.call(this, status);
-    anvil.call(this.$element, "_user_selected_all", false);
+.anvil-role-ae-ms-btn > button > span {
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden;
 }
-$.fn.selectpicker.Constructor.prototype.changeAll = changeAll;
+
+/* dropdown */
+.ae-ms-dd {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ae-ms-select-all button > span {
+    text-wrap: nowrap !important;
+}
+
+.ae-ms-options {
+    min-height: 0;
+}
+
+.ae-ms-options:focus-visible {
+    outline: none;
+}
+.ae-ms-options > div {
+    height: 100%
+}
+.ae-ms-options ul {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: scroll;
+}
+
+.ae-ms-options a[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.ae-ms-options a[data-disabled] * {
+    pointer-events: none;
+}
+
+.ae-ms-options div[data-divider] {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}
+
+.ae-ms-options .anvil-panel-section-gutter,
+.ae-ms-options .flow-panel-gutter,
+.ae-ms-options .anvil-flow-panel-gutter,
+.ae-ms-options .anvil-panel-col,
+.ae-ms-options .flow-panel-item,
+.ae-ms-options .anvil-flow-panel-item {
+    margin: 0 !important;
+}
+.ae-ms-options .anvil-panel-col,
+.ae-ms-options .flow-panel-item,
+.ae-ms-options .anvil-flow-panel-item {
+    padding: 0 !important;
+}
+.ae-ms-options .flow-panel-gutter,
+.ae-ms-options .anvil-flow-panel-gutter {
+    gap: 8px;
+}
+
+.ae-ms-options a.anvil-role-ae-ms-option {
+    color: var(--ae-ms-option-text, #333333);
+    padding: 2px 0;
+}
+
+.ae-ms-options a.anvil-role-ae-ms-option:hover:not(.anvil-role-ae-ms-option-active) {
+    background-color: var(--ae-ms-option-bg-hover, #e8e8e8);
+}
+
+.ae-ms-options a.anvil-role-ae-ms-option-active {
+    background-color: var(--ae-ms-option-bg-active, #337ab7);
+    color: var(--ae-ms-option-text-active, #fff);
+}
+
+.anvil-role-ae-ms-option-label span {
+    white-space: nowrap !important;
+    padding: 0 !important;
+}
+
+.anvil-role-ae-ms-option-subtext span {
+    white-space: nowrap !important;
+    font-size: 80%;
+    padding: 0 !important;
+    color: var(--ae-ms-option-subtext, #777);
+}
+.anvil-role-ae-ms-option-active .anvil-role-ae-ms-option-subtext span {
+    color: var(--ae-ms-option-subtext-active, rgba(255,255,255,.5));
+}
+
 """
-)()
+_html_injector.css(_css)
 
-
-def off_dd_click(e):
-    # see bug #271
-    if not e.target.closest(".bootstrap-select"):
-        _S(_document).trigger("click.bs.dropdown.data-api")
-
-
-_document.addEventListener("click", off_dd_click, True)
-
+# TODO
+# - [x] add support for dividers
+# - [x] add support for icons
+# - [x] add support for subtext
+# - [x] add support for title
+# - [x] add support for disabled
+# - [x] make the dropwdown conatiner a compnent in it's own right - might even be a custom component
+# - [x] add support for select all buttons
+#       - [x] we probably need to wrap the lp in a container and add the button to that
+#       - [x] only works in multiple mode
+# - [x] add arrow key support
+#       - [x] active role
+#       - [x] when filtering is enabled - ensure the arrow keys work
+#         - needs a different approach - can't just do the focus thing
+# - [x] add tab key support
+# - [x] Consider whether we need the underlying select and options (probably not)
+#       - No
+# - [x] search box support
+#       - [x] focus the search box when the search box is added to the page
+# - [x] ensure visible works as expected - i.e. the popover should be hidden when we're not visible
+# - [x] support single select dropdown
+#       - when an option is selected all other options are hidden
+#       - This might be why it's useful to use the underlying option component, because then the browser is responsible for this logic
+# - [x] support the various width options
+#       - [ ] fit needs to also change the width of the dd to the max
+# - [x] support the selected text option
+# - [x] support the placeholder text
+# - [x] styling and roles
+# - [ ] go through each property and make sure it's working as expected
+# - [ ] test multi select inside a popover
+# - [ ] stop the focus within when enable fitler is false and we hit an arrow key
 
 _defaults = {
     "align": "left",
@@ -80,8 +171,6 @@ _defaults = {
     "visible": True,
 }
 
-visible_false_classes = ["visible-false", "anvil-visible-false"]
-
 
 def _props_property(prop, setter):
     def getprop(self):
@@ -94,81 +183,82 @@ def _props_property(prop, setter):
     return property(getprop, setprop, None, prop)
 
 
-def _component_property(prop, jquery, fn=None):
-    if jquery.startswith("data-"):
-        jquery = jquery.replace("data-", "")
-        set_meth = "data"
-    else:
-        set_meth = "attr"
-
-    def setter(self, value):
-        value = value if fn is None else fn(value)
-        if value:
-            self._el[set_meth](jquery, value)
-        else:
-            self._el[set_meth](jquery, None)
-
-        if self._init:
-            self._el.selectpicker("destroy")
-            self._reset()
-
-    return _props_property(prop, setter)
-
-
 class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def __init__(self, **properties):
-        # Set Form properties and Data Bindings.
         self._init = False
-        self._selectPicker = None
-
         self._dom_node = _js.get_dom_node(self)
-        _S_dom_node = _S(self._dom_node)
-        self._el = _S_dom_node.find("select")
-
-        _S_dom_node.html("").append(self._el)
-        # remove all the script tags before they load into the dom
-
-        self._values = {}
         self._invalid = []
-        # Any code you write here will run when the form opens
+        self._options = []
+        self._total = 0
         self._props = props = _defaults | properties
         props["items"] = props["items"] or []
+
+        self._dd_width = 0
+        self._dd = DropDown()
+        self._dd.add_event_handler("change", self._change)
+        popover(
+            self._select_btn,
+            self._dd,
+            placement="bottom-start",
+            arrow=False,
+            delay=0,
+            animation=False,
+            trigger="manual",
+            max_width="fit-content",
+        )
+
         selected = props.pop("selected", ())
 
         self.init_components(**props)
-
         self.set_event_handler("x-popover-init", self._mk_popover)
         self.set_event_handler("x-popover-destroy", self._mk_popover)
-        self._user_selected_all(False)
-        self._reset(selected)
-        self._el.selectpicker("refresh")
-        self._init = True
-
-    def _reset(self, selected=None):
-        if self._init:
-            selected = self.selected
-        self._el.selectpicker(
-            {"countSelectedText": lambda *args: self.format_selected_text(*args)}
+        self._dd.set_event_handler(
+            "x-popover-show", lambda **e: self.raise_event("opened")
         )
-        self._el.on("changed.bs.select", self.change)
-        self._el.on("shown.bs.select", self._opened)
-        self._el.on("hidden.bs.select", self._closed)
-        self._selectPicker = self._el.data("selectpicker")
-        menu = self._selectPicker["$menu"]
-        menu.find(".bs-actionsbox").on("click", self._user_selected_all)
-        self.visible = self.visible
-        if selected:
-            self.selected = selected
+        self._dd.set_event_handler(
+            "x-popover-hide", lambda **e: self.raise_event("closed")
+        )
+
+        self._init = True
+        self.selected = selected
 
     def format_selected_text(self, count, total):
         if count > 3:
             return f"{count} items selected"
-        return ", ".join(self.selected_keys)
+        return ", ".join(opt.title or opt.key for opt in self._options if opt.selected)
 
     ##### PROPERTIES #####
-    align = _props_property(
-        "align", lambda s, v: s._dom_node.style.setProperty("text-align", v)
-    )
+    @property
+    def width(self):
+        return self._props.get("width")
+
+    @width.setter
+    def width(self, val):
+        self._props["width"] = val
+        self._dd._dom_node.style.minWidth = ""
+
+        if val == "auto":
+            self._select_btn.width = self._dd_width
+        elif val == "fit":
+            self._select_btn.width = "fit-content"
+            self._dd._dom_node.style.minWidth = ""
+        elif not val:
+            self._select_btn.width = 220
+            self._dd._dom_node.style.minWidth = "192px"
+        else:
+            self._select_btn.width = val
+            self._dd._dom_node.style.minWidth = _css_length(val)
+        # We might want to change this
+        # but if we do we need the btn to be on the screen to calculate the width
+        # and we'd probably need to have a resize observer to change the width of the _dd element
+
+    @property
+    def align(self):
+        return self._select_btn.align
+
+    @align.setter
+    def align(self, val):
+        self._select_btn.align = val
 
     @property
     def items(self):
@@ -177,30 +267,31 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     @items.setter
     def items(self, value):
         self._props["items"] = value
+        self._close()
         selected = self.selected + self._invalid
-        self._el.children().remove()
-        options, values = _clean_items(value)
-        self._el.append(options)
-        self._values = values
+
+        options = Option.from_items(value)
+
+        self._dd.options = self._options = options
+        self._calc_dd_width()
+        self._total = sum(1 for opt in options if not opt.is_divider)
+        self.selected = selected
         if self._init:
-            self._el.selectpicker("refresh")
-            self._el.selectpicker("render")
-            self.selected = selected
+            self.width = self.width
 
     @property
     def selected_keys(self):
-        return [e.textContent for e in _S("option:selected", self._el) if e.value != ""]
+        return [opt.key for opt in self._options if opt.selected]
 
     @property
     def selected(self):
-        return [
-            self._values[e.value]
-            for e in _S("option:selected", self._el)
-            if e.value != ""
-        ]
+        return [opt.value for opt in self._options if opt.selected]
 
     @selected.setter
     def selected(self, values):
+        if not self._init:
+            return
+
         FOUND = object()
 
         if not isinstance(values, (list, tuple)):
@@ -208,137 +299,109 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         else:
             values = list(values)
 
-        to_select = []
-        for key, val in self._values.items():
+        multiple = self.multiple
+        first = True
+
+        for opt in self._options:
             try:
-                idx = values.index(val)
+                idx = values.index(opt.value)
             except ValueError:
-                pass
+                opt.selected = False
             else:
                 values[idx] = FOUND
-                to_select.append(key)
+                opt.selected = True if multiple else first
+                first = False
 
         self._invalid = [val for val in values if val is not FOUND]
-        self._el.selectpicker("val", to_select)
+        self._change(raise_event=False)
 
-    width = _component_property("width", "data-width", _css_length)
-    multiple = _component_property("multiple", "multiple")
-    placeholder = _component_property("placeholder", "title")
-    enable_filtering = _component_property("enable_filtering", "data-live-search")
-    enabled = _component_property("enabled", "disabled", lambda v: not v)
-    enable_select_all = _component_property("enable_select_all", "data-actions-box")
+    @property
+    def placeholder(self):
+        return self._props.get("placeholder", "")
+
+    @placeholder.setter
+    def placeholder(self, val):
+        self._props["placeholder"] = val
+        if not self.selected_keys:
+            self._select_btn.text = val
+
+    @property
+    def enabled(self):
+        return self._select_btn.enabled
+
+    @enabled.setter
+    def enabled(self, val):
+        self._select_btn.enabled = val
+        if not val:
+            self._close()
+
+    @property
+    def enable_filtering(self):
+        return self._dd.enable_filtering
+
+    @enable_filtering.setter
+    def enable_filtering(self, val):
+        self._dd.enable_filtering = val
+
+    @property
+    def multiple(self):
+        return self._dd.multiple
+
+    @multiple.setter
+    def multiple(self, val):
+        self._dd.multiple = val
+        self.selected = self.selected
+
+    @property
+    def enable_select_all(self):
+        return self._dd.enable_select_all
+
+    @enable_select_all.setter
+    def enable_select_all(self, val):
+        self._dd.enable_select_all = val
+
     tag = _HtmlPanel.tag
-
-    def _set_visible(self, val):
-        _HtmlPanel.visible.__set__(self, val)
-        selectPicker = self._selectPicker
-        if not selectPicker:
-            return
-        container = selectPicker["$bsContainer"]
-        visible_false = not val
-        for cs in visible_false_classes:
-            container.toggleClass(cs, visible_false)
-
-    visible = _props_property("visible", _set_visible)
+    visible = _HtmlPanel.visible
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
 
-    ##### EVENTS #####
-    def _opened(self, *e):
-        # invalidate these since the user has interacted with the component
-        self._invalid = []
-        self.raise_event("opened")
+    ##### PRIVATE Functions #####
 
-    def _closed(self, *e):
-        self.raise_event("closed")
+    def _calc_dd_width(self):
+        dd_node = self._dd._dom_node
+        width = dd_node.style.width
+        min_width = dd_node.style.minWidth
+        dd_node.style.width = "fit-content"
+        _document.body.appendChild(dd_node)
+        self._dd_width = dd_node.offsetWidth + 28
+        dd_node.remove()
+        dd_node.style.width = width
+        dd_node.style.minWidth = min_width
 
-    def change(self, e, clickedIndex, isSelected, prev):
-        if clickedIndex is not None or self._select_all_is_user:
-            self._user_selected_all(False)
+    def _change(self, raise_event=True, **event_args):
+        keys = self.selected_keys
+        if not keys:
+            self._select_btn.text = self.placeholder
+        else:
+            self._select_btn.text = self.format_selected_text(len(keys), self._total)
+        if raise_event:
             self.raise_event("change")
 
-    def _user_selected_all(self, e):
-        # either e is False or it's a js event
-        self._select_all_is_user = bool(e)
-
     def _mk_popover(self, init_node, **event_args):
-        # this is a bit of a hack - we're using the libraries private methods for this
-        init_node(self._el.data("selectpicker")["$bsContainer"][0])
+        init_node(self._dd)
 
-    def _form_hide(self, **event_args):
-        try:
-            # this is a bit of a hack
-            # we need to remove the open class from the selectpicker
-            # otherwise the dropdown might remain open when the form is hidden
-            # this can happen if the form closes without the user interacting with the page
-            # e.g. if the form is closed by clicking the browser's back button
-            data = self._el.data("selectpicker")
-            data["$newElement"].removeClass("open")
-            data["$bsContainer"].removeClass("open")
-        except AttributeError:
-            pass
+    def _open(self, **e):
+        if not pop(self._select_btn, "shown"):
+            pop(self._select_btn, "show")
+            # invalidate these since the user has interacted with the component
+            self._invalid = []
 
+    def _close(self, **e):
+        if pop(self._select_btn, "shown"):
+            pop(self._select_btn, "hide")
 
-##### PRIVATE Functions #####
-
-
-def _option_from_str(item: str, idx: str) -> tuple:
-    key = value = item
-    if item == "---":
-        return "<option data-divider='true'></option>", object()  # dummy value
-    else:
-        return f"<option value={idx}>{key}</option>", value
-
-
-def _option_from_tuple(item: tuple, idx: int) -> tuple:
-    key, value = item
-    if not isinstance(key, str):
-        raise TypeError(
-            f"expectected a tuple of the form str, value in items at idx {idx}"
-        )
-    return f"<option value={idx}>{key}</option>", value
-
-
-def _option_from_dict(item: dict, idx: int) -> tuple:
-    sentinel = object()
-
-    # if they only set a key and not a value then use the key as the value
-    value = item.get("value", sentinel)
-    if value is sentinel:
-        value = item.get("key")
-
-    title = repr(item.get("title", ""))
-    icon = repr(item.get("icon", "")).replace(":", "-")
-    subtext = repr(item.get("subtext", ""))
-    disabled = not item.get("enabled", True)
-
-    option = f"""<option {'disabled' if disabled else ''}
-                        {f'data-icon={icon}' if icon else ''}
-                        {f'data-subtext={subtext}' if subtext else ''}
-                        {f'title={title}' if title else ''}
-                        value={idx}>
-                        {item.get('key')}
-                </option>"""
-
-    return option, value
-
-
-def _clean_items(items):
-    options = []
-    value_dict = {}
-
-    for idx, item in enumerate(items):
-        if isinstance(item, str):
-            option, value = _option_from_str(item, idx)
-        elif isinstance(item, (tuple, list)):
-            option, value = _option_from_tuple(item, idx)
-        elif isinstance(item, dict):
-            option, value = _option_from_dict(item, idx)
+    def _toggle(self, **e):
+        if not pop(self._select_btn, "shown"):
+            self._open()
         else:
-            raise TypeError(f"Invalid item at index {idx} (got type {type(item)})")
-
-        # use strings since the value from jquery is always a string
-        value_dict[str(idx)] = value
-        options.append(option)
-
-    return _S("\n".join(options)), value_dict
+            self._close()
