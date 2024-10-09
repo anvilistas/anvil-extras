@@ -38,7 +38,7 @@ _html_injector.css(
 .ae-chip a {
     user-select: none;
 }
-.ae-chip span {
+.ae-chip span, .ae-chip a > div {
     padding: 0 !important;
 }
 """

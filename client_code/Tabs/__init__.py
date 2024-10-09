@@ -61,7 +61,7 @@ _html_injector.css(
     -webkit-transition: color .28s ease, background-color .28s ease;
     transition: color .28s ease, background-color .28s ease
 }
-.ae-tabs .ae-tab a > span {
+.ae-tabs .ae-tab a > div {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
