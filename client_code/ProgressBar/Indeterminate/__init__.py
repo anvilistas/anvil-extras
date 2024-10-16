@@ -20,8 +20,8 @@ class Indeterminate(IndeterminateTemplate):
     def __init__(self, **properties):
         self.dom_node = get_dom_node(self)
         self._props = properties
-        self.role = "progress-track"
-        self.indicator_panel.role = "indeterminate-progress-indicator"
+        self.role = "ae-progress-track"
+        self.indicator_panel.role = "ae-indeterminate-progress-indicator"
         self.init_components(**properties)
 
     @property
@@ -31,7 +31,7 @@ class Indeterminate(IndeterminateTemplate):
     @track_colour.setter
     def track_colour(self, value):
         self._props["track_colour"] = value
-        self.dom_node.style.setProperty("--anvil-extras-track-colour", value)
+        self.dom_node.style.setProperty("--ae-track-colour", value)
 
     @property
     def indicator_colour(self):
