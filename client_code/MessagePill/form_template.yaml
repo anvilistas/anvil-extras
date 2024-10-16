@@ -1,14 +1,14 @@
-container:
-  type: ColumnPanel
-  properties: {col_widths: '{}'}
 components:
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false, background: '', bold: false, underline: false, icon: ''}
-  name: label
+- data_bindings: []
   layout_properties: {grid_position: 'XOVYVY,IBMHOM'}
-  data_bindings: []
-is_package: true
+  name: label
+  properties: {align: left, background: '', bold: false, border: '', font: '', font_size: null, foreground: '', icon: '', icon_align: left, italic: false, role: null, spacing_above: small, spacing_below: small, text: '', tooltip: '', underline: false, visible: true}
+  type: Label
+container:
+  properties: {col_widths: '{}'}
+  type: ColumnPanel
 custom_component: true
+is_package: true
 properties:
-- {name: level, type: string, default_value: info, default_binding_prop: true}
-- {name: message, type: string, default_value: ''}
+- {default_binding_prop: true, default_value: info, name: level, type: string}
+- {default_value: '', name: message, type: string}

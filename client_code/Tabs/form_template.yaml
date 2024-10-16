@@ -1,78 +1,72 @@
-properties:
-- {name: background, type: color, default_value: null, group: appearance, important: false}
-- {name: foreground, type: color, default_value: null, description: This should be a hex value or a theme color, group: appearance, important: false}
-- name: tab_titles
-  type: text[]
-  default_value: [Tab 1, Tab 2, Tab 3]
-  description: Each line should be a new tab title
-  important: true
-- {name: active_tab_index, type: number, default_value: 0, default_binding_prop: true, description: The current active tab, important: false}
-- {name: active_background, type: color, default_value: '', important: true, group: appearance}
-- {name: role, type: string, default_value: null, description: This component works well with the card role. Place a card below or above the tabs component, group: appearance, important: true}
-- name: align
-  type: enum
-  options: [left, center, right]
-  default_value: left
-  description: align tab text left center or right
-  group: text
-  important: false
-  designer_hint: align-horizontal
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
-- {name: tag, type: object, group: user data, important: false}
-- name: spacing_above
-  type: enum
-  options: [none, small, medium, large]
-  default_value: none
-  group: layout
-  important: false
-- name: spacing_below
-  type: enum
-  options: [none, small, medium, large]
-  default_value: none
-  group: layout
-  important: false
-- {name: bold, type: boolean, default_value: null, group: text, important: false, designer_hint: font-bold}
-- {name: font_size, type: string, default_value: null, group: text, important: false}
-- {name: italic, type: boolean, default_value: null, group: text, important: false, designer_hint: font-italic}
-- {name: font, type: string, default_value: '', group: text, important: false}
-is_package: true
+components:
+- layout_properties: {slot: default}
+  name: link_1
+  properties: {}
+  type: Link
+- layout_properties: {slot: default}
+  name: link_2
+  properties: {}
+  type: Link
+container:
+  event_bindings: {hide: _on_hide, show: _on_show}
+  properties:
+    background: ''
+    border: ''
+    foreground: ''
+    html: |
+      <ul anvil-name="ae-tabs" class="ae-tabs">
+        <li class="ae-tab" anvil-slot-repeat="default"></li>
+        <li anvil-name="ae-tab-indicator" class="ae-tab-indicator"></li>
+      </ul>
+    role: null
+    tooltip: ''
+    visible: true
+  type: HtmlTemplate
+custom_component: true
 events:
-- name: tab_click
-  default_event: true
+- default_event: true
   description: when a tab is clicked
+  name: tab_click
   parameters:
   - {name: tab_index}
   - {name: tab_title}
-- {name: show, description: when the tabs are shown}
-- {name: hide, description: when the tabs are hidden}
-custom_component: true
-components:
-- type: Link
-  properties: {}
-  name: link_1
-  layout_properties: {slot: default}
-- type: Link
-  properties: {}
-  name: link_2
-  layout_properties: {slot: default}
-container:
-  type: HtmlTemplate
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: null
-    html: |+
-      <ul class="tabs">
-        <li class="tab" anvil-slot-repeat="default"></li>
-        <li class="indicator"></li>
-      </ul>
-      <script type="module">
-      import {DesignerTabs} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerTabs.init();
-      </script>
-
-
-  event_bindings: {show: _on_show, hide: _on_hide}
+- {description: when the tabs are shown, name: show}
+- {description: when the tabs are hidden, name: hide}
+is_package: true
+properties:
+- {default_value: null, group: appearance, important: false, name: background, type: color}
+- {default_value: null, description: This should be a hex value or a theme color, group: appearance, important: false, name: foreground, type: color}
+- default_value: [Tab 1, Tab 2, Tab 3]
+  description: Each line should be a new tab title
+  important: true
+  name: tab_titles
+  type: text[]
+- {default_binding_prop: true, default_value: 0, description: The current active tab, important: false, name: active_tab_index, type: number}
+- {default_value: '', group: appearance, important: true, name: active_background, type: color}
+- {default_value: null, description: This component works well with the card role. Place a card below or above the tabs component, group: appearance, important: true, name: role, type: string}
+- default_value: left
+  description: align tab text left center or right
+  designer_hint: align-horizontal
+  group: text
+  important: false
+  name: align
+  options: [left, center, right]
+  type: enum
+- {default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
+- {group: user data, important: false, name: tag, type: object}
+- default_value: none
+  group: layout
+  important: false
+  name: spacing_above
+  options: [none, small, medium, large]
+  type: enum
+- default_value: none
+  group: layout
+  important: false
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- {default_value: null, designer_hint: font-bold, group: text, important: false, name: bold, type: boolean}
+- {default_value: null, group: text, important: false, name: font_size, type: string}
+- {default_value: null, designer_hint: font-italic, group: text, important: false, name: italic, type: boolean}
+- {default_value: '', group: text, important: false, name: font, type: string}

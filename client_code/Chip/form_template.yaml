@@ -1,51 +1,39 @@
-properties:
-- {name: text, type: string, default_value: chip, default_binding_prop: true}
-- {name: icon, type: icon, default_value: null}
-- {name: close_icon, type: boolean, default_value: true}
-- {name: background, type: color, default_value: null, group: appearance, important: false}
-- {name: foreground, type: color, default_value: null, group: appearance, important: false}
-- name: spacing_above
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- name: spacing_below
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- {name: visible, type: boolean, default_value: true, group: appearance, important: false, designer_hint: visible}
-- {name: tag, type: object, group: user data, important: false}
-is_package: true
-events:
-- {name: close_click, default_event: true, description: when the close link is clicked}
-- {name: click, description: when the chip is clicked}
-- {name: show, description: when the chip is shown}
-- {name: hide, description: when the chip is hidden}
-custom_component: true
 components:
-- type: Label
-  properties: {role: null, align: left, tooltip: '', border: '', foreground: '', visible: true, text: Chip, font_size: null, font: '', spacing_above: none, icon_align: left, spacing_below: none, italic: false, background: '', bold: false, underline: false, icon: 'fa:bolt'}
+- layout_properties: {slot: default}
   name: chip_label
-  layout_properties: {slot: default}
-- type: Link
-  properties: {role: null, url: '', align: left, tooltip: '', border: '', foreground: 'rgba(0,0,0,0.6)', visible: true, text: ✕, font_size: null, wrap_on: mobile, font: '', col_spacing: medium, spacing_above: none, icon_align: left, col_widths: '', spacing_below: none, italic: false, background: '', bold: false, underline: false, icon: ''}
+  properties: {align: left, background: '', bold: false, border: '', font: '', font_size: null, foreground: '', icon: 'fa:bolt', icon_align: left, italic: false, role: null, spacing_above: none, spacing_below: none, text: Chip, tooltip: '', underline: false, visible: true}
+  type: Label
+- layout_properties: {slot: default}
   name: close_link
-  layout_properties: {slot: default}
+  properties: {align: left, background: '', bold: false, border: '', col_spacing: medium, col_widths: '', font: '', font_size: null, foreground: 'rgba(0,0,0,0.6)', icon: '', icon_align: left, italic: false, role: null, spacing_above: none, spacing_below: none, text: ✕, tooltip: '', underline: false, url: '', visible: true, wrap_on: mobile}
+  type: Link
 container:
+  properties: {background: '', border: '', foreground: '', html: '', role: null, tooltip: '', visible: true}
   type: HtmlTemplate
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: null
-    html: |
-      <div class="chip-placeholder"></div>
-      <script type="module">
-      import {DesignerChip} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerChip.init();
-      </script>
+custom_component: true
+events:
+- {default_event: true, description: when the close link is clicked, name: close_click}
+- {description: when the chip is clicked, name: click}
+- {description: when the chip is shown, name: show}
+- {description: when the chip is hidden, name: hide}
+is_package: true
+properties:
+- {default_binding_prop: true, default_value: chip, name: text, type: string}
+- {default_value: null, name: icon, type: icon}
+- {default_value: true, name: close_icon, type: boolean}
+- {default_value: null, group: appearance, important: false, name: background, type: color}
+- {default_value: null, group: appearance, important: false, name: foreground, type: color}
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_above
+  options: [none, small, medium, large]
+  type: enum
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- {default_value: true, designer_hint: visible, group: appearance, important: false, name: visible, type: boolean}
+- {group: user data, important: false, name: tag, type: object}

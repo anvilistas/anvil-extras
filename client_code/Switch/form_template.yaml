@@ -1,53 +1,41 @@
-properties:
-- {name: checked, type: boolean, default_value: false, default_binding_prop: true, important: true, allow_binding_writeback: true}
-- {name: checked_color, type: color, default_value: null, group: appearance, important: false}
-- {name: enabled, type: boolean, default_value: true, group: interaction, important: true}
-- {name: foreground, type: color, default_value: null, group: appearance, important: false}
-- {name: background, type: color, default_value: null, group: appearance, important: false}
-- {name: font_size, type: number, default_value: 14, group: text, important: false}
-- {name: bold, type: boolean, default_value: null, group: text, important: false}
-- {name: italic, type: boolean, default_value: null, group: text, important: false}
-- {name: text_pre, type: string, default_value: '', group: text, important: true}
-- {name: text_post, type: string, default_value: '', group: text, important: true}
-- name: spacing_above
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- name: spacing_below
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- {name: tooltip, type: string, default_value: '', group: tooltip, important: false}
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true}
-- {name: tag, type: object, group: user data, important: false}
-is_package: true
-events:
-- {name: change, default_event: true, description: when this switch is checked or unchecked}
-- {name: show, description: when this switch is shown}
-- {name: hide, description: when this switch is hidden}
-custom_component: true
 components:
-- type: CheckBox
-  properties: {role: switch, align: left, tooltip: '', border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: small, spacing_below: small, italic: false, background: '', bold: false, checked: true, underline: false}
-  name: check_box_1
+- event_bindings: {change: check_box_1_change}
   layout_properties: {slot: default}
-  event_bindings: {change: check_box_1_change}
+  name: check_box_1
+  properties: {align: left, background: '', bold: false, border: '', checked: true, enabled: true, font: '', font_size: null, foreground: '', italic: false, spacing_above: small, spacing_below: small, text: '', tooltip: '', underline: false, visible: true}
+  type: CheckBox
 container:
+  properties: {background: '', border: '', foreground: '', html: '', tooltip: '', visible: true}
   type: HtmlTemplate
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: switch
-    html: |-
-      <div class="anvil-extras-switch"></div>
-      <script type="module">
-      import {DesignerSwitch} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerSwitch.init();
-      </script>
+custom_component: true
+events:
+- {default_event: true, description: when this switch is checked or unchecked, name: change}
+- {description: when this switch is shown, name: show}
+- {description: when this switch is hidden, name: hide}
+is_package: true
+properties:
+- {allow_binding_writeback: true, default_binding_prop: true, default_value: false, important: true, name: checked, type: boolean}
+- {default_value: null, group: appearance, important: false, name: checked_color, type: color}
+- {default_value: true, group: interaction, important: true, name: enabled, type: boolean}
+- {default_value: null, group: appearance, important: false, name: foreground, type: color}
+- {default_value: null, group: appearance, important: false, name: background, type: color}
+- {default_value: 14, group: text, important: false, name: font_size, type: number}
+- {default_value: null, group: text, important: false, name: bold, type: boolean}
+- {default_value: null, group: text, important: false, name: italic, type: boolean}
+- {default_value: '', group: text, important: true, name: text_pre, type: string}
+- {default_value: '', group: text, important: true, name: text_post, type: string}
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_above
+  options: [none, small, medium, large]
+  type: enum
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- {default_value: '', group: tooltip, important: false, name: tooltip, type: string}
+- {default_value: true, group: appearance, important: true, name: visible, type: boolean}
+- {group: user data, important: false, name: tag, type: object}

@@ -1,34 +1,34 @@
+components: []
 container:
-  type: HtmlTemplate
   properties:
-    tooltip: ''
     background: ''
-    foreground: ''
     border: ''
-    visible: true
-    role: null
+    foreground: ''
     html: |
       <!--
       Based on the snippet at https://anvil.works/forum/t/plots-in-pdf-being-divided-between-two-pages/7774/5
       -->
-      <div class="break-container" style="overflow: hidden;">
+      <div anvil-name="ae-page-break-container" class="ae-break-container" style="overflow: hidden;">
         <div style="page-break-after:always;"></div>
-        <div class="margin-element" style="margin-top: 0px;"></div>
+        <div anvil-name="ae-page-break-margin-element" style="margin-top: 0px;"></div>
       </div>
 
       <style>
-        .break-container {
+        .ae-break-container {
           border: 1px solid grey;
         }
         @media print {
-          .break-container {
+          .ae-break-container {
             border-color: transparent !important;
           }
         }
       </style>
-components: []
-is_package: true
+    role: null
+    tooltip: ''
+    visible: true
+  type: HtmlTemplate
 custom_component: true
+is_package: true
 properties:
-- {name: margin_top, type: number, default_value: 0, default_binding_prop: true, description: Use to adjust whitespace at the top of each page in the generated pdf. This is an optional property and defaults to 0. Can be positive or negative. Negative numbers will reduce whitespace in the generated pdf.}
-- {name: border, type: string, default_value: 1px solid gray, description: Use to set the style in the form. Useful when the PDF has many grey horizontal lines and the default border style would be confusing. Has no effect on the printed PDF.}
+- {default_binding_prop: true, default_value: 0, description: Use to adjust whitespace at the top of each page in the generated pdf. This is an optional property and defaults to 0. Can be positive or negative. Negative numbers will reduce whitespace in the generated pdf., name: margin_top, type: number}
+- {default_value: 1px solid gray, description: Use to set the style in the form. Useful when the PDF has many grey horizontal lines and the default border style would be confusing. Has no effect on the printed PDF., name: border, type: string}

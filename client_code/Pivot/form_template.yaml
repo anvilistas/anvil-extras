@@ -1,24 +1,13 @@
 components: []
-is_package: true
-custom_component: true
-properties:
-- {name: rows, type: 'text[]', default_value: '', default_binding_prop: true}
-- {name: columns, type: 'text[]', default_value: '', default_binding_prop: false}
-- {name: values, type: 'text[]', default_value: '', default_binding_prop: false}
-- {name: items, type: object, default_binding_prop: false}
-- {name: aggregator, type: string, default_value: Count, default_binding_prop: false}
 container:
-  type: HtmlTemplate
   event_bindings: {show: form_show}
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: null
-    html: |
-      <div class="pivot-placeholder"><div class="anvil-extras-pivot"></div></div> <script type="module">
-      import {DesignerPivot} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerPivot.init();
-      </script>
+  properties: {background: '', border: '', foreground: '', html: <div anvil-name="ae-pivot" class="ae-pivot"></div>, role: null, tooltip: '', visible: true}
+  type: HtmlTemplate
+custom_component: true
+is_package: true
+properties:
+- {default_binding_prop: true, default_value: '', name: rows, type: 'text[]'}
+- {default_binding_prop: false, default_value: '', name: columns, type: 'text[]'}
+- {default_binding_prop: false, default_value: '', name: values, type: 'text[]'}
+- {default_binding_prop: false, name: items, type: object}
+- {default_binding_prop: false, default_value: Count, name: aggregator, type: string}

@@ -14,7 +14,7 @@ from ._anvil_designer import ChipTemplate
 __version__ = "2.7.1"
 
 _html_injector.css(
-    """.anvil-extras-chip{
+    """.ae-chip{
     height: 32px;
     font-size: 14px;
     font-weight: 500;
@@ -32,16 +32,13 @@ _html_injector.css(
     position: relative;
 }
 
-.anvil-extras-chip i.anvil-component-icon.left {
+.ae-chip i.anvil-component-icon {
     font-size: 1.5rem;
 }
-.anvil-extras-chip a {
+.ae-chip a {
     user-select: none;
 }
-.anvil-extras-chip a .link-text {
-    padding: 0 !important;
-}
-.anvil-extras-chip span {
+.ae-chip span, .ae-chip a > div {
     padding: 0 !important;
 }
 """
@@ -62,10 +59,8 @@ _defaults = {
 class Chip(ChipTemplate):
     def __init__(self, **properties):
         dom_node = self._dom_node = _get_dom_node(self)
-        dom_node.querySelector("script").remove()
-        dom_node.querySelector(".chip-placeholder").remove()
         dom_node.addEventListener("click", lambda e: self.raise_event("click"))
-        dom_node.classList.add("anvil-extras-chip")
+        dom_node.classList.add("ae-chip")
         dom_node.tabIndex = 0
 
         self.close_link.set_event_handler(

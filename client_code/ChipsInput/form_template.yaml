@@ -1,65 +1,51 @@
-properties:
-- name: chips
-  type: text[]
-  default_value: null
-  allow_binding_writeback: true
-  binding_writeback_events: [chips_changed]
-  description: Set to a list of strings
-  default_binding_prop: true
-- name: spacing_below
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- name: spacing_above
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
-  group: layout
-  important: false
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
-- {name: tag, type: object, group: user data, important: false}
-- {name: primary_placeholder, type: string, default_value: Enter a Tag, description: placeholder when there are no chips}
-- {name: secondary_placeholder, type: string, default_value: +Tag, description: placeholder when there are chips}
-is_package: true
+components:
+- layout_properties: {}
+  name: temp_chip
+  properties: {background: null, close_icon: true, foreground: null, icon: null, text: chip}
+  type: form:Chip
+- event_bindings: {focus: _chip_input_focus, lost_focus: _chip_input_lost_focus, pressed_enter: _chip_input_pressed_enter}
+  layout_properties: {}
+  name: chip_input
+  properties: {align: left, background: '', bold: false, border: '', enabled: true, font: '', font_size: null, foreground: '', hide_text: false, italic: false, placeholder: +Tag, role: null, spacing_above: none, spacing_below: small, text: '', tooltip: '', type: text, underline: false, visible: true}
+  type: TextBox
+container:
+  properties: {background: '', border: '', foreground: '', html: <div class="chip-slot" anvil-slot-repeat="chips"></div>, role: null, tooltip: '', visible: true}
+  type: HtmlTemplate
+custom_component: true
 events:
-- {name: chips_changed, default_event: true, description: when a chip is added or removed}
-- name: chip_added
-  description: when a chip is added
+- {default_event: true, description: when a chip is added or removed, name: chips_changed}
+- description: when a chip is added
+  name: chip_added
   parameters:
-  - {name: chip, description: the chip that was added}
-- name: chip_removed
-  description: when a chip is removed
+  - {description: the chip that was added, name: chip}
+- description: when a chip is removed
+  name: chip_removed
   parameters:
   - {name: chip}
-- {name: show, description: when the component is shown}
-- {name: hide, description: when the component is hidden}
-custom_component: true
-components:
-- type: form:Chip
-  properties: {text: chip, icon: null, close_icon: true, background: null, foreground: null}
-  name: temp_chip
-  layout_properties: {}
-- type: TextBox
-  properties: {role: null, align: left, hide_text: false, tooltip: '', placeholder: +Tag, border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null, font: '', spacing_above: none, type: text, spacing_below: small, italic: false, background: '', bold: false, underline: false}
-  name: chip_input
-  layout_properties: {}
-  event_bindings: {pressed_enter: _chip_input_pressed_enter, focus: _chip_input_focus, lost_focus: _chip_input_lost_focus}
-container:
-  type: HtmlTemplate
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: null
-    html: |
-      <div class="chips-input-placeholder"></div>
-      <div class="chip-slot" anvil-slot-repeat="chips"></div>
-
-      <script type="module">
-      import {DesignerChipsInput} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerChipsInput.init();
-      </script>
+- {description: when the component is shown, name: show}
+- {description: when the component is hidden, name: hide}
+is_package: true
+properties:
+- allow_binding_writeback: true
+  binding_writeback_events: [chips_changed]
+  default_binding_prop: true
+  default_value: null
+  description: Set to a list of strings
+  name: chips
+  type: text[]
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- default_value: small
+  group: layout
+  important: false
+  name: spacing_above
+  options: [none, small, medium, large]
+  type: enum
+- {default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
+- {group: user data, important: false, name: tag, type: object}
+- {default_value: Enter a Tag, description: placeholder when there are no chips, name: primary_placeholder, type: string}
+- {default_value: +Tag, description: placeholder when there are chips, name: secondary_placeholder, type: string}

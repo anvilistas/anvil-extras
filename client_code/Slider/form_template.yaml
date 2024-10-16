@@ -1,101 +1,89 @@
+components: []
+container:
+  properties: {background: '', border: '', foreground: '', html: <div anvil-name="ae-slider" class="ae-slider" anvil-slot></div>, role: null, tooltip: '', visible: true}
+  type: HtmlTemplate
+custom_component: true
+events:
+- default_event: true
+  description: when the slider has finished sliding
+  name: change
+  parameters:
+  - {description: an integer representing which handle caused the event, name: handle}
+- description: when the slider is sliding or dragging
+  name: slide
+  parameters:
+  - {description: an integer representing which handle caused the event, name: handle}
+- {description: when the slider is shown, name: show}
+- {description: when the slider is hidden, name: hide}
+is_package: true
 properties:
-- {name: start, type: string, default_value: '20', description: The start option sets the number of handles and corresponding start positions. Use a single value or comma separated values. One for each slider. Other properties with lists must usually match the number of sliders, important: true}
-- {name: connect, type: string, default_value: 'True, False', description: 'The connect option can be used to control the bar between the handles or the edges of the slider.  When using one handle, set the value to either ''upper'' or ''lower''.  For sliders with 2 or more handles, pass a list of True, False values. One for each gap.', important: true}
-- {name: margin, type: string, default_value: null, description: 'When using two handles, the minimum distance between the handles can be set using the margin option. The margin value is relative to the value set in ''range''.', group: multi handle, important: false}
-- {name: limit, type: string, default_value: null, description: 'The limit option is the opposite of the margin option, limiting the maximum distance between two handles', group: multi handle, important: false}
-- {name: padding, type: string, default_value: '', description: Padding limits how close to the slider edges handles can be., group: multi handle, important: false}
-- {name: step, type: number, default_value: null, description: 'By default, the slider slides fluently. In order to make the handles jump between intervals, the step option can be used.', important: false}
-- {name: tooltips, type: boolean, default_value: null, description: Adds tooltips to the sliders. Uses the same formatting as the format property, group: appearance, important: false}
-- {name: animate, type: boolean, default_value: true, description: Set the animate option to False to prevent the slider from animating to a new value with when setting values in code, group: interaction, important: false}
-- {name: min, type: number, default_value: 0, description: lower bound, important: true}
-- {name: max, type: number, default_value: 100, description: upper bound, important: true}
-- {name: range, type: object, default_value: null, description: 'An object with ''min'', ''max'' as keys. For additional options see noUiSlider for examples', group: range, important: false}
-- {name: behaviour, type: string, default_value: tap, description: 'This option accepts a "-" separated list of "drag", "tap", "fixed", "snap", "unconstrained" or "none"', group: interaction, important: false}
-- {name: color, type: color, default_value: null, group: appearance, important: false}
-- {name: visible, type: boolean, default_value: true, group: appearance, important: true, designer_hint: visible}
-- {name: tag, type: object, group: user data, important: false}
-- {name: enabled, type: boolean, default_value: true, group: interaction, important: true, designer_hint: enabled}
-- name: spacing_above
-  type: enum
-  options: [none, small, medium, large]
-  default_value: small
+- {default_value: '20', description: The start option sets the number of handles and corresponding start positions. Use a single value or comma separated values. One for each slider. Other properties with lists must usually match the number of sliders, important: true, name: start, type: string}
+- {default_value: 'True, False', description: 'The connect option can be used to control the bar between the handles or the edges of the slider.  When using one handle, set the value to either ''upper'' or ''lower''.  For sliders with 2 or more handles, pass a list of True, False values. One for each gap.', important: true, name: connect, type: string}
+- {default_value: null, description: 'When using two handles, the minimum distance between the handles can be set using the margin option. The margin value is relative to the value set in ''range''.', group: multi handle, important: false, name: margin, type: string}
+- {default_value: null, description: 'The limit option is the opposite of the margin option, limiting the maximum distance between two handles', group: multi handle, important: false, name: limit, type: string}
+- {default_value: '', description: Padding limits how close to the slider edges handles can be., group: multi handle, important: false, name: padding, type: string}
+- {default_value: null, description: 'By default, the slider slides fluently. In order to make the handles jump between intervals, the step option can be used.', important: false, name: step, type: number}
+- {default_value: null, description: Adds tooltips to the sliders. Uses the same formatting as the format property, group: appearance, important: false, name: tooltips, type: boolean}
+- {default_value: true, description: Set the animate option to False to prevent the slider from animating to a new value with when setting values in code, group: interaction, important: false, name: animate, type: boolean}
+- {default_value: 0, description: lower bound, important: true, name: min, type: number}
+- {default_value: 100, description: upper bound, important: true, name: max, type: number}
+- {default_value: null, description: 'An object with ''min'', ''max'' as keys. For additional options see noUiSlider for examples', group: range, important: false, name: range, type: object}
+- {default_value: tap, description: 'This option accepts a "-" separated list of "drag", "tap", "fixed", "snap", "unconstrained" or "none"', group: interaction, important: false, name: behaviour, type: string}
+- {default_value: null, group: appearance, important: false, name: color, type: color}
+- {default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
+- {group: user data, important: false, name: tag, type: object}
+- {default_value: true, designer_hint: enabled, group: interaction, important: true, name: enabled, type: boolean}
+- default_value: small
   group: layout
   important: false
-- name: spacing_below
-  type: enum
+  name: spacing_above
   options: [none, small, medium, large]
-  default_value: small
+  type: enum
+- default_value: small
   group: layout
   important: false
-- {name: pips, type: boolean, default_value: false, description: Sets whether the slider has pips (ticks), group: pips, important: false}
-- {name: pips_mode, type: string, default_value: '', description: '''range'', ''steps'', ''positions'', ''count'', ''values''', group: pips, important: false}
-- {name: pips_density, type: number, default_value: null, description: 'Controls how many pips are placed. With the default value of 1, there is one pip per percent. For a value of 2, a pip is placed for every 2 percent. A value of zero will place more than one pip per percentage. A value of -1 will remove all intermediate pips.', group: pips, important: false}
-- {name: pips_values, type: string, default_value: '', description: a list of values. Interpreted differently depending on the mode, group: pips, important: false}
-- {name: pips_stepped, type: boolean, default_value: true, description: the stepped option can be set to true to match the pips to the slider steps, group: pips, important: false}
-- {name: format, type: string, default_value: .2f, description: 'Provide a format for the values. This can either be a string to call with .format or a format spec. e.g. "{:.2f}" or just ".2f". See python''s format string syntax for more options.', group: appearance, important: false}
-- binding_writeback_events: [x-writeback, change]
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- {default_value: false, description: Sets whether the slider has pips (ticks), group: pips, important: false, name: pips, type: boolean}
+- {default_value: '', description: '''range'', ''steps'', ''positions'', ''count'', ''values''', group: pips, important: false, name: pips_mode, type: string}
+- {default_value: null, description: 'Controls how many pips are placed. With the default value of 1, there is one pip per percent. For a value of 2, a pip is placed for every 2 percent. A value of zero will place more than one pip per percentage. A value of -1 will remove all intermediate pips.', group: pips, important: false, name: pips_density, type: number}
+- {default_value: '', description: a list of values. Interpreted differently depending on the mode, group: pips, important: false, name: pips_values, type: string}
+- {default_value: true, description: the stepped option can be set to true to match the pips to the slider steps, group: pips, important: false, name: pips_stepped, type: boolean}
+- {default_value: .2f, description: 'Provide a format for the values. This can either be a string to call with .format or a format spec. e.g. "{:.2f}" or just ".2f". See python''s format string syntax for more options.', group: appearance, important: false, name: format, type: string}
+- allow_binding_writeback: true
+  binding_writeback_events: [x-writeback, change]
+  default_binding_prop: true
   default_value: null
+  description: returns the value of the first handle. This can only be set after initialization or with a databinding.
   group: values
   important: false
   name: value
-  default_binding_prop: true
   type: object
-  allow_binding_writeback: true
-  description: returns the value of the first handle. This can only be set after initialization or with a databinding.
-- name: values
-  type: object
+- allow_binding_writeback: true
+  binding_writeback_events: [x-writeback, change]
   default_value: null
   description: returns a list of numerical values. This can only be set after initialization or with a databinding
-  allow_binding_writeback: true
-  binding_writeback_events: [x-writeback, change]
   group: values
   important: false
-- name: formatted_value
+  name: values
   type: object
+- allow_binding_writeback: true
+  binding_writeback_events: [x-writeback, change]
   default_value: null
   description: returns the value of the first handle as a formatted string, based on the format property
-  allow_binding_writeback: true
-  binding_writeback_events: [x-writeback, change]
   group: values
   important: false
-- name: formatted_values
+  name: formatted_value
   type: object
+- allow_binding_writeback: true
+  binding_writeback_events: [x-writeback, change]
   default_value: null
   description: returns the a list of values as formatted strings, based on the format property
-  allow_binding_writeback: true
-  binding_writeback_events: [x-writeback, change]
   group: values
   important: false
-- {name: bar_height, type: string, default_value: '', default_binding_prop: false, description: set the bar height for this slider - default height is 18, group: appearance, important: false}
-- {name: handle_size, type: string, default_value: '', default_binding_prop: false, description: Set the size of the handle - the default size is 34, group: appearance, important: false}
-- {name: role, type: string, default_value: '', default_binding_prop: false, group: appearance}
-is_package: true
-events:
-- name: change
-  default_event: true
-  description: when the slider has finished sliding
-  parameters:
-  - {name: handle, description: an integer representing which handle caused the event}
-- name: slide
-  parameters:
-  - {name: handle, description: an integer representing which handle caused the event}
-  description: when the slider is sliding or dragging
-- {name: show, description: when the slider is shown}
-- {name: hide, description: when the slider is hidden}
-custom_component: true
-components: []
-container:
-  type: HtmlTemplate
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: null
-    html: |-
-      <div class="anvil-slider" anvil-slot></div>
-      <script type="module">
-      import {DesignerSlider} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerSlider.init();
-      </script>
+  name: formatted_values
+  type: object
+- {default_binding_prop: false, default_value: '', description: set the bar height for this slider - default height is 18, group: appearance, important: false, name: bar_height, type: string}
+- {default_binding_prop: false, default_value: '', description: Set the size of the handle - the default size is 34, group: appearance, important: false, name: handle_size, type: string}
+- {default_binding_prop: false, default_value: '', group: appearance, name: role, type: string}

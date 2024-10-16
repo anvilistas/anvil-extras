@@ -1,55 +1,43 @@
+components: []
+container:
+  properties: {background: '', border: '', foreground: '', html: '<div class="quill-editor" style="min-height:150px;"></div>', role: null, tooltip: '', visible: true}
+  type: HtmlTemplate
+custom_component: true
+events:
+- {default: true, description: when the quill text changes, name: text_change}
+- {default: false, description: when the quill text selection changes, name: selection_change}
+- {default: false, description: when the component is shown, name: show}
+- {default: false, description: when the component is no longer on the screen, name: hide}
+is_package: true
 properties:
-- {name: enabled, type: boolean, default_value: true, default_binding_prop: true, group: interaction, important: true, designer_hint: enabled}
-- {name: visible, type: boolean, default_value: true, default_binding_prop: false, group: appearance, important: true, designer_hint: visible}
-- {name: height, type: string, default_value: '150', default_binding_prop: false, description: If auto_expand is set to True this will be the min_height. otherwise it'll be the fixed height, group: height, important: false}
-- {name: auto_expand, type: boolean, default_value: true, default_binding_prop: false, description: If set to True the height becomes the starting height, important: false}
-- {name: readonly, type: boolean, default_value: false, default_binding_prop: false, description: Similar to enabled but cannot be updated, group: interaction, important: false}
-- {name: toolbar, type: boolean, default_value: true, default_binding_prop: false, description: This can be set at runtime for different tooolbar configurations, important: false}
-- {name: modules, type: object, default_value: null, default_binding_prop: false, description: This can be set at runtime and must include all modules. The toolbar can be set separately, important: false}
-- name: theme
-  type: enum
-  options: [snow, bubble]
+- {default_binding_prop: true, default_value: true, designer_hint: enabled, group: interaction, important: true, name: enabled, type: boolean}
+- {default_binding_prop: false, default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
+- {default_binding_prop: false, default_value: '150', description: If auto_expand is set to True this will be the min_height. otherwise it'll be the fixed height, group: height, important: false, name: height, type: string}
+- {default_binding_prop: false, default_value: true, description: If set to True the height becomes the starting height, important: false, name: auto_expand, type: boolean}
+- {default_binding_prop: false, default_value: false, description: Similar to enabled but cannot be updated, group: interaction, important: false, name: readonly, type: boolean}
+- {default_binding_prop: false, default_value: true, description: This can be set at runtime for different tooolbar configurations, important: false, name: toolbar, type: boolean}
+- {default_binding_prop: false, default_value: null, description: This can be set at runtime and must include all modules. The toolbar can be set separately, important: false, name: modules, type: object}
+- default_binding_prop: false
   default_value: snow
-  default_binding_prop: false
   description: snow or bubble - check quill for the difference - cannot be updated once set
   group: appearance
   important: false
-- {name: placeholder, type: string, default_value: '', default_binding_prop: false, description: The text to display when there is not content, important: false}
-- {name: content, type: string, default_binding_prop: false, description: A json-able object you can store as simple object in a data table cell. Use get_contents to interact with the quill delta object directly., default_value: null, important: false}
-- name: spacing_above
+  name: theme
+  options: [snow, bubble]
   type: enum
-  options: [none, small, medium, large]
-  default_value: small
+- {default_binding_prop: false, default_value: '', description: The text to display when there is not content, important: false, name: placeholder, type: string}
+- {default_binding_prop: false, default_value: null, description: A json-able object you can store as simple object in a data table cell. Use get_contents to interact with the quill delta object directly., important: false, name: content, type: string}
+- default_value: small
   group: layout
   important: false
-- name: spacing_below
-  type: enum
+  name: spacing_above
   options: [none, small, medium, large]
-  default_value: small
+  type: enum
+- default_value: small
   group: layout
   important: false
-- {name: sanitize, type: boolean, default_value: true, description: sets the default sanitize behaviour for set_html(), group: interaction, important: false}
-- {name: tag, type: object, group: user data, important: false}
-is_package: true
-events:
-- {name: text_change, description: when the quill text changes, default: true}
-- {name: selection_change, description: when the quill text selection changes, default: false}
-- {name: show, description: when the component is shown, default: false}
-- {name: hide, description: when the component is no longer on the screen, default: false}
-custom_component: true
-components: []
-container:
-  type: HtmlTemplate
-  properties:
-    tooltip: ''
-    background: ''
-    foreground: ''
-    border: ''
-    visible: true
-    role: null
-    html: |
-      <div class="quill-editor" style="min-height:150px;"></div>
-      <script type="module">
-      import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerQuill.init();
-      </script>
+  name: spacing_below
+  options: [none, small, medium, large]
+  type: enum
+- {default_value: true, description: sets the default sanitize behaviour for set_html(), group: interaction, important: false, name: sanitize, type: boolean}
+- {group: user data, important: false, name: tag, type: object}
