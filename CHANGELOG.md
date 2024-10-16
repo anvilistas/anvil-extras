@@ -7,10 +7,15 @@
   https://github.com/anvilistas/anvil-extras/issues/567
 
 ## Breaking Changes
+* popover - rewritten without bootstrap, now uses floating-ui
+  `dismiss_on_scroll` is deprecated
+  class names on the popover element have changed
+  https://github.com/anvilistas/anvil-extras/pull/563
 * classic editor - design components are no longer supported
   https://github.com/anvilistas/anvil-extras/issues/567
 * class-names and roles - all anvil extras components now use class names and roles prefixed with `ae-`
   https://github.com/anvilistas/anvil-extras/issues/567
+
 
 # v2.7.0 05-Sep-2024
 
