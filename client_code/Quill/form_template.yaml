@@ -1,18 +1,6 @@
 components: []
 container:
-  properties:
-    background: ''
-    border: ''
-    foreground: ''
-    html: |
-      <div class="quill-editor" style="min-height:150px;"></div>
-      <script type="module">
-      import {DesignerQuill} from "https://deno.land/x/anvil_extras@dev-2.1.1/js/designer_components/bundle.min.js";
-      DesignerQuill.init();
-      </script>
-    role: null
-    tooltip: ''
-    visible: true
+  properties: {background: '', border: '', foreground: '', html: '<div class="quill-editor" style="min-height:150px;"></div>', role: null, tooltip: '', visible: true}
   type: HtmlTemplate
 custom_component: true
 events:
