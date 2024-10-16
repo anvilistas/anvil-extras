@@ -16,7 +16,7 @@ try:
 except ImportError:
     in_designer = False
 
-__version__ = "2.7.1"
+__version__ = "3.0.0"
 
 noui_version = "15.4.0"
 

@@ -14,7 +14,7 @@ from anvil.js import window
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
 
-__version__ = "2.7.1"
+__version__ = "3.0.0"
 
 _characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 window.anvilExtras = window.get("anvilExtras", {})
