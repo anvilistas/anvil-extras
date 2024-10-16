@@ -1,0 +1,46 @@
+components:
+- components:
+  - components:
+    - data_bindings:
+      - {code: self.key, property: text, writeback: false}
+      - {code: self.icon, property: icon, writeback: false}
+      layout_properties: {}
+      name: label
+      properties: {spacing_above: none, spacing_below: none}
+      type: Label
+    - data_bindings:
+      - {code: self.subtext, property: text, writeback: false}
+      layout_properties: {}
+      name: label_sub
+      properties: {spacing_above: none, spacing_below: none, visible: true}
+      type: Label
+    layout_properties: {expand: true}
+    name: text_container
+    properties: {spacing_above: none, spacing_below: none, vertical_align: bottom}
+    type: FlowPanel
+  - layout_properties: {expand: false}
+    name: icon_checked
+    properties: {icon: 'fa:check', spacing_above: none, spacing_below: none, text: ''}
+    type: Label
+  layout_properties: {grid_position: 'APEFXR,YJTGRA'}
+  name: flow_panel
+  properties: {spacing_above: none, spacing_below: none, vertical_align: middle}
+  type: FlowPanel
+container:
+  event_bindings: {click: _on_click, hide: _on_hide, show: _on_show}
+  properties: {col_spacing: small, spacing_above: none, spacing_below: none}
+  type: Link
+custom_component: true
+events: []
+is_package: true
+properties:
+- {default_binding_prop: true, default_value: '', important: true, name: title, type: string}
+- {default_value: '', important: true, name: key, type: string}
+- {default_value: '', important: true, name: value, type: string}
+- {important: true, name: idx, type: number}
+- {default_value: false, important: true, name: disabled, type: boolean}
+- {default_value: '', important: true, name: icon, type: icon}
+- {default_value: '', important: true, name: subtext, type: string}
+- {default_value: false, important: true, name: active, type: boolean}
+- {default_value: false, important: true, name: selected, type: boolean}
+toolbox_item: {hidden: true}

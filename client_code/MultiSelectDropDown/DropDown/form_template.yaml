@@ -1,0 +1,45 @@
+components:
+- event_bindings: {change: _on_filter_change, hide: _on_filter_hide, pressed_enter: _on_filter_enter, show: _on_filter_show}
+  layout_properties: {slot: filter}
+  name: filter_box
+  properties: {}
+  type: TextBox
+- components:
+  - event_bindings: {click: _on_select_all}
+    layout_properties: {expand: true}
+    name: select_all_btn
+    properties: {align: full, text: Select All}
+    type: Button
+  - event_bindings: {click: _on_deselect_all}
+    layout_properties: {expand: true}
+    name: deselect_all_btn
+    properties: {align: full, text: Deselect All}
+    type: Button
+  layout_properties: {slot: select-all}
+  name: select_all_flow
+  properties: {align: center, gap: tiny}
+  type: FlowPanel
+- layout_properties: {slot: options}
+  name: options_panel
+  properties: {}
+  type: LinearPanel
+container:
+  event_bindings: {show: _on_show}
+  properties:
+    html: |
+      <div anvil-name="ae-ms-dd" class="ae-ms-dd">
+          <div class="ae-ms-filter" anvil-slot="filter"></div>
+          <div class="ae-ms-select-all" anvil-slot="select-all"></div>
+          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" anvil-slot="options" tab-index="-1"></div>
+      </div>
+  type: HtmlTemplate
+custom_component: true
+events:
+- {default_event: true, description: when the selected values change, name: change}
+is_package: true
+properties:
+- {default_binding_prop: true, default_value: false, important: true, name: enable_filtering, type: boolean}
+- {default_value: false, important: true, name: enable_select_all, type: boolean}
+- {default_value: false, important: true, name: multiple, type: boolean}
+- {important: true, name: options, type: object}
+toolbox_item: {hidden: true}

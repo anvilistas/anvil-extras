@@ -133,7 +133,7 @@ Properties
 
 
 Events
-----------
+------
 :change:
 
     When the selection changes
@@ -153,3 +153,34 @@ Events
 :hide:
 
     When the component is hidden
+
+
+Styling
+-------
+
+The following variables can be overridden in your theme.css to style the multi select dropdown.
+
+.. code-block:: css
+
+    :root {
+        --ae-ms-option-text: #333333;
+        --ae-ms-option-text-active: #fff;
+        --ae-ms-option-bg-hover: #e8e8e8;
+        --ae-ms-option-bg-active: #337ab7;
+        --ae-ms-option-subtext: #777;
+        --ae-ms-option-subtext-active: rgba(255,255,255,.5);
+    }
+
+The following roles can be used to style the multi select dropdown.
+
+.. code-block:: css
+
+    .anvil-role-ae-ms-btn {}
+    .anvil-role-ae-ms-select-btn {}
+    .anvil-role-ae-ms-filter {}
+    .anvil-role-ae-ms-option {}
+    .anvil-role-ae-ms-option-active {}
+    .anvil-role-ae-ms-option-label {}
+    .anvil-role-ae-ms-option-subtext {}
+
+The multi select dropdown uses a popover, so additional styling can be done by following the Popover styling guide.

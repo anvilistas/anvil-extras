@@ -11,6 +11,8 @@
   `dismiss_on_scroll` is deprecated
   class names on the popover element have changed
   https://github.com/anvilistas/anvil-extras/pull/563
+* multi-select - rewritten without bootstrap, now uses popover and basic anvil components
+  https://github.com/anvilistas/anvil-extras/pull/566
 * classic editor - design components are no longer supported
   https://github.com/anvilistas/anvil-extras/issues/567
 * class-names and roles - all anvil extras components now use class names and roles prefixed with `ae-`
