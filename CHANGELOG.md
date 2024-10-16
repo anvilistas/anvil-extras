@@ -1,4 +1,4 @@
-# Unreleased
+# v3.0.0
 
 ## Bug Fixes
 * popover - fix bug where popovers could not be used on forms using layouts
