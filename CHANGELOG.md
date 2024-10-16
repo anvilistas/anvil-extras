@@ -3,6 +3,8 @@
 ## Bug Fixes
 * popover - fix bug where popovers could not be used on forms using layouts
   https://github.com/anvilistas/anvil-extras/issues/553
+* ChipsInput - Chip close icon color is fixed for the last highlighted chip
+  https://github.com/anvilistas/anvil-extras/issues/567
 
 ## Breaking Changes
 * popover - rewritten without bootstrap, now uses floating-ui
@@ -11,6 +13,10 @@
   https://github.com/anvilistas/anvil-extras/pull/563
 * multi-select - rewritten without bootstrap, now uses popover and basic anvil components
   https://github.com/anvilistas/anvil-extras/pull/566
+* classic editor - design components are no longer supported
+  https://github.com/anvilistas/anvil-extras/issues/567
+* class-names and roles - all anvil extras components now use class names and roles prefixed with `ae-`
+  https://github.com/anvilistas/anvil-extras/issues/567
 
 
 # v2.7.0 05-Sep-2024
