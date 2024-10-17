@@ -133,7 +133,7 @@ def _get_computed_color(value):
         container = _document.createElement("div")
         container.style.display = "none"
         container.style.color = "chartreuse"  # obscure color
-        _hidden_style_getter = _document.createElement("style")
+        _hidden_style_getter = _document.createElement("div")
         container.appendChild(_hidden_style_getter)
         _document.body.appendChild(container)
 
