@@ -5,15 +5,24 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil import CheckBox, app
+from anvil import CheckBox
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 
-from ..utils._component_helpers import _get_rgb, _html_injector
+from ..utils._component_helpers import (
+    _get_color,
+    _get_rgb,
+    _html_injector,
+    _primary_color,
+    _supports_relative_colors,
+)
 
 __version__ = "3.0.0"
 
-primary = app.theme_colors.get("Primary 500", "#2196F3")
+primary = _primary_color
+
+if _supports_relative_colors():
+    _get_rgb = _get_color
 
 css = """
 .ae-switch,
@@ -100,6 +109,15 @@ input[type=checkbox]:not(:disabled) ~ .ae-switch-lever:active:before {
 .ae-switch label input[type=checkbox][disabled]+.ae-switch-lever:after,
 .ae-switch label input[type=checkbox][disabled]:checked+.ae-switch-lever:after {
     background-color: #949494;
+}
+
+@supports (color: rgb(from white r g b / 0.2)) {
+    .ae-switch label input[type=checkbox]:checked+.ae-switch-lever {
+        background-color: rgba(from var(--color) r g b / .5);
+    }
+    .ae-switch label input[type=checkbox]:checked+.ae-switch-lever:after {
+        background-color: var(--color);
+    }
 }
 
 """

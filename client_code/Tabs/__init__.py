@@ -16,6 +16,7 @@ from ..utils._component_helpers import (
     _get_rgb,
     _html_injector,
     _spacing_property,
+    _supports_relative_colors,
 )
 from ._anvil_designer import TabsTemplate
 
@@ -84,8 +85,30 @@ _html_injector.css(
     background-color: rgb(var(--color) / 0.4);
     will-change: left, right;
 }
+
+@supports (color: rgb(from white r g b / 0.2)) {
+    .ae-tabs .ae-tab a:hover,.ae-tabs .ae-tab a.ae-tab-active {
+        color: var(--color);
+    }
+    .ae-tabs .ae-tab a {
+        color: rgb(from var(--color) r g b / 0.7);
+    }
+    .ae-tabs .ae-tab a:focus,.ae-tabs .ae-tab a:focus.ae-tab-active {
+        --fallback-bg: rgb(from var(--color) r g b / 0.2);
+        background-color: var(--active-bg, var(--fallback-bg));
+    }
+    .ae-tabs .ae-tab a:hover,.ae-tabs .ae-tab a.ae-tab-active {
+        background-color: var(--active-bg);
+    }
+    .ae-tabs .ae-tab-indicator {
+        background-color: rgb(from var(--color) r g b / 0.4);
+    }
+}
 """
 )
+
+if _supports_relative_colors():
+    _get_rgb = _get_color
 
 _defaults = {
     "align": "left",
