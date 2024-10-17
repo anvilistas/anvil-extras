@@ -112,6 +112,10 @@ _primary_color = (window.document.querySelector("meta[name=theme-color]") or {})
 )
 
 
+def _supports_relative_colors():
+    return window.CSS.supports("color", "rgb(from white r g b / 0.2)")
+
+
 def _get_color(value):
     if not value:
         return _primary_color
