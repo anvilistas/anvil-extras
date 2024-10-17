@@ -51,7 +51,7 @@ _html_injector.css(
     text-transform: uppercase
 }
 .ae-tabs .ae-tab a {
-    color: rgba(var(--color),0.7);
+    color: rgb(var(--color) / 0.7);
     display: block;
     width: 100%;
     height: 100%;

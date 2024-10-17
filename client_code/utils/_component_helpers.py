@@ -117,25 +117,73 @@ def _get_color(value):
         return _primary_color
     elif value.startswith("theme:"):
         return _app.theme_colors.get(value.replace("theme:", ""), _primary_color)
+    elif value.startswith("--"):
+        # we need the css var wrapped
+        return "var(" + value + ")"
     else:
         return value
 
 
+_hidden_style_getter = None
+
+
+def _get_computed_color(value):
+    global _hidden_style_getter
+    if _hidden_style_getter is None:
+        container = _document.createElement("div")
+        container.style.display = "none"
+        container.style.color = "chartreuse"  # obscure color
+        _hidden_style_getter = _document.createElement("style")
+        container.appendChild(_hidden_style_getter)
+        _document.body.appendChild(container)
+
+    _hidden_style_getter.style.color = ""
+    _hidden_style_getter.style.color = value
+
+    computed = window.getComputedStyle(_hidden_style_getter).color
+    if computed == "rgb(127, 255, 0)":
+        return value
+    else:
+        return computed
+
+
+def _strip_rgba(value):
+    original = value
+
+    value = value.strip()
+
+    if value.startswith("rgba("):
+        value = value[5:]
+
+    if value.startswith("rgb("):
+        value = value[4:]
+
+    if value.endswith(")"):
+        value = value[:-1]
+
+    value = value.split(",")
+
+    if len(value) == 3:
+        return " ".join(v.strip() for v in value)
+
+    if len(value) == 4:
+        return f"{value[0].strip()} {value[1].strip()} {value[2].strip()} / {value[3].strip()}"
+
+    return original
+
+
 def _get_rgb(value):
     value = _get_color(value)
-    if value.startswith("#"):
-        value = value[1:]
-        tmp = " ".join(str(int(value[i : i + 2], 16)) for i in (0, 2, 4))
-        if len(value) == 8:
-            alpha = str(int(value[6:], 16) / 256)
-            tmp += " / " + alpha
-        value = tmp
-    elif value.startswith("rgb") and value.endswith(")"):
-        value = value[value.find("(") + 1 : -1]
+
+    if value.startswith("--"):
+        # css var
+        value = "var(" + value + ")"
+    elif value.startswith("var("):
+        pass
     else:
-        raise ValueError(
-            f"expected a hex value, theme color or rgb value, not, {value}"
-        )
+        value = _get_computed_color(value)
+        value = _strip_rgba(value)
+
     return value
 
 
