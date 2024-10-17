@@ -1,3 +1,13 @@
+# Unreleased
+
+## Bug Fixes
+* tabs - tab color was not being applied to inactive tabs
+  https://github.com/anvilistas/anvil-extras/issues/570
+
+## Enhancements
+* tabs - tab color can now be a css var and better support for css colors in general
+  https://github.com/anvilistas/anvil-extras/pull/570
+
 # v3.0.0
 
 ## Bug Fixes
