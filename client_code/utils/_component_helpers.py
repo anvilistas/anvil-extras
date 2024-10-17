@@ -174,6 +174,8 @@ def _get_rgb(value):
 
     if value.startswith("--"):
         # css var
+        value = "var(" + value + ")"
+    elif value.startswith("var"):
         pass
     else:
         value = _get_computed_color(value)
