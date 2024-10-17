@@ -16,10 +16,10 @@ Properties
 
 :active_background: color
 
-    the background of the active tab.
+    the background of the active tab. It is suggested you add opacity e.g. `#2196F344`
 
 :foreground: color
-    the color of the highlight and text. Defaults to ``"theme:Primary 500"``
+    the color of the highlight and text. Defaults to the apps primary color. Do not add opacity.
 
 :background: color
     the background for all tabs. Defaults to ``"transparent"``

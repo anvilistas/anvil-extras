@@ -117,6 +117,9 @@ def _get_color(value):
         return _primary_color
     elif value.startswith("theme:"):
         return _app.theme_colors.get(value.replace("theme:", ""), _primary_color)
+    elif value.startswith("--"):
+        # we need the css var wrapped
+        return "var(" + value + ")"
     else:
         return value
 
@@ -158,13 +161,13 @@ def _strip_rgba(value):
     if value.endswith(")"):
         value = value[:-1]
 
-    value = value.split(", ")
+    value = value.split(",")
 
     if len(value) == 3:
-        return " ".join(value)
+        return " ".join(v.strip() for v in value)
 
     if len(value) == 4:
-        return f"{value[0]} {value[1]} {value[2]} / {value[3]}"
+        return f"{value[0].strip()} {value[1].strip()} {value[2].strip()} / {value[3].strip()}"
 
     return original
 
@@ -175,7 +178,7 @@ def _get_rgb(value):
     if value.startswith("--"):
         # css var
         value = "var(" + value + ")"
-    elif value.startswith("var"):
+    elif value.startswith("var("):
         pass
     else:
         value = _get_computed_color(value)
