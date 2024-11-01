@@ -6,6 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 from logging import Logger
+
 __version__ = "3.0.0"
 
 
@@ -41,7 +42,7 @@ class Publisher:
                 with_logging.log(
                     log_level,
                     f"Published '{message.title}' message on '{channel}' channel to "
-                    f"{len(subscribers)} subscriber(s)"
+                    f"{len(subscribers)} subscriber(s)",
                 )
             else:
                 print(
@@ -49,7 +50,9 @@ class Publisher:
                     f"{len(subscribers)} subscriber(s)"
                 )
 
-    def subscribe(self, channel, subscriber, handler, with_logging=None, log_level=None):
+    def subscribe(
+        self, channel, subscriber, handler, with_logging=None, log_level=None
+    ):
         if with_logging is None:
             with_logging = self.with_logging
         if log_level is None:
@@ -74,7 +77,9 @@ class Publisher:
             ]
         if with_logging:
             if isinstance(with_logging, Logger):
-                with_logging.log(log_level, f"Removed subscriber from {channel} channel")
+                with_logging.log(
+                    log_level, f"Removed subscriber from {channel} channel"
+                )
             else:
                 print(f"Removed subscriber from {channel} channel")
 
@@ -87,6 +92,8 @@ class Publisher:
         del self.subscribers[channel]
         if with_logging:
             if isinstance(with_logging, Logger):
-                with_logging.log(log_level, f"{channel} closed ({subscribers_count} subscribers)")
+                with_logging.log(
+                    log_level, f"{channel} closed ({subscribers_count} subscribers)"
+                )
             else:
                 print(f"{channel} closed ({subscribers_count} subscribers)")
