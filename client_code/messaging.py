@@ -6,6 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 from logging import Logger as _Logger
+
 from .utils._warnings import warn as _warn
 
 __version__ = "3.0.0"
@@ -24,7 +25,7 @@ class Subscriber:
 
 
 class Publisher:
-    def __init__(self, logger:_Logger=None, **kwargs):
+    def __init__(self, logger: _Logger = None, **kwargs):
         if logger is None:
             logger = _Logger(name="publisher", format="{msg}")
         self.logger = logger
@@ -36,7 +37,7 @@ class Publisher:
             _warn(
                 "publisher.with_logging",
                 "with_logging option is deprecated and it will be removed in future versions. Use the logger options instead, passing an instance of logging.Logger",
-                "DEPRECATION WARNING"
+                "DEPRECATION WARNING",
             )
 
     def publish(self, channel, title, content=None, **kwargs):
@@ -45,8 +46,10 @@ class Publisher:
         subscribers = self.subscribers.get(channel, [])
         for subscriber in subscribers:
             subscriber.handler(message)
-        self.logger.info(f"Published '{message.title}' message on '{channel}' channel to "
-                         f"{len(subscribers)} subscriber(s)")
+        self.logger.info(
+            f"Published '{message.title}' message on '{channel}' channel to "
+            f"{len(subscribers)} subscriber(s)"
+        )
 
     def subscribe(self, channel, subscriber, handler, **kwargs):
         self._deprecation_warnings(**kwargs)
