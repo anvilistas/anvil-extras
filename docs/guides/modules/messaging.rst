@@ -91,7 +91,7 @@ continue to be called.
 Logging
 +++++++
 By default, the publisher will log each message it receieves to your app's logs (and
-the output pane if you're in the IDE).
+the output pane if you're in the IDE) using a `Logger` instance.
 
 You can change this default behaviour when you first create your publisher instance:
 
@@ -100,8 +100,11 @@ You can change this default behaviour when you first create your publisher insta
 .. code-block:: python
 
     from anvil_extras.messaging import Publisher
-    publisher = Publisher(with_logging=False)
+    from anvil_extras.logging import Logger, INFO
+    publisher = Publisher(
+        logger=Logger(name="publisher", level=INFO, format="{datetime:%Y-%m-%d %H:%M:%S}: {msg}")
     )
 
-The `publish`, `subscribe`, `unsubscribe` and `close_channel` methods each take an
-optional `with_logging` parameter which can be used to override the default behaviour.
+The `publish`, `subscribe`, `unsubscribe` and `close_channel` methods will each use the
+`logger` informed at creation (or a default of not informed) and log the message at INFO level.
+For more information, check the Logging page in the docs.
