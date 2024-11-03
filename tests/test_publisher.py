@@ -2,7 +2,8 @@ from client_code import messaging
 
 
 def test_default_logging(capsys):
-    from client_code.logging import Logger, DEBUG
+    from client_code.logging import DEBUG, Logger
+
     publisher = messaging.Publisher(logger=Logger(level=DEBUG))
     publisher.publish("test_channel", "test_message")
     captured = capsys.readouterr()
