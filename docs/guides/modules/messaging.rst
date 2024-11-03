@@ -90,12 +90,10 @@ continue to be called.
 
 Logging
 +++++++
-By default, the publisher will log each message it receieves to your app's logs (and
+The publisher can log each message it receieves to your app's logs (and
 the output pane if you're in the IDE) using a `Logger` instance.
 
-You can change this default behaviour when you first create your publisher instance:
-
-
+You can do this by passing a `Logger` instance when you first create a Publisher:
 
 .. code-block:: python
 
@@ -106,5 +104,19 @@ You can change this default behaviour when you first create your publisher insta
     )
 
 The `publish`, `subscribe`, `unsubscribe` and `close_channel` methods will each use the
-`logger` informed at creation (or a default of not informed) and log the message at INFO level.
+`logger` informed at creation.
+
+By default, if no logger is informed, no messages will be logged. Also, messages will be logged at INFO level by default.
+To change this behavior globally you can do the following:
+
+.. code-block:: python
+
+    from anvil_extras.messaging import Publisher
+    from anvil_extras.logging import Logger, ERROR
+
+    # The following line sets the default logger to be used for every new published instance created after it's set
+    Publisher.default_logger = Logger(name="publisher", level=INFO, format="{datetime:%Y-%m-%d %H:%M:%S}: {msg}")
+    # The following line sets the overrides the default log level (INFO) to ERROR for all publishers that have a logger.
+    Publisher.default_log_level = ERROR
+
 For more information, check the Logging page in the docs.

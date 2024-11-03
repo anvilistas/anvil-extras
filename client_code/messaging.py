@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from logging import Logger as _Logger
+from logging import Logger as _Logger, INFO
 
 from .utils._warnings import warn as _warn
 
@@ -25,10 +25,11 @@ class Subscriber:
 
 
 class Publisher:
+    default_logger = None
+    default_log_level = INFO
+
     def __init__(self, logger: _Logger = None, **kwargs):
-        if logger is None:
-            logger = _Logger(name="publisher", format="{msg}")
-        self.logger = logger
+        self.logger = logger or self.default_logger
         self.subscribers = {}
         self._deprecation_warnings(**kwargs)
 
@@ -46,17 +47,19 @@ class Publisher:
         subscribers = self.subscribers.get(channel, [])
         for subscriber in subscribers:
             subscriber.handler(message)
-        self.logger.info(
-            f"Published '{message.title}' message on '{channel}' channel to "
-            f"{len(subscribers)} subscriber(s)"
-        )
+        if self.logger is not None:
+            self.logger.log(self.default_log_level,
+                            f"Published '{message.title}' message on '{channel}' channel to "
+                            f"{len(subscribers)} subscriber(s)"
+                            )
 
     def subscribe(self, channel, subscriber, handler, **kwargs):
         self._deprecation_warnings(**kwargs)
         if channel not in self.subscribers:
             self.subscribers[channel] = []
         self.subscribers[channel].append(Subscriber(subscriber, handler))
-        self.logger.info(f"Added subscriber to {channel} channel")
+        if self.logger is not None:
+            self.logger.log(self.default_log_level, f"Added subscriber to {channel} channel")
 
     def unsubscribe(self, channel, subscriber, **kwargs):
         self._deprecation_warnings(**kwargs)
@@ -64,10 +67,12 @@ class Publisher:
             self.subscribers[channel] = [
                 s for s in self.subscribers[channel] if s.subscriber != subscriber
             ]
-        self.logger.info(f"Removed subscriber from {channel} channel")
+        if self.logger is not None:
+            self.logger.log(self.default_log_level, f"Removed subscriber from {channel} channel")
 
     def close_channel(self, channel, **kwargs):
         self._deprecation_warnings(**kwargs)
         subscribers_count = len(self.subscribers[channel])
         del self.subscribers[channel]
-        self.logger.info(f"{channel} closed ({subscribers_count} subscribers)")
+        if self.logger is not None:
+            self.logger.log(self.default_log_level, f"{channel} closed ({subscribers_count} subscribers)")
