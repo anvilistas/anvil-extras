@@ -5,8 +5,8 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from logging import INFO
-from logging import Logger as _Logger
+from .logging import INFO
+from .logging import Logger as _Logger
 
 from .utils._warnings import warn as _warn
 
