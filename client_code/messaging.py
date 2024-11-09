@@ -31,7 +31,7 @@ class Subscriber:
 class Publisher:
     default_log_level = INFO
 
-    def __init__(self, logger: _Logger = None, **kwargs):
+    def __init__(self, *, logger: _Logger = None, **kwargs):
         self.logger = logger or _null_logger
         self.subscribers = {}
         self._deprecation_warnings(**kwargs)
