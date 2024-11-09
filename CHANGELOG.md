@@ -9,6 +9,8 @@
 ## Enhancements
 * tabs - tab color can now be a css var and better support for css colors in general
   https://github.com/anvilistas/anvil-extras/pull/570
+* messaging - support custom loggers in messaging module
+  https://github.com/anvilistas/anvil-extras/issues/569
 
 # v3.0.0
 
