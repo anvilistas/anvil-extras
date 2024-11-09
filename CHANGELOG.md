@@ -9,6 +9,13 @@
 ## Enhancements
 * tabs - tab color can now be a css var and better support for css colors in general
   https://github.com/anvilistas/anvil-extras/pull/570
+* messaging - support custom loggers in messaging module
+  https://github.com/anvilistas/anvil-extras/issues/569
+
+## Deprecations
+- messaging - with_logging argument is deprecated and maybe removed in a future version
+  logging messages is now off by default - to turn it on provide a custom `logger` argument
+  https://github.com/anvilistas/anvil-extras/pull/572/files
 
 # v3.0.0
 
