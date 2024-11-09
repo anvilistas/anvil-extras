@@ -184,4 +184,4 @@ class PersistedClass:
 
 def persisted_class(cls):
     """A decorator for a class with a persistence mechanism"""
-    return type(cls.__name__, (PersistedClass,), cls.__dict__.copy())
+    return type(cls.__name__, (cls, PersistedClass), cls.__dict__.copy())
