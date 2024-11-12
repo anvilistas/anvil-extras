@@ -170,7 +170,11 @@ class PersistedClass:
 
     def update(self, *args, **kwargs):
         anvil.server.call(
-            f"update_{self._snake_name}", self._store, _serialise_delta(self._delta), *args, **kwargs
+            f"update_{self._snake_name}",
+            self._store,
+            _serialise_delta(self._delta),
+            *args,
+            **kwargs,
         )
         self._delta.clear()
 
