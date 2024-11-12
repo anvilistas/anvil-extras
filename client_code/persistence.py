@@ -163,7 +163,9 @@ class PersistedClass:
         setattr(self, key, value)
 
     def __eq__(self, other):
-        return self._store == other._store
+        if not instance(other, type(self)):
+            return NotImplemented
+        return self._store is not None and self._store == other._store
 
     def add(self, *args, **kwargs):
         self._store = anvil.server.call(
