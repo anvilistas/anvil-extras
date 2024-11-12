@@ -162,6 +162,9 @@ class PersistedClass:
     def __setitem__(self, key, value):
         setattr(self, key, value)
 
+    def __eq__(self, other):
+        return self._store == other._store
+
     def add(self, *args, **kwargs):
         self._store = anvil.server.call(
             f"add_{self._snake_name}", _serialise_delta(self._delta), *args, **kwargs
