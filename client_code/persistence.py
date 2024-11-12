@@ -164,13 +164,13 @@ class PersistedClass:
 
     def add(self, *args, **kwargs):
         self._store = anvil.server.call(
-            f"add_{self._snake_name}", self._delta, *args, **kwargs
+            f"add_{self._snake_name}", _serialise_delta(self._delta), *args, **kwargs
         )
         self._delta.clear()
 
     def update(self, *args, **kwargs):
         anvil.server.call(
-            f"update_{self._snake_name}", self._store, self._delta, *args, **kwargs
+            f"update_{self._snake_name}", self._store, _serialise_delta(self._delta), *args, **kwargs
         )
         self._delta.clear()
 
@@ -180,6 +180,13 @@ class PersistedClass:
 
     def reset(self):
         self._delta.clear()
+
+
+def _serialise_delta(delta):
+    return {
+        key: value._store if isinstance(value, PersistedClass) else value
+        for key, value in delta.items()
+    }
 
 
 def persisted_class(cls):
