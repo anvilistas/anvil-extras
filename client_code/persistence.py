@@ -163,7 +163,7 @@ class PersistedClass:
         setattr(self, key, value)
 
     def __eq__(self, other):
-        if not instance(other, type(self)):
+        if not isinstance(other, type(self)):
             return NotImplemented
         return self._store is not None and self._store == other._store
 
