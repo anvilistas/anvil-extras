@@ -11,6 +11,8 @@
   https://github.com/anvilistas/anvil-extras/pull/570
 * messaging - support custom loggers in messaging module
   https://github.com/anvilistas/anvil-extras/issues/569
+* persistence - Handle addition and updates of instances with linked classes
+  https://github.com/anvilistas/anvil-extras/pull/575
 
 ## Deprecations
 - messaging - with_logging argument is deprecated and maybe removed in a future version
