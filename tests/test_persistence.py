@@ -79,7 +79,6 @@ def linked_persisted_book_without_author():
     class Book:
         author = Author
 
-
     store = {"title": "Fluent Python", "author": None}
 
     return Book(store)
@@ -165,9 +164,11 @@ def test_linked_class_set(linked_persisted_book, douglas_adams):
     linked_persisted_book.author = douglas_adams
     assert linked_persisted_book.author.name == "Douglas Adams"
 
+
 def test_linked_class_set_none(linked_persisted_book_without_author):
     """Test that linked classes can be set to None"""
     assert linked_persisted_book_without_author.author is None
+
 
 def test_linked_class_change_none(linked_persisted_book):
     """Test that linked classes can be set to None"""
