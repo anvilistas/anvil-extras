@@ -65,6 +65,26 @@ def linked_persisted_book(book_store):
 
 
 @pytest.fixture
+def linked_persisted_book_without_author():
+    """A persisted class with a linked class attribute
+
+    instantiated without an author
+    """
+
+    @ps.persisted_class
+    class Author:
+        pass
+
+    @ps.persisted_class
+    class Book:
+        author = Author
+
+    store = {"title": "Fluent Python", "author": None}
+
+    return Book(store)
+
+
+@pytest.fixture
 def douglas_adams():
     @ps.persisted_class
     class Author:
@@ -143,6 +163,17 @@ def test_linked_class_set(linked_persisted_book, douglas_adams):
     """Test that changing a linked class instance behaves as expected"""
     linked_persisted_book.author = douglas_adams
     assert linked_persisted_book.author.name == "Douglas Adams"
+
+
+def test_linked_class_set_none(linked_persisted_book_without_author):
+    """Test that linked classes can be set to None"""
+    assert linked_persisted_book_without_author.author is None
+
+
+def test_linked_class_change_none(linked_persisted_book):
+    """Test that linked classes can be set to None"""
+    linked_persisted_book.author = None
+    assert linked_persisted_book.author is None
 
 
 def test_non_attributes_in_local_store(persisted_book):

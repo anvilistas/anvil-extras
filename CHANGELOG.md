@@ -5,6 +5,8 @@
   https://github.com/anvilistas/anvil-extras/issues/570
 * persistence - orginal class was missing from the resulting base classes
   https://github.com/anvilistas/anvil-extras/pull/573
+* persistence - linked class attributes were not handling None values correctly
+  https://github.com/anvilistas/anvil-extras/pull/577
 
 ## Enhancements
 * tabs - tab color can now be a css var and better support for css colors in general
