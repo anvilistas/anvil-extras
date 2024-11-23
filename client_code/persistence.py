@@ -6,6 +6,8 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.server
 
+from .utils._warnings import warn as _warn
+
 __version__ = "3.0.0"
 
 
@@ -30,6 +32,11 @@ class LinkedAttribute:
             The name of the column in the linked table which contains the required
             value
         """
+        _warn(
+            "persistence.LinkedAttribute",
+            "LinkedAttribute is deprecated and will be removed in future versions. Use a LinkedClass instead.",
+            "DEPRECATION_WARNING",
+        )
         self._linked_column = linked_column
         self._linked_attr = linked_attr
 

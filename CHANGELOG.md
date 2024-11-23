@@ -20,6 +20,7 @@
 - messaging - with_logging argument is deprecated and maybe removed in a future version
   logging messages is now off by default - to turn it on provide a custom `logger` argument
   https://github.com/anvilistas/anvil-extras/pull/572/files
+- persistence - LinkedAttribute is deprecated and will be removed in a future version  https://github.com/anvilistas/anvil-extras/pull/578
 
 # v3.0.0
 
