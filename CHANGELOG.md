@@ -22,6 +22,10 @@
   https://github.com/anvilistas/anvil-extras/pull/572/files
 - persistence - LinkedAttribute is deprecated and will be removed in a future version  https://github.com/anvilistas/anvil-extras/pull/578
 
+## Breaking Changes
+* theme - the default colors have been updated to match the M3 (beta) theme
+  https://github.com/anvilistas/anvil-extras/pull/579
+
 # v3.0.0
 
 ## Bug Fixes
