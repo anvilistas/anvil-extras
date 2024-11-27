@@ -387,7 +387,7 @@ class Popover:
     @staticmethod
     def document_sticky_mouseleave_handler(e):
         # did we leave a popover?
-        target = e.target
+        target = _clean_target(e.target)
         if not (target and target.hasAttribute("ae-popover")):
             return
 
@@ -669,8 +669,17 @@ def get_all_parent_popover_ids(target):
     return parent_ids
 
 
+def _clean_target(target):
+    """ensure we are dealing with a dom element and not a node"""
+    if not target:
+        return None
+    if target.nodeType != 1:
+        target = target.parentElement
+    return target
+
+
 def _hide_popovers_on_outside_click(e):
-    target = e.target
+    target = _clean_target(e.target)
     parent_ids = get_all_parent_popover_ids(target)
 
     # Use a copy since the dict changes size during iteration
