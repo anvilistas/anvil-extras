@@ -9,6 +9,8 @@
   https://github.com/anvilistas/anvil-extras/pull/577
 * popover - fix bug with popovers not handling dom nodes correctly
   https://github.com/anvilistas/anvil-extras/pull/580
+* theme - fix Colors() without a variant argument
+  https://github.com/anvilistas/anvil-extras/pull/581
 
 ## Enhancements
 * tabs - tab color can now be a css var and better support for css colors in general
