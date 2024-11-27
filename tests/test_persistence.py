@@ -40,7 +40,6 @@ def customised_book():
 
     @ps.persisted_class
     class Book:
-
         def save(self):
             return "customised save"
 
