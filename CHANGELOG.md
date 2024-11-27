@@ -7,6 +7,8 @@
   https://github.com/anvilistas/anvil-extras/pull/573
 * persistence - linked class attributes were not handling None values correctly
   https://github.com/anvilistas/anvil-extras/pull/577
+* popover - fix bug with popovers not handling dom nodes correctly
+  https://github.com/anvilistas/anvil-extras/pull/580
 
 ## Enhancements
 * tabs - tab color can now be a css var and better support for css colors in general
