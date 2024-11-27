@@ -97,19 +97,10 @@ def remove_event_handler(component: _Component, event: str, func: _Callable) -> 
     component.remove_event_handler(event, func)
 
 
-@deprecated(
-    "trigger('writeback') is no longer supported\nYou can now trigger a writeback using component.raise_event('x-anvil-write-back-<property>')"
-)
-def _trigger_writeback(self):
-    return
-
-
 def trigger(self: _Component, event: str):
     """trigger an event on a component, self is an anvil component, event is a str or a dictionary
     if event is a dictionary it should include an 'event' key e.g. {'event': 'keypress', 'which': 13}
     """
-    if event == "writeback":
-        return _trigger_writeback(self)
     if isinstance(event, dict):
         event = _S.Event(event["event"], event)
     event = "mouseenter mouseleave" if event == "hover" else event

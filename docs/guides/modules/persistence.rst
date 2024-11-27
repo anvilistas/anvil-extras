@@ -56,28 +56,7 @@ our `book` object will automatically have each of the row's columns as an attrib
 
 But what if we wanted our `book` object to include some information from the author table?
 
-There are two ways to go about that: using a LinkedAttribute or a LinkedClass.
-
-LinkedAttribute
-+++++++++++++++
-We can use a `LinkedAttribute` to fetch data from the linked row and include it as an
-attribute on our object. Let's include the author's name as an attribute of a book:
-
-
-.. code-block:: python
-
-   from anvil_extras.persistence import persisted_class, LinkedAttribute
-
-
-   @persisted_class
-   class Book:
-       key = "title"
-       author_name = LinkedAttribute(linked_column="author", linked_attr="name")
-
-
-    book = Book.get("Fluent Python")
-
-    assert book.author_name == "Luciano Ramalho"
+There are two ways to go about that: using a LinkedClass.
 
 
 LinkedClass
@@ -112,13 +91,12 @@ display the title and author of the book as a single string:
 
 .. code-block:: python
 
-   from anvil_extras.persistence import persisted_class, LinkedAttribute
+   from anvil_extras.persistence import persisted_class
 
 
    @persisted_class
    class Book:
        key = "title"
-       author_name = LinkedAttribute(linked_column="author", linked_attr="name")
 
        @property
        def display_text(self):

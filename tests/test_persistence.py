@@ -19,7 +19,6 @@ def book(book_store):
     class Book:
         _store = book_store
         _delta = {}
-        author_name = ps.LinkedAttribute(linked_column="author", linked_attr="name")
 
     return Book()
 
@@ -30,7 +29,7 @@ def persisted_book():
 
     @ps.persisted_class
     class Book:
-        author_name = ps.LinkedAttribute(linked_column="author", linked_attr="name")
+        pass
 
     return Book()
 
@@ -41,7 +40,6 @@ def customised_book():
 
     @ps.persisted_class
     class Book:
-        author_name = ps.LinkedAttribute(linked_column="author", linked_attr="name")
 
         def save(self):
             return "customised save"
@@ -93,50 +91,24 @@ def douglas_adams():
     return Author({"name": "Douglas Adams"})
 
 
-def test_linked_attribute(book, book_store):
-    """Test that the LinkedAttribute class works independently of persisted_class"""
-    assert book.author_name == "Luciano Ramalho"
-    book.author_name = "Luciano"
-    assert book._delta["author_name"] == "Luciano"
-    assert book._store == book_store
-    assert book.author_name == "Luciano"
-
-
-def test_linked_attribute_name_clash():
-    with pytest.raises(RuntimeError) as excinfo:
-
-        class Book:
-            author = ps.LinkedAttribute(linked_column="author", linked_attr="name")
-
-    assert "Error calling __set_name__" in str(excinfo.value)
-
-
 def test_persisted_class_attributes(persisted_book, book_store):
     """Test that persisted class attributes behave as expected"""
     persisted_book._store = book_store
     assert persisted_book.title == "Fluent Python"
-    assert persisted_book.author_name == "Luciano Ramalho"
     persisted_book.title = "Changed Title"
-    persisted_book.author_name = "Luciano"
     assert persisted_book._delta["title"] == "Changed Title"
-    assert persisted_book._delta["author_name"] == "Luciano"
     assert persisted_book._store == book_store
     assert persisted_book.title == "Changed Title"
-    assert persisted_book.author_name == "Luciano"
 
 
 def test_persisted_class_indexing(persisted_book, book_store):
     """Test that persisted class also works with index access"""
     persisted_book._store = book_store
     assert persisted_book["title"] == "Fluent Python"
-    assert persisted_book["author_name"] == "Luciano Ramalho"
     persisted_book["title"] = "Changed Title"
-    persisted_book["author_name"] = "Luciano"
     assert persisted_book._delta["title"] == "Changed Title"
-    assert persisted_book._delta["author_name"] == "Luciano"
     assert persisted_book._store == book_store
     assert persisted_book["title"] == "Changed Title"
-    assert persisted_book["author_name"] == "Luciano"
 
 
 def test_default_server_functions(persisted_book):

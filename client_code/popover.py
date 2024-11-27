@@ -218,7 +218,6 @@ class Popover:
         delay=None,
         max_width=None,
         auto_dismiss=True,
-        dismiss_on_scroll=None,
         container=None,
         arrow=True,
     ):
@@ -276,13 +275,6 @@ class Popover:
         # we use this to allow show-hide events to be fired on the content
         self.fake_container = _anvil.Container()
         self._clicked = False
-
-        if dismiss_on_scroll is not None:
-            _warn(
-                "popover.dismiss_on_scroll",
-                "dismiss_on_scroll option is deprecated",
-                "DEPRECATION WARNING",
-            )
 
         self.make_template()
         self.add_behavior()
