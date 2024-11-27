@@ -103,7 +103,7 @@ API
 
         # with UID
 
-        from anvil_extras.uuid import uuid4
+        from uuid import uuid4
 
         class UIDLogger(Logger):
             def __init__(self, name="uid logger", uid=None, level=INFO, format="{uid}: {msg}"):
