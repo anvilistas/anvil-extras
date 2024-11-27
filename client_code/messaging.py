@@ -7,7 +7,6 @@
 
 from .logging import INFO
 from .logging import Logger as _Logger
-from .utils._warnings import warn as _warn
 
 __version__ = "3.0.0"
 
@@ -31,21 +30,11 @@ class Subscriber:
 class Publisher:
     default_log_level = INFO
 
-    def __init__(self, *, logger: _Logger = None, **kwargs):
+    def __init__(self, *, logger: _Logger = None):
         self.logger = logger or _null_logger
         self.subscribers = {}
-        self._deprecation_warnings(**kwargs)
 
-    def _deprecation_warnings(self, **kwargs):
-        if "with_logging" in kwargs:
-            _warn(
-                "publisher.with_logging",
-                "with_logging option is deprecated and it will be removed in future versions. Use the logger options instead, passing an instance of logging.Logger",
-                "DEPRECATION WARNING",
-            )
-
-    def publish(self, channel, title, content=None, **kwargs):
-        self._deprecation_warnings(**kwargs)
+    def publish(self, channel, title, content=None):
         message = Message(title, content)
         subscribers = self.subscribers.get(channel, [])
         for subscriber in subscribers:
@@ -56,8 +45,7 @@ class Publisher:
             f"{len(subscribers)} subscriber(s)",
         )
 
-    def subscribe(self, channel, subscriber, handler, **kwargs):
-        self._deprecation_warnings(**kwargs)
+    def subscribe(self, channel, subscriber, handler):
         if channel not in self.subscribers:
             self.subscribers[channel] = []
         self.subscribers[channel].append(Subscriber(subscriber, handler))
@@ -65,8 +53,7 @@ class Publisher:
             self.default_log_level, f"Added subscriber to {channel} channel"
         )
 
-    def unsubscribe(self, channel, subscriber, **kwargs):
-        self._deprecation_warnings(**kwargs)
+    def unsubscribe(self, channel, subscriber):
         if channel in self.subscribers:
             self.subscribers[channel] = [
                 s for s in self.subscribers[channel] if s.subscriber != subscriber
@@ -75,8 +62,7 @@ class Publisher:
             self.default_log_level, f"Removed subscriber from {channel} channel"
         )
 
-    def close_channel(self, channel, **kwargs):
-        self._deprecation_warnings(**kwargs)
+    def close_channel(self, channel):
         subscribers_count = len(self.subscribers[channel])
         del self.subscribers[channel]
         self.logger.log(

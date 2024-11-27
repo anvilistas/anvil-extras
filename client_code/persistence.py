@@ -15,57 +15,6 @@ def _snakify(text):
     return "".join("_" + c.lower() if c.isupper() else c for c in text).lstrip("_")
 
 
-class LinkedAttribute:
-    """A descriptor class for adding linked table items as attributes
-
-    For a class backed by a data tables row, this class is used to dyamically add
-    linked table items as attributes to the parent object.
-    """
-
-    def __init__(self, linked_column, linked_attr):
-        """
-        Parameters
-        ----------
-        linked_column: str
-            The name of the column in the row object which links to another table
-        linked_attr: str
-            The name of the column in the linked table which contains the required
-            value
-        """
-        _warn(
-            "persistence.LinkedAttribute",
-            "LinkedAttribute is deprecated and will be removed in future versions. Use a LinkedClass instead.",
-            "DEPRECATION_WARNING",
-        )
-        self._linked_column = linked_column
-        self._linked_attr = linked_attr
-
-    def __set_name__(self, owner, name):
-        if name == self._linked_column:
-            raise ValueError(
-                "Attribute name cannot be the same as the linked column name"
-            )
-        self._name = name
-
-    def __get__(self, instance, objtype=None):
-        if instance is None:
-            return self
-
-        if instance._delta:
-            return instance._delta[self._name]
-
-        if not instance._store:
-            return None
-
-        if not instance._store[self._linked_column]:
-            return None
-
-        return instance._store[self._linked_column][self._linked_attr]
-
-    def __set__(self, instance, value):
-        instance._delta[self._name] = value
-
-
 class LinkedClass:
     "A descriptor class for adding objects based on linked tables as attributes"
 

@@ -60,7 +60,7 @@ Create an offline todo app
 .. code-block:: python
 
     from anvil_extras.storage import indexed_db
-    from anvil_extras.uuid import uuid4
+    from uuid import uuid4
 
     todo_store = indexed_db.create_store('todos')
     # create_store() is a classmethod that takes a store_name
