@@ -56,8 +56,6 @@ our `book` object will automatically have each of the row's columns as an attrib
 
 But what if we wanted our `book` object to include some information from the author table?
 
-There are two ways to go about that: using a LinkedClass.
-
 
 LinkedClass
 +++++++++++
