@@ -84,7 +84,7 @@ class LinkedClass:
             if instance._delta and self._linked_column in instance._delta
             else instance._store
         )
-        if store[self._linked_column] is None:
+        if not store or store[self._linked_column] is None:
             return None
 
         return self._cls(store[self._linked_column], *self._args, **self._kwargs)
