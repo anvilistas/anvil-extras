@@ -1,4 +1,4 @@
-# Unreleased
+# v3.1.0
 
 ## Bug Fixes
 * tabs - tab color was not being applied to inactive tabs
