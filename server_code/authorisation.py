@@ -10,7 +10,7 @@ from operator import itemgetter
 import anvil.users
 from anvil.tables import app_tables
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 config = {"get_roles": itemgetter("roles")}
 

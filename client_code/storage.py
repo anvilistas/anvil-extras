@@ -11,7 +11,7 @@ import anvil.js
 from anvil.js import ExternalError
 from anvil.js import window as _window
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 __all__ = ["local_storage", "indexed_db"]
 
 try:

@@ -11,7 +11,7 @@ from anvil.js.window import history, location, window
 
 from . import _router
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 # re-initialise the state object which was overridden on load or this is a new session
 state = history.state or {"url": location.hash, "pos": 0}

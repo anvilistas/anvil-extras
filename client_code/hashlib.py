@@ -9,7 +9,7 @@ from functools import partial
 
 from anvil.js import window
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 
 def digest(algorithm, data):

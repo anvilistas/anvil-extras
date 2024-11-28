@@ -12,7 +12,7 @@ from ...popover import pop
 from ..Option import Option
 from ._anvil_designer import DropDownTemplate
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 
 class DropDown(DropDownTemplate):

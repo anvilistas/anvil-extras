@@ -25,7 +25,7 @@ from .utils._component_helpers import walk as _walk
 from .utils._deprecated import deprecated as _deprecated
 from .utils._warnings import warn as _warn
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 __all__ = [
     "popover",

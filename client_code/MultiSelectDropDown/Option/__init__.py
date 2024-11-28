@@ -10,7 +10,7 @@ from anvil.js import get_dom_node
 from ...utils._component_helpers import _add_roles, _remove_roles
 from ._anvil_designer import OptionTemplate
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 
 class Divider(_HtmlPanel):

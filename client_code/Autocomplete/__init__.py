@@ -16,7 +16,7 @@ from anvil.js.window import window as _window
 from ..utils._component_helpers import _html_injector
 from ._anvil_designer import AutocompleteTemplate
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 
 _html_injector.css(

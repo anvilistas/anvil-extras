@@ -12,7 +12,7 @@ from time import time
 
 from .. import logging as logging
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 LOGGER = logging.Logger(name="timing", format="{datetime:%Y-%m-%d %H:%M:%S}: {msg}")
 

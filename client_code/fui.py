@@ -8,7 +8,7 @@
 from anvil.js import import_from
 from anvil.js.window import window as _W
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 try:
     # support preloaded FloatingUIDOM

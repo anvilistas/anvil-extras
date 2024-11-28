@@ -15,7 +15,7 @@ from ._anvil_designer import MultiSelectDropDownTemplate
 from .DropDown import DropDown
 from .Option import Option
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 _css = """
 .anvil-role-ae-ms-btn > button {

@@ -17,7 +17,7 @@ from anvil.js.window import jQuery as _S
 
 from .utils._deprecated import deprecated
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 
 __all__ = ["add_event", "add_event_handler", "set_event_handler", "trigger"]
 
