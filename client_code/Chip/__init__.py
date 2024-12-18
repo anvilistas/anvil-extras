@@ -70,8 +70,9 @@ class Chip(ChipTemplate):
         self.init_components(**properties)
 
         def _spacebar_delete_chip(js_event):
-            self.raise_event("close_click")
-            js_event.preventDefault()
+            if js_event.key == " ":
+                self.raise_event("close_click")
+                js_event.preventDefault()
 
         _get_dom_node(self.close_link).addEventListener(
             "keydown", _spacebar_delete_chip
