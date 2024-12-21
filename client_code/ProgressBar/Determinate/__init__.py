@@ -19,8 +19,10 @@ _html_injector.css(ProgressBar.css)
 class Determinate(DeterminateTemplate):
     def __init__(self, **properties):
         self.indicator_dom_node = get_dom_node(self.indicator_panel)
+        self.dom_node = get_dom_node(self)
         self.role = "ae-progress-track"
         self.indicator_panel.role = "ae-progress-indicator"
+
         self._props = properties
         self.init_components(**properties)
 
@@ -32,6 +34,24 @@ class Determinate(DeterminateTemplate):
     def progress(self, value):
         self._props["progress"] = value
         self.indicator_dom_node.style.setProperty("width", f"{value:%}")
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
+        self._height = value
+        self.indicator_dom_node.style.setProperty("height", value)
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value):
+        self._width = value
+        self.dom_node.style.setProperty("width", value)
 
     @property
     def track_colour(self):
