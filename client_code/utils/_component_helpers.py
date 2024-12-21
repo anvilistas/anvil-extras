@@ -5,6 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import random
+import re
 
 import anvil.js
 from anvil import Component as _Component
