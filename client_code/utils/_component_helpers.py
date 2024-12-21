@@ -14,7 +14,6 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
-import re
 
 __version__ = "3.1.0"
 
