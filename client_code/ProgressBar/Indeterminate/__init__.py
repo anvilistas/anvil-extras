@@ -7,7 +7,7 @@
 from anvil.js import get_dom_node
 
 from anvil_extras import ProgressBar
-from anvil_extras.utils._component_helpers import _get_dom_node_id, _html_injector
+from anvil_extras.utils._component_helpers import _css_length, _html_injector
 
 from ._anvil_designer import IndeterminateTemplate
 
@@ -18,11 +18,30 @@ _html_injector.css(ProgressBar.css)
 
 class Indeterminate(IndeterminateTemplate):
     def __init__(self, **properties):
+        self.indicator_dom_node = get_dom_node(self.indicator_panel)
         self.dom_node = get_dom_node(self)
         self._props = properties
         self.role = "ae-progress-track"
         self.indicator_panel.role = "ae-indeterminate-progress-indicator"
         self.init_components(**properties)
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
+        self._height = value
+        self.indicator_dom_node.style.setProperty("height", _css_length(value or "3px"))
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value):
+        self._width = value
+        self.dom_node.style.setProperty("width", _css_length(value or "3px"))
 
     @property
     def track_colour(self):
