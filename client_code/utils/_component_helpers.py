@@ -5,7 +5,6 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import random
-import re
 
 import anvil.js
 from anvil import Component as _Component
@@ -206,10 +205,6 @@ def walk(component_or_components):
 
 
 def _css_length(v):
-    if isinstance(v, str) and re.match(
-        r"\b\d+(\.\d+)?\s*(cm|mm|in|pt|pc|px|em|rem|vw|vh|vmin|vmax|%)\b", v
-    ):
-        return v
     try:
         return f"{float(v)}px"
     except (TypeError, ValueError):
