@@ -31,9 +31,8 @@ class Indeterminate(IndeterminateTemplate):
 
     @height.setter
     def height(self, value):
-        value = _css_length(value)
         self._height = value
-        self.indicator_dom_node.style.setProperty("height", value)
+        self.indicator_dom_node.style.setProperty("height", _css_length(value))
 
     @property
     def width(self):
@@ -41,9 +40,8 @@ class Indeterminate(IndeterminateTemplate):
 
     @width.setter
     def width(self, value):
-        value = _css_length(value)
         self._width = value
-        self.dom_node.style.setProperty("width", value)
+        self.dom_node.style.setProperty("width", _css_length(value))
 
     @property
     def track_colour(self):
