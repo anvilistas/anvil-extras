@@ -5,7 +5,6 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import random
-import re
 
 import anvil.js
 from anvil import Component as _Component
@@ -15,6 +14,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
+import re
 
 __version__ = "3.1.0"
 
