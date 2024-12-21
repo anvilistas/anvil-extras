@@ -42,7 +42,7 @@ class Determinate(DeterminateTemplate):
     @height.setter
     def height(self, value):
         self._height = value
-        self.indicator_dom_node.style.setProperty("height", _css_length(value))
+        self.indicator_dom_node.style.setProperty("height", _css_length(value or "3px"))
 
     @property
     def width(self):
@@ -51,7 +51,7 @@ class Determinate(DeterminateTemplate):
     @width.setter
     def width(self, value):
         self._width = value
-        self.dom_node.style.setProperty("width", _css_length(value))
+        self.dom_node.style.setProperty("width", _css_length(value or "3px"))
 
     @property
     def track_colour(self):
