@@ -25,7 +25,7 @@ components:
   type: Label
 - layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
   name: indeterminate_progress_bar_1
-  properties: {height: "50px", width: "75%"}
+  properties: {height: 50, width: "75%"}
   type: form:ProgressBar.Indeterminate
 - layout_properties:
     col_widths: {}

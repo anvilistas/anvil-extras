@@ -14,6 +14,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window
 from anvil.js.window import Promise as _Promise
 from anvil.js.window import document as _document
+import re
 
 __version__ = "3.1.0"
 
@@ -205,6 +206,10 @@ def walk(component_or_components):
 
 
 def _css_length(v):
+    if isinstance(v, str) and re.match(
+        r"\b\d+(\.\d+)?\s*(cm|mm|in|pt|pc|px|em|rem|vw|vh|vmin|vmax|%)\b", v
+    ):
+        return v
     try:
         return f"{float(v)}px"
     except (TypeError, ValueError):
