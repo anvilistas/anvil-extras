@@ -7,7 +7,7 @@
 from anvil.js import get_dom_node
 
 from anvil_extras import ProgressBar
-from anvil_extras.utils._component_helpers import _html_injector
+from anvil_extras.utils._component_helpers import _css_length, _html_injector
 
 from ._anvil_designer import DeterminateTemplate
 
@@ -41,6 +41,7 @@ class Determinate(DeterminateTemplate):
 
     @height.setter
     def height(self, value):
+        value = _css_length(value)
         self._height = value
         self.indicator_dom_node.style.setProperty("height", value)
 
@@ -50,6 +51,7 @@ class Determinate(DeterminateTemplate):
 
     @width.setter
     def width(self, value):
+        value = _css_length(value)
         self._width = value
         self.dom_node.style.setProperty("width", value)
 

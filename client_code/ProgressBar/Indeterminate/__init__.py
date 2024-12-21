@@ -5,10 +5,9 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil.js import get_dom_node
-from anvil.js.window import document
 
 from anvil_extras import ProgressBar
-from anvil_extras.utils._component_helpers import _get_dom_node_id, _html_injector
+from anvil_extras.utils._component_helpers import _css_length, _html_injector
 
 from ._anvil_designer import IndeterminateTemplate
 
@@ -32,6 +31,7 @@ class Indeterminate(IndeterminateTemplate):
 
     @height.setter
     def height(self, value):
+        value = _css_length(value)
         self._height = value
         self.indicator_dom_node.style.setProperty("height", value)
 
@@ -41,6 +41,7 @@ class Indeterminate(IndeterminateTemplate):
 
     @width.setter
     def width(self, value):
+        value = _css_length(value)
         self._width = value
         self.dom_node.style.setProperty("width", value)
 
