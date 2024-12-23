@@ -148,7 +148,7 @@ components:
   name: change_multi_color_btn
   properties:
     text: Change Multi Select Background Color to Blue, Foreground Color to Red
-  type: Button 
+  type: Button
 - layout_properties:
     col_widths: {}
     grid_position: FBTNBP,PVGRIB
