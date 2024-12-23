@@ -6,6 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil import HtmlPanel as _HtmlPanel
 from anvil.js import get_dom_node
+from anvil.js.window import jQuery as _S
 
 from ...utils._component_helpers import _add_roles, _remove_roles
 from ._anvil_designer import OptionTemplate
@@ -81,6 +82,15 @@ class Option(OptionTemplate):
             self._dom_node.dataset["disabled"] = ""
         else:
             del self._dom_node.dataset["disabled"]
+
+    @property
+    def foreground(self):
+        return self._foreground
+
+    @foreground.setter
+    def foreground(self, value):
+        self._foreground = value
+        self.label.foreground = self.icon_checked.foreground = value
 
     def focus(self):
         self._dom_node.focus()
