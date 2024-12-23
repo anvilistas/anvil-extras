@@ -5,11 +5,12 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.http
+from anvil import alert
 
 from ..utils import auto_refreshing
 from ._anvil_designer import DemoTemplate
 
-__version__ = "2.5.4"
+__version__ = "3.1.0"
 dataset_url = "https://pivottable.js.org/examples/mps.json"
 
 
@@ -142,3 +143,7 @@ class Demo(DemoTemplate):
 
     def autocomplete_event(self, event_name, **event_args):
         print(event_name, self.item["text"])
+    
+    def change_multi_color(self, **event_args):
+        self.multi_select_drop_down_1.background = "blue"
+        self.multi_select_drop_down_1.foreground = "red"
