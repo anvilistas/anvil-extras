@@ -18,6 +18,7 @@ import anvil.js
 from anvil.js.window import WeakMap as _WeakMap
 from anvil.js.window import document as _document
 from anvil.js.window import window as _W
+from anvil.js.window import jQuery as _S
 
 from . import fui
 from .utils._component_helpers import _html_injector
@@ -221,6 +222,7 @@ class Popover:
         dismiss_on_scroll=None,
         container=None,
         arrow=True,
+        background=None,
     ):
         _popper_map.set(popper, self)
 
@@ -232,6 +234,8 @@ class Popover:
 
         self.title = title
         self.arrow = arrow
+
+        self.background = background
 
         if not isinstance(placement, str):
             raise TypeError("placement must be a string")
@@ -329,6 +333,9 @@ class Popover:
         element = _anvil.js.get_dom_node(element)
         element.setAttribute("ae-popover", "")
         element.setAttribute("ae-popover-id", self.id)
+
+        if self.background:
+            _S(element).css("background-color", self.background)
 
     def cleanup_popover(self, element):
         try:
@@ -481,7 +488,7 @@ class Popover:
 
         if self.state == _State.visible:
             return
-
+        
         self.state = _State.visible
         _visible_popovers[self.id] = self.popper
 
@@ -579,6 +586,7 @@ def popover(
     dismiss_on_scroll=None,
     container=None,
     arrow=True,
+    background=None,
 ):
     """should be called by a button or link
     content - either text or an anvil component or Form
@@ -632,6 +640,7 @@ def popover(
         dismiss_on_scroll=dismiss_on_scroll,
         container=container,
         arrow=arrow,
+        background=background,
     )
 
 
