@@ -17,8 +17,8 @@ import anvil as _anvil
 import anvil.js
 from anvil.js.window import WeakMap as _WeakMap
 from anvil.js.window import document as _document
-from anvil.js.window import window as _W
 from anvil.js.window import jQuery as _S
+from anvil.js.window import window as _W
 
 from . import fui
 from .utils._component_helpers import _html_injector
@@ -488,7 +488,7 @@ class Popover:
 
         if self.state == _State.visible:
             return
-        
+
         self.state = _State.visible
         _visible_popovers[self.id] = self.popper
 

@@ -143,7 +143,7 @@ class Demo(DemoTemplate):
 
     def autocomplete_event(self, event_name, **event_args):
         print(event_name, self.item["text"])
-    
+
     def change_multi_color(self, **event_args):
         self.multi_select_drop_down_1.background = "blue"
         self.multi_select_drop_down_1.foreground = "red"

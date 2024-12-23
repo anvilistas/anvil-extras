@@ -6,8 +6,10 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 import anvil.js as _js
-from anvil import HtmlPanel as _HtmlPanel, alert
-from anvil.js.window import document as _document, jQuery as _S
+from anvil import HtmlPanel as _HtmlPanel
+from anvil import alert
+from anvil.js.window import document as _document
+from anvil.js.window import jQuery as _S
 
 from ..popover import pop, popover
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
@@ -233,7 +235,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             _S(_js.get_dom_node(self._select_btn)).children("button").css(
                 "background-color", value
             )
-        
+
         pop(self._select_btn, "destroy")
         popover(
             self._select_btn,
@@ -246,7 +248,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             max_width="fit-content",
             background=value,
         )
-
 
     @property
     def foreground(self):
