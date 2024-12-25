@@ -235,8 +235,6 @@ class Popover:
         self.title = title
         self.arrow = arrow
 
-        self.background = background
-
         if not isinstance(placement, str):
             raise TypeError("placement must be a string")
 
@@ -291,6 +289,23 @@ class Popover:
         self.make_template()
         self.add_behavior()
 
+        self.background = background
+
+    @property
+    def background(self):
+        return self._background
+
+    @background.setter
+    def background(self, value):
+        self._background = value
+        fui.auto_update(
+            _get_popper_element(self.popper),
+            self.dom_popover,
+            placement=self.placement,
+            arrow=self.dom_arrow if self.arrow else None,
+            background=value,
+        )
+
     def make_template(self):
         d = _document.createElement("div")
         d.className = "ae-popover"
@@ -333,9 +348,6 @@ class Popover:
         element = _anvil.js.get_dom_node(element)
         element.setAttribute("ae-popover", "")
         element.setAttribute("ae-popover-id", self.id)
-
-        if self.background:
-            _S(element).css("background-color", self.background)
 
     def cleanup_popover(self, element):
         try:
@@ -504,6 +516,7 @@ class Popover:
             self.dom_popover,
             placement=self.placement,
             arrow=self.dom_arrow if self.arrow else None,
+            background=self.background,
         )
 
         delay = self.delay["show"] if e else 0
@@ -627,7 +640,7 @@ def popover(
             "Support for this may be removed in a future version.",
         )
 
-    Popover(
+    return Popover(
         self,
         content,
         title=title,

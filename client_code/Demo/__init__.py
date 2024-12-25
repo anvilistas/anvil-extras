@@ -147,3 +147,9 @@ class Demo(DemoTemplate):
     def change_multi_color(self, **event_args):
         self.multi_select_drop_down_1.background = "blue"
         self.multi_select_drop_down_1.foreground = "red"
+        self.multi_select_drop_down_1.items += ["another item"]
+
+    def remove_multi_color(self, **event_args):
+        self.multi_select_drop_down_1.background = ""
+        self.multi_select_drop_down_1.foreground = ""
+        self.multi_select_drop_down_1.items = self.multi_select_drop_down_1.items

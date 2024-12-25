@@ -25,7 +25,7 @@ components:
   type: Label
 - layout_properties: {grid_position: 'MBVZPS,ZJSMWM'}
   name: indeterminate_progress_bar_1
-  properties: {}
+  properties: {height: 50, width: "75%"}
   type: form:ProgressBar.Indeterminate
 - layout_properties:
     col_widths: {}
@@ -35,7 +35,7 @@ components:
   type: Label
 - layout_properties: {grid_position: 'TUUBRI,CREBNE'}
   name: progress_bar
-  properties: {indicator_colour: '#1976D2', progress: 0.5, track_colour: '#b3d4fc'}
+  properties: {indicator_colour: '#1976D2', progress: 0.5, track_colour: '#b3d4fc', height: "50px", width: "55vh"}
   type: form:ProgressBar.Determinate
 - layout_properties: {grid_position: 'YBVZRV,XCMOTC'}
   name: label_3
@@ -149,6 +149,11 @@ components:
   properties:
     text: Change Multi Select Background Color to Blue, Foreground Color to Red
   type: Button
+- event_bindings: {click: remove_multi_color}
+  name: change_multi_color_btn
+  properties:
+    text: Remove Multi Select Background Color and Foreground Color
+  type: Button 
 - layout_properties:
     col_widths: {}
     grid_position: FBTNBP,PVGRIB

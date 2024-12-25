@@ -7,9 +7,7 @@
 
 import anvil.js as _js
 from anvil import HtmlPanel as _HtmlPanel
-from anvil import alert
 from anvil.js.window import document as _document
-from anvil.js.window import jQuery as _S
 
 from ..popover import pop, popover
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
@@ -171,6 +169,7 @@ _defaults = {
     "enable_select_all": False,
     "width": "",
     "visible": True,
+    "foreground": "",
 }
 
 
@@ -198,13 +197,21 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._dd_width = 0
         self._dd = DropDown()
         self._dd.add_event_handler("change", self._change)
+        self.popover = popover(
+            self._select_btn,
+            self._dd,
+            placement="bottom-start",
+            arrow=False,
+            delay=0,
+            animation=False,
+            trigger="manual",
+            max_width="fit-content",
+            background=self._props["background"],
+        )
 
         selected = props.pop("selected", ())
-        self._props_initialized = False
 
         self.init_components(**props)
-        self._props_initialized = True
-        self.foreground = self.foreground
 
         self.set_event_handler("x-popover-init", self._mk_popover)
         self.set_event_handler("x-popover-destroy", self._mk_popover)
@@ -226,42 +233,30 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     ##### PROPERTIES #####
     @property
     def background(self):
-        return self._background
+        return self._props["background"]
 
     @background.setter
     def background(self, value):
-        self._background = value
-        if value:
-            _S(_js.get_dom_node(self._select_btn)).children("button").css(
-                "background-color", value
-            )
+        self._props["background"] = value
 
-        pop(self._select_btn, "destroy")
-        popover(
-            self._select_btn,
-            self._dd,
-            placement="bottom-start",
-            arrow=False,
-            delay=0,
-            animation=False,
-            trigger="manual",
-            max_width="fit-content",
-            background=value,
+        _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
+            "background-color", value
         )
+
+        self.popover.background = value
 
     @property
     def foreground(self):
-        return self._foreground
+        return self._props["foreground"]
 
     @foreground.setter
     def foreground(self, value):
-        self._foreground = value
-        if value and self._props_initialized:
-            _S(_js.get_dom_node(self._select_btn)).children("button").css(
-                "color", value
-            )
-            for option in self._options:
-                option.foreground = value
+        self._props["foreground"] = value
+        _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
+            "color", value
+        )
+        for option in self._options:
+            option.foreground = value
 
     @property
     def width(self):
@@ -304,7 +299,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props["items"] = value
         self._close()
         selected = self.selected + self._invalid
-        options = Option.from_items(value)
+        options = Option.from_items(value, self._props["foreground"])
 
         self._dd.options = self._options = options
         self._calc_dd_width()

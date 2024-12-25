@@ -6,7 +6,6 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 from anvil import HtmlPanel as _HtmlPanel
 from anvil.js import get_dom_node
-from anvil.js.window import jQuery as _S
 
 from ...utils._component_helpers import _add_roles, _remove_roles
 from ._anvil_designer import OptionTemplate
@@ -85,11 +84,11 @@ class Option(OptionTemplate):
 
     @property
     def foreground(self):
-        return self._foreground
+        return self._props["foreground"]
 
     @foreground.setter
     def foreground(self, value):
-        self._foreground = value
+        self._props["foreground"] = value
         self.label.foreground = self.icon_checked.foreground = value
 
     def focus(self):
@@ -147,6 +146,7 @@ class Option(OptionTemplate):
         subtext = item.get("subtext", "")
         disabled = not item.get("enabled", True)
         key = item.get("key")
+        foreground = item.get("foreground")
 
         return cls(
             idx=idx,
@@ -156,21 +156,26 @@ class Option(OptionTemplate):
             subtext=subtext,
             title=title,
             disabled=disabled,
+            foreground=foreground,
         )
 
     @classmethod
-    def from_items(cls, items):
+    def from_items(cls, items, foreground=None):
         options = []
 
         for idx, item in enumerate(items):
+            current_foreground = foreground
             if isinstance(item, str):
                 option = cls.from_str(item, idx)
             elif isinstance(item, (tuple, list)):
                 option = cls.from_tuple(item, idx)
             elif isinstance(item, dict):
                 option = cls.from_dict(item, idx)
+                current_foreground = item.get("foreground", current_foreground)
             else:
                 raise TypeError(f"Invalid item at index {idx} (got type {type(item)})")
+
+            option.foreground = current_foreground
 
             options.append(option)
 
