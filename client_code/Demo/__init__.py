@@ -5,9 +5,10 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 import anvil.http
-from anvil import alert
+from anvil import Button
 
 from ..utils import auto_refreshing
+from ..popover import popover
 from ._anvil_designer import DemoTemplate
 
 __version__ = "3.2.0"
@@ -32,6 +33,11 @@ class Demo(DemoTemplate):
         self.item = self.default_item.copy()
         self.pivot.items = anvil.http.request(dataset_url, json=True)
         self.init_components(**properties)
+
+        self.popover_button = Button(text="Open the popup")
+        self.popover_button.add_event_handler("click", self.popup_button_click)
+        self.popover = popover(self.popover_button, "test popup colors")
+        self.add_component(self.popover_button)
 
     def timer_1_tick(self, **event_args):
         if self.progress <= 1:
@@ -153,3 +159,20 @@ class Demo(DemoTemplate):
         self.multi_select_drop_down_1.background = ""
         self.multi_select_drop_down_1.foreground = ""
         self.multi_select_drop_down_1.items = self.multi_select_drop_down_1.items
+
+    def popup_button_click(self, **event_args):
+        if self.popover.foreground == "red":
+            self.popover.foreground = "blue"
+        elif self.popover.foreground == "blue":
+            self.popover.foreground = ""
+        else:
+            self.popover.foreground = "red"
+
+        if self.popover.background == "blue":
+            self.popover.background = "red"
+        elif self.popover.background == "red":
+            self.popover.background = ""
+        else:
+            self.popover.background = "blue"
+
+        self.popover_button.popover("show")
