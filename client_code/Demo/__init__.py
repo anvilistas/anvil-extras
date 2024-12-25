@@ -7,8 +7,8 @@
 import anvil.http
 from anvil import Button
 
-from ..utils import auto_refreshing
 from ..popover import popover
+from ..utils import auto_refreshing
 from ._anvil_designer import DemoTemplate
 
 __version__ = "3.2.0"
