@@ -17,7 +17,6 @@ import anvil as _anvil
 import anvil.js
 from anvil.js.window import WeakMap as _WeakMap
 from anvil.js.window import document as _document
-from anvil.js.window import jQuery as _S
 from anvil.js.window import window as _W
 
 from . import fui
@@ -222,6 +221,7 @@ class Popover:
         dismiss_on_scroll=None,
         container=None,
         arrow=True,
+        foreground=None,
         background=None,
     ):
         _popper_map.set(popper, self)
@@ -289,6 +289,7 @@ class Popover:
         self.make_template()
         self.add_behavior()
 
+        self.foreground = foreground
         self.background = background
 
     @property
@@ -303,7 +304,24 @@ class Popover:
             self.dom_popover,
             placement=self.placement,
             arrow=self.dom_arrow if self.arrow else None,
+            foreground=self.foreground,
             background=value,
+        )
+
+    @property
+    def foreground(self):
+        return self._foreground
+
+    @foreground.setter
+    def foreground(self, value):
+        self._foreground = value
+        fui.auto_update(
+            _get_popper_element(self.popper),
+            self.dom_popover,
+            placement=self.placement,
+            arrow=self.dom_arrow if self.arrow else None,
+            foreground=value,
+            background=getattr(self, "background", None),
         )
 
     def make_template(self):
@@ -599,7 +617,8 @@ def popover(
     dismiss_on_scroll=None,
     container=None,
     arrow=True,
-    background=None,
+    foreground="",
+    background="",
 ):
     """should be called by a button or link
     content - either text or an anvil component or Form
