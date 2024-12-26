@@ -46,8 +46,6 @@ def auto_update(
     shift={"padding": 5},
     hide={"padding": 15},
     arrow=None,
-    foreground="",
-    background="",
 ):
     """starts auto updating position of floating element to a reference element
     returns a cleanup function
@@ -86,9 +84,6 @@ def auto_update(
         if "hide" in middlewareData:
             hidden = middlewareData.hide.referenceHidden
             floating_el.style.visibility = "hidden" if hidden else "visible"
-
-        floating_el.style.setProperty("color", foreground)
-        floating_el.style.setProperty("background-color", background)
 
         main_axis = rv.placement.split("-")[0]
         static_side = _static_arrow_position.get(main_axis)

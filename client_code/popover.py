@@ -299,14 +299,7 @@ class Popover:
     @background.setter
     def background(self, value):
         self._background = value
-        fui.auto_update(
-            _get_popper_element(self.popper),
-            self.dom_popover,
-            placement=self.placement,
-            arrow=self.dom_arrow if self.arrow else None,
-            foreground=self.foreground,
-            background=value,
-        )
+        self.dom_popover.style.setProperty("background-color", value)
 
     @property
     def foreground(self):
@@ -315,14 +308,7 @@ class Popover:
     @foreground.setter
     def foreground(self, value):
         self._foreground = value
-        fui.auto_update(
-            _get_popper_element(self.popper),
-            self.dom_popover,
-            placement=self.placement,
-            arrow=self.dom_arrow if self.arrow else None,
-            foreground=value,
-            background=getattr(self, "background", None),
-        )
+        self.dom_popover.style.setProperty("color", value)
 
     def make_template(self):
         d = _document.createElement("div")
@@ -534,7 +520,6 @@ class Popover:
             self.dom_popover,
             placement=self.placement,
             arrow=self.dom_arrow if self.arrow else None,
-            background=self.background,
         )
 
         delay = self.delay["show"] if e else 0
