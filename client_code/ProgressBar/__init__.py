@@ -8,7 +8,6 @@ __version__ = "3.1.0"
 
 css = """ .anvil-role-ae-progress-track, .anvil-role-ae-progress-indicator {
     display: block;
-    height: 3px;
     margin: 0;
 }
 
@@ -16,16 +15,7 @@ css = """ .anvil-role-ae-progress-track, .anvil-role-ae-progress-indicator {
     width: 100%;
 }
 
-.anvil-role-ae-progress-indicator {
-    top: 0 !important;
-}
-
-.anvil-role-ae-progress-track > .holder, .anvil-role-ae-progress-indicator > .holder {
-    display: block !important;
-}
-
 .anvil-role-ae-indeterminate-progress-indicator, .anvil-role-ae-indeterminate-progress-indicator:before {
-  height: 3px;
   width: 100%;
   margin: 0;
 }
