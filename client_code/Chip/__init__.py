@@ -68,6 +68,15 @@ class Chip(ChipTemplate):
         )
         properties = _defaults | properties
         self.init_components(**properties)
+
+        def _spacebar_delete_chip(js_event):
+            if js_event.key == " ":
+                self.raise_event("close_click")
+                js_event.preventDefault()
+
+        _get_dom_node(self.close_link).addEventListener(
+            "keydown", _spacebar_delete_chip
+        )
         # Any code you write here will run when the form opens.
 
     @property
