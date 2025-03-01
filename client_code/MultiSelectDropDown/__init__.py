@@ -169,6 +169,7 @@ _defaults = {
     "enable_select_all": False,
     "width": "",
     "visible": True,
+    "foreground": "",
 }
 
 
@@ -196,7 +197,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._dd_width = 0
         self._dd = DropDown()
         self._dd.add_event_handler("change", self._change)
-        popover(
+        self.popover = popover(
             self._select_btn,
             self._dd,
             placement="bottom-start",
@@ -205,11 +206,13 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             animation=False,
             trigger="manual",
             max_width="fit-content",
+            background=self._props["background"],
         )
 
         selected = props.pop("selected", ())
 
         self.init_components(**props)
+
         self.set_event_handler("x-popover-init", self._mk_popover)
         self.set_event_handler("x-popover-destroy", self._mk_popover)
         self._dd.set_event_handler(
@@ -228,6 +231,33 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         return ", ".join(opt.title or opt.key for opt in self._options if opt.selected)
 
     ##### PROPERTIES #####
+    @property
+    def background(self):
+        return self._props["background"]
+
+    @background.setter
+    def background(self, value):
+        self._props["background"] = value
+
+        _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
+            "background-color", value
+        )
+
+        self.popover.background = value
+
+    @property
+    def foreground(self):
+        return self._props["foreground"]
+
+    @foreground.setter
+    def foreground(self, value):
+        self._props["foreground"] = value
+        _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
+            "color", value
+        )
+        for option in self._options:
+            option.foreground = value
+
     @property
     def width(self):
         return self._props.get("width")
@@ -269,8 +299,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props["items"] = value
         self._close()
         selected = self.selected + self._invalid
-
-        options = Option.from_items(value)
+        options = Option.from_items(value, self._props["foreground"])
 
         self._dd.options = self._options = options
         self._calc_dd_width()
