@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* quill - click guard was not working properly when clicking the spacer below the text
+  https://github.com/anvilistas/anvil-extras/pull/593
+
 # v3.1.0
 
 ## Bug Fixes
