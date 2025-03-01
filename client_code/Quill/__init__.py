@@ -81,8 +81,10 @@ class Quill(QuillTemplate):
         self._min_height = None
 
         def click_guard(e):
+            # if you click the quill element below the text, you want to focus the editor
+            # but only if you're clicking the spacer itself
             q = self._quill
-            if not q.hasFocus():
+            if not q.hasFocus() and e.srcElement is self._el:
                 q.focus()
                 q.setSelection(len(q.getText()))
 
