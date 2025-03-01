@@ -201,6 +201,7 @@ class ChipsInput(ChipsInputTemplate):
         sender.remove_from_parent()
         self.raise_event("chips_changed")
         self.raise_event("chip_removed", chip=chip_text)
+        self.chip_input.focus()
 
     @staticmethod
     def _set_focus(chip, val):
