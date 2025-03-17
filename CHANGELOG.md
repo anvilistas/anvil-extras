@@ -3,6 +3,8 @@
 ## Bug Fixes
 * autocomplete - fix bug where escape and enter key should close suggestions
   https://github.com/anvilistas/anvil-extras/discussions/595
+* quill - click guard was not working properly when clicking the spacer below the text
+  https://github.com/anvilistas/anvil-extras/pull/593
 
 # v3.1.0
 
