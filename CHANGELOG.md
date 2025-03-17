@@ -1,5 +1,10 @@
 # Unreleased
 
+## Enhancements
+* slider - add spacing property
+  https://github.com/anvilistas/anvil-extras/pull/597
+
+
 ## Bug Fixes
 * autocomplete - fix bug where escape and enter key should close suggestions
   https://github.com/anvilistas/anvil-extras/discussions/595

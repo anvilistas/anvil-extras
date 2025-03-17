@@ -136,13 +136,9 @@ Properties
 
     Is the component visible
 
-:spacing_above: str
+:spacing: spacing
 
-    One of ``"none"``, ``"small"``, ``"medium"``, ``"large"``
-
-:spacing_below: str
-
-    One of ``"none"``, ``"small"``, ``"medium"``, ``"large"``
+    e.g. {"margin": [10, 10], "padding": [10, 10]}
 
 
 

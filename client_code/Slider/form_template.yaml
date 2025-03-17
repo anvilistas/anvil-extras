@@ -33,16 +33,22 @@ properties:
 - {default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
 - {group: user data, important: false, name: tag, type: object}
 - {default_value: true, designer_hint: enabled, group: interaction, important: true, name: enabled, type: boolean}
+- group: spacing
+  important: false
+  name: spacing
+  type: spacing
 - default_value: small
-  group: layout
+  group: spacing
   important: false
   name: spacing_above
+  deprecated: true
   options: [none, small, medium, large]
   type: enum
 - default_value: small
-  group: layout
+  group: spacing
   important: false
   name: spacing_below
+  deprecated: true
   options: [none, small, medium, large]
   type: enum
 - {default_value: false, description: Sets whether the slider has pips (ticks), group: pips, important: false, name: pips, type: boolean}

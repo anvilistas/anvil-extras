@@ -7,6 +7,8 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
+from anvil.property_utils import get_unset_spacing as _get_unset_spacing
+from anvil.property_utils import set_element_spacing as _set_spacing
 
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
@@ -276,6 +278,14 @@ def _pips_prop(prop):
     return property(_prop_getter(prop), setter)
 
 
+def _spacing_prop(prop):
+    def setter(self, value):
+        self._props[prop] = value
+        _set_spacing(self._dom_node, value)
+
+    return property(_prop_getter(prop), setter)
+
+
 _defaults = {
     "animate": True,
     "start": 20,
@@ -299,6 +309,7 @@ _defaults = {
     "enabled": True,
     "spacing_above": "small",
     "spacing_below": "small",
+    "spacing": None,
     "value": None,
     "values": None,
     "formatted_value": None,
@@ -312,6 +323,7 @@ _defaults = {
 _always = (
     "color",
     "enabled",
+    "spacing",
     "spacing_above",
     "spacing_below",
     "bar_height",
@@ -468,11 +480,16 @@ class Slider(SliderTemplate):
     bar_height = _css_length_prop("bar_height", BAR_HEIGHT, 18)
     handle_size = _css_length_prop("handle_size", HANDLE_SIZE, 34)
     color = _color_prop("color", BAR_COLOR)
+    spacing = _spacing_prop("spacing")
     spacing_above = _spacing_property("above")
     spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
     tag = _HtmlPanel.tag
     role = _HtmlPanel.role
+
+    def _anvil_get_unset_property_values_(self):
+        spacing = _get_unset_spacing(self._dom_node, self._dom_node, self.spacing)
+        return {"spacing": spacing}
 
     ###### METHODS ######
     def reset(self):
