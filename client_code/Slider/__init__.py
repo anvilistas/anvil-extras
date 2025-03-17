@@ -7,8 +7,10 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
+from anvil.property_utils import get_unset_margin as _get_unset_margin
+from anvil.property_utils import set_element_margin as _set_margin
 
-from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
+from ..utils._component_helpers import _get_color, _html_injector
 from ._anvil_designer import SliderTemplate
 
 try:
@@ -276,6 +278,14 @@ def _pips_prop(prop):
     return property(_prop_getter(prop), setter)
 
 
+def _margin_prop(prop):
+    def setter(self, value):
+        self._props[prop] = value
+        _set_margin(self._dom_node, value)
+
+    return property(_prop_getter(prop), setter)
+
+
 _defaults = {
     "animate": True,
     "start": 20,
@@ -297,8 +307,7 @@ _defaults = {
     "max": 100,
     "visible": True,
     "enabled": True,
-    "spacing_above": "small",
-    "spacing_below": "small",
+    "margin": None,
     "value": None,
     "values": None,
     "formatted_value": None,
@@ -312,8 +321,7 @@ _defaults = {
 _always = (
     "color",
     "enabled",
-    "spacing_above",
-    "spacing_below",
+    "margin",
     "bar_height",
     "handle_size",
     "role",
@@ -468,11 +476,14 @@ class Slider(SliderTemplate):
     bar_height = _css_length_prop("bar_height", BAR_HEIGHT, 18)
     handle_size = _css_length_prop("handle_size", HANDLE_SIZE, 34)
     color = _color_prop("color", BAR_COLOR)
-    spacing_above = _spacing_property("above")
-    spacing_below = _spacing_property("below")
+    margin = _margin_prop("margin")
     visible = _HtmlPanel.visible
     tag = _HtmlPanel.tag
     role = _HtmlPanel.role
+
+    def _anvil_get_unset_property_values_(self):
+        m = _get_unset_margin(self._dom_node, self.margin)
+        return {"margin": m}
 
     ###### METHODS ######
     def reset(self):
