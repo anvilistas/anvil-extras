@@ -35,8 +35,8 @@ properties:
 - {default_value: true, designer_hint: enabled, group: interaction, important: true, name: enabled, type: boolean}
 - group: spacing
   important: false
-  name: margin
-  type: margin
+  name: spacing
+  type: spacing
 - {default_value: false, description: Sets whether the slider has pips (ticks), group: pips, important: false, name: pips, type: boolean}
 - {default_value: '', description: '''range'', ''steps'', ''positions'', ''count'', ''values''', group: pips, important: false, name: pips_mode, type: string}
 - {default_value: null, description: 'Controls how many pips are placed. With the default value of 1, there is one pip per percent. For a value of 2, a pip is placed for every 2 percent. A value of zero will place more than one pip per percentage. A value of -1 will remove all intermediate pips.', group: pips, important: false, name: pips_density, type: number}
