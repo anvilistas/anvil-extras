@@ -10,7 +10,7 @@ from anvil import HtmlPanel as _HtmlPanel
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
-from ..utils._component_helpers import _get_color, _html_injector
+from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
 try:
@@ -304,6 +304,9 @@ _defaults = {
     "max": 100,
     "visible": True,
     "enabled": True,
+    "spacing_above": "small",
+    "spacing_below": "small",
+    "spacing": None,
     "value": None,
     "values": None,
     "formatted_value": None,
@@ -318,6 +321,8 @@ _always = (
     "color",
     "enabled",
     "spacing",
+    "spacing_above",
+    "spacing_below",
     "bar_height",
     "handle_size",
     "role",
@@ -473,6 +478,8 @@ class Slider(SliderTemplate):
     handle_size = _css_length_prop("handle_size", HANDLE_SIZE, 34)
     color = _color_prop("color", BAR_COLOR)
     spacing = _spacing_prop("spacing")
+    spacing_above = _spacing_property("above")
+    spacing_below = _spacing_property("below")
     visible = _HtmlPanel.visible
     tag = _HtmlPanel.tag
     role = _HtmlPanel.role
