@@ -158,6 +158,8 @@ class Autocomplete(AutocompleteTemplate):
         elif self._active is not None:
             self.text = self._active.text
             self._reset_autocomplete()
+        else:
+            self._reset_autocomplete()
 
     def _reset_autocomplete(self):
         if self._active is not None:
@@ -185,6 +187,9 @@ class Autocomplete(AutocompleteTemplate):
             e.preventDefault()
         elif key == "Enter":
             self._set_text()
+            return
+        elif key == "Escape":
+            self._reset_autocomplete()
             return
         else:
             return
