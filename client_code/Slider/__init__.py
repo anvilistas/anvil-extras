@@ -39,9 +39,6 @@ _html_injector.css(
 .ae-slider-container.has-pips {{
   padding-bottom: 40px;
 }}
-.anvil-container-overflow, .anvil-panel-col {{
-    overflow: visible;
-}}
 .noUi-connect {{
   background: var({BAR_COLOR});
 }}
