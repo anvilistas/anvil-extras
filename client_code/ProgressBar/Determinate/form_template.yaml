@@ -14,3 +14,4 @@ properties:
 - {default_binding_prop: true, default_value: '#b3d4fc', name: track_colour, type: color}
 - {default_value: '#1976D2', name: indicator_colour, type: color}
 - {default_value: 0.25, name: progress, type: number}
+- {name: height, type: string}
