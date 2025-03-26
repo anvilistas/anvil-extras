@@ -5,6 +5,8 @@
   https://github.com/anvilistas/anvil-extras/pull/597
 * colors - support colors that update when theme_colors dict is updated
   https://github.com/anvilistas/anvil-extras/pull/599
+* ChipsInput - space will close a chip when selected, and input is focused
+  https://github.com/anvilistas/anvil-extras/pull/587
 
 
 ## Bug Fixes
