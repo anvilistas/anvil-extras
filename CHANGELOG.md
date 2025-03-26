@@ -3,6 +3,8 @@
 ## Enhancements
 * slider - add spacing property
   https://github.com/anvilistas/anvil-extras/pull/597
+* colors - support colors that update when theme_colors dict is updated
+  https://github.com/anvilistas/anvil-extras/pull/599
 
 
 ## Bug Fixes
