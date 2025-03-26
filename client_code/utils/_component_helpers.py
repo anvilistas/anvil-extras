@@ -239,3 +239,40 @@ def _remove_roles(self, roles):
     updated_roles = [role for role in current_roles if role not in roles_to_remove]
 
     self.role = updated_roles
+
+
+class CustomComponentPropertyWithSetHook:
+    def __init__(self, on_set, old_prop):
+        self.on_set = on_set
+        self.old_prop = old_prop
+
+    def __get__(self, instance, owner):
+        return self.old_prop.__get__(instance, owner)
+
+    def __set__(self, instance, value):
+        self.old_prop.__set__(instance, value)
+        self.on_set(instance)
+
+
+class set_hook:
+    def __init__(self, fn):
+        self.fn = fn
+
+    def __set_name__(self, owner, name):
+        name = name[7:]
+        old_prop = getattr(owner, name, None)
+        if old_prop is None or isinstance(old_prop, CustomComponentPropertyWithSetHook):
+            return
+        setattr(owner, name, CustomComponentPropertyWithSetHook(self, old_prop))
+
+    def __call__(self, instance):
+        return self.fn(instance)
+
+    def __get__(self, instance, owner):
+        return self.fn.__get__(instance, owner)
+
+    @staticmethod
+    def mixin_helper(cls, mixin):
+        for name, value in mixin.__dict__.items():
+            if isinstance(value, set_hook):
+                value.__set_name__(cls, name)
