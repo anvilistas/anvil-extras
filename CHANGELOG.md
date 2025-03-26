@@ -7,6 +7,8 @@
   https://github.com/anvilistas/anvil-extras/pull/599
 * ChipsInput - space will close a chip when selected, and input is focused
   https://github.com/anvilistas/anvil-extras/pull/587
+* ProgressBar - support height property
+  https://github.com/anvilistas/anvil-extras/pull/588
 
 
 ## Bug Fixes
