@@ -8,6 +8,7 @@ import random
 
 import anvil.js
 from anvil import Component as _Component
+from anvil import TextBox as _TextBox
 from anvil import app as _app
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js import window
@@ -116,16 +117,21 @@ def _supports_relative_colors():
     return window.CSS.supports("color", "rgb(from white r g b / 0.2)")
 
 
+_tb = _TextBox()
+_tb_node = _get_dom_node(_tb)
+
+
 def _get_color(value):
     if not value:
         return _primary_color
-    elif value.startswith("theme:"):
-        return _app.theme_colors.get(value.replace("theme:", ""), _primary_color)
-    elif value.startswith("--"):
-        # we need the css var wrapped
-        return "var(" + value + ")"
-    else:
-        return value
+
+    _tb.foreground = value
+    color = _tb_node.style.color
+
+    if color.startswith("--"):
+        return f"var({color})"
+
+    return color
 
 
 _hidden_style_getter = None
@@ -178,16 +184,8 @@ def _strip_rgba(value):
 
 def _get_rgb(value):
     value = _get_color(value)
-
-    if value.startswith("--"):
-        # css var
-        value = "var(" + value + ")"
-    elif value.startswith("var("):
-        pass
-    else:
-        value = _get_computed_color(value)
-        value = _strip_rgba(value)
-
+    value = _get_computed_color(value)
+    value = _strip_rgba(value)
     return value
 
 
