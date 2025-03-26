@@ -30,7 +30,7 @@ jobs:
         uv run isort --check-only server_code
     - name: Run test suite
       run: |
-        uv run pytest
+        uv run -m pytest
     - name: Check docs build
       run: |
         uv run sphinx-build docs build
