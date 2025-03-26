@@ -13,5 +13,4 @@ is_package: true
 properties:
 - {default_binding_prop: true, default_value: '#b3d4fc', name: track_colour, type: color}
 - {default_value: '#1976D2', name: indicator_colour, type: color}
-- {default_value: "3px", name: height, type: string}
-- {default_value: "100%", name: width, type: string}
+- {name: height, type: string}
