@@ -239,3 +239,66 @@ def _remove_roles(self, roles):
     updated_roles = [role for role in current_roles if role not in roles_to_remove]
 
     self.role = updated_roles
+
+
+class CustomComponentPropertyWithSetHook:
+    def __init__(self, on_set, old_prop):
+        self.on_set = on_set
+        self.old_prop = old_prop
+
+    def __get__(self, instance, owner):
+        return self.old_prop.__get__(instance, owner)
+
+    def __set__(self, instance, value):
+        self.old_prop.__set__(instance, value)
+        self.on_set(instance)
+
+
+class set_hook:
+    def __init__(self, fn):
+        self.fn = fn
+
+    def __set_name__(self, owner, name):
+        if not name.startswith("on_set_"):
+            print(
+                f"WARNING: set_hook should be used with a method named on_set_<prop>, got {name}"
+            )
+        self.prop_name = name[7:]
+        self._override_descriptor(owner)
+
+    def _override_descriptor(self, owner):
+        prop_name = self.prop_name
+        old_prop = getattr(owner, prop_name, None)
+        if old_prop is None or isinstance(old_prop, CustomComponentPropertyWithSetHook):
+            return
+        setattr(owner, prop_name, CustomComponentPropertyWithSetHook(self, old_prop))
+
+    def __call__(self, instance):
+        return self.fn(instance)
+
+    def __get__(self, instance, owner):
+        return self.fn.__get__(instance, owner)
+
+    def __repr__(self):
+        return f"set_hook(<{self.fn}>)"
+
+    @staticmethod
+    def mixin_helper(cls, mixin):
+        for name, value in mixin.__dict__.items():
+            if not isinstance(value, set_hook):
+                continue
+            if not hasattr(value, "prop_name"):
+                raise ValueError(f"__set_name__ for set_hook {name} was not called")
+            value._override_descriptor(cls)
+
+
+@set_hook
+def spacing_above_set_hook(self):
+    self._dom_node.classList.remove(f"anvil-spacing-above-{self.spacing_above}")
+    self._dom_node.classList.add(f"anvil-spacing-above-{self.spacing_above}")
+
+
+@set_hook
+def spacing_below_set_hook(self):
+    self._dom_node.classList.remove(f"anvil-spacing-below-{self.spacing_below}")
+    self._dom_node.classList.add(f"anvil-spacing-below-{self.spacing_below}")

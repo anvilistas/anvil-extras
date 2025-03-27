@@ -1,13 +1,7 @@
-components:
-- components: []
-  data_bindings: []
-  layout_properties: {full_width_row: true, grid_position: 'BSBUXX,ZCPRGS'}
-  name: indicator_panel
-  properties: {background: '', border: '', col_spacing: medium, col_widths: '{}', foreground: '', role: null, spacing_above: small, spacing_below: small, tooltip: '', visible: true, wrap_on: mobile}
-  type: ColumnPanel
+components: []
 container:
-  properties: {background: '', border: '', col_spacing: medium, col_widths: '{}', foreground: '', role: null, spacing_above: small, spacing_below: small, tooltip: '', visible: true, wrap_on: mobile}
-  type: ColumnPanel
+  properties: {html: "<div class='ae-progress-bar ae-indeterminate'><div class='ae-progress-indicator'></div></div>"}
+  type: HtmlTemplate
 custom_component: true
 is_package: true
 properties:
