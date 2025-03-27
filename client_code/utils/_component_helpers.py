@@ -259,11 +259,19 @@ class set_hook:
         self.fn = fn
 
     def __set_name__(self, owner, name):
-        name = name[7:]
-        old_prop = getattr(owner, name, None)
+        if not name.startswith("on_set_"):
+            print(
+                f"WARNING: set_hook should be used with a method named on_set_<prop>, got {name}"
+            )
+        self.prop_name = name[7:]
+        self._override_descriptor(owner)
+
+    def _override_descriptor(self, owner):
+        prop_name = self.prop_name
+        old_prop = getattr(owner, prop_name, None)
         if old_prop is None or isinstance(old_prop, CustomComponentPropertyWithSetHook):
             return
-        setattr(owner, name, CustomComponentPropertyWithSetHook(self, old_prop))
+        setattr(owner, prop_name, CustomComponentPropertyWithSetHook(self, old_prop))
 
     def __call__(self, instance):
         return self.fn(instance)
@@ -271,8 +279,26 @@ class set_hook:
     def __get__(self, instance, owner):
         return self.fn.__get__(instance, owner)
 
+    def __repr__(self):
+        return f"set_hook(<{self.fn}>)"
+
     @staticmethod
     def mixin_helper(cls, mixin):
         for name, value in mixin.__dict__.items():
-            if isinstance(value, set_hook):
-                value.__set_name__(cls, name)
+            if not isinstance(value, set_hook):
+                continue
+            if not hasattr(value, "prop_name"):
+                raise ValueError(f"__set_name__ for set_hook {name} was not called")
+            value._override_descriptor(cls)
+
+
+@set_hook
+def spacing_above_set_hook(self):
+    self._dom_node.classList.remove(f"anvil-spacing-above-{self.spacing_above}")
+    self._dom_node.classList.add(f"anvil-spacing-above-{self.spacing_above}")
+
+
+@set_hook
+def spacing_below_set_hook(self):
+    self._dom_node.classList.remove(f"anvil-spacing-below-{self.spacing_below}")
+    self._dom_node.classList.add(f"anvil-spacing-below-{self.spacing_below}")
