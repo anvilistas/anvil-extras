@@ -16,6 +16,8 @@
   https://github.com/anvilistas/anvil-extras/discussions/595
 * quill - click guard was not working properly when clicking the spacer below the text
   https://github.com/anvilistas/anvil-extras/pull/593
+* multiselect - fix zerodivision error
+  https://github.com/anvilistas/anvil-extras/issues/601
 
 # v3.1.0
 
