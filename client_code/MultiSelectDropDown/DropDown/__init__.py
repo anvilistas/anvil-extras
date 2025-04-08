@@ -158,6 +158,10 @@ class DropDown(DropDownTemplate):
 
     def _get_next_idx(self, active_idx, dir=1, pred=None):
         num_options = len(self.options)
+
+        if num_options == 0:
+            return -1
+
         if active_idx == -1 and dir == -1:
             active_idx = 0
 
