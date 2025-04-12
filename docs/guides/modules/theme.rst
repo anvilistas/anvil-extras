@@ -2,7 +2,7 @@ Theme
 =====
 Define color schemes for your app and switch between them easily.
 
-The module includes the definition of the anvil standard Material Design color schemes and those are used as the default. You can also define your own color schemes and use them in the same way.
+The module includes the definition of the anvil M3 (beta) color schemes and those are used as the default. You can also define your own color schemes and use them in the same way.
 
 Examples
 --------
@@ -14,7 +14,7 @@ Create an instance of the `theme.Colors` class:
 
     colors = theme.Colors()
 
-By default, that instance will have a `schemes` attribute that contains the standard Material Design color schemes.
+By default, that instance will have a `schemes` attribute that contains the M3 (beta) color schemes.
 
 You can use the instance to set the color scheme of your app to either the 'light' or 'dark' variant of one of those standard schemes.
 
@@ -53,7 +53,7 @@ If you want to set both the scheme and variant at the same time, you can use the
     colors.set_scheme("Material", "dark")
 
 You can define your own color schemes and use them in the same way. For a material
-design scheme, follow the `Creating a custom Material Design 3 color scheme <https://anvil.works/docs/how-to/creating-material-3-color-scheme>`_ docs.
+design scheme, follow the `Creating an Material Design 3 color scheme <https://anvil.works/docs/how-to/creating-material-3-color-scheme>`_ docs.
 
 .. code-block:: python
 
