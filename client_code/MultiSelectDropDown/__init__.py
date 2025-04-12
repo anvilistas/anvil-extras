@@ -10,7 +10,13 @@ from anvil import HtmlPanel as _HtmlPanel
 from anvil.js.window import document as _document
 
 from ..popover import pop, popover
-from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
+from ..utils._component_helpers import (
+    _css_length,
+    _html_injector,
+    set_hook,
+    spacing_above_set_hook,
+    spacing_below_set_hook,
+)
 from ._anvil_designer import MultiSelectDropDownTemplate
 from .DropDown import DropDown
 from .Option import Option
@@ -172,17 +178,6 @@ _defaults = {
 }
 
 
-def _props_property(prop, setter):
-    def getprop(self):
-        return self._props[prop]
-
-    def setprop(self, val):
-        self._props[prop] = val
-        setter(self, val)
-
-    return property(getprop, setprop, None, prop)
-
-
 class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def __init__(self, **properties):
         self._init = False
@@ -190,7 +185,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._invalid = []
         self._options = []
         self._total = 0
-        self._props = props = _defaults | properties
+        props = _defaults | properties
         props["items"] = props["items"] or []
 
         self._dd_width = 0
@@ -227,14 +222,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             return f"{count} items selected"
         return ", ".join(opt.title or opt.key for opt in self._options if opt.selected)
 
-    ##### PROPERTIES #####
-    @property
-    def width(self):
-        return self._props.get("width")
-
-    @width.setter
-    def width(self, val):
-        self._props["width"] = val
+    ##### Set Hooks #####
+    @set_hook
+    def on_set_width(self):
+        val = self.width
         self._dd._dom_node.style.minWidth = ""
 
         if val == "auto":
@@ -252,21 +243,13 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         # but if we do we need the btn to be on the screen to calculate the width
         # and we'd probably need to have a resize observer to change the width of the _dd element
 
-    @property
-    def align(self):
-        return self._select_btn.align
+    @set_hook
+    def on_set_align(self):
+        self._select_btn.align = self.align
 
-    @align.setter
-    def align(self, val):
-        self._select_btn.align = val
-
-    @property
-    def items(self):
-        return self._props["items"]
-
-    @items.setter
-    def items(self, value):
-        self._props["items"] = value
+    @set_hook
+    def on_set_items(self):
+        value = self.items
         self._close()
         selected = self.selected + self._invalid
 
@@ -278,6 +261,38 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.selected = selected
         if self._init:
             self.width = self.width
+
+    @set_hook
+    def on_set_placeholder(self):
+        if not self.selected_keys:
+            self._select_btn.text = self.placeholder
+
+    @set_hook
+    def on_set_enabled(self):
+        val = self.enabled
+        self._select_btn.enabled = val
+        if not val:
+            self._close()
+
+    @set_hook
+    def on_set_enable_filtering(self):
+        self._dd.enable_filtering = self.enable_filtering
+
+    @set_hook
+    def on_set_multiple(self):
+        self._dd.multiple = self.multiple
+        self.selected = self.selected
+
+    @set_hook
+    def on_set_enable_select_all(self):
+        self._dd.enable_select_all = self.enable_select_all
+
+    on_set_spacing_above = spacing_above_set_hook
+    on_set_spacing_below = spacing_below_set_hook
+
+    ##### PROPERTIES #####
+    tag = _HtmlPanel.tag
+    visible = _HtmlPanel.visible
 
     @property
     def selected_keys(self):
@@ -314,56 +329,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         self._invalid = [val for val in values if val is not FOUND]
         self._change(raise_event=False)
-
-    @property
-    def placeholder(self):
-        return self._props.get("placeholder", "")
-
-    @placeholder.setter
-    def placeholder(self, val):
-        self._props["placeholder"] = val
-        if not self.selected_keys:
-            self._select_btn.text = val
-
-    @property
-    def enabled(self):
-        return self._select_btn.enabled
-
-    @enabled.setter
-    def enabled(self, val):
-        self._select_btn.enabled = val
-        if not val:
-            self._close()
-
-    @property
-    def enable_filtering(self):
-        return self._dd.enable_filtering
-
-    @enable_filtering.setter
-    def enable_filtering(self, val):
-        self._dd.enable_filtering = val
-
-    @property
-    def multiple(self):
-        return self._dd.multiple
-
-    @multiple.setter
-    def multiple(self, val):
-        self._dd.multiple = val
-        self.selected = self.selected
-
-    @property
-    def enable_select_all(self):
-        return self._dd.enable_select_all
-
-    @enable_select_all.setter
-    def enable_select_all(self, val):
-        self._dd.enable_select_all = val
-
-    tag = _HtmlPanel.tag
-    visible = _HtmlPanel.visible
-    spacing_above = _spacing_property("above")
-    spacing_below = _spacing_property("below")
 
     ##### PRIVATE Functions #####
 
