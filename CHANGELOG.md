@@ -1,4 +1,4 @@
-# Unreleased
+# v3.2.0
 
 ## Enhancements
 * slider - add spacing property
