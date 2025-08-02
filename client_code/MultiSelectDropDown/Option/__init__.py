@@ -82,6 +82,15 @@ class Option(OptionTemplate):
         else:
             del self._dom_node.dataset["disabled"]
 
+    @property
+    def foreground(self):
+        return self._props["foreground"]
+
+    @foreground.setter
+    def foreground(self, value):
+        self._props["foreground"] = value
+        self.label.foreground = self.icon_checked.foreground = value
+
     def focus(self):
         self._dom_node.focus()
 
@@ -137,6 +146,7 @@ class Option(OptionTemplate):
         subtext = item.get("subtext", "")
         disabled = not item.get("enabled", True)
         key = item.get("key")
+        foreground = item.get("foreground")
 
         return cls(
             idx=idx,
@@ -146,21 +156,26 @@ class Option(OptionTemplate):
             subtext=subtext,
             title=title,
             disabled=disabled,
+            foreground=foreground,
         )
 
     @classmethod
-    def from_items(cls, items):
+    def from_items(cls, items, foreground=None):
         options = []
 
         for idx, item in enumerate(items):
+            current_foreground = foreground
             if isinstance(item, str):
                 option = cls.from_str(item, idx)
             elif isinstance(item, (tuple, list)):
                 option = cls.from_tuple(item, idx)
             elif isinstance(item, dict):
                 option = cls.from_dict(item, idx)
+                current_foreground = item.get("foreground", current_foreground)
             else:
                 raise TypeError(f"Invalid item at index {idx} (got type {type(item)})")
+
+            option.foreground = current_foreground
 
             options.append(option)
 
