@@ -2,7 +2,9 @@ name: check_codebase
 
 on:
   push:
+    branches: [main, feat/radio-group]
   pull_request:
+    branches: [main]
 
 jobs:
   lint:
@@ -30,17 +32,30 @@ jobs:
 
   test:
     name: Tests on Python 3.7
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
+    - name: Debug runner
+      run: |
+        echo "Runner started"
+        uname -a
+        python3 --version
     - uses: actions/checkout@v4
-    - name: Install uv and Python 3.7
-      uses: astral-sh/setup-uv@v5
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v4
       with:
         python-version: '3.7'
+    - name: Verify Python
+      run: |
+        python --version
+        which python
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
         enable-cache: true
     - name: Install test dependencies (3.7-compatible)
       run: |
-        uv pip install -r requirements.txt "pytest<8"
+        uv pip install --system -r requirements.txt "pytest<8"
     - name: Run test suite (3.7)
       run: |
-        uv run python -m pytest
+        python -m pytest
