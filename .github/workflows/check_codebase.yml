@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Run pre-commit
-      uses: pre-commit/action@v3.0.1
-      with:
-        extra_args: --all-files
     - name: Install uv and set Python version
       uses: astral-sh/setup-uv@v5
       with:
         python-version: '3.12'
+        enable-cache: true
+    - name: Run pre-commit
+      uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: --all-files
     - name: Install dependencies
       run: |
         uv pip install sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
