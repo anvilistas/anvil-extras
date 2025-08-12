@@ -1,5 +1,9 @@
 # Unreleased
 
+## Features
+* RadioGroup - add RadioGroup component
+  https://github.com/anvilistas/anvil-extras/pull/608
+
 ## Bug Fixes
 * multiselect - reverts the overflow behavior to auto
   https://github.com/anvilistas/anvil-extras/pull/607
