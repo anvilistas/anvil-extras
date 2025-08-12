@@ -31,31 +31,18 @@ jobs:
         uv run bumpversion --dry-run patch
 
   test:
-    name: Tests on Python 3.7
+    name: Tests on Python 3.8
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-    - name: Debug runner
-      run: |
-        echo "Runner started"
-        uname -a
-        python3 --version
     - uses: actions/checkout@v4
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.7'
-    - name: Verify Python
-      run: |
-        python --version
-        which python
-    - name: Install uv
+    - name: Install uv and set Python version
       uses: astral-sh/setup-uv@v5
       with:
+        python-version: '3.8'
         enable-cache: true
-    - name: Install test dependencies (3.7-compatible)
+    - name: Install test dependencies (3.8-compatible)
       run: |
         uv pip install --system -r requirements.txt "pytest<8"
-    - name: Run test suite (3.7)
+    - name: Run test suite (3.8)
       run: |
         python -m pytest
