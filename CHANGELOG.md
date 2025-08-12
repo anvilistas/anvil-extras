@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* multiselect - reverts the overflow behavior to auto
+  https://github.com/anvilistas/anvil-extras/pull/607
+
 # v3.2.0
 
 ## Enhancements
@@ -18,8 +24,6 @@
   https://github.com/anvilistas/anvil-extras/pull/593
 * multiselect - fix zerodivision error
   https://github.com/anvilistas/anvil-extras/issues/601
-* multiselect - reverts the overflow behavior to auto
-  https://github.com/anvilistas/anvil-extras/pull/607
 
 # v3.1.0
 
