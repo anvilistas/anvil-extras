@@ -2,38 +2,47 @@ name: check_codebase
 
 on:
   push:
+    branches: [main, feat/radio-group]
   pull_request:
+    branches: [main]
 
 jobs:
-  check:
-    name: Check code base
+  lint:
+    name: Lint/Docs
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install uv and set Python version
       uses: astral-sh/setup-uv@v5
       with:
-        python-version: '3.7'
+        python-version: '3.12'
+        enable-cache: true
     - name: Install dependencies
       run: |
-        uv pip install flake8 pytest black isort sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
-    - name: Lint with flake8
+        uv pip install pre-commit sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
+    - name: Run pre-commit
       run: |
-        uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.venv
-        uv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.venv
-    - name: Check format with black
-      run: |
-        uv run black --check . --exclude=.venv
-    - name: Check imports with isort
-      run: |
-        uv run isort --check-only client_code
-        uv run isort --check-only server_code
-    - name: Run test suite
-      run: |
-        uv run -m pytest
+        uv run pre-commit run --all-files
     - name: Check docs build
       run: |
         uv run sphinx-build docs build
     - name: Check version numbering
       run: |
         uv run bumpversion --dry-run patch
+
+  test:
+    name: Tests on Python 3.8
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install uv and set Python version
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: '3.8'
+        enable-cache: true
+    - name: Install test dependencies (3.8-compatible)
+      run: |
+        uv pip install pytest anvil-uplink marshmallow
+    - name: Run test suite (3.8)
+      run: |
+        python -m pytest

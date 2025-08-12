@@ -12,3 +12,8 @@ services:
   source: /runtime/services/tables.yml
 startup: {module: Demo, type: form}
 startup_form: Demo
+toolbox_sections:
+  - items:
+    - component: {type: anvil_extras.RadioGroup}
+      title: RadioGroup
+    packageName: anvil_extras
