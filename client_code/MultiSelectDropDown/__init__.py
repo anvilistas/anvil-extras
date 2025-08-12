@@ -56,7 +56,7 @@ _css = """
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .ae-ms-options a[data-disabled] {

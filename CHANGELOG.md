@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+* multiselect - reverts the overflow behavior to auto
+  https://github.com/anvilistas/anvil-extras/pull/607
+
 # v3.2.0
 
 ## Enhancements
