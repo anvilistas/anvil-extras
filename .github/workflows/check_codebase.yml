@@ -42,7 +42,7 @@ jobs:
         enable-cache: true
     - name: Install test dependencies (3.8-compatible)
       run: |
-        uv pip install --system -r requirements.txt "pytest<8"
+        uv pip install pytest anvil-uplink marshmallow
     - name: Run test suite (3.8)
       run: |
         python -m pytest
