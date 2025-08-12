@@ -30,21 +30,17 @@ jobs:
 
   test:
     name: Tests on Python 3.7
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
-    - name: Setup pyenv (3.7.17)
-      uses: gabrielfalcao/pyenv-action@v18
-      with:
-        default: 3.7.17
-        versions: 3.7.17
-    - name: Install uv (tool only)
+    - name: Install uv and Python 3.7
       uses: astral-sh/setup-uv@v5
       with:
         python-version: '3.7'
+        enable-cache: true
     - name: Install test dependencies (3.7-compatible)
       run: |
         uv pip install -r requirements.txt "pytest<8"
     - name: Run test suite (3.7)
       run: |
-        uv run -m pytest
+        uv run python -m pytest
