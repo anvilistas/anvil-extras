@@ -10,24 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Run pre-commit
+      uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: --all-files
     - name: Install uv and set Python version
       uses: astral-sh/setup-uv@v5
       with:
         python-version: '3.12'
     - name: Install dependencies
       run: |
-        uv pip install flake8 black isort sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
-    - name: Lint with flake8
-      run: |
-        uv run flake8 . --count --select=E9,F63,F7,F82 --ignore=E203,E266,E501,W503,F403,F401,E402,F811 --show-source --statistics --exclude=.venv
-        uv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.venv
-    - name: Check format with black
-      run: |
-        uv run black --check . --exclude=.venv
-    - name: Check imports with isort
-      run: |
-        uv run isort --check-only client_code
-        uv run isort --check-only server_code
+        uv pip install sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
     - name: Check docs build
       run: |
         uv run sphinx-build docs build
