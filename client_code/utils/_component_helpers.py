@@ -239,3 +239,27 @@ def _remove_roles(self, roles):
     updated_roles = [role for role in current_roles if role not in roles_to_remove]
 
     self.role = updated_roles
+
+
+def _to_kebab(s: str) -> str:
+    return "".join(("-" + c.lower()) if c.isupper() else c for c in s).lstrip("-")
+
+
+def _normalize_attr_name(attr_name: str) -> str:
+    if attr_name == "className":
+        return "class"
+    if attr_name == "htmlFor":
+        return "for"
+    return _to_kebab(attr_name)
+
+
+def crelt(node_type: str, **attrs):
+    el = _document.createElement(node_type)
+
+    for attr, value in attrs.items():
+        if value is None:
+            continue
+        norm_name = _normalize_attr_name(attr)
+        el.setAttribute(norm_name, value)
+
+    return el
