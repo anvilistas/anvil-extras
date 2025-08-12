@@ -5,21 +5,21 @@ on:
   pull_request:
 
 jobs:
-  check:
-    name: Check code base
+  lint:
+    name: Lint/Docs
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install uv and set Python version
       uses: astral-sh/setup-uv@v5
       with:
-        python-version: '3.7'
+        python-version: '3.12'
     - name: Install dependencies
       run: |
-        uv pip install flake8 pytest black isort sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
+        uv pip install flake8 black isort sphinx sphinx_rtd_theme bump2version anvil-uplink marshmallow
     - name: Lint with flake8
       run: |
-        uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.venv
+        uv run flake8 . --count --select=E9,F63,F7,F82 --ignore=E203,E266,E501,W503,F403,F401,E402,F811 --show-source --statistics --exclude=.venv
         uv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=.venv
     - name: Check format with black
       run: |
@@ -28,12 +28,30 @@ jobs:
       run: |
         uv run isort --check-only client_code
         uv run isort --check-only server_code
-    - name: Run test suite
-      run: |
-        uv run -m pytest
     - name: Check docs build
       run: |
         uv run sphinx-build docs build
     - name: Check version numbering
       run: |
         uv run bumpversion --dry-run patch
+
+  test:
+    name: Tests on Python 3.7
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup pyenv (3.7.17)
+      uses: gabrielfalcao/pyenv-action@v18
+      with:
+        default: 3.7.17
+        versions: 3.7.17
+    - name: Install uv (tool only)
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: '3.7'
+    - name: Install test dependencies (3.7-compatible)
+      run: |
+        uv pip install -r requirements.txt "pytest<8"
+    - name: Run test suite (3.7)
+      run: |
+        uv run -m pytest
