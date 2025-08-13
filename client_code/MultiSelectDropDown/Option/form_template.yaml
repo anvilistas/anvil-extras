@@ -43,5 +43,4 @@ properties:
 - {default_value: '', important: true, name: subtext, type: string}
 - {default_value: false, important: true, name: active, type: boolean}
 - {default_value: false, important: true, name: selected, type: boolean}
-- {default_value: "", important: true, name: foreground, type: string}
 toolbox_item: {hidden: true}

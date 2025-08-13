@@ -61,6 +61,7 @@ css = """
     white-space: normal;
     font-size: 14px;
     background-color: var(--ae-popover-bg, #fff);
+    color: var(--ae-popover-fg, initial);
     background-clip: padding-box;
     border: 1px solid var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-radius: 6px;
@@ -223,6 +224,7 @@ class Popover:
         arrow=True,
         foreground=None,
         background=None,
+        popover_class=None,
     ):
         _popper_map.set(popper, self)
 
@@ -234,6 +236,7 @@ class Popover:
 
         self.title = title
         self.arrow = arrow
+        self.popover_class = popover_class
 
         if not isinstance(placement, str):
             raise TypeError("placement must be a string")
@@ -299,7 +302,7 @@ class Popover:
     @background.setter
     def background(self, value):
         self._background = value
-        self.dom_popover.style.setProperty("background-color", value)
+        self.dom_popover.style.setProperty("--ae-popover-bg", value)
 
     @property
     def foreground(self):
@@ -308,11 +311,13 @@ class Popover:
     @foreground.setter
     def foreground(self, value):
         self._foreground = value
-        self.dom_popover.style.setProperty("color", value)
+        self.dom_popover.style.setProperty("--ae-popover-fg", value)
 
     def make_template(self):
         d = _document.createElement("div")
-        d.className = "ae-popover"
+        d.className = (
+            f"ae-popover{' ' + self.popover_class if self.popover_class else ''}"
+        )
         d.style.position = "absolute"
         d.style.visibility = "hidden"
         d.style.opacity = "0"
@@ -604,6 +609,7 @@ def popover(
     arrow=True,
     foreground="",
     background="",
+    popover_class=None,
 ):
     """should be called by a button or link
     content - either text or an anvil component or Form
@@ -658,6 +664,7 @@ def popover(
         container=container,
         arrow=arrow,
         background=background,
+        popover_class=popover_class,
     )
 
 

@@ -23,6 +23,7 @@ _css = """
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    background-color: var(--ae-ms-btn-bg, initial);
 }
 
 .anvil-role-ae-ms-btn > button > span {
@@ -207,6 +208,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             trigger="manual",
             max_width="fit-content",
             background=self._props["background"],
+            popover_class="ae-ms-popover",
         )
 
         selected = props.pop("selected", ())
@@ -239,9 +241,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def background(self, value):
         self._props["background"] = value
 
-        _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
-            "background-color", value
-        )
+        self._dom_node.style.setProperty("--ae-ms-btn-bg", value)
 
         self.popover.background = value
 
@@ -255,8 +255,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
             "color", value
         )
-        for option in self._options:
-            option.foreground = value
 
     @property
     def width(self):
@@ -299,7 +297,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props["items"] = value
         self._close()
         selected = self.selected + self._invalid
-        options = Option.from_items(value, self._props["foreground"])
+        options = Option.from_items(value)
 
         self._dd.options = self._options = options
         self._calc_dd_width()
