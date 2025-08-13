@@ -295,6 +295,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props["items"] = value
         self._close()
         selected = self.selected + self._invalid
+
         options = Option.from_items(value)
 
         self._dd.options = self._options = options

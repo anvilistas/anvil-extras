@@ -133,11 +133,11 @@ Properties
 
 :background: String
 
-    Sets the button background color. Note that this property only affects the basic button appearance and may not provide the visual consistency needed for complex themes. For more fine-grained control over all styling aspects including hover states, active states, and popover appearance, see the `Styling`_ section.
+    Sets the button and popover background color. Note that this property only affects the basic button appearance and may not provide the visual consistency needed for complex themes. For more fine-grained control over all styling aspects including hover states, active states, and popover appearance, see the `Styling`_ section.
 
 :foreground: String
 
-    Sets the button text color. This property sets the color directly on the button element, allowing your global CSS styles to work naturally. For more fine-grained control over all styling aspects including hover states, active states, and popover appearance, see the `Styling`_ section.
+    Sets the button text color. For more fine-grained control over all styling aspects including hover states, active states, and options appearance, see the `Styling`_ section.
 
 
 Events
@@ -177,14 +177,11 @@ For button text and background colors and other styling, use CSS selectors to en
     /* Style the button directly using CSS selectors */
     .anvil-role-ae-ms-btn > button {
         color: #333333;
-        border: 1px solid #ccc;
-        font-weight: 500;
         background-color: #ffffff;
     }
 
     .anvil-role-ae-ms-btn > button:hover {
         color: #000000;
-        border-color: #999;
         background-color: #f8f9fa;
     }
 
@@ -192,8 +189,6 @@ For button text and background colors and other styling, use CSS selectors to en
     .anvil-role-ae-ms-btn > button:focus,
     .anvil-role-ae-ms-btn > button:active {
         color: #000000;
-        border-color: #0066cc;
-        box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
         background-color: #e9ecef;
     }
 

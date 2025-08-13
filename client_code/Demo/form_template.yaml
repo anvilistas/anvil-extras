@@ -141,19 +141,7 @@ components:
     spacing_above: small
     spacing_below: small
     visible: true
-    background: red
-    foreground: yellow
   type: form:MultiSelectDropDown
-- event_bindings: {click: change_multi_color}
-  name: change_multi_color_btn
-  properties:
-    text: Change Multi Select Background Color to Blue, Foreground Color to Red
-  type: Button
-- event_bindings: {click: remove_multi_color}
-  name: change_multi_color_btn
-  properties:
-    text: Remove Multi Select Background Color and Foreground Color
-  type: Button
 - layout_properties:
     col_widths: {}
     grid_position: FBTNBP,PVGRIB

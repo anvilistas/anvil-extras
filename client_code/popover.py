@@ -61,7 +61,6 @@ css = """
     white-space: normal;
     font-size: 14px;
     background-color: var(--ae-popover-bg, #fff);
-    color: var(--ae-popover-fg);
     background-clip: padding-box;
     border: 1px solid var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-radius: 6px;
@@ -311,7 +310,7 @@ class Popover:
     @foreground.setter
     def foreground(self, value):
         self._foreground = value
-        self.dom_popover.style.setProperty("--ae-popover-fg", value)
+        self.dom_popover.style.setProperty("color", value)
 
     def make_template(self):
         d = _document.createElement("div")
