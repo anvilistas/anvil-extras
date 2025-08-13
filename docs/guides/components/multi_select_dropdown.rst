@@ -175,9 +175,13 @@ The following CSS variables can be overridden in your theme.css to style the mul
     :root {
         /* Button background */
         --ae-ms-btn-bg: initial;
+        --ae-ms-btn-bg-hover: initial;
+        --ae-ms-btn-bg-active: initial;
 
         /* Button text color */
         --ae-ms-btn-fg: initial;
+        --ae-ms-btn-fg-hover: initial;
+        --ae-ms-btn-fg-active: initial;
     }
 
 **Option Styling:**

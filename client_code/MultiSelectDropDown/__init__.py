@@ -27,6 +27,16 @@ _css = """
     color: var(--ae-ms-btn-fg, initial);
 }
 
+.anvil-role-ae-ms-btn > button:hover {
+    background-color: var(--ae-ms-btn-bg-hover, var(--ae-ms-btn-bg, initial));
+    color: var(--ae-ms-btn-fg-hover, var(--ae-ms-btn-fg, initial));
+}
+
+.anvil-role-ae-ms-btn > button:active {
+    background-color: var(--ae-ms-btn-bg-active, var(--ae-ms-btn-bg, initial));
+    color: var(--ae-ms-btn-fg-active, var(--ae-ms-btn-fg, initial));
+}
+
 .anvil-role-ae-ms-btn > button > span {
     text-overflow: ellipsis;
     white-space: nowrap !important;
