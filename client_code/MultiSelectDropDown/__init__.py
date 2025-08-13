@@ -169,6 +169,8 @@ _defaults = {
     "enable_select_all": False,
     "width": "",
     "visible": True,
+    "background": "",
+    "foreground": "",
 }
 
 
@@ -196,7 +198,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._dd_width = 0
         self._dd = DropDown()
         self._dd.add_event_handler("change", self._change)
-        popover(
+        self.popover = popover(
             self._select_btn,
             self._dd,
             placement="bottom-start",
@@ -205,6 +207,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             animation=False,
             trigger="manual",
             max_width="fit-content",
+            background=self._props.get("background", ""),
+            foreground=self._props.get("foreground", ""),
+            popover_class="ae-ms-popover",
         )
 
         selected = props.pop("selected", ())
@@ -228,6 +233,27 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         return ", ".join(opt.title or opt.key for opt in self._options if opt.selected)
 
     ##### PROPERTIES #####
+    @property
+    def background(self):
+        return self._props.get("background")
+
+    @background.setter
+    def background(self, value):
+        self._props["background"] = value
+        self._select_btn.background = value
+        self.popover.background = value
+
+    @property
+    def foreground(self):
+        return self._props.get("foreground")
+
+    @foreground.setter
+    def foreground(self, value):
+        self._props["foreground"] = value
+        # Apply foreground color directly to button text
+        self._select_btn.foreground = value
+        self.popover.foreground = value
+
     @property
     def width(self):
         return self._props.get("width")

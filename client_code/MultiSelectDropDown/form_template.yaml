@@ -31,6 +31,8 @@ properties:
 - {default_value: false, group: interaction, important: false, name: enable_select_all, type: boolean}
 - {default_value: true, designer_hint: visible, group: appearance, important: true, name: visible, type: boolean}
 - {\'fit\' resizes to the selected content: null, default_value: '', description: use css lengths. \'auto\' sets the width as wide as the largest option, group: appearance, name: width, type: string}
+- {default_value: "", important: false, type: string, name: background, group: appearance}
+- {default_value: "", important: false, type: string, name: foreground, group: appearance}
 - default_value: small
   group: layout
   important: false

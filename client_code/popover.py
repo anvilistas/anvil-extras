@@ -221,6 +221,9 @@ class Popover:
         dismiss_on_scroll=None,
         container=None,
         arrow=True,
+        foreground=None,
+        background=None,
+        popover_class=None,
     ):
         _popper_map.set(popper, self)
 
@@ -232,6 +235,7 @@ class Popover:
 
         self.title = title
         self.arrow = arrow
+        self.popover_class = popover_class
 
         if not isinstance(placement, str):
             raise TypeError("placement must be a string")
@@ -287,9 +291,32 @@ class Popover:
         self.make_template()
         self.add_behavior()
 
+        self.foreground = foreground
+        self.background = background
+
+    @property
+    def background(self):
+        return self._background
+
+    @background.setter
+    def background(self, value):
+        self._background = value
+        self.dom_popover.style.setProperty("--ae-popover-bg", value)
+
+    @property
+    def foreground(self):
+        return self._foreground
+
+    @foreground.setter
+    def foreground(self, value):
+        self._foreground = value
+        self.dom_popover.style.setProperty("color", value)
+
     def make_template(self):
         d = _document.createElement("div")
-        d.className = "ae-popover"
+        d.className = (
+            f"ae-popover{' ' + self.popover_class if self.popover_class else ''}"
+        )
         d.style.position = "absolute"
         d.style.visibility = "hidden"
         d.style.opacity = "0"
@@ -579,6 +606,9 @@ def popover(
     dismiss_on_scroll=None,
     container=None,
     arrow=True,
+    foreground="",
+    background="",
+    popover_class=None,
 ):
     """should be called by a button or link
     content - either text or an anvil component or Form
@@ -619,7 +649,7 @@ def popover(
             "Support for this may be removed in a future version.",
         )
 
-    Popover(
+    return Popover(
         self,
         content,
         title=title,
@@ -632,6 +662,9 @@ def popover(
         dismiss_on_scroll=dismiss_on_scroll,
         container=container,
         arrow=arrow,
+        background=background,
+        foreground=foreground,
+        popover_class=popover_class,
     )
 
 

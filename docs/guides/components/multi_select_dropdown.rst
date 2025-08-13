@@ -131,6 +131,14 @@ Properties
 
     Enable Select All and Deselect All buttons.
 
+:background: String
+
+    Sets the button and popover background color. Note that this property only affects the basic button appearance and may not provide the visual consistency needed for complex themes. For more fine-grained control over all styling aspects including hover states, active states, and popover appearance, see the `Styling`_ section.
+
+:foreground: String
+
+    Sets the button text color. For more fine-grained control over all styling aspects including hover states, active states, and options appearance, see the `Styling`_ section.
+
 
 Events
 ------
@@ -158,20 +166,76 @@ Events
 Styling
 -------
 
-The following variables can be overridden in your theme.css to style the multi select dropdown.
+The following CSS variables can be overridden in your theme.css to style the multi select dropdown.
+
+**Button Styling:**
+
+For button text and background colors and other styling, use CSS selectors to ensure proper cascade behavior:
+
+.. code-block:: css
+
+    /* Style the button directly using CSS selectors */
+    .anvil-role-ae-ms-btn > button {
+        color: #333333;
+        background-color: #ffffff;
+    }
+
+    .anvil-role-ae-ms-btn > button:hover {
+        color: #000000;
+        background-color: #f8f9fa;
+    }
+
+    .anvil-role-ae-ms-btn > button:active:focus,
+    .anvil-role-ae-ms-btn > button:focus,
+    .anvil-role-ae-ms-btn > button:active {
+        color: #000000;
+        background-color: #e9ecef;
+    }
+
+**Note:** Avoid using CSS variables for text colors as they can override your global button styles. Use direct CSS selectors instead to maintain proper CSS cascade behavior.
+
+**Option Styling:**
 
 .. code-block:: css
 
     :root {
+        /* Option text colors */
         --ae-ms-option-text: #333333;
         --ae-ms-option-text-active: #fff;
+
+        /* Option background colors */
         --ae-ms-option-bg-hover: #e8e8e8;
         --ae-ms-option-bg-active: #337ab7;
+
+        /* Subtext colors */
         --ae-ms-option-subtext: #777;
         --ae-ms-option-subtext-active: rgba(255,255,255,.5);
     }
 
-The following roles can be used to style the multi select dropdown.
+**Popover Styling:**
+
+The MultiSelectDropDown uses a popover with the class ``ae-ms-popover`` for specific targeting. You can style the popover background using CSS variables or direct CSS:
+
+.. code-block:: css
+
+    /* Target only MultiSelectDropDown popovers using CSS variables */
+    .ae-popover.ae-ms-popover {
+        --ae-popover-bg: #ffffff;
+        --ae-popover-border: rgba(0, 0, 0, 0.2);
+        --ae-popover-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Or style directly with CSS */
+    .ae-popover.ae-ms-popover {
+        background-color: #f8f9fa;
+        color: #212529;
+        border-color: #dee2e6;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+**CSS Roles:**
+
+The following roles can be used for additional styling:
 
 .. code-block:: css
 
@@ -183,4 +247,4 @@ The following roles can be used to style the multi select dropdown.
     .anvil-role-ae-ms-option-label {}
     .anvil-role-ae-ms-option-subtext {}
 
-The multi select dropdown uses a popover, so additional styling can be done by following the Popover styling guide.
+For general popover styling that affects all popovers, see the Popover styling guide.
