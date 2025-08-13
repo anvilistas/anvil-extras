@@ -23,20 +23,20 @@ _css = """
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    background-color: var(--ae-ms-btn-bg, initial);
-    color: var(--ae-ms-btn-fg, initial);
+    background-color: var(--ae-ms-btn-bg);
+    color: var(--ae-ms-btn-fg);
 }
 
 .anvil-role-ae-ms-btn > button:hover {
-    background-color: var(--ae-ms-btn-bg-hover, var(--ae-ms-btn-bg, initial));
-    color: var(--ae-ms-btn-fg-hover, var(--ae-ms-btn-fg, initial));
+    background-color: var(--ae-ms-btn-bg-hover, var(--ae-ms-btn-bg));
+    color: var(--ae-ms-btn-fg-hover, var(--ae-ms-btn-fg));
 }
 
 .anvil-role-ae-ms-btn > button:focus,
 .anvil-role-ae-ms-btn > button:active,
 .anvil-role-ae-ms-btn > button:active:focus {
-    background-color: var(--ae-ms-btn-bg-active, var(--ae-ms-btn-bg, initial));
-    color: var(--ae-ms-btn-fg-active, var(--ae-ms-btn-fg, initial));
+    background-color: var(--ae-ms-btn-bg-active, var(--ae-ms-btn-bg));
+    color: var(--ae-ms-btn-fg-active, var(--ae-ms-btn-fg));
 }
 
 .anvil-role-ae-ms-btn > button > span {
@@ -108,7 +108,7 @@ _css = """
 }
 
 .ae-ms-options a.anvil-role-ae-ms-option {
-    color: var(--ae-ms-option-text, #333333);
+    color: var(--ae-ms-option-text);
     padding: 2px 0;
 }
 

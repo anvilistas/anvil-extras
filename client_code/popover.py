@@ -61,7 +61,7 @@ css = """
     white-space: normal;
     font-size: 14px;
     background-color: var(--ae-popover-bg, #fff);
-    color: var(--ae-popover-fg, initial);
+    color: var(--ae-popover-fg);
     background-clip: padding-box;
     border: 1px solid var(--ae-popover-border, rgba(0, 0, 0, 0.2));
     border-radius: 6px;
