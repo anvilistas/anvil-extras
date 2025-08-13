@@ -32,7 +32,9 @@ _css = """
     color: var(--ae-ms-btn-fg-hover, var(--ae-ms-btn-fg, initial));
 }
 
-.anvil-role-ae-ms-btn > button:active {
+.anvil-role-ae-ms-btn > button:focus,
+.anvil-role-ae-ms-btn > button:active,
+.anvil-role-ae-ms-btn > button:active:focus {
     background-color: var(--ae-ms-btn-bg-active, var(--ae-ms-btn-bg, initial));
     color: var(--ae-ms-btn-fg-active, var(--ae-ms-btn-fg, initial));
 }

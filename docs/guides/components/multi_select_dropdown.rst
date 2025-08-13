@@ -176,12 +176,12 @@ The following CSS variables can be overridden in your theme.css to style the mul
         /* Button background */
         --ae-ms-btn-bg: initial;
         --ae-ms-btn-bg-hover: initial;
-        --ae-ms-btn-bg-active: initial;
+        --ae-ms-btn-bg-active: initial; /* Used for both :focus and :active states */
 
         /* Button text color */
         --ae-ms-btn-fg: initial;
         --ae-ms-btn-fg-hover: initial;
-        --ae-ms-btn-fg-active: initial;
+        --ae-ms-btn-fg-active: initial; /* Used for both :focus and :active states */
     }
 
 **Option Styling:**
