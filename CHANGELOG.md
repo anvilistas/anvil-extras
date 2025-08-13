@@ -1,4 +1,4 @@
-# Unreleased
+# v3.3.0
 
 ## Features
 * RadioGroup - add RadioGroup component
