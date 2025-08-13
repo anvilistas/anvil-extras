@@ -664,6 +664,7 @@ def popover(
         container=container,
         arrow=arrow,
         background=background,
+        foreground=foreground,
         popover_class=popover_class,
     )
 

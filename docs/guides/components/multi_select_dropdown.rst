@@ -137,7 +137,7 @@ Properties
 
 :foreground: String
 
-    Sets the button text color. Note that this property only affects the basic button text and may not provide the visual consistency needed for complex themes. For more fine-grained control over all styling aspects including hover states, active states, and popover appearance, see the `Styling`_ section.
+    Sets the button text color. This property sets the color directly on the button element, allowing your global CSS styles to work naturally. For more fine-grained control over all styling aspects including hover states, active states, and popover appearance, see the `Styling`_ section.
 
 
 Events
@@ -170,19 +170,34 @@ The following CSS variables can be overridden in your theme.css to style the mul
 
 **Button Styling:**
 
+For button text and background colors and other styling, use CSS selectors to ensure proper cascade behavior:
+
 .. code-block:: css
 
-    :root {
-        /* Button background */
-        --ae-ms-btn-bg: initial;
-        --ae-ms-btn-bg-hover: initial;
-        --ae-ms-btn-bg-active: initial; /* Used for both :focus and :active states */
-
-        /* Button text color */
-        --ae-ms-btn-fg: initial;
-        --ae-ms-btn-fg-hover: initial;
-        --ae-ms-btn-fg-active: initial; /* Used for both :focus and :active states */
+    /* Style the button directly using CSS selectors */
+    .anvil-role-ae-ms-btn > button {
+        color: #333333;
+        border: 1px solid #ccc;
+        font-weight: 500;
+        background-color: #ffffff;
     }
+
+    .anvil-role-ae-ms-btn > button:hover {
+        color: #000000;
+        border-color: #999;
+        background-color: #f8f9fa;
+    }
+
+    .anvil-role-ae-ms-btn > button:active:focus,
+    .anvil-role-ae-ms-btn > button:focus,
+    .anvil-role-ae-ms-btn > button:active {
+        color: #000000;
+        border-color: #0066cc;
+        box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+        background-color: #e9ecef;
+    }
+
+**Note:** Avoid using CSS variables for text colors as they can override your global button styles. Use direct CSS selectors instead to maintain proper CSS cascade behavior.
 
 **Option Styling:**
 
@@ -204,24 +219,23 @@ The following CSS variables can be overridden in your theme.css to style the mul
 
 **Popover Styling:**
 
-The MultiSelectDropDown uses a popover with the class ``ae-ms-popover`` for specific targeting:
+The MultiSelectDropDown uses a popover with the class ``ae-ms-popover`` for specific targeting. You can style the popover background using CSS variables or direct CSS:
 
 .. code-block:: css
 
-    /* Target only MultiSelectDropDown popovers */
+    /* Target only MultiSelectDropDown popovers using CSS variables */
     .ae-popover.ae-ms-popover {
-        --ae-ms-popover-bg: #ffffff;
-        --ae-ms-popover-fg: #333333;
-        --ae-ms-popover-border: rgba(0, 0, 0, 0.2);
-        --ae-ms-popover-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        --ae-popover-bg: #ffffff;
+        --ae-popover-border: rgba(0, 0, 0, 0.2);
+        --ae-popover-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     }
 
-    /* Or use root-level variables that fallback to general popover styling */
-    :root {
-        --ae-ms-popover-bg: #f8f9fa;
-        --ae-ms-popover-fg: #212529;
-        --ae-ms-popover-border: #dee2e6;
-        --ae-ms-popover-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    /* Or style directly with CSS */
+    .ae-popover.ae-ms-popover {
+        background-color: #f8f9fa;
+        color: #212529;
+        border-color: #dee2e6;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
 **CSS Roles:**

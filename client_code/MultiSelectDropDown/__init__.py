@@ -23,20 +23,6 @@ _css = """
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    background-color: var(--ae-ms-btn-bg);
-    color: var(--ae-ms-btn-fg);
-}
-
-.anvil-role-ae-ms-btn > button:hover {
-    background-color: var(--ae-ms-btn-bg-hover, var(--ae-ms-btn-bg));
-    color: var(--ae-ms-btn-fg-hover, var(--ae-ms-btn-fg));
-}
-
-.anvil-role-ae-ms-btn > button:focus,
-.anvil-role-ae-ms-btn > button:active,
-.anvil-role-ae-ms-btn > button:active:focus {
-    background-color: var(--ae-ms-btn-bg-active, var(--ae-ms-btn-bg));
-    color: var(--ae-ms-btn-fg-active, var(--ae-ms-btn-fg));
 }
 
 .anvil-role-ae-ms-btn > button > span {
@@ -108,7 +94,7 @@ _css = """
 }
 
 .ae-ms-options a.anvil-role-ae-ms-option {
-    color: var(--ae-ms-option-text);
+    color: var(--ae-ms-option-text, #333333);
     padding: 2px 0;
 }
 
@@ -183,6 +169,7 @@ _defaults = {
     "enable_select_all": False,
     "width": "",
     "visible": True,
+    "background": "",
     "foreground": "",
 }
 
@@ -220,14 +207,14 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             animation=False,
             trigger="manual",
             max_width="fit-content",
-            background=self._props["background"],
+            background=self._props.get("background", ""),
+            foreground=self._props.get("foreground", ""),
             popover_class="ae-ms-popover",
         )
 
         selected = props.pop("selected", ())
 
         self.init_components(**props)
-
         self.set_event_handler("x-popover-init", self._mk_popover)
         self.set_event_handler("x-popover-destroy", self._mk_popover)
         self._dd.set_event_handler(
@@ -248,24 +235,23 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     ##### PROPERTIES #####
     @property
     def background(self):
-        return self._props["background"]
+        return self._props.get("background")
 
     @background.setter
     def background(self, value):
         self._props["background"] = value
-
-        self._dom_node.style.setProperty("--ae-ms-btn-bg", value)
-
+        self._select_btn.background = value
         self.popover.background = value
 
     @property
     def foreground(self):
-        return self._props["foreground"]
+        return self._props.get("foreground")
 
     @foreground.setter
     def foreground(self, value):
         self._props["foreground"] = value
-        self._dom_node.style.setProperty("--ae-ms-btn-fg", value)
+        # Apply foreground color directly to button text
+        self._select_btn.foreground = value
         self.popover.foreground = value
 
     @property
