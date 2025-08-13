@@ -15,7 +15,7 @@ from anvil_extras.utils._component_helpers import (
 
 from ._anvil_designer import IndeterminateTemplate
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"
 
 _html_injector.css(ProgressBar.css)
 
