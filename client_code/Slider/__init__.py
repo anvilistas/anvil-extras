@@ -7,6 +7,7 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
+from anvil.js.window import document as _document
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
@@ -34,13 +35,10 @@ HANDLE_SIZE = "--ae-slider-handle-size"
 _html_injector.css(
     f"""
 .ae-slider-container {{
-  padding: 10px 0;
+  padding: 10px;
 }}
 .ae-slider-container.has-pips {{
   padding-bottom: 40px;
-}}
-.anvil-container-overflow, .anvil-panel-col {{
-    overflow: visible;
 }}
 .noUi-connect {{
   background: var({BAR_COLOR});
@@ -194,7 +192,7 @@ def _prop_getter(prop):
 
 def _recreate_slider(self):
     self._dom_node.replaceChildren(self._slider_node)
-    values = self.values
+    values = getattr(self, "values", None)
     try:
         self._parse_props()
         self._create_slider()
@@ -271,6 +269,8 @@ def _min_max_prop(prop):
 def _pips_prop(prop):
     def setter(self, value):
         self._props[prop] = value
+        if in_designer:
+            return _recreate_slider(self)
         pips = self._make_pips()
         self._toggle_has_pips(pips)
         self._slider.updateOptions({"pips": pips})
@@ -350,6 +350,8 @@ class Slider(SliderTemplate):
         self._slider_node = self.dom_nodes["ae-slider"]
         props = self._props = _defaults | properties
 
+        self._tooltips = []
+        self._origins = []
         self._slider = None
         try:
             self._parse_props()
@@ -365,6 +367,8 @@ class Slider(SliderTemplate):
         if_true = {p: props[p] for p in _if_true if props[p] is not None}
         if_false = {p: props[p] for p in _if_false if not props[p]}
         self.init_components(**always, **if_false, **if_true)
+        self.add_event_handler("x-anvil-page-shown", self._update_tooltip_visibility)
+        self.add_event_handler("x-anvil-page-hidden", self._update_tooltip_visibility)
 
     def _parse_props(self):
         props = self._props.copy()
@@ -387,6 +391,10 @@ class Slider(SliderTemplate):
         self._toggle_has_pips(pips)
         if self._slider is not None:
             self._slider.destroy()
+
+        for tooltip in self._tooltips:
+            tooltip.remove()
+
         try:
             self._slider = _Slider.create(
                 self._slider_node, self._parsed_props | {"pips": pips}
@@ -396,9 +404,86 @@ class Slider(SliderTemplate):
                 e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
+        self._tooltips = self._slider.getTooltips()
+        for tooltip in self._tooltips:
+            _document.body.append(tooltip)
+
+        self._origins = self._slider.getOrigins()
+
+        # Initial tooltip positioning
+        self._update_tooltip_positions()
+
         ###### EVENTS ######
-        self._slider.on("slide", lambda a, h, *e: self.raise_event("slide", handle=h))
-        self._slider.on("change", lambda a, h, *e: self.raise_event("change", handle=h))
+
+        self._slider.on(
+            "end",
+            lambda a, h, *e: (print("tooltip"), self._update_tooltip_positions()),
+        )
+        self._slider.on(
+            "slide",
+            lambda a, h, *e: (
+                self._update_tooltip_positions(),
+                self.raise_event("slide", handle=h),
+            ),
+        )
+        self._slider.on(
+            "change",
+            lambda a, h, *e: (
+                self._update_tooltip_positions(),
+                self.raise_event("change", handle=h),
+            ),
+        )
+
+    def _update_tooltip_visibility(self, **kws):
+        """Update tooltip visibility to match their origins when tooltips are on body"""
+        visible = kws.get("event_name") == "x-anvil-page-shown"
+        for tooltip in self._tooltips:
+            tooltip.style.display = "block" if visible else "none"
+        if visible:
+            self._update_tooltip_positions()
+
+    def _update_tooltip_positions(self):
+        """Update tooltip positions to match their origins when tooltips are on body"""
+        for tooltip, origin in zip(self._tooltips, self._origins):
+            if tooltip and origin:
+                # Get the actual handle element (first child of origin)
+                handle = origin.firstElementChild or origin
+                # Get the bounding rectangle of the handle element
+                rect = handle.getBoundingClientRect()
+
+                # Reset any existing positioning to get natural tooltip size
+                tooltip.style.position = "absolute"
+                tooltip.style.left = "-9999px"
+                tooltip.style.top = "-9999px"
+                tooltip.style.visibility = "visible"
+                tooltip.style.display = "block"
+
+                # Force a reflow to get accurate measurements
+                tooltip.offsetHeight
+
+                # Get tooltip dimensions after reset
+                tooltip_width = tooltip.offsetWidth
+                tooltip_height = tooltip.offsetHeight
+
+                # Account for scroll position
+                scroll_x = (
+                    anvil.js.window.pageXOffset or _document.documentElement.scrollLeft
+                )
+                scroll_y = (
+                    anvil.js.window.pageYOffset or _document.documentElement.scrollTop
+                )
+
+                # Calculate absolute position of the handle center
+                handle_center_x = rect.left + scroll_x + rect.width / 2
+                handle_top = rect.top + scroll_y
+
+                # Position tooltip centered above the handle using absolute positioning
+                tooltip.style.position = "absolute"
+                tooltip.style.left = f"{handle_center_x - tooltip_width / 2}px"
+                tooltip.style.top = f"{handle_top - tooltip_height - 12}px"
+                tooltip.style.transform = "none"
+                tooltip.style.zIndex = "9999"
+                tooltip.style.pointerEvents = "none"
 
     ###### VALUE PROPERTIES ######
     def _value_setter(self, val):
