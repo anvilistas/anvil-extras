@@ -175,6 +175,9 @@ The following CSS variables can be overridden in your theme.css to style the mul
     :root {
         /* Button background */
         --ae-ms-btn-bg: initial;
+
+        /* Button text color */
+        --ae-ms-btn-fg: initial;
     }
 
 **Option Styling:**

@@ -24,6 +24,7 @@ _css = """
     justify-content: space-between;
     width: 100%;
     background-color: var(--ae-ms-btn-bg, initial);
+    color: var(--ae-ms-btn-fg, initial);
 }
 
 .anvil-role-ae-ms-btn > button > span {
@@ -252,9 +253,8 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     @foreground.setter
     def foreground(self, value):
         self._props["foreground"] = value
-        _js.get_dom_node(self._select_btn).querySelector("button").style.setProperty(
-            "color", value
-        )
+        self._dom_node.style.setProperty("--ae-ms-btn-fg", value)
+        self.popover.foreground = value
 
     @property
     def width(self):
