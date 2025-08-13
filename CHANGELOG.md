@@ -4,6 +4,10 @@
 * RadioGroup - add RadioGroup component
   https://github.com/anvilistas/anvil-extras/pull/608
 
+## Enhancements
+* MultiSelectDropDown - add foreground and background properties
+  https://github.com/anvilistas/anvil-extras/pull/590
+
 ## Bug Fixes
 * multiselect - reverts the overflow behavior to auto
   https://github.com/anvilistas/anvil-extras/pull/607
