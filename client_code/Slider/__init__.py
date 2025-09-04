@@ -13,6 +13,7 @@ from anvil.js.window import setTimeout
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
+from ..fui import auto_update
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
@@ -408,13 +409,20 @@ class Slider(SliderTemplate):
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
         self._tooltips = self._slider.getTooltips()
-        for tooltip in self._tooltips:
-            _document.body.append(tooltip)
+        # for tooltip in self._tooltips:
+        #     _document.body.append(tooltip)
 
         self._origins = self._slider.getOrigins()
 
         # Initial tooltip positioning
-        self._update_tooltip_positions()
+        for tooltip, origin in zip(self._tooltips, self._origins):
+            auto_update(
+                origin.firstElementChild,
+                tooltip,
+                placement="top",
+                arrow=None,
+            )
+        # self._update_tooltip_positions()
 
         ###### EVENTS ######
 
@@ -461,6 +469,8 @@ class Slider(SliderTemplate):
 
     def _update_tooltip_positions(self):
         """Update tooltip positions to match their origins when tooltips are on body"""
+        return
+
         for tooltip, origin in zip(self._tooltips, self._origins):
             if tooltip and origin:
                 # Get the actual handle element (first child of origin)
