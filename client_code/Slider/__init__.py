@@ -419,7 +419,7 @@ class Slider(SliderTemplate):
         for tooltip, origin in zip(self._tooltips, self._origins):
             _document.body.append(tooltip)
             cleanup = auto_update(
-                origin.firstElementChild,
+                origin.firstElementChild.firstElementChild,
                 tooltip,
                 placement="top",
                 arrow=None,
