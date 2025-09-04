@@ -7,9 +7,9 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
-from anvil.js.window import clearTimeout
+from anvil.js.window import cancelAnimationFrame, clearTimeout
 from anvil.js.window import document as _document
-from anvil.js.window import setTimeout
+from anvil.js.window import requestAnimationFrame, setTimeout
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
@@ -358,7 +358,7 @@ class Slider(SliderTemplate):
         self._fui_cleanup = []
         self._slider = None
         self._tap_timeout_id = None
-        self._debounce_timeout_id = None
+        self._animation_frame_id = None
         try:
             self._parse_props()
             self._create_slider()
@@ -431,19 +431,19 @@ class Slider(SliderTemplate):
             self._update_tooltip_positions()
 
     def _handle_slider_event(self, tap):
-        # Clear existing timeouts
+        # Clear existing timeouts and animation frames
         clearTimeout(self._tap_timeout_id)
-        clearTimeout(self._debounce_timeout_id)
+        cancelAnimationFrame(self._animation_frame_id)
 
         if tap:
             # For tap events, update immediately and after animation
             self._update_tooltip_positions()
             self._tap_timeout_id = setTimeout(self._update_tooltip_positions, 300)
         else:
-            # For drag events, debounce to avoid excessive updates
-            self._debounce_timeout_id = setTimeout(
-                self._update_tooltip_positions, 16
-            )  # ~60fps
+            # For drag events, use requestAnimationFrame for smooth updates
+            self._animation_frame_id = requestAnimationFrame(
+                self._update_tooltip_positions
+            )
 
     def _update_tooltip_positions(self):
         for cleanup in self._fui_cleanup:
