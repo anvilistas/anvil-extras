@@ -414,8 +414,11 @@ class Slider(SliderTemplate):
 
         ###### EVENTS ######
         self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
-        self._slider.on("set", lambda v, h, *e: self._update_tooltip_positions())
         self._slider.on("change", lambda v, h, *e: self.raise_event("change", handle=h))
+        self._slider.on(
+            "slide", lambda v, h, u, tap, *e: self._handle_slider_event(tap)
+        )
+        self._slider.on("set", lambda v, h, u, tap, *e: self._handle_slider_event(tap))
 
     def _update_tooltip_visibility(self, **kws):
         """Update tooltip visibility to match their origins when tooltips are on body"""
@@ -424,6 +427,12 @@ class Slider(SliderTemplate):
             tooltip.style.display = "block" if visible else "none"
 
         if visible:
+            self._update_tooltip_positions()
+
+    def _handle_slider_event(self, tap):
+        if tap:
+            setTimeout(self._update_tooltip_positions, 300)
+        else:
             self._update_tooltip_positions()
 
     def _update_tooltip_positions(self):
