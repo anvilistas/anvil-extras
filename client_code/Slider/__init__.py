@@ -355,6 +355,7 @@ class Slider(SliderTemplate):
 
         self._tooltips = []
         self._origins = []
+        self._fui_cleanup = []
         self._slider = None
         self._tap_timeout_id = None
         try:
@@ -409,109 +410,33 @@ class Slider(SliderTemplate):
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
         self._tooltips = self._slider.getTooltips()
-        # for tooltip in self._tooltips:
-        #     _document.body.append(tooltip)
+        for tooltip in self._tooltips:
+            _document.body.append(tooltip)
 
         self._origins = self._slider.getOrigins()
 
-        # Initial tooltip positioning
+        for cleanup in self._fui_cleanup:
+            cleanup()
+
+        self._fui_cleanup = []
         for tooltip, origin in zip(self._tooltips, self._origins):
-            auto_update(
+            cleanup = auto_update(
                 origin.firstElementChild,
                 tooltip,
                 placement="top",
                 arrow=None,
             )
-        # self._update_tooltip_positions()
+            self._fui_cleanup.append(cleanup)
 
         ###### EVENTS ######
-
-        self._slider.on(
-            "slide",
-            lambda values, handle, unencoded, tap, positions, *args: (
-                self._handle_slider_event(tap, positions),
-                self.raise_event("slide", handle=handle),
-            ),
-        )
-        self._slider.on(
-            "change",
-            lambda values, handle, unencoded, tap, positions, *args: (
-                self._handle_slider_event(tap, positions),
-                self.raise_event("change", handle=handle),
-            ),
-        )
+        self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
+        self._slider.on("change", lambda v, h, *e: self.raise_event("change", handle=h))
 
     def _update_tooltip_visibility(self, **kws):
         """Update tooltip visibility to match their origins when tooltips are on body"""
         visible = kws.get("event_name") == "x-anvil-page-shown"
         for tooltip in self._tooltips:
             tooltip.style.display = "block" if visible else "none"
-        if visible:
-            self._update_tooltip_positions()
-
-    def _handle_slider_event(self, is_tap, positions):
-        """Handle slider event and set up delayed positioning if needed"""
-        # Clear any existing timeout
-        print(positions)
-
-        if self._tap_timeout_id is not None:
-            clearTimeout(self._tap_timeout_id)
-            self._tap_timeout_id = None
-
-        # Immediate position update
-        self._update_tooltip_positions()
-
-        # If this was a tap event, set up delayed positioning after 300ms
-        if is_tap:
-            self._tap_timeout_id = setTimeout(
-                lambda: self._update_tooltip_positions(), 300
-            )
-
-    def _update_tooltip_positions(self):
-        """Update tooltip positions to match their origins when tooltips are on body"""
-        return
-
-        for tooltip, origin in zip(self._tooltips, self._origins):
-            if tooltip and origin:
-                # Get the actual handle element (first child of origin)
-                handle = origin.firstElementChild or origin
-                # Get the bounding rectangle of the handle element
-                rect = handle.getBoundingClientRect()
-                print(dict(rect))
-
-                # Reset any existing positioning to get natural tooltip size
-                tooltip.style.position = "absolute"
-                tooltip.style.left = "-9999px"
-                tooltip.style.top = "-9999px"
-                tooltip.style.visibility = "visible"
-                tooltip.style.display = "block"
-
-                # Force a reflow to get accurate measurements
-                tooltip.offsetHeight
-
-                # Get tooltip dimensions after reset
-                tooltip_width = tooltip.offsetWidth
-                tooltip_height = tooltip.offsetHeight
-
-                # Account for scroll position
-                scroll_x = (
-                    anvil.js.window.pageXOffset or _document.documentElement.scrollLeft
-                )
-                scroll_y = (
-                    anvil.js.window.pageYOffset or _document.documentElement.scrollTop
-                )
-
-                # Calculate absolute position of the handle center
-                handle_center_x = rect.left + scroll_x + rect.width / 2
-                handle_top = rect.top + scroll_y
-
-                # Position tooltip centered above the handle using absolute positioning
-                tooltip.style.position = "absolute"
-                tooltip.style.left = f"{handle_center_x - tooltip_width / 2}px"
-                tooltip.style.top = f"{handle_top - tooltip_height - 12}px"
-                tooltip.style.transform = "none"
-                tooltip.style.zIndex = "9999"
-                tooltip.style.pointerEvents = "none"
 
     ###### VALUE PROPERTIES ######
     def _value_setter(self, val):
