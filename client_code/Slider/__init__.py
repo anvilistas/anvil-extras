@@ -7,9 +7,13 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
+from anvil.js.window import cancelAnimationFrame, clearTimeout
+from anvil.js.window import document as _document
+from anvil.js.window import requestAnimationFrame, setTimeout
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
+from ..fui import auto_update
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
@@ -34,13 +38,10 @@ HANDLE_SIZE = "--ae-slider-handle-size"
 _html_injector.css(
     f"""
 .ae-slider-container {{
-  padding: 10px 0;
+  padding: 10px;
 }}
 .ae-slider-container.has-pips {{
   padding-bottom: 40px;
-}}
-.anvil-container-overflow, .anvil-panel-col {{
-    overflow: visible;
 }}
 .noUi-connect {{
   background: var({BAR_COLOR});
@@ -194,7 +195,7 @@ def _prop_getter(prop):
 
 def _recreate_slider(self):
     self._dom_node.replaceChildren(self._slider_node)
-    values = self.values
+    values = getattr(self, "values", None)
     try:
         self._parse_props()
         self._create_slider()
@@ -271,6 +272,8 @@ def _min_max_prop(prop):
 def _pips_prop(prop):
     def setter(self, value):
         self._props[prop] = value
+        if in_designer:
+            return _recreate_slider(self)
         pips = self._make_pips()
         self._toggle_has_pips(pips)
         self._slider.updateOptions({"pips": pips})
@@ -350,7 +353,12 @@ class Slider(SliderTemplate):
         self._slider_node = self.dom_nodes["ae-slider"]
         props = self._props = _defaults | properties
 
+        self._tooltips = []
+        self._origins = []
+        self._fui_cleanup = []
         self._slider = None
+        self._tap_timeout_id = None
+        self._animation_frame_id = None
         try:
             self._parse_props()
             self._create_slider()
@@ -365,6 +373,8 @@ class Slider(SliderTemplate):
         if_true = {p: props[p] for p in _if_true if props[p] is not None}
         if_false = {p: props[p] for p in _if_false if not props[p]}
         self.init_components(**always, **if_false, **if_true)
+        self.add_event_handler("x-anvil-page-shown", self._update_tooltip_visibility)
+        self.add_event_handler("x-anvil-page-hidden", self._update_tooltip_visibility)
 
     def _parse_props(self):
         props = self._props.copy()
@@ -387,6 +397,10 @@ class Slider(SliderTemplate):
         self._toggle_has_pips(pips)
         if self._slider is not None:
             self._slider.destroy()
+
+        for tooltip in self._tooltips:
+            tooltip.remove()
+
         try:
             self._slider = _Slider.create(
                 self._slider_node, self._parsed_props | {"pips": pips}
@@ -396,9 +410,56 @@ class Slider(SliderTemplate):
                 e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
+        self._tooltips = self._slider.getTooltips()
+        self._origins = self._slider.getOrigins()
+
         ###### EVENTS ######
-        self._slider.on("slide", lambda a, h, *e: self.raise_event("slide", handle=h))
-        self._slider.on("change", lambda a, h, *e: self.raise_event("change", handle=h))
+        self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
+        self._slider.on("change", lambda v, h, *e: self.raise_event("change", handle=h))
+        self._slider.on(
+            "slide", lambda v, h, u, tap, *e: self._handle_slider_event(tap)
+        )
+        self._slider.on("set", lambda v, h, u, tap, *e: self._handle_slider_event(tap))
+
+    def _update_tooltip_visibility(self, **kws):
+        """Update tooltip visibility to match their origins when tooltips are on body"""
+        visible = kws.get("event_name") == "x-anvil-page-shown"
+        for tooltip in self._tooltips:
+            tooltip.style.display = "block" if visible else "none"
+
+        if visible:
+            self._update_tooltip_positions()
+
+    def _handle_slider_event(self, tap):
+        # Clear existing timeouts and animation frames
+        clearTimeout(self._tap_timeout_id)
+        cancelAnimationFrame(self._animation_frame_id)
+
+        if tap:
+            # For tap events, update immediately and after animation
+            self._update_tooltip_positions()
+            self._tap_timeout_id = setTimeout(self._update_tooltip_positions, 300)
+        else:
+            # For drag events, use requestAnimationFrame for smooth updates
+            self._animation_frame_id = requestAnimationFrame(
+                self._update_tooltip_positions
+            )
+
+    def _update_tooltip_positions(self, *e):
+        for cleanup in self._fui_cleanup:
+            cleanup()
+
+        self._fui_cleanup = []
+
+        for tooltip, origin in zip(self._tooltips, self._origins):
+            _document.body.append(tooltip)
+            cleanup = auto_update(
+                origin.firstElementChild,
+                tooltip,
+                placement="top",
+                arrow=None,
+            )
+            self._fui_cleanup.append(cleanup)
 
     ###### VALUE PROPERTIES ######
     def _value_setter(self, val):
