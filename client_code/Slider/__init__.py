@@ -409,17 +409,15 @@ class Slider(SliderTemplate):
                 e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
-        self._tooltips = self._slider.getTooltips()
-        for tooltip in self._tooltips:
-            _document.body.append(tooltip)
-
-        self._origins = self._slider.getOrigins()
-
         for cleanup in self._fui_cleanup:
             cleanup()
 
+        self._tooltips = self._slider.getTooltips()
+        self._origins = self._slider.getOrigins()
         self._fui_cleanup = []
+
         for tooltip, origin in zip(self._tooltips, self._origins):
+            _document.body.append(tooltip)
             cleanup = auto_update(
                 origin.firstElementChild,
                 tooltip,
