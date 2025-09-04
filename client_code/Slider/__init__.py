@@ -358,6 +358,7 @@ class Slider(SliderTemplate):
         self._fui_cleanup = []
         self._slider = None
         self._tap_timeout_id = None
+        self._debounce_timeout_id = None
         try:
             self._parse_props()
             self._create_slider()
@@ -430,10 +431,19 @@ class Slider(SliderTemplate):
             self._update_tooltip_positions()
 
     def _handle_slider_event(self, tap):
+        # Clear existing timeouts
+        clearTimeout(self._tap_timeout_id)
+        clearTimeout(self._debounce_timeout_id)
+
         if tap:
-            setTimeout(self._update_tooltip_positions, 300)
-        else:
+            # For tap events, update immediately and after animation
             self._update_tooltip_positions()
+            self._tap_timeout_id = setTimeout(self._update_tooltip_positions, 300)
+        else:
+            # For drag events, debounce to avoid excessive updates
+            self._debounce_timeout_id = setTimeout(
+                self._update_tooltip_positions, 16
+            )  # ~60fps
 
     def _update_tooltip_positions(self):
         for cleanup in self._fui_cleanup:
