@@ -1,3 +1,10 @@
+# Unreleased
+
+## Bug Fixes
+* slider - remove overflow css override that broke some other anvil components
+https://github.com/anvilistas/anvil-extras/pull/610
+
+
 # v3.3.0
 
 ## Features
