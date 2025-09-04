@@ -445,7 +445,7 @@ class Slider(SliderTemplate):
                 self._update_tooltip_positions
             )
 
-    def _update_tooltip_positions(self):
+    def _update_tooltip_positions(self, *e):
         for cleanup in self._fui_cleanup:
             cleanup()
 
