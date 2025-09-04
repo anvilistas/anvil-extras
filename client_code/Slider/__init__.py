@@ -7,7 +7,9 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
+from anvil.js.window import clearTimeout
 from anvil.js.window import document as _document
+from anvil.js.window import setTimeout
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
@@ -353,6 +355,7 @@ class Slider(SliderTemplate):
         self._tooltips = []
         self._origins = []
         self._slider = None
+        self._tap_timeout_id = None
         try:
             self._parse_props()
             self._create_slider()
@@ -416,21 +419,17 @@ class Slider(SliderTemplate):
         ###### EVENTS ######
 
         self._slider.on(
-            "end",
-            lambda a, h, *e: (print("tooltip"), self._update_tooltip_positions()),
-        )
-        self._slider.on(
             "slide",
-            lambda a, h, *e: (
-                self._update_tooltip_positions(),
-                self.raise_event("slide", handle=h),
+            lambda values, handle, unencoded, tap, positions, *args: (
+                self._handle_slider_event(tap, positions),
+                self.raise_event("slide", handle=handle),
             ),
         )
         self._slider.on(
             "change",
-            lambda a, h, *e: (
-                self._update_tooltip_positions(),
-                self.raise_event("change", handle=h),
+            lambda values, handle, unencoded, tap, positions, *args: (
+                self._handle_slider_event(tap, positions),
+                self.raise_event("change", handle=handle),
             ),
         )
 
@@ -442,6 +441,24 @@ class Slider(SliderTemplate):
         if visible:
             self._update_tooltip_positions()
 
+    def _handle_slider_event(self, is_tap, positions):
+        """Handle slider event and set up delayed positioning if needed"""
+        # Clear any existing timeout
+        print(positions)
+
+        if self._tap_timeout_id is not None:
+            clearTimeout(self._tap_timeout_id)
+            self._tap_timeout_id = None
+
+        # Immediate position update
+        self._update_tooltip_positions()
+
+        # If this was a tap event, set up delayed positioning after 300ms
+        if is_tap:
+            self._tap_timeout_id = setTimeout(
+                lambda: self._update_tooltip_positions(), 300
+            )
+
     def _update_tooltip_positions(self):
         """Update tooltip positions to match their origins when tooltips are on body"""
         for tooltip, origin in zip(self._tooltips, self._origins):
@@ -450,6 +467,7 @@ class Slider(SliderTemplate):
                 handle = origin.firstElementChild or origin
                 # Get the bounding rectangle of the handle element
                 rect = handle.getBoundingClientRect()
+                print(dict(rect))
 
                 # Reset any existing positioning to get natural tooltip size
                 tooltip.style.position = "absolute"
