@@ -56,7 +56,6 @@ def auto_update(
     offset = 11 if arrow else 4
 
     def update(*args):
-        print("update")
         middleware = [
             FloatingUIDOM.offset(offset),
             FloatingUIDOM.flip(),

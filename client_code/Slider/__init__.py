@@ -409,11 +409,27 @@ class Slider(SliderTemplate):
                 e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
+        self._tooltips = self._slider.getTooltips()
+        self._origins = self._slider.getOrigins()
+
+        ###### EVENTS ######
+        self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
+        self._slider.on("set", lambda v, h, *e: self._update_tooltip_positions())
+        self._slider.on("change", lambda v, h, *e: self.raise_event("change", handle=h))
+
+    def _update_tooltip_visibility(self, **kws):
+        """Update tooltip visibility to match their origins when tooltips are on body"""
+        visible = kws.get("event_name") == "x-anvil-page-shown"
+        for tooltip in self._tooltips:
+            tooltip.style.display = "block" if visible else "none"
+
+        if visible:
+            self._update_tooltip_positions()
+
+    def _update_tooltip_positions(self):
         for cleanup in self._fui_cleanup:
             cleanup()
 
-        self._tooltips = self._slider.getTooltips()
-        self._origins = self._slider.getOrigins()
         self._fui_cleanup = []
 
         for tooltip, origin in zip(self._tooltips, self._origins):
@@ -425,16 +441,6 @@ class Slider(SliderTemplate):
                 arrow=None,
             )
             self._fui_cleanup.append(cleanup)
-
-        ###### EVENTS ######
-        self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
-        self._slider.on("change", lambda v, h, *e: self.raise_event("change", handle=h))
-
-    def _update_tooltip_visibility(self, **kws):
-        """Update tooltip visibility to match their origins when tooltips are on body"""
-        visible = kws.get("event_name") == "x-anvil-page-shown"
-        for tooltip in self._tooltips:
-            tooltip.style.display = "block" if visible else "none"
 
     ###### VALUE PROPERTIES ######
     def _value_setter(self, val):
