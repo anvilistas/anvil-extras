@@ -40,6 +40,12 @@ class DropDown(DropDownTemplate):
         self._last_filter_term = ""
         # event delegation listeners
         self.options_node.addEventListener("click", self._on_click_delegate)
+        # ensure container is focusable when filter is hidden
+        try:
+            get_dom_node(self.dd_node).tabIndex = 0
+            get_dom_node(self.dd_node).setAttribute("tabindex", "0")
+        except Exception:
+            pass
 
     @property
     def options(self):
@@ -170,17 +176,26 @@ class DropDown(DropDownTemplate):
         # Otherwise, focus the dropdown container only (no active item pre-selected)
         def _focus_dd():
             try:
-                get_dom_node(self.dd_node).focus()
+                node = get_dom_node(self.dd_node)
+                # defensively ensure focusability at the moment of focus
+                try:
+                    node.tabIndex = 0
+                    node.setAttribute("tabindex", "0")
+                except Exception:
+                    pass
+                node.focus()
             except Exception:
                 pass
 
-        setTimeout(_focus_dd, 10)
+        setTimeout(_focus_dd, 30)
 
     def _on_filter_hide(self, **event_args):
         self.filter_box.text = ""
         # show all
         for el in self._iter_option_elements():
             el.parentElement.style.display = ""
+        # clear any active element when filter/search UI is hidden
+        self._set_active_idx(-1)
 
     def _on_filter_change(self, **event_args):
         term = (self.filter_box.text or "").lower()
