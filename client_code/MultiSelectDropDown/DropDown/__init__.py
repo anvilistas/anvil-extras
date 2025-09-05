@@ -8,6 +8,8 @@
 from anvil.js import get_dom_node
 from anvil.js.window import setTimeout
 
+from ...logging import DEBUG as _DEBUG
+from ...logging import TimerLogger as _TimerLogger
 from ...popover import pop
 from ..Option import Option
 from ._anvil_designer import DropDownTemplate
@@ -39,13 +41,34 @@ class DropDown(DropDownTemplate):
     def options(self, val):
         val = val or []
         self._props["options"] = val
+        # timing instrumentation
+        tlog = _TimerLogger(name="ms-dd.options", level=_DEBUG)
+        try:
+            tlog.start("options: start")
+        except Exception:
+            pass
+
         self.options_panel.clear()
+        try:
+            tlog.check("cleared panel")
+        except Exception:
+            pass
+
         for opt in val:
             self.options_panel.add_component(opt)
             opt.add_event_handler("click", self._on_option_clicked)
 
+        try:
+            tlog.check(f"added components (n={len(val)})")
+        except Exception:
+            pass
+
         self.options_panel.add_component(self._no_options)
         self._no_options.visible = False
+        try:
+            tlog.end("options: end")
+        except Exception:
+            pass
 
     @property
     def enable_filtering(self):

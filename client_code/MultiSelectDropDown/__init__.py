@@ -9,6 +9,8 @@ import anvil.js as _js
 from anvil import HtmlPanel as _HtmlPanel
 from anvil.js.window import document as _document
 
+from ..logging import DEBUG as _DEBUG
+from ..logging import TimerLogger as _TimerLogger
 from ..popover import pop, popover
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
@@ -195,6 +197,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props = props = _defaults | properties
         props["items"] = props["items"] or []
 
+        # timer logger for performance investigation
+        self._tlog = _TimerLogger(name="ms-render", level=_DEBUG)
+
         self._dd_width = 0
         self._dd = DropDown()
         self._dd.add_event_handler("change", self._change)
@@ -217,12 +222,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.init_components(**props)
         self.set_event_handler("x-popover-init", self._mk_popover)
         self.set_event_handler("x-popover-destroy", self._mk_popover)
-        self._dd.set_event_handler(
-            "x-popover-show", lambda **e: self.raise_event("opened")
-        )
-        self._dd.set_event_handler(
-            "x-popover-hide", lambda **e: self.raise_event("closed")
-        )
+        # cache of open state to avoid pop(..., 'shown') check costs
+        self._is_open = False
+        self._dd.set_event_handler("x-popover-show", self._on_dd_opened)
+        self._dd.set_event_handler("x-popover-hide", self._on_dd_closed)
 
         self._init = True
         self.selected = selected
@@ -295,15 +298,36 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props["items"] = value
         self._close()
         selected = self.selected + self._invalid
+        try:
+            self._tlog.start("items: start")
+        except Exception:
+            pass
 
         options = Option.from_items(value)
+        try:
+            self._tlog.check("built options")
+        except Exception:
+            pass
 
         self._dd.options = self._options = options
+        try:
+            self._tlog.check(f"assigned options (n={len(options)})")
+        except Exception:
+            pass
+
         self._calc_dd_width()
+        try:
+            self._tlog.check("calc width")
+        except Exception:
+            pass
         self._total = sum(1 for opt in options if not opt.is_divider)
         self.selected = selected
         if self._init:
             self.width = self.width
+        try:
+            self._tlog.end("items: end")
+        except Exception:
+            pass
 
     @property
     def selected_keys(self):
@@ -416,18 +440,67 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def _mk_popover(self, init_node, **event_args):
         init_node(self._dd)
 
+    def _on_dd_opened(self, **e):
+        self._is_open = True
+        self.raise_event("opened")
+
+    def _on_dd_closed(self, **e):
+        self._is_open = False
+        self.raise_event("closed")
+
     def _open(self, **e):
+        try:
+            self._tlog.start("_open: start")
+        except Exception:
+            pass
         if not pop(self._select_btn, "shown"):
+            try:
+                self._tlog.check("not shown -> show")
+            except Exception:
+                pass
             pop(self._select_btn, "show")
             # invalidate these since the user has interacted with the component
             self._invalid = []
+        try:
+            self._tlog.end("_open: end")
+        except Exception:
+            pass
 
     def _close(self, **e):
+        try:
+            self._tlog.start("_close: start")
+        except Exception:
+            pass
         if pop(self._select_btn, "shown"):
+            try:
+                self._tlog.check("shown -> hide")
+            except Exception:
+                pass
             pop(self._select_btn, "hide")
+        try:
+            self._tlog.end("_close: end")
+        except Exception:
+            pass
 
     def _toggle(self, **e):
-        if not pop(self._select_btn, "shown"):
+        try:
+            self._tlog.start("_toggle: start")
+        except Exception:
+            pass
+        # prefer cached state (kept in sync via events) to avoid DOM queries
+        try:
+            is_shown = self._is_open
+        except Exception:
+            is_shown = pop(self._select_btn, "shown")
+        try:
+            self._tlog.check(f"checked shown={is_shown}")
+        except Exception:
+            pass
+        if not is_shown:
             self._open()
         else:
             self._close()
+        try:
+            self._tlog.end("_toggle: end")
+        except Exception:
+            pass

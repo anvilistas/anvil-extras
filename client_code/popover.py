@@ -20,6 +20,8 @@ from anvil.js.window import document as _document
 from anvil.js.window import window as _W
 
 from . import fui
+from .logging import DEBUG as _DEBUG
+from .logging import TimerLogger as _TimerLogger
 from .utils._component_helpers import _html_injector
 from .utils._component_helpers import walk as _walk
 from .utils._deprecated import deprecated as _deprecated
@@ -277,8 +279,12 @@ class Popover:
         self.timeouts = []
         self.cleanup = _noop
 
+        # per-instance timer logger
+        self._tlog = _TimerLogger(name=f"popover#{self.id}", level=_DEBUG)
+
         # we use this to allow show-hide events to be fired on the content
         self.fake_container = _anvil.Container()
+        anvil.js.get_dom_node(self.fake_container).style.display = "none"
         self._clicked = False
 
         if dismiss_on_scroll is not None:
@@ -501,6 +507,10 @@ class Popover:
         pass
 
     def show(self, *e):
+        try:
+            self._tlog.start("show: start")
+        except Exception:
+            pass
         # exit early if we're already showing
         is_hover = e and e[0].type == "mouseenter"
         if not is_hover:
@@ -513,9 +523,21 @@ class Popover:
         _visible_popovers[self.id] = self.popper
 
         self.cleanup()
+        try:
+            self._tlog.check("cleanup")
+        except Exception:
+            pass
         self.setup_dom()
+        try:
+            self._tlog.check("setup_dom")
+        except Exception:
+            pass
 
         self.clear_timeouts()
+        try:
+            self._tlog.check("clear_timeouts")
+        except Exception:
+            pass
 
         self.dom_popover.style.display = ""
 
@@ -525,11 +547,19 @@ class Popover:
             placement=self.placement,
             arrow=self.dom_arrow if self.arrow else None,
         )
+        try:
+            self._tlog.check("auto_update")
+        except Exception:
+            pass
 
         delay = self.delay["show"] if e else 0
         self.timeouts.append(_W.setTimeout(self.animate_in, delay))
         self.timeouts.append(_W.setTimeout(self.on_shown, delay + self.animation_ms))
         self.poppee.raise_event("x-popover-show")
+        try:
+            self._tlog.end("show: end")
+        except Exception:
+            pass
 
     def on_hidden(self):
         self.dom_popover.style.display = "none"

@@ -7,6 +7,8 @@
 from anvil import HtmlPanel as _HtmlPanel
 from anvil.js import get_dom_node
 
+from ...logging import DEBUG as _DEBUG
+from ...logging import TimerLogger as _TimerLogger
 from ...utils._component_helpers import _add_roles, _remove_roles
 from ._anvil_designer import OptionTemplate
 
@@ -151,6 +153,11 @@ class Option(OptionTemplate):
     @classmethod
     def from_items(cls, items):
         options = []
+        tlog = _TimerLogger(name="ms-option.parse", level=_DEBUG)
+        try:
+            tlog.start("from_items: start")
+        except Exception:
+            pass
 
         for idx, item in enumerate(items):
             if isinstance(item, str):
@@ -163,5 +170,9 @@ class Option(OptionTemplate):
                 raise TypeError(f"Invalid item at index {idx} (got type {type(item)})")
 
             options.append(option)
+        try:
+            tlog.end(f"from_items: end (n={len(options)})")
+        except Exception:
+            pass
 
         return options
