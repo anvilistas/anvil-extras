@@ -6,6 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 from anvil.js import get_dom_node
+from anvil.js.window import document as _document
 from anvil.js.window import setTimeout
 
 from ...logging import DEBUG as _DEBUG
@@ -29,18 +30,20 @@ class DropDown(DropDownTemplate):
         self.deselect_all_btn.role = "ae-ms-select-btn"
         self.filter_box.role = "ae-ms-filter"
         self.dd_node.addEventListener("keydown", self._on_keydown)
-        self._no_options = Option()
-        self._no_options.visible = False
-        self.options_panel.add_component(self._no_options)
+        # backing store for html-rendered options (list of dicts)
+        self._options_data = []
+        # event delegation listeners
+        self.options_node.addEventListener("click", self._on_click_delegate)
 
     @property
     def options(self):
-        return self._props.get("options", [])
+        return self._options_data
 
     @options.setter
     def options(self, val):
+        # val is list of dicts produced by parent component
         val = val or []
-        self._props["options"] = val
+        self._options_data = val
         # timing instrumentation
         tlog = _TimerLogger(name="ms-dd.options", level=_DEBUG)
         try:
@@ -48,23 +51,44 @@ class DropDown(DropDownTemplate):
         except Exception:
             pass
 
-        self.options_panel.clear()
+        # clear container
+        self.options_node.innerHTML = ""
         try:
             tlog.check("cleared panel")
         except Exception:
             pass
 
-        for opt in val:
-            self.options_panel.add_component(opt)
-            opt.add_event_handler("click", self._on_option_clicked)
+        # build a single HTML string for all options
+        html_parts = ['<div class="ae-ms-options-wrap"><ul>']
+        for idx, opt in enumerate(val):
+            if opt.get("is_divider"):
+                html_parts.append("<li><div data-divider></div></li>")
+                continue
+            key = opt.get("key", "")
+            title = opt.get("title") or key
+            subtext = opt.get("subtext") or ""
+            disabled = opt.get("disabled", False)
+            selected = opt.get("selected", False)
+            classes = ["anvil-role-ae-ms-option"]
+            if selected:
+                classes.append("anvil-role-ae-ms-option-selected")
+            cls = " ".join(classes)
+            data_disabled = ' data-disabled=""' if disabled else ""
+            # checkbox/icon placeholders as spans
+            html_parts.append(
+                f'<li><a class="{cls}" data-idx="{idx}" data-key="{key}" tabindex="-1"{data_disabled}>'
+                f'<span class="ms-chk">&#x2610;</span>'
+                f'<div class="anvil-role-ae-ms-option-label"><span>{title}</span></div>'
+                f'<div class="anvil-role-ae-ms-option-subtext"><span>{subtext}</span></div>'
+                f"</a></li>"
+            )
+        html_parts.append("</ul></div>")
+        self.options_node.innerHTML = "".join(html_parts)
 
         try:
             tlog.check(f"added components (n={len(val)})")
         except Exception:
             pass
-
-        self.options_panel.add_component(self._no_options)
-        self._no_options.visible = False
         try:
             tlog.end("options: end")
         except Exception:
@@ -107,55 +131,57 @@ class DropDown(DropDownTemplate):
 
     def _on_filter_hide(self, **event_args):
         self.filter_box.text = ""
-        for option in self.options:
-            option.visible = True
-
-        self._no_options.visible = False
+        # show all
+        for el in self._iter_option_elements():
+            el.parentElement.style.display = ""
 
     def _on_filter_change(self, **event_args):
         term = self.filter_box.text or ""
         term = term.lower()
         num_results = 0
-        for option in self.options:
-            if option.is_divider:
-                option.visible = not term
-            else:
-                visible = term in option.key.lower() or term in option.subtext.lower()
-                option.visible = visible
-                num_results += visible
+        for idx, opt in enumerate(self._options_data):
+            el = self._get_option_element(idx)
+            if el is None:
+                continue
+            if opt.get("is_divider"):
+                el.parentElement.style.display = "none" if term else ""
+                continue
+            key = (opt.get("key") or "").lower()
+            sub = (opt.get("subtext") or "").lower()
+            visible = (term in key) or (term in sub)
+            el.parentElement.style.display = "" if visible else "none"
+            num_results += 1 if visible else 0
 
-        active_idx = self._get_active_idx()
-        if active_idx != -1:
-            self.options[active_idx].active = False
-
-        no_options = not num_results and term
-        self._no_options.visible = no_options
-        if no_options:
-            self._no_options.label.text = f"No results matched {term!r}"
+        # clear active
+        self._set_active_idx(-1)
 
         if not term:
             return
 
         first_idx = self._get_next_idx(-1)
         if first_idx != -1:
-            self.options[first_idx].active = True
+            self._set_active_idx(first_idx)
 
     def _on_filter_enter(self, **e):
         active_idx = self._get_active_idx()
         if active_idx != -1:
-            self.options[active_idx].click()
+            self._on_option_clicked(active_idx)
 
     def _on_select_all(self, **event_args):
-        for option in self.options:
-            option.selected = True
+        for option in self._options_data:
+            if not option.get("is_divider") and not option.get("disabled"):
+                option["selected"] = True
         self._on_focus()
         self.raise_event("change")
+        self._sync_dom_selection()
 
     def _on_deselect_all(self, **event_args):
-        for option in self.options:
-            option.selected = False
+        for option in self._options_data:
+            if not option.get("is_divider"):
+                option["selected"] = False
         self._on_focus()
         self.raise_event("change")
+        self._sync_dom_selection()
 
     def _on_show(self, **event_args):
         if self.enable_filtering:
@@ -172,15 +198,16 @@ class DropDown(DropDownTemplate):
         setTimeout(self.filter_box.focus)
 
     def _get_active_idx(self):
-        for i, opt in enumerate(self.options):
-            if opt.is_divider:
+        for i, opt in enumerate(self._options_data):
+            if opt.get("is_divider"):
                 continue
-            if opt.active:
+            el = self._get_option_element(i)
+            if el is not None and "anvil-role-ae-ms-option-active" in el.classList:
                 return i
         return -1
 
     def _get_next_idx(self, active_idx, dir=1, pred=None):
-        num_options = len(self.options)
+        num_options = len(self._options_data)
 
         if num_options == 0:
             return -1
@@ -192,10 +219,15 @@ class DropDown(DropDownTemplate):
 
         for i in range(nxt_idx, dir * num_options + nxt_idx, dir):
             idx = i % num_options
-            nxt = self.options[idx]
-            if nxt.is_divider:
+            nxt = self._options_data[idx]
+            if nxt.get("is_divider"):
                 continue
-            if not nxt.visible or nxt.disabled:
+            el = self._get_option_element(idx)
+            if (
+                el is None
+                or el.parentElement.style.display == "none"
+                or nxt.get("disabled")
+            ):
                 continue
             if pred is None:
                 return idx
@@ -231,10 +263,10 @@ class DropDown(DropDownTemplate):
             dir = 1 if key == "ArrowDown" else -1
             active_idx = self._get_active_idx()
             if active_idx != -1:
-                self.options[active_idx].active = False
+                self._set_active_idx(-1)
             next_idx = self._get_next_idx(active_idx, dir)
             if next_idx != -1:
-                self.options[next_idx].active = True
+                self._set_active_idx(next_idx)
 
         elif key.isalpha():
             if is_input:
@@ -242,24 +274,74 @@ class DropDown(DropDownTemplate):
             key = key.lower()
             active_idx = self._get_active_idx()
             next_idx = self._get_next_idx(
-                active_idx, dir=1, pred=lambda opt: opt.key.lower().startswith(key)
+                active_idx,
+                dir=1,
+                pred=lambda opt: (opt.get("key") or "").lower().startswith(key),
             )
             if next_idx != -1:
                 if active_idx != -1:
-                    self.options[active_idx].active = False
-                self.options[next_idx].active = True
+                    self._set_active_idx(-1)
+                self._set_active_idx(next_idx)
 
-    def _on_option_clicked(self, sender, **e):
-        multiple = self.multiple
-        for opt in self.options:
-            if not multiple:
-                opt.selected = opt is sender
-            opt.active = opt is sender and not sender.disabled
-
-        if sender.disabled:
+    def _on_option_clicked(self, idx):
+        """Handle a click on option index idx in _options_data."""
+        opt = self._options_data[idx]
+        if opt.get("disabled"):
             return
-
+        multiple = self.multiple
+        if multiple:
+            opt["selected"] = not opt.get("selected", False)
+        else:
+            # clear previous
+            for o in self._options_data:
+                o["selected"] = False
+            opt["selected"] = True
+        # update DOM selection classes
+        self._sync_dom_selection()
         self.raise_event("change")
-
-        if not self.multiple:
+        if not multiple:
             self._close()
+
+    # --- helpers for HTML renderer ---
+    def _iter_option_elements(self):
+        return self.options_node.querySelectorAll(".anvil-role-ae-ms-option")
+
+    def _get_option_element(self, idx):
+        return self.options_node.querySelector(
+            f'.anvil-role-ae-ms-option[data-idx="{idx}"]'
+        )
+
+    def _set_active_idx(self, idx):
+        # remove existing active
+        for el in self._iter_option_elements():
+            el.classList.remove("anvil-role-ae-ms-option-active")
+        if idx == -1:
+            return
+        el = self._get_option_element(idx)
+        if el is not None:
+            el.classList.add("anvil-role-ae-ms-option-active")
+            el.scrollIntoView({"block": "nearest"})
+
+    def _sync_dom_selection(self):
+        for idx, opt in enumerate(self._options_data):
+            el = self._get_option_element(idx)
+            if el is None or opt.get("is_divider"):
+                continue
+            if opt.get("selected"):
+                el.classList.add("anvil-role-ae-ms-option-selected")
+            else:
+                el.classList.remove("anvil-role-ae-ms-option-selected")
+
+    # event delegation handler
+    def _on_click_delegate(self, e):
+        target = e.target
+        el = (
+            target.closest(".anvil-role-ae-ms-option")
+            if hasattr(target, "closest")
+            else None
+        )
+        if not el:
+            return
+        idx = int(el.getAttribute("data-idx") or -1)
+        if idx >= 0:
+            self._on_option_clicked(idx)

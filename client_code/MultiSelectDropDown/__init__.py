@@ -15,7 +15,6 @@ from ..popover import pop, popover
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
 from .DropDown import DropDown
-from .Option import Option
 
 __version__ = "3.3.0"
 
@@ -236,7 +235,13 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def format_selected_text(self, count, total):
         if count > 3:
             return f"{count} items selected"
-        return ", ".join(opt.title or opt.key for opt in self._options if opt.selected)
+        return ", ".join(
+            [
+                opt.get("title") or opt.get("key")
+                for opt in self._options
+                if opt.get("selected")
+            ]
+        )
 
     ##### PROPERTIES #####
     @property
@@ -302,19 +307,19 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._props["items"] = value
         self._raw_items = list(value) if value else []
         self._options_built = False
-        self._options = []
-        self._dd.options = []
+        self._options = []  # list[dict]
+        self._dd.options = []  # html renderer expects list[dict]
         self._total = 0
         # keep button text in sync
         self._change(raise_event=False)
 
     @property
     def selected_keys(self):
-        return [opt.key for opt in self._options if opt.selected]
+        return [opt["key"] for opt in self._options if opt.get("selected")]
 
     @property
     def selected(self):
-        return [opt.value for opt in self._options if opt.selected]
+        return [opt["value"] for opt in self._options if opt.get("selected")]
 
     @selected.setter
     def selected(self, values):
@@ -328,20 +333,28 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         else:
             values = list(values)
 
+        # If options are not yet built, store and refresh label later
+        if not self._options_built:
+            self._invalid = list(values)
+            self._change(raise_event=False)
+            return
+
         multiple = self.multiple
         first = True
 
         for opt in self._options:
             try:
-                idx = values.index(opt.value)
+                idx = values.index(opt["value"])
             except ValueError:
-                opt.selected = False
+                opt["selected"] = False
             else:
                 values[idx] = FOUND
-                opt.selected = True if multiple else first
+                opt["selected"] = True if multiple else first
                 first = False
 
         self._invalid = [val for val in values if val is not FOUND]
+        # reflect to DOM via DropDown
+        self._dd.options = self._options
         self._change(raise_event=False)
 
     @property
@@ -432,16 +445,17 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             self._tlog.start("_open: start")
         except Exception:
             pass
+
         # Build options lazily before first show
         if not self._options_built:
             try:
                 self._tlog.check("lazy build: start")
             except Exception:
                 pass
-            selected_snapshot = self.selected + self._invalid
-            options = Option.from_items(self._raw_items)
+            selected_snapshot = list(self.selected) + list(self._invalid)
+            options = self._normalize_items(self._raw_items)
             self._dd.options = self._options = options
-            self._total = sum(1 for opt in options if not opt.is_divider)
+            self._total = sum(1 for opt in options if not opt.get("is_divider"))
             # Only calculate width if needed
             try:
                 needs_width = self.width in ("auto", "fit")
@@ -453,13 +467,15 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
                     self._tlog.check("lazy build: calc width")
                 except Exception:
                     pass
-            # re-apply selection
-            self.selected = selected_snapshot
+            # re-apply selection by values
+            if selected_snapshot:
+                self.selected = selected_snapshot
             self._options_built = True
             try:
                 self._tlog.check(f"lazy build: done (n={len(options)})")
             except Exception:
                 pass
+
         if not pop(self._select_btn, "shown"):
             try:
                 self._tlog.check("not shown -> show")
@@ -472,6 +488,64 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             self._tlog.end("_open: end")
         except Exception:
             pass
+
+    def _normalize_items(self, items):
+        """Convert raw items into dicts for the HTML renderer.
+        Supports str, tuple/list(key,value), dict with keys: key,value,title,icon,subtext,enabled.
+        Dividers represented by '---' string become {'is_divider': True}.
+        """
+        options = []
+        sentinel = object()
+        for idx, item in enumerate(items):
+            if isinstance(item, str):
+                if item == "---":
+                    options.append({"is_divider": True})
+                else:
+                    key = item
+                    options.append(
+                        {
+                            "key": key,
+                            "value": key,
+                            "title": key,
+                            "subtext": "",
+                            "disabled": False,
+                            "selected": False,
+                        }
+                    )
+            elif isinstance(item, (tuple, list)):
+                key, value = item
+                if not isinstance(key, str):
+                    raise TypeError(
+                        f"expected a tuple of the form str, value in items at idx {idx}"
+                    )
+                options.append(
+                    {
+                        "key": key,
+                        "value": value,
+                        "title": key,
+                        "subtext": "",
+                        "disabled": False,
+                        "selected": False,
+                    }
+                )
+            elif isinstance(item, dict):
+                value = item.get("value", sentinel)
+                if value is sentinel:
+                    value = item.get("key")
+                options.append(
+                    {
+                        "key": item.get("key"),
+                        "value": value,
+                        "title": item.get("title", "") or item.get("key"),
+                        "icon": item.get("icon", ""),
+                        "subtext": item.get("subtext", ""),
+                        "disabled": not item.get("enabled", True),
+                        "selected": item.get("selected", False),
+                    }
+                )
+            else:
+                raise TypeError(f"Invalid item at index {idx} (got type {type(item)})")
+        return options
 
     def _close(self, **e):
         try:
