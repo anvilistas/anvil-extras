@@ -27,10 +27,10 @@ container:
   event_bindings: {show: _on_show}
   properties:
     html: |
-      <div anvil-name="ae-ms-dd" class="ae-ms-dd">
+      <div anvil-name="ae-ms-dd" class="ae-ms-dd" tabindex="0" style="outline: none; box-shadow: none;">
           <div class="ae-ms-filter" anvil-slot="filter"></div>
           <div class="ae-ms-select-all" anvil-slot="select-all"></div>
-          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" anvil-slot="options" tab-index="-1"></div>
+          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" anvil-slot="options" tabindex="-1"></div>
       </div>
   type: HtmlTemplate
 custom_component: true
