@@ -160,6 +160,7 @@ class DropDown(DropDownTemplate):
 
     def _on_filter_show(self, **event_args):
         # because of weird way we are hacking the show events in popovers
+        print("focus")
         setTimeout(self.filter_box.focus)
 
     def _on_filter_hide(self, **event_args):
