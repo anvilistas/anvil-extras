@@ -285,7 +285,7 @@ class DropDown(DropDownTemplate):
             active_idx = self._get_active_idx()
             if active_idx != -1:
                 self._set_active_idx(-1)
-            next_idx = self._get_next_idx(active_idx, dir)
+            next_idx = self._get_next_visible_idx(active_idx, dir)
             if next_idx != -1:
                 self._set_active_idx(next_idx)
 
@@ -294,7 +294,7 @@ class DropDown(DropDownTemplate):
                 return
             key = key.lower()
             active_idx = self._get_active_idx()
-            next_idx = self._get_next_idx(
+            next_idx = self._get_next_visible_idx(
                 active_idx,
                 dir=1,
                 pred=lambda opt: (opt.get("key") or "").lower().startswith(key),
@@ -345,16 +345,65 @@ class DropDown(DropDownTemplate):
             f'.anvil-role-ae-ms-option[data-idx="{idx}"]'
         )
 
+    def _is_option_focusable(self, idx):
+        try:
+            opt = self._options_data[idx]
+        except Exception:
+            return False
+        if opt.get("is_divider") or opt.get("disabled"):
+            return False
+        el = self._get_option_element(idx)
+        if el is None:
+            return False
+        # consider filtered-out items not focusable
+        try:
+            disp = getattr(el.style, "display", "")
+            if disp == "none":
+                return False
+        except Exception:
+            pass
+        return True
+
+    def _get_next_visible_idx(self, active_idx, dir=1, pred=None):
+        """Find next index in given direction that is focusable and matches pred if provided.
+        Wraps around; returns -1 if none found.
+        """
+        n = len(self._options_data) if hasattr(self, "_options_data") else 0
+        if n == 0:
+            return -1
+        # start point
+        i = active_idx
+        steps = 0
+        while steps < n:
+            if i == -1:
+                i = 0 if dir > 0 else n - 1
+            else:
+                i = (i + dir) % n
+            steps += 1
+            if not self._is_option_focusable(i):
+                continue
+            if pred is None or pred(self._options_data[i]):
+                return i
+        return -1
+
     def _set_active_idx(self, idx):
-        # remove existing active
-        for el in self._iter_option_elements():
-            el.classList.remove("anvil-role-ae-ms-option-active")
+        # Fast path: toggle only the previously active and the new active element
+        prev = getattr(self, "_active_idx", -1)
+        if prev != -1 and prev != idx:
+            el_prev = self._get_option_element(prev)
+            if el_prev is not None:
+                el_prev.classList.remove("anvil-role-ae-ms-option-active")
         if idx == -1:
+            self._active_idx = -1
             return
         el = self._get_option_element(idx)
         if el is not None:
             el.classList.add("anvil-role-ae-ms-option-active")
-            el.scrollIntoView({"block": "nearest"})
+            try:
+                el.scrollIntoView({"block": "nearest"})
+            except Exception:
+                pass
+        self._active_idx = idx
 
     def _update_dom_selection_for_idx(self, idx):
         el = self._get_option_element(idx)
