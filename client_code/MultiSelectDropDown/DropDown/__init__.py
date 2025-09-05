@@ -94,12 +94,11 @@ class DropDown(DropDownTemplate):
                     prefix, name = icon.split(":", 1)
                 except ValueError:
                     name = icon
+                    prefix = "fa"
                 name = name.strip().replace(" ", "-")
                 if name and not name.startswith("fa-"):
                     name = f"fa-{name}"
-                icon_html = (
-                    f'<i class="ae-ms-option-icon fa {name}" aria-hidden="true"></i>'
-                )
+                icon_html = f'<i class="ae-ms-option-icon {prefix} {name}" aria-hidden="true"></i>'
             # right-side check placeholder (always present; visibility via CSS)
             # icon and subtext inline with label
             label_html = (
@@ -160,8 +159,26 @@ class DropDown(DropDownTemplate):
 
     def _on_filter_show(self, **event_args):
         # because of weird way we are hacking the show events in popovers
-        print("focus")
-        setTimeout(self.filter_box.focus, 10)
+        try:
+            # If the filter input is visible, focus it for typing.
+            if getattr(self.filter_box, "visible", True):
+                setTimeout(self.filter_box.focus, 10)
+                return
+        except Exception:
+            pass
+
+        # Otherwise, focus the dropdown container and set the first visible as active
+        def _focus_dd():
+            try:
+                get_dom_node(self.dd_node).focus()
+            except Exception:
+                pass
+            if self._get_active_idx() == -1:
+                idx = self._get_next_visible_idx(-1, dir=1)
+                if idx != -1:
+                    self._set_active_idx(idx)
+
+        setTimeout(_focus_dd, 10)
 
     def _on_filter_hide(self, **event_args):
         self.filter_box.text = ""
