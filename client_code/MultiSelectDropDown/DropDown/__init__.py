@@ -88,10 +88,10 @@ class DropDown(DropDownTemplate):
                 icon_html = (
                     f'<i class="ae-ms-option-icon fa {name}" aria-hidden="true"></i>'
                 )
-            # checkbox/icon placeholders as spans
+            # right-side check placeholder (always present; visibility via CSS)
             html_parts.append(
                 f'<li><a class="{cls}" data-idx="{idx}" data-key="{key}" tabindex="-1"{data_disabled}>'
-                f'<span class="ms-chk">&#x2610;</span>'
+                f'<i class="ae-ms-chk fa fa-check" aria-hidden="true"></i>'
                 f"{icon_html}"
                 f'<div class="anvil-role-ae-ms-option-label"><span>{title}</span></div>'
                 f'<div class="anvil-role-ae-ms-option-subtext"><span>{subtext}</span></div>'

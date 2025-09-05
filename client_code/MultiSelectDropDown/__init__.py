@@ -157,16 +157,12 @@ _css = """
     grid-row: 1 / span 2;
     justify-self: end;
     color: var(--ae-ms-chk, #888);
-    /* hide original glyph and use ::before for FA check */
-    font-size: 0;
-}
-.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk { color: #337ab7; }
-.ae-ms-options .anvil-role-ae-ms-option-active .ms-chk { color: #fff; }
-.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk::before {
-    content: "\f00c"; /* fa-check */
-    font: normal normal normal 14px/1 FontAwesome;
     font-size: 14px;
+    line-height: 1;
+    opacity: 0; /* hidden unless selected */
 }
+.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk { opacity: 1; color: #337ab7; }
+.ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ms-chk { color: #fff; }
 
 
 """
