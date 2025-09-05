@@ -6,6 +6,7 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 from anvil.js import get_dom_node
+from anvil.js.window import clearTimeout
 from anvil.js.window import document as _document
 from anvil.js.window import setTimeout
 
@@ -34,6 +35,9 @@ class DropDown(DropDownTemplate):
         self._options_data = []
         # tracked active index for keyboard navigation
         self._active_idx = -1
+        # filter debounce state
+        self._filter_timer = None
+        self._last_filter_term = ""
         # event delegation listeners
         self.options_node.addEventListener("click", self._on_click_delegate)
 
@@ -46,6 +50,12 @@ class DropDown(DropDownTemplate):
         # val is list of dicts produced by parent component
         val = val or []
         self._options_data = val
+        # cache lowercase search fields to avoid repeated lower() on each keystroke
+        for opt in self._options_data:
+            key = (opt.get("key") or "").lower()
+            sub = (opt.get("subtext") or "").lower()
+            opt["_search"] = f"{key} {sub}".strip()
+            opt["_visible"] = True
         # timing instrumentation
         tlog = _TimerLogger(name="ms-dd.options", level=_DEBUG)
         try:
@@ -159,31 +169,45 @@ class DropDown(DropDownTemplate):
             el.parentElement.style.display = ""
 
     def _on_filter_change(self, **event_args):
-        term = self.filter_box.text or ""
-        term = term.lower()
+        term = (self.filter_box.text or "").lower()
+        if term == self._last_filter_term:
+            return
+        self._last_filter_term = term
+        # debounce apply
+        try:
+            if self._filter_timer:
+                clearTimeout(self._filter_timer)
+        except Exception:
+            pass
+
+        def _run():
+            self._apply_filter(term)
+
+        self._filter_timer = setTimeout(_run, 120)
+
+    def _apply_filter(self, term: str):
         num_results = 0
         for idx, opt in enumerate(self._options_data):
             el = self._get_option_element(idx)
             if el is None:
                 continue
             if opt.get("is_divider"):
-                el.parentElement.style.display = "none" if term else ""
+                new_disp = "none" if term else ""
+                if el.parentElement.style.display != new_disp:
+                    el.parentElement.style.display = new_disp
+                opt["_visible"] = new_disp == ""
                 continue
-            key = (opt.get("key") or "").lower()
-            sub = (opt.get("subtext") or "").lower()
-            visible = (term in key) or (term in sub)
-            el.parentElement.style.display = "" if visible else "none"
-            num_results += 1 if visible else 0
+            search = opt.get("_search", "")
+            visible = (term in search) if term else True
+            if opt.get("_visible", True) != visible:
+                el.parentElement.style.display = "" if visible else "none"
+                opt["_visible"] = visible
+            if visible:
+                num_results += 1
 
-        # clear active
-        self._set_active_idx(-1)
-
-        if not term:
-            return
-
-        first_idx = self._get_next_idx(-1)
-        if first_idx != -1:
-            self._set_active_idx(first_idx)
+        # update active to first visible item (or clear if none)
+        next_idx = self._get_next_visible_idx(-1, dir=1)
+        self._set_active_idx(next_idx if next_idx != -1 else -1)
 
     def _on_filter_enter(self, **e):
         active_idx = self._get_active_idx()
