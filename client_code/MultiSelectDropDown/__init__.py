@@ -102,10 +102,8 @@ _css = """
 .ae-ms-options a.anvil-role-ae-ms-option {
     color: var(--ae-ms-option-text, #333333);
     display: grid;
-    grid-template-columns: 18px 1fr auto;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1fr auto; /* label | check */
     column-gap: 10px;
-    row-gap: 0;
     align-items: center;
     padding: 6px 10px;
     text-decoration: none;
@@ -145,16 +143,16 @@ _css = """
     color: var(--ae-ms-icon, #666);
 }
 .ae-ms-options .anvil-role-ae-ms-option-label {
-    grid-column: 2;
-    grid-row: 1;
+    grid-column: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
-.ae-ms-options .anvil-role-ae-ms-option-subtext {
-    grid-column: 2;
-    grid-row: 2;
-}
+.ae-ms-options .ae-ms-label-text { font-weight: 600; }
+.ae-ms-options .ae-ms-subtext { margin-left: 6px; color: var(--ae-ms-subtext, #9aa1a9); font-size: 90%; }
 .ae-ms-options .ae-ms-chk,
 .ae-ms-options .ms-chk {
-    grid-column: 3;
+    grid-column: 2;
     grid-row: 1 / span 2;
     justify-self: end;
     color: var(--ae-ms-chk, #888);

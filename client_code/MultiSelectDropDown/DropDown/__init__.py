@@ -89,12 +89,18 @@ class DropDown(DropDownTemplate):
                     f'<i class="ae-ms-option-icon fa {name}" aria-hidden="true"></i>'
                 )
             # right-side check placeholder (always present; visibility via CSS)
+            # icon and subtext inline with label
+            label_html = (
+                f'<div class="anvil-role-ae-ms-option-label">'
+                f"{icon_html}"
+                f'<span class="ae-ms-label-text">{title}</span>'
+                f'<span class="ae-ms-subtext">{subtext}</span>'
+                f"</div>"
+            )
             html_parts.append(
                 f'<li><a class="{cls}" data-idx="{idx}" data-key="{key}" tabindex="-1"{data_disabled}>'
+                f"{label_html}"
                 f'<i class="ae-ms-chk fa fa-check" aria-hidden="true"></i>'
-                f"{icon_html}"
-                f'<div class="anvil-role-ae-ms-option-label"><span>{title}</span></div>'
-                f'<div class="anvil-role-ae-ms-option-subtext"><span>{subtext}</span></div>'
                 f"</a></li>"
             )
         html_parts.append("</ul></div>")
@@ -321,6 +327,11 @@ class DropDown(DropDownTemplate):
             # select current
             self._options_data[idx]["selected"] = True
             self._update_dom_selection_for_idx(idx)
+        # ensure active styling follows the clicked row
+        try:
+            self._set_active_idx(idx)
+        except Exception:
+            pass
         self.raise_event("change")
         if not multiple:
             self._close()
