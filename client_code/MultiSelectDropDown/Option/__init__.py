@@ -38,16 +38,16 @@ class Option(OptionTemplate):
 
     def __init__(self, **properties):
         self._props = properties
-        self._dom_node = get_dom_node(self)
-        self._icon_node = get_dom_node(self.icon_checked)
-        self._icon_node.style.visibility = "hidden"
-        self.label.role = "ae-ms-option-label"
-        self.label_sub.role = "ae-ms-option-subtext"
-        self.role = ["ae-ms-option"]
+        # self._dom_node = get_dom_node(self)
+        # self._icon_node = get_dom_node(self.icon_checked)
+        # self._icon_node.style.visibility = "hidden"
+        # self.label.role = "ae-ms-option-label"
+        # self.label_sub.role = "ae-ms-option-subtext"
+        # self.role = ["ae-ms-option"]
 
-        self.init_components(**properties)
-        self._dom_node.addEventListener("focus", self._on_focus)
-        self._dom_node.addEventListener("blur", self._on_blur)
+        # self.init_components(**properties)
+        # self._dom_node.addEventListener("focus", self._on_focus)
+        # self._dom_node.addEventListener("blur", self._on_blur)
 
     @property
     def selected(self):
