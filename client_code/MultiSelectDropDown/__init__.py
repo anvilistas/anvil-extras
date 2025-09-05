@@ -315,7 +315,13 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         except Exception:
             pass
 
-        self._calc_dd_width()
+        # Only calculate width if it's needed for 'auto' or 'fit' cases to avoid heavy layout work.
+        try:
+            needs_width = self.width in ("auto", "fit")
+        except Exception:
+            needs_width = False
+        if needs_width:
+            self._calc_dd_width()
         try:
             self._tlog.check("calc width")
         except Exception:
