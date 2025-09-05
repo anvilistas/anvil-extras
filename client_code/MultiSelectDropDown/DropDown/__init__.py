@@ -179,11 +179,18 @@ class DropDown(DropDownTemplate):
                 clearTimeout(self._filter_timer)
         except Exception:
             pass
+        # dynamic debounce by term length
+        if not term:
+            # run immediately to reset quickly
+            self._filter_timer = None
+            self._apply_filter(term)
+            return
+        delay = 150 if len(term) == 1 else 100 if len(term) == 2 else 60
 
         def _run():
             self._apply_filter(term)
 
-        self._filter_timer = setTimeout(_run, 120)
+        self._filter_timer = setTimeout(_run, delay)
 
     def _apply_filter(self, term: str):
         num_results = 0
