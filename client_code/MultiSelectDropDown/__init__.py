@@ -152,6 +152,7 @@ _css = """
     grid-column: 2;
     grid-row: 2;
 }
+.ae-ms-options .ae-ms-chk,
 .ae-ms-options .ms-chk {
     grid-column: 3;
     grid-row: 1 / span 2;
@@ -161,8 +162,14 @@ _css = """
     line-height: 1;
     opacity: 0; /* hidden unless selected */
 }
-.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk { opacity: 1; color: #337ab7; }
-.ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ms-chk { color: #fff; }
+.ae-ms-options .anvil-role-ae-ms-option-selected .ae-ms-chk,
+.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk {
+    opacity: 1; color: #337ab7;
+}
+.ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ae-ms-chk,
+.ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ae-ms-chk {
+    color: #fff;
+}
 
 
 """
