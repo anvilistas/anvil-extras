@@ -167,16 +167,12 @@ class DropDown(DropDownTemplate):
         except Exception:
             pass
 
-        # Otherwise, focus the dropdown container and set the first visible as active
+        # Otherwise, focus the dropdown container only (no active item pre-selected)
         def _focus_dd():
             try:
                 get_dom_node(self.dd_node).focus()
             except Exception:
                 pass
-            if self._get_active_idx() == -1:
-                idx = self._get_next_visible_idx(-1, dir=1)
-                if idx != -1:
-                    self._set_active_idx(idx)
 
         setTimeout(_focus_dd, 10)
 
