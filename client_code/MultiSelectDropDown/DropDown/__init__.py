@@ -32,6 +32,8 @@ class DropDown(DropDownTemplate):
         self.dd_node.addEventListener("keydown", self._on_keydown)
         # backing store for html-rendered options (list of dicts)
         self._options_data = []
+        # tracked active index for keyboard navigation
+        self._active_idx = -1
         # event delegation listeners
         self.options_node.addEventListener("click", self._on_click_delegate)
 
@@ -219,13 +221,7 @@ class DropDown(DropDownTemplate):
         setTimeout(self.filter_box.focus)
 
     def _get_active_idx(self):
-        for i, opt in enumerate(self._options_data):
-            if opt.get("is_divider"):
-                continue
-            el = self._get_option_element(i)
-            if el is not None and "anvil-role-ae-ms-option-active" in el.classList:
-                return i
-        return -1
+        return getattr(self, "_active_idx", -1)
 
     def _get_next_idx(self, active_idx, dir=1, pred=None):
         num_options = len(self._options_data)
@@ -283,8 +279,6 @@ class DropDown(DropDownTemplate):
 
             dir = 1 if key == "ArrowDown" else -1
             active_idx = self._get_active_idx()
-            if active_idx != -1:
-                self._set_active_idx(-1)
             next_idx = self._get_next_visible_idx(active_idx, dir)
             if next_idx != -1:
                 self._set_active_idx(next_idx)
@@ -358,7 +352,9 @@ class DropDown(DropDownTemplate):
         # consider filtered-out items not focusable
         try:
             disp = getattr(el.style, "display", "")
-            if disp == "none":
+            parent_disp = getattr(getattr(el, "parentElement", None), "style", None)
+            parent_disp_val = getattr(parent_disp, "display", "") if parent_disp else ""
+            if disp == "none" or parent_disp_val == "none":
                 return False
         except Exception:
             pass
