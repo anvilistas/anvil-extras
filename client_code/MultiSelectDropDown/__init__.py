@@ -196,6 +196,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._total = 0
         self._props = props = _defaults | properties
         props["items"] = props["items"] or []
+        # lazy-build: keep raw items until first open
+        self._raw_items = list(props["items"]) if props["items"] else []
+        self._options_built = False
 
         # timer logger for performance investigation
         self._tlog = _TimerLogger(name="ms-render", level=_DEBUG)
@@ -295,45 +298,15 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     @items.setter
     def items(self, value):
+        # store raw items and mark for lazy build
         self._props["items"] = value
-        self._close()
-        selected = self.selected + self._invalid
-        try:
-            self._tlog.start("items: start")
-        except Exception:
-            pass
-
-        options = Option.from_items(value)
-        try:
-            self._tlog.check("built options")
-        except Exception:
-            pass
-
-        self._dd.options = self._options = options
-        try:
-            self._tlog.check(f"assigned options (n={len(options)})")
-        except Exception:
-            pass
-
-        # Only calculate width if it's needed for 'auto' or 'fit' cases to avoid heavy layout work.
-        try:
-            needs_width = self.width in ("auto", "fit")
-        except Exception:
-            needs_width = False
-        if needs_width:
-            self._calc_dd_width()
-        try:
-            self._tlog.check("calc width")
-        except Exception:
-            pass
-        self._total = sum(1 for opt in options if not opt.is_divider)
-        self.selected = selected
-        if self._init:
-            self.width = self.width
-        try:
-            self._tlog.end("items: end")
-        except Exception:
-            pass
+        self._raw_items = list(value) if value else []
+        self._options_built = False
+        self._options = []
+        self._dd.options = []
+        self._total = 0
+        # keep button text in sync
+        self._change(raise_event=False)
 
     @property
     def selected_keys(self):
@@ -459,6 +432,34 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
             self._tlog.start("_open: start")
         except Exception:
             pass
+        # Build options lazily before first show
+        if not self._options_built:
+            try:
+                self._tlog.check("lazy build: start")
+            except Exception:
+                pass
+            selected_snapshot = self.selected + self._invalid
+            options = Option.from_items(self._raw_items)
+            self._dd.options = self._options = options
+            self._total = sum(1 for opt in options if not opt.is_divider)
+            # Only calculate width if needed
+            try:
+                needs_width = self.width in ("auto", "fit")
+            except Exception:
+                needs_width = False
+            if needs_width:
+                self._calc_dd_width()
+                try:
+                    self._tlog.check("lazy build: calc width")
+                except Exception:
+                    pass
+            # re-apply selection
+            self.selected = selected_snapshot
+            self._options_built = True
+            try:
+                self._tlog.check(f"lazy build: done (n={len(options)})")
+            except Exception:
+                pass
         if not pop(self._select_btn, "shown"):
             try:
                 self._tlog.check("not shown -> show")

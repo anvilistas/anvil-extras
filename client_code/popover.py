@@ -281,6 +281,8 @@ class Popover:
 
         # per-instance timer logger
         self._tlog = _TimerLogger(name=f"popover#{self.id}", level=_DEBUG)
+        # track whether we've already walked content to init popover attributes
+        self._init_walk_done = False
 
         # we use this to allow show-hide events to be fired on the content
         self.fake_container = _anvil.Container()
@@ -461,24 +463,55 @@ class Popover:
         self.animate(False)
 
     def setup_dom(self):
+        try:
+            self._tlog.check("setup_dom: start")
+        except Exception:
+            pass
         if self.fake_container.parent is None:
             root = _get_root()
             if root is not None:
                 root.add_component(self.fake_container)
+        try:
+            self._tlog.check("setup_dom: ensure fake_container")
+        except Exception:
+            pass
 
         if self.poppee.parent is None:
             self.fake_container.add_component(self.poppee)
+        try:
+            self._tlog.check("setup_dom: ensure poppee parented")
+        except Exception:
+            pass
 
         if self.dom_content.firstChild is None:
             self.dom_content.append(_anvil.js.get_dom_node(self.poppee))
+        try:
+            self._tlog.check("setup_dom: attach content node")
+        except Exception:
+            pass
 
         el = _get_popper_element(self.popper)
         self.init_popover(el)
+        try:
+            self._tlog.check("setup_dom: init popper attrs")
+        except Exception:
+            pass
 
-        for c in _walk(self.poppee):
-            c.raise_event("x-popover-init", init_node=self.init_popover)
+        # Only perform the expensive walk/init once per instance
+        if not self._init_walk_done:
+            for c in _walk(self.poppee):
+                c.raise_event("x-popover-init", init_node=self.init_popover)
+            self._init_walk_done = True
+            try:
+                self._tlog.check("setup_dom: walk+init (once)")
+            except Exception:
+                pass
 
         if self.dom_popover.isConnected:
+            try:
+                self._tlog.check("setup_dom: already connected")
+            except Exception:
+                pass
             return
 
         container = self.container
@@ -492,6 +525,10 @@ class Popover:
             container.append(self.dom_popover)
         except AttributeError:
             _document.body.append(self.dom_popover)
+        try:
+            self._tlog.check("setup_dom: appended popover")
+        except Exception:
+            pass
 
     def cleanup_dom(self):
         self.dom_popover.remove()
