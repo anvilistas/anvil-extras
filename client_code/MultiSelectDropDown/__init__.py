@@ -169,6 +169,32 @@ _css = """
     color: #fff;
 }
 
+/* Option rows */
+.anvil-role-ae-ms-option:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Select/Deselect buttons inside popover */
+[role="ae-ms-select-btn"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Filter input */
+[role="ae-ms-filter"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Dropdown container (when filter is hidden and container is focused) */
+.ae-ms-dropdown:focus,
+#ae-ms-dd:focus,
+[role="ae-ms-dd"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 
 """
 _html_injector.css(_css)

@@ -13,7 +13,6 @@ from anvil.js.window import setTimeout
 from ...logging import DEBUG as _DEBUG
 from ...logging import TimerLogger as _TimerLogger
 from ...popover import pop
-from ..Option import Option
 from ._anvil_designer import DropDownTemplate
 
 __version__ = "3.3.0"
