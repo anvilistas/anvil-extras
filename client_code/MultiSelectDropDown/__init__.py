@@ -58,6 +58,9 @@ _css = """
     flex-direction: column;
     height: 100%;
     overflow: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .ae-ms-options a[data-disabled] {
@@ -94,9 +97,19 @@ _css = """
     gap: 8px;
 }
 
+.ae-ms-options li { padding: 0; }
+
 .ae-ms-options a.anvil-role-ae-ms-option {
     color: var(--ae-ms-option-text, #333333);
-    padding: 2px 0;
+    display: grid;
+    grid-template-columns: 18px 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 0;
+    align-items: center;
+    padding: 6px 10px;
+    text-decoration: none;
+    border-radius: 4px;
 }
 
 .ae-ms-options a.anvil-role-ae-ms-option:hover:not(.anvil-role-ae-ms-option-active) {
@@ -122,6 +135,37 @@ _css = """
 .anvil-role-ae-ms-option-active .anvil-role-ae-ms-option-subtext span {
     color: var(--ae-ms-option-subtext-active, rgba(255,255,255,.5));
 }
+
+/* Grid placement for parts */
+.ae-ms-options .ae-ms-option-icon {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 18px;
+    text-align: center;
+    color: var(--ae-ms-icon, #666);
+}
+.ae-ms-options .anvil-role-ae-ms-option-label {
+    grid-column: 2;
+    grid-row: 1;
+}
+.ae-ms-options .anvil-role-ae-ms-option-subtext {
+    grid-column: 2;
+    grid-row: 2;
+}
+.ae-ms-options .ms-chk {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    color: var(--ae-ms-chk, #fff);
+    /* hide original glyph and use ::before for FA check */
+    font-size: 0;
+}
+.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk::before {
+    content: "\f00c"; /* fa-check */
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 14px;
+}
+
 
 """
 _html_injector.css(_css)

@@ -67,6 +67,7 @@ class DropDown(DropDownTemplate):
             key = opt.get("key", "")
             title = opt.get("title") or key
             subtext = opt.get("subtext") or ""
+            icon = opt.get("icon") or ""
             disabled = opt.get("disabled", False)
             selected = opt.get("selected", False)
             classes = ["anvil-role-ae-ms-option"]
@@ -74,10 +75,24 @@ class DropDown(DropDownTemplate):
                 classes.append("anvil-role-ae-ms-option-selected")
             cls = " ".join(classes)
             data_disabled = ' data-disabled=""' if disabled else ""
+            # icon mapping for FA4: accept "fa:foo" or "far:foo" and map to "fa fa-foo"
+            icon_html = ""
+            if icon:
+                try:
+                    prefix, name = icon.split(":", 1)
+                except ValueError:
+                    name = icon
+                name = name.strip().replace(" ", "-")
+                if name and not name.startswith("fa-"):
+                    name = f"fa-{name}"
+                icon_html = (
+                    f'<i class="ae-ms-option-icon fa {name}" aria-hidden="true"></i>'
+                )
             # checkbox/icon placeholders as spans
             html_parts.append(
                 f'<li><a class="{cls}" data-idx="{idx}" data-key="{key}" tabindex="-1"{data_disabled}>'
                 f'<span class="ms-chk">&#x2610;</span>'
+                f"{icon_html}"
                 f'<div class="anvil-role-ae-ms-option-label"><span>{title}</span></div>'
                 f'<div class="anvil-role-ae-ms-option-subtext"><span>{subtext}</span></div>'
                 f"</a></li>"
