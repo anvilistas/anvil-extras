@@ -305,14 +305,22 @@ class DropDown(DropDownTemplate):
             return
         multiple = self.multiple
         if multiple:
+            # Toggle only clicked item
             opt["selected"] = not opt.get("selected", False)
+            self._update_dom_selection_for_idx(idx)
         else:
-            # clear previous
-            for o in self._options_data:
-                o["selected"] = False
-            opt["selected"] = True
-        # update DOM selection classes
-        self._sync_dom_selection()
+            # Single select: find previous selected (if any) and update only those two indices
+            prev_idx = None
+            for i, o in enumerate(self._options_data):
+                if o.get("selected"):
+                    prev_idx = i
+                    break
+            if prev_idx is not None and prev_idx != idx:
+                self._options_data[prev_idx]["selected"] = False
+                self._update_dom_selection_for_idx(prev_idx)
+            # select current
+            self._options_data[idx]["selected"] = True
+            self._update_dom_selection_for_idx(idx)
         self.raise_event("change")
         if not multiple:
             self._close()
@@ -336,6 +344,15 @@ class DropDown(DropDownTemplate):
         if el is not None:
             el.classList.add("anvil-role-ae-ms-option-active")
             el.scrollIntoView({"block": "nearest"})
+
+    def _update_dom_selection_for_idx(self, idx):
+        el = self._get_option_element(idx)
+        if el is None:
+            return
+        if self._options_data[idx].get("selected"):
+            el.classList.add("anvil-role-ae-ms-option-selected")
+        else:
+            el.classList.remove("anvil-role-ae-ms-option-selected")
 
     def _sync_dom_selection(self):
         for idx, opt in enumerate(self._options_data):
