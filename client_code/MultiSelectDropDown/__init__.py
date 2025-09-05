@@ -156,10 +156,12 @@ _css = """
     grid-column: 3;
     grid-row: 1 / span 2;
     justify-self: end;
-    color: var(--ae-ms-chk, #fff);
+    color: var(--ae-ms-chk, #888);
     /* hide original glyph and use ::before for FA check */
     font-size: 0;
 }
+.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk { color: #337ab7; }
+.ae-ms-options .anvil-role-ae-ms-option-active .ms-chk { color: #fff; }
 .ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk::before {
     content: "\f00c"; /* fa-check */
     font: normal normal normal 14px/1 FontAwesome;
