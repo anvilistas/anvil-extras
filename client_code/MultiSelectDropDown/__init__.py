@@ -153,40 +153,6 @@ _css = """
 
 """
 _html_injector.css(_css)
-"""
-
-/* Grid placement for parts */
-.ae-ms-options .ae-ms-option-icon {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    width: 18px;
-    text-align: center;
-    color: var(--ae-ms-icon, #666);
-}
-.ae-ms-options .anvil-role-ae-ms-option-label {
-    grid-column: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-.ae-ms-options .ae-ms-subtext { margin-left: 6px; color: var(--ae-ms-subtext, #9aa1a9); font-size: 90%; }
-.ae-ms-options .ae-ms-chk {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    justify-self: end;
-    color: var(--ae-ms-chk, #888);
-    font-size: 14px;
-    line-height: 1;
-    opacity: 0; /* hidden unless selected */
-}
-.ae-ms-options .anvil-role-ae-ms-option-selected .ae-ms-chk {
-    opacity: 1; color: #337ab7;
-}
-.ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ae-ms-chk {
-    color: #fff;
-}
-
-"""
 
 # TODO
 # - [x] add support for dividers
