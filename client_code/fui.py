@@ -16,7 +16,7 @@ try:
 except AttributeError:
     # https://floating-ui.com/
     FloatingUIDOM = import_from(
-        "https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.10/+esm"
+        "https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.4/+esm"
     )
 
 _static_arrow_position = {

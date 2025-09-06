@@ -2,7 +2,9 @@
 
 ## Bug Fixes
 * slider - remove overflow css override that broke some other anvil components
-https://github.com/anvilistas/anvil-extras/pull/610
+  https://github.com/anvilistas/anvil-extras/pull/610
+* multiselect- performance improvements with large item lists
+  https://github.com/anvilistas/anvil-extras/pull/613
 
 
 # v3.3.0
