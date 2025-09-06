@@ -369,6 +369,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._options = []  # list[dict]
         self._dd.options = []  # html renderer expects list[dict]
         self._total = 0
+
+        if pop(self._select_btn, "shown"):
+            self._lazy_build()
         # keep button text in sync
         self._change(raise_event=False)
 
