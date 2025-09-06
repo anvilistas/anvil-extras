@@ -147,7 +147,6 @@ _css = """
     align-items: center;
     gap: 8px;
 }
-.ae-ms-options .ae-ms-label-text { font-weight: 600; }
 .ae-ms-options .ae-ms-subtext { margin-left: 6px; color: var(--ae-ms-subtext, #9aa1a9); font-size: 90%; }
 .ae-ms-options .ae-ms-chk {
     grid-column: 2;

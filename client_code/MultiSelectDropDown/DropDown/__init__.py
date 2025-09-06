@@ -88,8 +88,8 @@ class DropDown(DropDownTemplate):
             label_html = (
                 f'<div class="anvil-role-ae-ms-option-label">'
                 f"{icon_html}"
-                f'<span class="ae-ms-label-text">{title}</span>'
-                f'<span class="ae-ms-subtext">{subtext}</span>'
+                f'<div class="ae-ms-label"><span>{title}</span></div>'
+                f'<div class="ae-ms-subtext"><span>{subtext}</span></div>'
                 f"</div>"
             )
             html_parts.append(
