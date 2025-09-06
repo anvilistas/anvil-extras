@@ -525,16 +525,12 @@ class Popover:
 
         self.dom_popover.style.display = ""
 
-        # Defer auto_update to avoid doing heavy layout sync work inside show()
-        # def _start_auto_update():
         self.cleanup = fui.auto_update(
             _get_popper_element(self.popper),
             self.dom_popover,
             placement=self.placement,
             arrow=self.dom_arrow if self.arrow else None,
         )
-
-        # _W.setTimeout(_start_auto_update, 0)
 
         delay = self.delay["show"] if e else 0
         self.timeouts.append(_W.setTimeout(self.animate_in, delay))
