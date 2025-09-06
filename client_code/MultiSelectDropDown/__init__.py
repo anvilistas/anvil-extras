@@ -133,6 +133,11 @@ _css = """
     color: var(--ae-ms-option-subtext-active, rgba(255,255,255,.5));
 }
 
+
+"""
+_html_injector.css(_css)
+"""
+
 /* Grid placement for parts */
 .ae-ms-options .ae-ms-option-icon {
     grid-column: 1;
@@ -164,9 +169,7 @@ _css = """
     color: #fff;
 }
 
-
 """
-_html_injector.css(_css)
 
 # TODO
 # - [x] add support for dividers
