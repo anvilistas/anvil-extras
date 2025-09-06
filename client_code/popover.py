@@ -20,8 +20,6 @@ from anvil.js.window import document as _document
 from anvil.js.window import window as _W
 
 from . import fui
-from .logging import DEBUG as _DEBUG
-from .logging import TimerLogger as _TimerLogger
 from .utils._component_helpers import _html_injector
 from .utils._component_helpers import walk as _walk
 from .utils._deprecated import deprecated as _deprecated
@@ -279,9 +277,6 @@ class Popover:
         self.timeouts = []
         self.cleanup = _noop
 
-        # per-instance timer logger
-        self._tlog = _TimerLogger(name=f"popover#{self.id}", level=_DEBUG)
-        # track whether we've already walked content to init popover attributes
         self._init_walk_done = False
 
         # we use this to allow show-hide events to be fired on the content
@@ -463,55 +458,27 @@ class Popover:
         self.animate(False)
 
     def setup_dom(self):
-        try:
-            self._tlog.check("setup_dom: start")
-        except Exception:
-            pass
         if self.fake_container.parent is None:
             root = _get_root()
             if root is not None:
                 root.add_component(self.fake_container)
-        try:
-            self._tlog.check("setup_dom: ensure fake_container")
-        except Exception:
-            pass
 
         if self.poppee.parent is None:
             self.fake_container.add_component(self.poppee)
-        try:
-            self._tlog.check("setup_dom: ensure poppee parented")
-        except Exception:
-            pass
 
         if self.dom_content.firstChild is None:
             self.dom_content.append(_anvil.js.get_dom_node(self.poppee))
-        try:
-            self._tlog.check("setup_dom: attach content node")
-        except Exception:
-            pass
 
         el = _get_popper_element(self.popper)
         self.init_popover(el)
-        try:
-            self._tlog.check("setup_dom: init popper attrs")
-        except Exception:
-            pass
 
         # Only perform the expensive walk/init once per instance
         if not self._init_walk_done:
             for c in _walk(self.poppee):
                 c.raise_event("x-popover-init", init_node=self.init_popover)
             self._init_walk_done = True
-            try:
-                self._tlog.check("setup_dom: walk+init (once)")
-            except Exception:
-                pass
 
         if self.dom_popover.isConnected:
-            try:
-                self._tlog.check("setup_dom: already connected")
-            except Exception:
-                pass
             return
 
         container = self.container
@@ -525,10 +492,6 @@ class Popover:
             container.append(self.dom_popover)
         except AttributeError:
             _document.body.append(self.dom_popover)
-        try:
-            self._tlog.check("setup_dom: appended popover")
-        except Exception:
-            pass
 
     def cleanup_dom(self):
         self.dom_popover.remove()
@@ -544,10 +507,6 @@ class Popover:
         pass
 
     def show(self, *e):
-        try:
-            self._tlog.start("show: start")
-        except Exception:
-            pass
         # exit early if we're already showing
         is_hover = e and e[0].type == "mouseenter"
         if not is_hover:
@@ -560,51 +519,27 @@ class Popover:
         _visible_popovers[self.id] = self.popper
 
         self.cleanup()
-        try:
-            self._tlog.check("cleanup")
-        except Exception:
-            pass
         self.setup_dom()
-        try:
-            self._tlog.check("setup_dom")
-        except Exception:
-            pass
 
         self.clear_timeouts()
-        try:
-            self._tlog.check("clear_timeouts")
-        except Exception:
-            pass
 
         self.dom_popover.style.display = ""
 
         # Defer auto_update to avoid doing heavy layout sync work inside show()
-        def _start_auto_update():
-            try:
-                self._tlog.check("auto_update: start")
-            except Exception:
-                pass
-            self.cleanup = fui.auto_update(
-                _get_popper_element(self.popper),
-                self.dom_popover,
-                placement=self.placement,
-                arrow=self.dom_arrow if self.arrow else None,
-            )
-            try:
-                self._tlog.check("auto_update: started")
-            except Exception:
-                pass
+        # def _start_auto_update():
+        self.cleanup = fui.auto_update(
+            _get_popper_element(self.popper),
+            self.dom_popover,
+            placement=self.placement,
+            arrow=self.dom_arrow if self.arrow else None,
+        )
 
-        _W.setTimeout(_start_auto_update, 0)
+        # _W.setTimeout(_start_auto_update, 0)
 
         delay = self.delay["show"] if e else 0
         self.timeouts.append(_W.setTimeout(self.animate_in, delay))
         self.timeouts.append(_W.setTimeout(self.on_shown, delay + self.animation_ms))
         self.poppee.raise_event("x-popover-show")
-        try:
-            self._tlog.end("show: end")
-        except Exception:
-            pass
 
     def on_hidden(self):
         self.dom_popover.style.display = "none"

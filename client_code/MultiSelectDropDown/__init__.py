@@ -9,8 +9,6 @@ import anvil.js as _js
 from anvil import HtmlPanel as _HtmlPanel
 from anvil.js.window import document as _document
 
-from ..logging import DEBUG as _DEBUG
-from ..logging import TimerLogger as _TimerLogger
 from ..popover import pop, popover
 from ..utils._component_helpers import _css_length, _html_injector, _spacing_property
 from ._anvil_designer import MultiSelectDropDownTemplate
@@ -150,8 +148,7 @@ _css = """
 }
 .ae-ms-options .ae-ms-label-text { font-weight: 600; }
 .ae-ms-options .ae-ms-subtext { margin-left: 6px; color: var(--ae-ms-subtext, #9aa1a9); font-size: 90%; }
-.ae-ms-options .ae-ms-chk,
-.ae-ms-options .ms-chk {
+.ae-ms-options .ae-ms-chk {
     grid-column: 2;
     grid-row: 1 / span 2;
     justify-self: end;
@@ -160,11 +157,9 @@ _css = """
     line-height: 1;
     opacity: 0; /* hidden unless selected */
 }
-.ae-ms-options .anvil-role-ae-ms-option-selected .ae-ms-chk,
-.ae-ms-options .anvil-role-ae-ms-option-selected .ms-chk {
+.ae-ms-options .anvil-role-ae-ms-option-selected .ae-ms-chk {
     opacity: 1; color: #337ab7;
 }
-.ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ae-ms-chk,
 .ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ae-ms-chk {
     color: #fff;
 }
@@ -272,9 +267,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._raw_items = list(props["items"]) if props["items"] else []
         self._options_built = False
 
-        # timer logger for performance investigation
-        self._tlog = _TimerLogger(name="ms-render", level=_DEBUG)
-
         self._dd_width = 0
         self._dd = DropDown()
         self._dd.add_event_handler("change", self._change)
@@ -297,10 +289,12 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self.init_components(**props)
         self.set_event_handler("x-popover-init", self._mk_popover)
         self.set_event_handler("x-popover-destroy", self._mk_popover)
-        # cache of open state to avoid pop(..., 'shown') check costs
-        self._is_open = False
-        self._dd.set_event_handler("x-popover-show", self._on_dd_opened)
-        self._dd.set_event_handler("x-popover-hide", self._on_dd_closed)
+        self._dd.set_event_handler(
+            "x-popover-show", lambda **e: self.raise_event("opened")
+        )
+        self._dd.set_event_handler(
+            "x-popover-hide", lambda **e: self.raise_event("closed")
+        )
 
         self._init = True
         self.selected = selected
@@ -309,11 +303,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         if count > 3:
             return f"{count} items selected"
         return ", ".join(
-            [
-                opt.get("title") or opt.get("key")
-                for opt in self._options
-                if opt.get("selected")
-            ]
+            opt.get("title") or opt.get("key")
+            for opt in self._options
+            if opt.get("selected")
         )
 
     ##### PROPERTIES #####
@@ -505,62 +497,32 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     def _mk_popover(self, init_node, **event_args):
         init_node(self._dd)
 
-    def _on_dd_opened(self, **e):
-        self._is_open = True
-        self.raise_event("opened")
+    def _lazy_build(self):
+        if self._options_built:
+            return
 
-    def _on_dd_closed(self, **e):
-        self._is_open = False
-        self.raise_event("closed")
+        selected_snapshot = list(self.selected) + list(self._invalid)
+        options = self._normalize_items(self._raw_items)
+        self._dd.options = self._options = options
+        self._total = sum(1 for opt in options if not opt.get("is_divider"))
+        # Only calculate width if needed
+        try:
+            needs_width = self.width in ("auto", "fit")
+        except Exception:
+            needs_width = False
+        if needs_width:
+            self._calc_dd_width()
+        if selected_snapshot:
+            self.selected = selected_snapshot
+        self._options_built = True
 
     def _open(self, **e):
-        try:
-            self._tlog.start("_open: start")
-        except Exception:
-            pass
-
-        # Build options lazily before first show
-        if not self._options_built:
-            try:
-                self._tlog.check("lazy build: start")
-            except Exception:
-                pass
-            selected_snapshot = list(self.selected) + list(self._invalid)
-            options = self._normalize_items(self._raw_items)
-            self._dd.options = self._options = options
-            self._total = sum(1 for opt in options if not opt.get("is_divider"))
-            # Only calculate width if needed
-            try:
-                needs_width = self.width in ("auto", "fit")
-            except Exception:
-                needs_width = False
-            if needs_width:
-                self._calc_dd_width()
-                try:
-                    self._tlog.check("lazy build: calc width")
-                except Exception:
-                    pass
-            # re-apply selection by values
-            if selected_snapshot:
-                self.selected = selected_snapshot
-            self._options_built = True
-            try:
-                self._tlog.check(f"lazy build: done (n={len(options)})")
-            except Exception:
-                pass
+        self._lazy_build()
 
         if not pop(self._select_btn, "shown"):
-            try:
-                self._tlog.check("not shown -> show")
-            except Exception:
-                pass
             pop(self._select_btn, "show")
             # invalidate these since the user has interacted with the component
             self._invalid = []
-        try:
-            self._tlog.end("_open: end")
-        except Exception:
-            pass
 
     def _normalize_items(self, items):
         """Convert raw items into dicts for the HTML renderer.
@@ -621,40 +583,11 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         return options
 
     def _close(self, **e):
-        try:
-            self._tlog.start("_close: start")
-        except Exception:
-            pass
         if pop(self._select_btn, "shown"):
-            try:
-                self._tlog.check("shown -> hide")
-            except Exception:
-                pass
             pop(self._select_btn, "hide")
-        try:
-            self._tlog.end("_close: end")
-        except Exception:
-            pass
 
     def _toggle(self, **e):
-        try:
-            self._tlog.start("_toggle: start")
-        except Exception:
-            pass
-        # prefer cached state (kept in sync via events) to avoid DOM queries
-        try:
-            is_shown = self._is_open
-        except Exception:
-            is_shown = pop(self._select_btn, "shown")
-        try:
-            self._tlog.check(f"checked shown={is_shown}")
-        except Exception:
-            pass
-        if not is_shown:
+        if not pop(self._select_btn, "shown"):
             self._open()
         else:
             self._close()
-        try:
-            self._tlog.end("_toggle: end")
-        except Exception:
-            pass

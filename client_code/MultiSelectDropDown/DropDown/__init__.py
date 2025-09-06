@@ -6,12 +6,8 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 from anvil.js import get_dom_node
-from anvil.js.window import clearTimeout
-from anvil.js.window import document as _document
-from anvil.js.window import setTimeout
+from anvil.js.window import clearTimeout, setTimeout
 
-from ...logging import DEBUG as _DEBUG
-from ...logging import TimerLogger as _TimerLogger
 from ...popover import pop
 from ._anvil_designer import DropDownTemplate
 
@@ -55,19 +51,8 @@ class DropDown(DropDownTemplate):
             sub = (opt.get("subtext") or "").lower()
             opt["_search"] = f"{key} {sub}".strip()
             opt["_visible"] = True
-        # timing instrumentation
-        tlog = _TimerLogger(name="ms-dd.options", level=_DEBUG)
-        try:
-            tlog.start("options: start")
-        except Exception:
-            pass
-
         # clear container
         self.options_node.innerHTML = ""
-        try:
-            tlog.check("cleared panel")
-        except Exception:
-            pass
 
         # build a single HTML string for all options
         html_parts = ['<div class="ae-ms-options-wrap"><ul>']
@@ -116,15 +101,6 @@ class DropDown(DropDownTemplate):
         html_parts.append("</ul></div>")
         self.options_node.innerHTML = "".join(html_parts)
 
-        try:
-            tlog.check(f"added components (n={len(val)})")
-        except Exception:
-            pass
-        try:
-            tlog.end("options: end")
-        except Exception:
-            pass
-
     @property
     def enable_filtering(self):
         return self._props.get("enable_filtering", False)
@@ -158,22 +134,7 @@ class DropDown(DropDownTemplate):
 
     def _on_filter_show(self, **event_args):
         # because of weird way we are hacking the show events in popovers
-        try:
-            # If the filter input is visible, focus it for typing.
-            if getattr(self.filter_box, "visible", True):
-                setTimeout(self.filter_box.focus, 10)
-                return
-        except Exception:
-            pass
-
-        # Otherwise, focus the dropdown container only (no active item pre-selected)
-        def _focus_dd():
-            try:
-                self.dd_node.focus()
-            except Exception:
-                pass
-
-        setTimeout(_focus_dd, 30)
+        setTimeout(self.filter_box.focus, 10)
 
     def _on_filter_hide(self, **event_args):
         self.filter_box.text = ""
@@ -189,12 +150,7 @@ class DropDown(DropDownTemplate):
             return
         self._last_filter_term = term
         # debounce apply
-        try:
-            if self._filter_timer:
-                clearTimeout(self._filter_timer)
-        except Exception:
-            pass
-        # dynamic debounce by term length
+        clearTimeout(self._filter_timer)
         if not term:
             # run immediately to reset quickly
             self._filter_timer = None
@@ -261,7 +217,7 @@ class DropDown(DropDownTemplate):
             self.options_node.focus()
             self.options_node.tabIndex = -1
 
-        setTimeout(focus)
+        setTimeout(focus, 10)
 
     def _on_focus(self, *args, **kws):
         setTimeout(self.filter_box.focus)
