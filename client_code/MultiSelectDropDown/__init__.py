@@ -137,9 +137,7 @@ _css = """
 .ae-ms-options .ae-ms-option-icon {
     grid-column: 1;
     grid-row: 1 / span 2;
-    width: 18px;
     text-align: center;
-    color: var(--ae-ms-icon, #666);
 }
 .ae-ms-options .anvil-role-ae-ms-option-label {
     grid-column: 1;
@@ -151,7 +149,6 @@ _css = """
     grid-column: 2;
     grid-row: 1 / span 2;
     justify-self: end;
-    font-size: 14px;
     line-height: 1;
     opacity: 0; /* hidden unless selected */
 }
