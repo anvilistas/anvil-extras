@@ -95,8 +95,6 @@ _css = """
     gap: 8px;
 }
 
-.ae-ms-options li { padding: 0; }
-
 .ae-ms-options a.anvil-role-ae-ms-option {
     color: var(--ae-ms-option-text, #333333);
     display: grid;
@@ -134,11 +132,6 @@ _css = """
 }
 
 /* Grid placement for parts */
-.ae-ms-options .ae-ms-option-icon {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    text-align: center;
-}
 .ae-ms-options .anvil-role-ae-ms-option-label {
     grid-column: 1;
     display: inline-flex;
@@ -147,9 +140,6 @@ _css = """
 }
 .ae-ms-options .ae-ms-chk {
     grid-column: 2;
-    grid-row: 1 / span 2;
-    justify-self: end;
-    line-height: 1;
     opacity: 0; /* hidden unless selected */
 }
 .ae-ms-options .anvil-role-ae-ms-option-selected .ae-ms-chk {
