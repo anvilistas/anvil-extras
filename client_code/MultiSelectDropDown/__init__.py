@@ -133,6 +133,36 @@ _css = """
     color: var(--ae-ms-option-subtext-active, rgba(255,255,255,.5));
 }
 
+/* Grid placement for parts */
+.ae-ms-options .ae-ms-option-icon {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 18px;
+    text-align: center;
+    color: var(--ae-ms-icon, #666);
+}
+.ae-ms-options .anvil-role-ae-ms-option-label {
+    grid-column: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.ae-ms-options .ae-ms-chk {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0; /* hidden unless selected */
+}
+.ae-ms-options .anvil-role-ae-ms-option-selected .ae-ms-chk {
+    opacity: 1;
+}
+
+.anvil-role-ae-ms-option:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 """
 _html_injector.css(_css)
