@@ -106,6 +106,7 @@ _css = """
     padding: 6px 10px;
     text-decoration: none;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .ae-ms-options a.anvil-role-ae-ms-option:hover:not(.anvil-role-ae-ms-option-active) {
@@ -162,32 +163,6 @@ _css = """
 }
 .ae-ms-options .anvil-role-ae-ms-option-active.anvil-role-ae-ms-option-selected .ae-ms-chk {
     color: #fff;
-}
-
-/* Option rows */
-.anvil-role-ae-ms-option:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Select/Deselect buttons inside popover */
-[role="ae-ms-select-btn"]:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Filter input */
-[role="ae-ms-filter"]:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Dropdown container (when filter is hidden and container is focused) */
-.ae-ms-dropdown:focus,
-#ae-ms-dd:focus,
-[role="ae-ms-dd"]:focus {
-  outline: none !important;
-  box-shadow: none !important;
 }
 
 
