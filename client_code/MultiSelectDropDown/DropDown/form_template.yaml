@@ -30,7 +30,7 @@ container:
       <div anvil-name="ae-ms-dd" class="ae-ms-dd">
           <div class="ae-ms-filter" anvil-slot="filter"></div>
           <div class="ae-ms-select-all" anvil-slot="select-all"></div>
-          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" anvil-slot="options" tab-index="-1"></div>
+          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" anvil-slot="options" tabindex="-1"></div>
       </div>
   type: HtmlTemplate
 custom_component: true

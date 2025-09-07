@@ -277,8 +277,11 @@ class Popover:
         self.timeouts = []
         self.cleanup = _noop
 
+        self._init_walk_done = False
+
         # we use this to allow show-hide events to be fired on the content
         self.fake_container = _anvil.Container()
+        anvil.js.get_dom_node(self.fake_container).style.display = "none"
         self._clicked = False
 
         if dismiss_on_scroll is not None:
@@ -469,8 +472,11 @@ class Popover:
         el = _get_popper_element(self.popper)
         self.init_popover(el)
 
-        for c in _walk(self.poppee):
-            c.raise_event("x-popover-init", init_node=self.init_popover)
+        # Only perform the expensive walk/init once per instance
+        if not self._init_walk_done:
+            for c in _walk(self.poppee):
+                c.raise_event("x-popover-init", init_node=self.init_popover)
+            self._init_walk_done = True
 
         if self.dom_popover.isConnected:
             return
