@@ -156,12 +156,11 @@ class DropDown(DropDownTemplate):
             self._filter_timer = None
             self._apply_filter(term)
             return
-        delay = 150 if len(term) == 1 else 100 if len(term) == 2 else 60
 
         def _run():
             self._apply_filter(term)
 
-        self._filter_timer = setTimeout(_run, delay)
+        self._filter_timer = setTimeout(_run, 40)
 
     def _apply_filter(self, term: str):
         num_results = 0
