@@ -22,7 +22,7 @@ try:
 except ImportError:
     in_designer = False
 
-__version__ = "3.3.0"
+__version__ = "3.3.1"
 
 noui_version = "15.4.0"
 

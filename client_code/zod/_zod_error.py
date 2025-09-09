@@ -9,7 +9,7 @@ import anvil.server
 
 from .helpers import dict_util
 
-__version__ = "3.3.0"
+__version__ = "3.3.1"
 
 
 class ZodIssueCode_:

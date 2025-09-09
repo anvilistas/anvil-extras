@@ -7,7 +7,7 @@
 
 from functools import wraps
 
-__version__ = "3.3.0"
+__version__ = "3.3.1"
 
 
 def deprecated(msg=""):

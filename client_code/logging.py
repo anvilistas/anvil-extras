@@ -10,7 +10,7 @@ from datetime import datetime as _datetime
 from functools import wraps
 from time import time as _time
 
-__version__ = "3.3.0"
+__version__ = "3.3.1"
 
 NOTSET = 0
 DEBUG = 1
