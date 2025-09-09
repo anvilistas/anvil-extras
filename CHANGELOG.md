@@ -5,7 +5,9 @@
   https://github.com/anvilistas/anvil-extras/pull/610
 * multiselect- performance improvements with large item lists
   https://github.com/anvilistas/anvil-extras/pull/613
-
+  https://github.com/anvilistas/anvil-extras/pull/614
+* multiselect - fix bug where select all should only select visible options
+  https://github.com/anvilistas/anvil-extras/pull/614
 
 # v3.3.0
 
