@@ -48,14 +48,15 @@ _css = """
 .ae-ms-options:focus-visible {
     outline: none;
 }
-.ae-ms-options > div {
-    height: 100%
+
+.ae-ms-options {
+    height: 100%;
+    overflow: auto;
 }
 .ae-ms-options ul {
     display: flex;
+    position: relative;
     flex-direction: column;
-    height: 100%;
-    overflow: auto;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -300,7 +301,10 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._dd._dom_node.style.minWidth = ""
 
         if val == "auto":
-            self._select_btn.width = self._dd_width
+            if self._options_built:
+                self._select_btn.width = self._dd._estimate_max_width()
+            else:
+                self._lazy_build()
         elif val == "fit":
             self._select_btn.width = "fit-content"
             self._dd._dom_node.style.minWidth = ""
@@ -336,7 +340,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._dd.options = []  # html renderer expects list[dict]
         self._total = 0
 
-        if pop(self._select_btn, "shown"):
+        if pop(self._select_btn, "shown") or self.width == "auto":
             self._lazy_build()
         # keep button text in sync
         self._change(raise_event=False)
@@ -436,18 +440,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     spacing_below = _spacing_property("below")
 
     ##### PRIVATE Functions #####
-
-    def _calc_dd_width(self):
-        dd_node = self._dd._dom_node
-        width = dd_node.style.width
-        min_width = dd_node.style.minWidth
-        dd_node.style.width = "fit-content"
-        _document.body.appendChild(dd_node)
-        self._dd_width = dd_node.offsetWidth + 28
-        dd_node.remove()
-        dd_node.style.width = width
-        dd_node.style.minWidth = min_width
-
     def _change(self, raise_event=True, **event_args):
         keys = self.selected_keys
         if not keys:
@@ -469,12 +461,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         self._dd.options = self._options = options
         self._total = sum(1 for opt in options if not opt.get("is_divider"))
         # Only calculate width if needed
-        try:
-            needs_width = self.width in ("auto", "fit")
-        except Exception:
-            needs_width = False
-        if needs_width:
-            self._calc_dd_width()
+        if self.width == "auto":
+            self._select_btn.width = self._dd._estimate_max_width()
+
         if selected_snapshot:
             self.selected = selected_snapshot
         self._options_built = True
