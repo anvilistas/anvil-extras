@@ -1,3 +1,10 @@
+# Unreleased
+
+## Enhancements
+* autocomplete - use default textbox implementation (e.g. m3 apps will use m3 textbox)
+  adds virtualization for large suggestion lists
+  https://github.com/anvilistas/anvil-extras/pull/615
+
 # v3.3.1
 
 ## Bug Fixes
