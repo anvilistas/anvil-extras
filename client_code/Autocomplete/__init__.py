@@ -8,13 +8,14 @@
 from anvil import LinearPanel as _LinearPanel
 from anvil import Link as _Link
 from anvil import TextBox as _TextBox
+from anvil import pluggable_ui as _pluggable_ui
+from anvil.designer import get_design_component
 from anvil.js import get_dom_node as _get_dom_node
 from anvil.js.window import document as _document
 from anvil.js.window import jQuery as _S
 from anvil.js.window import window as _window
 
 from ..utils._component_helpers import _html_injector
-from ._anvil_designer import AutocompleteTemplate
 
 __version__ = "3.3.1"
 
@@ -54,8 +55,56 @@ _html_injector.css(
 )
 
 
-class Autocomplete(AutocompleteTemplate):
+TB = _pluggable_ui["anvil.TextBox"]
+
+# the pluggable ui component might be a callable rather than a class
+TB_Class = type(TB())
+
+
+AUTOCOMPLETE_PROPS = [
+    {
+        "name": "suggestions",
+        "type": "text[]",
+        "description": "The list of suggestions to display",
+        "default_value": [],
+        "group": "autocomplete",
+        "important": True,
+        "priority": 100,
+    },
+    {
+        "name": "suggest_if_empty",
+        "type": "boolean",
+        "description": "Whether to suggest suggestions when the text is empty",
+        "default_value": True,
+        "group": "autocomplete",
+        "important": True,
+    },
+    {
+        "name": "filter_mode",
+        "type": "enum",
+        "description": "How the autocompletion should filter suggestions",
+        "options": ["contains", "startswith"],
+        "default_value": "contains",
+        "group": "autocomplete",
+        "important": True,
+    },
+]
+
+TB_PROPS = TB_Class._anvil_properties_
+
+
+class Autocomplete(get_design_component(TB_Class)):
+    _anvil_properties_ = AUTOCOMPLETE_PROPS + TB_PROPS
+    _anvil_events_ = [
+        {"name": "suggestion_clicked"},
+        {"name": "pressed_enter", "defaultEvent": True},
+        {"name": "focus"},
+        {"name": "lost_focus"},
+        {"name": "change"},
+    ]
+
     def __init__(self, **properties):
+
         self._active_nodes = []
         self._active = None
         self._active_index = -1
@@ -64,7 +113,15 @@ class Autocomplete(AutocompleteTemplate):
         self._filter_mode = None
         self._filter_fn = self._filter_contains
 
-        self.init_components(**properties)
+        tb_props = {
+            k: v
+            for k, v in properties.items()
+            if any(prop["name"] == k for prop in TB_PROPS)
+        }
+        super().__init__(**tb_props)
+
+        for prop in AUTOCOMPLETE_PROPS:
+            setattr(self, prop["name"], properties.get(prop["name"]))
 
         self._lp = _LinearPanel(
             role="ae-autocomplete",
@@ -75,6 +132,9 @@ class Autocomplete(AutocompleteTemplate):
         self._lp_node = _get_dom_node(self._lp)
 
         dom_node = self._dom_node = _get_dom_node(self)
+        if dom_node.tagName != "INPUT":
+            dom_node = self._dom_node = dom_node.querySelector("input")
+
         # use capture for keydown so we can get the event before anvil does
         dom_node.addEventListener("keydown", self._on_keydown, True)
         dom_node.addEventListener("input", self._on_input)
@@ -82,9 +142,8 @@ class Autocomplete(AutocompleteTemplate):
         dom_node.addEventListener("blur", self._on_blur)
         self.set_event_handler("x-popover-init", self._handle_popover)
         self.set_event_handler("x-popover-destroy", self._handle_popover)
-
-        # ensure the same method is passed to $(window).off('resize')
-        self._reset_position = self._reset_position
+        self.add_event_handler("x-anvil-page-added", self._on_show)
+        self.add_event_handler("x-anvil-page-removed", self._on_hide)
 
     ###### PRIVATE METHODS ######
     @staticmethod
@@ -268,13 +327,3 @@ class Autocomplete(AutocompleteTemplate):
             self._filter_fn = self._filter_startswith
         else:
             self._filter_fn = self._filter_contains
-
-    text = _TextBox.text
-    placeholder = _TextBox.placeholder
-    spacing_above = _TextBox.spacing_above
-    spacing_below = _TextBox.spacing_below
-    enabled = _TextBox.enabled
-    foreground = _TextBox.foreground
-    background = _TextBox.background
-    visible = _TextBox.visible
-    tag = _TextBox.tag

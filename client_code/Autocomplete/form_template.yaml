@@ -1,5 +1,5 @@
 container:
-  event_bindings: {hide: _on_hide, show: _on_show}
+  event_bindings: {}
   properties: {}
   type: TextBox
 custom_component: true
