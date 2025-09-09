@@ -7,7 +7,6 @@
 
 from anvil import LinearPanel as _LinearPanel
 from anvil import Link as _Link
-from anvil import TextBox as _TextBox
 from anvil import pluggable_ui as _pluggable_ui
 from anvil.designer import get_design_component
 from anvil.js import get_dom_node as _get_dom_node
@@ -16,6 +15,7 @@ from anvil.js.window import jQuery as _S
 from anvil.js.window import window as _window
 
 from ..utils._component_helpers import _html_injector
+from ..virtualize import Virtualizer
 
 __version__ = "3.3.1"
 
@@ -24,6 +24,15 @@ _html_injector.css(
     """
 .anvil-role-ae-autocomplete {
     padding: 0 !important;
+}
+.anvil-role-ae-autocomplete > ul {
+    position: relative;
+}
+.anvil-role-ae-autocomplete > ul > li {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
 }
 .anvil-role-ae-autocomplete {
     position: absolute;
@@ -145,6 +154,14 @@ class Autocomplete(get_design_component(TB_Class)):
         self.add_event_handler("x-anvil-page-added", self._on_show)
         self.add_event_handler("x-anvil-page-removed", self._on_hide)
 
+        self._virtualizer = Virtualizer(
+            count=0,
+            estimate_size=lambda idx: 48,
+            component=self,
+            scroll_element=self._lp_node,
+            on_change=self._populate,
+        )
+
     ###### PRIVATE METHODS ######
     @staticmethod
     def _filter_contains(text, search):
@@ -154,10 +171,9 @@ class Autocomplete(get_design_component(TB_Class)):
     def _filter_startswith(text, search):
         return 0 if text.lower().startswith(search) else -1
 
-    def _populate(self):
+    def _gen_active_nodes(self):
         prev_active = self._active
         self._reset_autocomplete()
-        self._lp.clear()
 
         search_term = self.text.lower()
         if not search_term and not self.suggest_if_empty:
@@ -177,21 +193,34 @@ class Autocomplete(get_design_component(TB_Class)):
                 )
             return node
 
-        nodes = filter(None, map(get_node_with_emph, self.suggestions))
-        for node in nodes:
-            if node.parent is not None:
-                print(f"Warning: you have duplicate suggestions - ignoring {node.text}")
-                continue
-            self._lp.add_component(node)
-            self._active_nodes.append(node)
-
-        self._lp.visible = bool(self._active_nodes)
+        self._active_nodes = [
+            node for node in map(get_node_with_emph, self.suggestions) if node
+        ]
         try:
             self._active_index = self._active_nodes.index(prev_active)
             self._active = prev_active
             self._active.role = "ae-autocomplete-active"
         except ValueError:
             pass
+
+        self._virtualizer.update(count=len(self._active_nodes))
+
+    def _populate(self):
+        self._lp.clear()
+
+        self._lp_node.firstElementChild.style.height = (
+            f"{self._virtualizer.get_total_size()}px"
+        )
+
+        for item in self._virtualizer.get_virtual_items():
+            node = self._active_nodes[item.index]
+            if node.parent is not None:
+                print(f"Warning: you have duplicate suggestions - ignoring {node.text}")
+                continue
+            self._lp.add_component(node)
+            _get_dom_node(node).parentElement.style.top = f"{item.start}px"
+
+        self._lp.visible = bool(self._active_nodes)
 
     def _get_node(self, text):
         link = self._nodes.get(text)
@@ -228,6 +257,7 @@ class Autocomplete(get_design_component(TB_Class)):
         self._active_nodes = []
         self._active_index = -1
         self._lp_node.scrollTop = 0
+        self._virtualizer.update(count=0)
 
     def _reset_position(self, *e):
         rect = self._dom_node.getBoundingClientRect()
@@ -268,20 +298,19 @@ class Autocomplete(get_design_component(TB_Class)):
             self._active.role = None
         if new_active is not None:
             new_active.role = "ae-autocomplete-active"
-            self._link_height = (
-                self._link_height or _get_dom_node(new_active).clientHeight
-            )
-            self._lp_node.scrollTop = max(0, self._link_height * (i - 4))
+            self._virtualizer.scroll_to_index(i)
 
         self._active = new_active
 
     def _on_input(self, e):
         """This method is called when the text in this text box is edited"""
+        self._gen_active_nodes()
         self._populate()
 
     def _on_focus(self, e):
         """This method is called when the TextBox gets focus"""
         self._reset_position()
+        self._gen_active_nodes()
         self._populate()
 
     def _on_blur(self, e):
@@ -314,6 +343,7 @@ class Autocomplete(get_design_component(TB_Class)):
     def suggestions(self, val):
         self._data = val
         if self._active is not None:
+            self._gen_active_nodes()
             self._populate()
 
     @property
