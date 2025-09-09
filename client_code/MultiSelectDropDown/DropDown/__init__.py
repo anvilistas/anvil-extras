@@ -5,13 +5,16 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil.js import get_dom_node
-from anvil.js.window import clearTimeout, setTimeout
+from anvil.js import get_dom_node, import_from
+from anvil.js.window import clearTimeout, document, setTimeout
 
 from ...popover import pop
+from ...virtualize import Virtualizer
 from ._anvil_designer import DropDownTemplate
 
 __version__ = "3.3.0"
+
+_TEMP_DIV = document.createElement("div")
 
 
 class DropDown(DropDownTemplate):
@@ -21,11 +24,13 @@ class DropDown(DropDownTemplate):
         self._props = properties
         self.dd_node = self.dom_nodes["ae-ms-dd"]
         self.options_node = self.dom_nodes["ae-ms-options"]
+        self.virt_list = self.dom_nodes["ae-ms-virt-list"]
         self.init_components(**properties)
         self.select_all_btn.role = "ae-ms-select-btn"
         self.deselect_all_btn.role = "ae-ms-select-btn"
         self.filter_box.role = "ae-ms-filter"
         self.dd_node.addEventListener("keydown", self._on_keydown)
+        self._max_width = 0
         # backing store for html-rendered options (list of dicts)
         self._options_data = []
         # tracked active index for keyboard navigation
@@ -33,6 +38,20 @@ class DropDown(DropDownTemplate):
         # filter debounce state
         self._filter_timer = None
         self._last_filter_term = ""
+        # virtualizer scaffolding
+        self._filtered_indexes = []  # maps virtual index -> original index
+        # filtering state: list of original indices currently visible
+        self._filtered_pos = {}  # maps original index -> virtual index
+
+        self._virtualizer = Virtualizer(
+            count=0,
+            component=self,
+            scroll_element=self.options_node,
+            estimate_size=self._estimate_size,  # divider-aware estimate
+            on_change=self._render_virtual,
+            get_item_key=lambda i: self._filtered_indexes[i],
+        )
+
         # event delegation listeners
         self.options_node.addEventListener("click", self._on_click_delegate)
 
@@ -51,55 +70,11 @@ class DropDown(DropDownTemplate):
             sub = (opt.get("subtext") or "").lower()
             opt["_search"] = f"{key} {sub}".strip()
             opt["_visible"] = True
-        # clear container
-        self.options_node.innerHTML = ""
 
-        # build a single HTML string for all options
-        html_parts = ['<div class="ae-ms-options-wrap"><ul>']
-        for idx, opt in enumerate(val):
-            if opt.get("is_divider"):
-                html_parts.append("<li><div data-divider></div></li>")
-                continue
-            key = opt.get("key", "")
-            title = opt.get("title") or key
-            subtext = opt.get("subtext") or ""
-            icon = opt.get("icon") or ""
-            disabled = opt.get("disabled", False)
-            selected = opt.get("selected", False)
-            classes = ["anvil-role-ae-ms-option"]
-            if selected:
-                classes.append("anvil-role-ae-ms-option-selected")
-            cls = " ".join(classes)
-            data_disabled = ' data-disabled=""' if disabled else ""
-            # icon mapping for FA4: accept "fa:foo" or "far:foo" and map to "fa fa-foo"
-            icon_html = ""
-            if icon:
-                try:
-                    prefix, name = icon.split(":", 1)
-                except ValueError:
-                    name = icon
-                    prefix = "fa"
-                name = name.strip().replace(" ", "-")
-                if name and not name.startswith("fa-"):
-                    name = f"fa-{name}"
-                icon_html = f'<i class="ae-ms-option-icon {prefix} {name}" aria-hidden="true"></i>'
-            # right-side check placeholder (always present; visibility via CSS)
-            # icon and subtext inline with label
-            label_html = (
-                f'<div class="anvil-role-ae-ms-option-label">'
-                f"{icon_html}"
-                f"<span>{title}</span>"
-                f'<div class="anvil-role-ae-ms-option-subtext"><span>{subtext}</span></div>'
-                f"</div>"
-            )
-            html_parts.append(
-                f'<li><a class="{cls}" data-idx="{idx}" data-key="{key}" tabindex="-1"{data_disabled}>'
-                f"{label_html}"
-                f'<i class="ae-ms-chk fa fa-check" aria-hidden="true"></i>'
-                f"</a></li>"
-            )
-        html_parts.append("</ul></div>")
-        self.options_node.innerHTML = "".join(html_parts)
+        self._max_width = 0
+        self._estimate_max_width()
+
+        self._apply_filter(self._last_filter_term)
 
     @property
     def enable_filtering(self):
@@ -139,8 +114,8 @@ class DropDown(DropDownTemplate):
     def _on_filter_hide(self, **event_args):
         self.filter_box.text = ""
         # show all
-        for el in self._iter_option_elements():
-            el.parentElement.style.display = ""
+        for opt in self._options_data:
+            opt["_visible"] = True
         # clear any active element when filter/search UI is hidden
         self._set_active_idx(-1)
 
@@ -163,24 +138,17 @@ class DropDown(DropDownTemplate):
         self._filter_timer = setTimeout(_run, 40)
 
     def _apply_filter(self, term: str):
-        num_results = 0
-        for idx, opt in enumerate(self._options_data):
-            el = self._get_option_element(idx)
-            if el is None:
-                continue
+
+        for opt in self._options_data:
             if opt.get("is_divider"):
-                new_disp = "none" if term else ""
-                if el.parentElement.style.display != new_disp:
-                    el.parentElement.style.display = new_disp
-                opt["_visible"] = new_disp == ""
+                opt["_visible"] = False if term else True
                 continue
             search = opt.get("_search", "")
             visible = (term in search) if term else True
-            if opt.get("_visible", True) != visible:
-                el.parentElement.style.display = "" if visible else "none"
-                opt["_visible"] = visible
-            if visible:
-                num_results += 1
+            opt["_visible"] = visible
+
+        self._recompute_filtered()
+        self._render_virtual()
 
         # update active to first visible item (or clear if none)
         next_idx = self._get_next_visible_idx(-1, dir=1)
@@ -193,7 +161,11 @@ class DropDown(DropDownTemplate):
 
     def _on_select_all(self, **event_args):
         for option in self._options_data:
-            if not option.get("is_divider") and not option.get("disabled"):
+            if (
+                not option.get("is_divider")
+                and not option.get("disabled")
+                and option.get("_visible")
+            ):
                 option["selected"] = True
         self._on_focus()
         self.raise_event("change")
@@ -201,7 +173,7 @@ class DropDown(DropDownTemplate):
 
     def _on_deselect_all(self, **event_args):
         for option in self._options_data:
-            if not option.get("is_divider"):
+            if not option.get("is_divider") and option.get("_visible"):
                 option["selected"] = False
         self._on_focus()
         self.raise_event("change")
@@ -222,7 +194,7 @@ class DropDown(DropDownTemplate):
         setTimeout(self.filter_box.focus)
 
     def _get_active_idx(self):
-        return getattr(self, "_active_idx", -1)
+        return self._active_idx
 
     def _get_next_idx(self, active_idx, dir=1, pred=None):
         num_options = len(self._options_data)
@@ -265,7 +237,6 @@ class DropDown(DropDownTemplate):
         if key == "Escape":
             self._close()
             get_dom_node(self.popper).firstElementChild.focus()
-            # TODO focus the popper
 
         elif key == " ":
             if not is_input:
@@ -277,7 +248,6 @@ class DropDown(DropDownTemplate):
 
         elif key == "ArrowDown" or key == "ArrowUp":
             e.preventDefault()
-
             dir = 1 if key == "ArrowDown" else -1
             active_idx = self._get_active_idx()
             next_idx = self._get_next_visible_idx(active_idx, dir)
@@ -347,19 +317,7 @@ class DropDown(DropDownTemplate):
             return False
         if opt.get("is_divider") or opt.get("disabled"):
             return False
-        el = self._get_option_element(idx)
-        if el is None:
-            return False
-        # consider filtered-out items not focusable
-        try:
-            disp = getattr(el.style, "display", "")
-            parent_disp = getattr(getattr(el, "parentElement", None), "style", None)
-            parent_disp_val = getattr(parent_disp, "display", "") if parent_disp else ""
-            if disp == "none" or parent_disp_val == "none":
-                return False
-        except Exception:
-            pass
-        return True
+        return bool(opt.get("_visible", True))
 
     def _get_next_visible_idx(self, active_idx, dir=1, pred=None):
         """Find next index in given direction that is focusable and matches pred if provided.
@@ -385,7 +343,7 @@ class DropDown(DropDownTemplate):
 
     def _set_active_idx(self, idx):
         # Fast path: toggle only the previously active and the new active element
-        prev = getattr(self, "_active_idx", -1)
+        prev = self._get_active_idx()
         if prev != -1 and prev != idx:
             el_prev = self._get_option_element(prev)
             if el_prev is not None:
@@ -393,14 +351,30 @@ class DropDown(DropDownTemplate):
         if idx == -1:
             self._active_idx = -1
             return
+        # ensure item is scrolled into view using virtualizer
+        # translate original index -> virtual index for scrolling
+        vpos = self._filtered_pos.get(idx)
+        if vpos is not None:
+            self._virtualizer.scroll_to_index(vpos, align="auto")
+
         el = self._get_option_element(idx)
         if el is not None:
             el.classList.add("anvil-role-ae-ms-option-active")
-            try:
-                el.scrollIntoView({"block": "nearest"})
-            except Exception:
-                pass
         self._active_idx = idx
+        # After scrolling, focus may revert to <body>. Restore focus to the options container
+        self._ensure_keyboard_focus()
+
+    def _recompute_filtered(self):
+        """Rebuild the filtered index list and positional map, then update the virtualizer count."""
+        # Include all visible rows here (options and dividers). When filtering,
+        # _apply_filter() sets dividers to _visible = False, so they are excluded.
+        self._filtered_indexes = [
+            i for i, opt in enumerate(self._options_data) if opt.get("_visible", True)
+        ]
+        self._filtered_pos = {
+            orig: vi for vi, orig in enumerate(self._filtered_indexes)
+        }
+        self._virtualizer.update(count=len(self._filtered_indexes))
 
     def _update_dom_selection_for_idx(self, idx):
         el = self._get_option_element(idx)
@@ -411,12 +385,24 @@ class DropDown(DropDownTemplate):
         else:
             el.classList.remove("anvil-role-ae-ms-option-selected")
 
+    def _estimate_size(self, v_idx):
+        """Estimated row height for virtual index v_idx.
+        Dividers are short; options use the default row height.
+        """
+        orig = self._filtered_indexes[v_idx]
+        opt = self._options_data[orig]
+        return 19 if opt.get("is_divider") else 32
+
     def _sync_dom_selection(self):
-        for idx, opt in enumerate(self._options_data):
-            el = self._get_option_element(idx)
-            if el is None or opt.get("is_divider"):
+        # update classes only for rendered items
+        for el in self._iter_option_elements():
+            try:
+                idx = int(el.getAttribute("data-idx") or -1)
+            except Exception:
                 continue
-            if opt.get("selected"):
+            if idx < 0 or idx >= len(self._options_data):
+                continue
+            if self._options_data[idx].get("selected"):
                 el.classList.add("anvil-role-ae-ms-option-selected")
             else:
                 el.classList.remove("anvil-role-ae-ms-option-selected")
@@ -434,3 +420,150 @@ class DropDown(DropDownTemplate):
         idx = int(el.getAttribute("data-idx") or -1)
         if idx >= 0:
             self._on_option_clicked(idx)
+
+    def _render_virtual(self):
+        self.virt_list.innerHTML = ""
+
+        total = self._virtualizer.get_total_size()
+        self.virt_list.style.height = f"{int(total)}px"
+
+        items = self._virtualizer.get_virtual_items()
+
+        for it in items:
+            v_idx = it.index
+            if v_idx < 0 or v_idx >= len(self._filtered_indexes):
+                continue
+            idx = self._filtered_indexes[v_idx]
+            opt = self._options_data[idx]
+            if not opt.get("_visible", True):
+                continue
+            if opt.get("is_divider"):
+                li = self._make_divider(v_idx=v_idx, top_px=it.start)
+            else:
+                # Option row via helper (returns LI containing the anchor)
+                li = self._make_option_element(opt, idx, v_idx=v_idx, top_px=it.start)
+            self.virt_list.appendChild(li)
+            width = li.style.width
+            li.style.width = "fit-content"
+            self._max_width = max(self._max_width, li.offsetWidth)
+            li.style.width = width
+            if idx == self._get_active_idx():
+                li.firstElementChild.classList.add("anvil-role-ae-ms-option-active")
+
+        self.options_node.style.minWidth = f"{int(self._max_width)}px"
+
+        # self._set_active_idx(self._get_active_idx())
+        # If focus was lost during render, ensure our container is focusable and focused
+        self._ensure_keyboard_focus()
+
+    def _make_divider(self, v_idx=None, top_px=None):
+        data_index = "" if v_idx is None else f"data-index={v_idx}"
+
+        _TEMP_DIV.innerHTML = f"""
+        <li role="separator" style="width:100%; position:absolute; left:0; right:0; top:{top_px}px" {data_index}>
+        <div data-divider></div>
+        </li>
+        """
+        return _TEMP_DIV.firstElementChild
+
+    def _make_option_element(self, opt, idx, v_idx=None, top_px=None):
+        key = opt.get("key", "")
+        title = opt.get("title") or key
+        subtext = opt.get("subtext") or ""
+        icon = (opt.get("icon") or "").strip()
+        # container LI
+        li = document.createElement("li")
+        li.setAttribute("data-idx", str(idx))
+        li.setAttribute(
+            "style", f"width:100%; position:absolute; left:0; right:0; top:{top_px}px"
+        )
+        # When rendering virtually, position absolutely and add data-index
+        if v_idx is not None:
+            li.setAttribute("data-index", str(v_idx))
+
+        disabled = "" if not opt.get("disabled") else 'data-disabled=""'
+        data_index = "" if v_idx is None else f"data-index={v_idx}"
+        selected = "" if not opt.get("selected") else "anvil-role-ae-ms-option-selected"
+        active = (
+            "" if idx != self._get_active_idx() else "anvil-role-ae-ms-option-active"
+        )
+
+        icon_html = ""
+        if icon:
+            try:
+                prefix, name = icon.split(":", 1)
+            except ValueError:
+                name = icon
+                prefix = "fa"
+            name = name.strip().replace(" ", "-")
+            if name and not name.startswith("fa-"):
+                name = f"fa-{name}"
+            icon_html = (
+                f'<i class="ae-ms-option-icon {prefix} {name}" aria-hidden="true"></i>'
+            )
+
+        _TEMP_DIV.innerHTML = f"""
+        <li style="width:100%; position:absolute; left:0; right:0; top:{top_px}px" {data_index}>
+<a class="anvil-role-ae-ms-option {selected} {active}" data-idx="{idx}" data-key="{key}" tabindex="-1" {disabled}>
+    <div class="anvil-role-ae-ms-option-label">
+        {icon_html}
+        <span>{title}</span>
+        <div class="anvil-role-ae-ms-option-subtext"><span>{subtext}</span></div>
+    </div>
+    <i class="ae-ms-chk fa fa-check" aria-hidden="true"></i>
+</a>
+</li>
+"""
+        return _TEMP_DIV.firstElementChild
+
+    def _ensure_keyboard_focus(self):
+        """Ensure keydown continues to be received after scroll/renders.
+        We prefer to keep focus within the options container so Arrow keys work.
+        """
+        active = document.activeElement
+
+        if active and self.dd_node.contains(active):
+            return
+
+        cur = self._get_active_idx()
+        if cur != -1:
+            a = self._get_option_element(cur)
+            if a:
+                a.focus({"preventScroll": True})
+                return
+
+        prev_tab = getattr(self.options_node, "tabIndex", -1)
+        self.options_node.tabIndex = 0
+        self.options_node.focus({"preventScroll": True})
+        self.options_node.tabIndex = prev_tab
+
+    def _estimate_max_width(self):
+
+        candidate = {"opt": None, "idx": -1, "total": -1}
+        for i, opt in enumerate(self._options_data):
+            if opt.get("is_divider"):
+                continue
+            total = len(opt.get("key", "")) + len(opt.get("subtext", ""))
+            if opt.get("icon"):
+                total += 2
+
+            if total > candidate["total"]:
+                candidate["opt"] = opt
+                candidate["idx"] = i
+                candidate["total"] = total
+
+        if candidate["idx"] != -1:
+            copy = self._dom_node.cloneNode(True)
+            ul = copy.querySelector("ul")
+            li = self._make_option_element(candidate["opt"], candidate["idx"])
+            ul.appendChild(li)
+            li.style.width = "fit-content"
+            document.body.appendChild(copy)
+            width = li.offsetWidth
+            copy.remove()
+
+            self._max_width = max(self._max_width, width)
+
+        self.options_node.style.minWidth = f"{int(self._max_width)}px"
+
+        return self._max_width + 28

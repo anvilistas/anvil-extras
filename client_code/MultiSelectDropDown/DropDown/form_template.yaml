@@ -19,10 +19,6 @@ components:
   name: select_all_flow
   properties: {align: center, gap: tiny}
   type: FlowPanel
-- layout_properties: {slot: options}
-  name: options_panel
-  properties: {}
-  type: LinearPanel
 container:
   event_bindings: {show: _on_show}
   properties:
@@ -30,7 +26,9 @@ container:
       <div anvil-name="ae-ms-dd" class="ae-ms-dd">
           <div class="ae-ms-filter" anvil-slot="filter"></div>
           <div class="ae-ms-select-all" anvil-slot="select-all"></div>
-          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" anvil-slot="options" tabindex="-1"></div>
+          <div anvil-name="ae-ms-options" role="listbox" class="ae-ms-options" tabindex="-1">
+              <ul anvil-name="ae-ms-virt-list"></ul>
+          </div>
       </div>
   type: HtmlTemplate
 custom_component: true
