@@ -5,6 +5,10 @@
   adds virtualization for large suggestion lists
   https://github.com/anvilistas/anvil-extras/pull/615
 
+## Bug Fixes
+* routing - avoid view transition random errors
+  https://github.com/anvilistas/anvil-extras/pull/616
+
 # v3.3.1
 
 ## Bug Fixes
