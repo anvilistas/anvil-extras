@@ -8,6 +8,10 @@
 ## Bug Fixes
 * routing - avoid view transition random errors
   https://github.com/anvilistas/anvil-extras/pull/616
+* slider - fix padding issue with tooltips
+  https://github.com/anvilistas/anvil-extras/pull/618
+* slider - fix slider._tooltips type error
+  https://github.com/anvilistas/anvil-extras/pull/618
 
 # v3.3.1
 

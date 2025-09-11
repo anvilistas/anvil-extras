@@ -38,7 +38,7 @@ HANDLE_SIZE = "--ae-slider-handle-size"
 _html_injector.css(
     f"""
 .ae-slider-container {{
-  padding: 10px;
+  padding: calc(var(--ae-slider-handle-size) / 2);
 }}
 .ae-slider-container.has-pips {{
   padding-bottom: 40px;
@@ -410,8 +410,8 @@ class Slider(SliderTemplate):
                 e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
-        self._tooltips = self._slider.getTooltips()
-        self._origins = self._slider.getOrigins()
+        self._tooltips = self._slider.getTooltips() or []
+        self._origins = self._slider.getOrigins() or []
 
         ###### EVENTS ######
         self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
