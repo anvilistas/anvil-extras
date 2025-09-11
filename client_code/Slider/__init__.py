@@ -410,8 +410,8 @@ class Slider(SliderTemplate):
                 e = e.original_error.message
             raise RuntimeError(repr(e).replace("noUiSlider", "Slider"))
 
-        self._tooltips = self._slider.getTooltips()
-        self._origins = self._slider.getOrigins()
+        self._tooltips = self._slider.getTooltips() or []
+        self._origins = self._slider.getOrigins() or []
 
         ###### EVENTS ######
         self._slider.on("slide", lambda v, h, *e: self.raise_event("slide", handle=h))
