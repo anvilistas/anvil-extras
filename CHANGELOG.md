@@ -5,6 +5,12 @@
   adds virtualization for large suggestion lists
   https://github.com/anvilistas/anvil-extras/pull/615
 
+## Bug Fixes
+* slider - fix padding issue with tooltips
+  https://github.com/anvilistas/anvil-extras/pull/618
+* slider - fix slider._tooltips type error
+  https://github.com/anvilistas/anvil-extras/pull/618
+
 # v3.3.1
 
 ## Bug Fixes
