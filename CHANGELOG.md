@@ -10,6 +10,8 @@
   https://github.com/anvilistas/anvil-extras/pull/618
 * slider - fix slider._tooltips type error
   https://github.com/anvilistas/anvil-extras/pull/618
+* autocomplete - fix suggestions should populate if changed while the component has focus
+  https://github.com/anvilistas/anvil-extras/pull/621
 
 # v3.3.1
 
