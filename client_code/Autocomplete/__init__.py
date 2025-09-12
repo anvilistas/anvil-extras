@@ -122,16 +122,6 @@ class Autocomplete(get_design_component(TB_Class)):
         self._filter_mode = None
         self._filter_fn = self._filter_contains
 
-        tb_props = {
-            k: v
-            for k, v in properties.items()
-            if any(prop["name"] == k for prop in TB_PROPS)
-        }
-        super().__init__(**tb_props)
-
-        for prop in AUTOCOMPLETE_PROPS:
-            setattr(self, prop["name"], properties.get(prop["name"]))
-
         self._lp = _LinearPanel(
             role="ae-autocomplete",
             spacing_above="none",
@@ -143,6 +133,16 @@ class Autocomplete(get_design_component(TB_Class)):
         dom_node = self._dom_node = _get_dom_node(self)
         if dom_node.tagName != "INPUT":
             dom_node = self._dom_node = dom_node.querySelector("input")
+
+        tb_props = {
+            k: v
+            for k, v in properties.items()
+            if any(prop["name"] == k for prop in TB_PROPS)
+        }
+        super().__init__(**tb_props)
+
+        for prop in AUTOCOMPLETE_PROPS:
+            setattr(self, prop["name"], properties.get(prop["name"]))
 
         # use capture for keydown so we can get the event before anvil does
         dom_node.addEventListener("keydown", self._on_keydown, True)
@@ -342,7 +342,7 @@ class Autocomplete(get_design_component(TB_Class)):
     @suggestions.setter
     def suggestions(self, val):
         self._data = val
-        if self._active is not None:
+        if self._dom_node is _document.activeElement:
             self._gen_active_nodes()
             self._populate()
 
