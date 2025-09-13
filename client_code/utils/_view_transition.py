@@ -28,6 +28,7 @@ class ViewTransition:
         self.deferred = Deferred()
         self.form = form
         self.transition = None
+        self.promise_callback = lambda: self.deferred.promise
         try:
             handlers = form.get_event_handlers("show")
             form.set_event_handler("show", self.show)
@@ -52,13 +53,20 @@ class ViewTransition:
 
     def __enter__(self):
         global _transition
-        if _transition is None and _can_transition and _use_transition:
-            self.transition = document.startViewTransition(
-                lambda: self.deferred.promise
-            )
-            _transition = self.transition
-            sleep(0)
-            setTimeout(self.resolve, 100)
+        # Only attempt a view transition when supported, enabled, and visible
+        visible = getattr(document, "visibilityState", "visible") == "visible"
+        try:
+            if _transition is None and _can_transition and _use_transition and visible:
+                self.transition = document.startViewTransition(self.promise_callback)
+                _transition = self.transition
+                sleep(0)
+                setTimeout(self.resolve, 100)
+
+        except Exception:
+            # startViewTransition can throw InvalidStateError if the document becomes hidden
+            # between checks or other environment constraints occur; gracefully fall back.
+            pass
+
         return self
 
     def __exit__(self, *exc_args):
