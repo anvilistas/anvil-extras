@@ -17,7 +17,7 @@ from anvil.property_utils import (
 
 from .utils._component_helpers import _css_length, crelt
 
-__version__ = "3.3.1"
+__version__ = "3.4.0"
 
 DEFAULT_STYLE = (
     "display: flex; "

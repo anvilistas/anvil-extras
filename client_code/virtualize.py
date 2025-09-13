@@ -8,7 +8,7 @@
 import anvil
 from anvil.js import import_from, window
 
-__version__ = "3.3.1"
+__version__ = "3.4.0"
 
 if window.get("tanstackvirtualCore"):
     virtual_core = window.tanstackvirtualCore

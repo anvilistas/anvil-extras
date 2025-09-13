@@ -11,7 +11,7 @@ from anvil.js.window import document, setTimeout
 
 from ._deferred import Deferred
 
-__version__ = "3.3.1"
+__version__ = "3.4.0"
 
 _transition = None
 _can_transition = hasattr(document, "startViewTransition")
