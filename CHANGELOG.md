@@ -1,4 +1,4 @@
-# Unreleased
+# v3.4.0
 
 ## Enhancements
 * autocomplete - use default textbox implementation (e.g. m3 apps will use m3 textbox)
