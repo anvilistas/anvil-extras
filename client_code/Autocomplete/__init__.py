@@ -115,24 +115,24 @@ class Autocomplete(get_design_component(TB_Class)):
     def __init__(self, **properties):
 
         self._active_nodes = []
-        self._active = None
-        self._active_index = -1
-        self._link_height = 0
-        self._nodes = {}
-        self._filter_mode = None
-        self._filter_fn = self._filter_contains
+        self.__active = None
+        self.__active_index = -1
+        self.__link_height = 0
+        self.__nodes = {}
+        self.__filter_mode = None
+        self.__filter_fn = self.__filter_contains
 
-        self._lp = _LinearPanel(
+        self.__lp = _LinearPanel(
             role="ae-autocomplete",
             spacing_above="none",
             spacing_below="none",
             visible=False,
         )
-        self._lp_node = _get_dom_node(self._lp)
+        self.__lp_node = _get_dom_node(self.__lp)
 
-        dom_node = self._dom_node = _get_dom_node(self)
+        dom_node = self.__dom_node = _get_dom_node(self)
         if dom_node.tagName != "INPUT":
-            dom_node = self._dom_node = dom_node.querySelector("input")
+            dom_node = self.__dom_node = dom_node.querySelector("input")
 
         tb_props = {
             k: v
@@ -145,215 +145,215 @@ class Autocomplete(get_design_component(TB_Class)):
             setattr(self, prop["name"], properties.get(prop["name"]))
 
         # use capture for keydown so we can get the event before anvil does
-        dom_node.addEventListener("keydown", self._on_keydown, True)
-        dom_node.addEventListener("input", self._on_input)
-        dom_node.addEventListener("focus", self._on_focus, True)
-        dom_node.addEventListener("blur", self._on_blur)
-        self.set_event_handler("x-popover-init", self._handle_popover)
-        self.set_event_handler("x-popover-destroy", self._handle_popover)
-        self.add_event_handler("x-anvil-page-added", self._on_show)
-        self.add_event_handler("x-anvil-page-removed", self._on_hide)
+        dom_node.addEventListener("keydown", self.__on_keydown, True)
+        dom_node.addEventListener("input", self.__on_input)
+        dom_node.addEventListener("focus", self.__on_focus, True)
+        dom_node.addEventListener("blur", self.__on_blur)
+        self.set_event_handler("x-popover-init", self.__handle_popover)
+        self.set_event_handler("x-popover-destroy", self.__handle_popover)
+        self.add_event_handler("x-anvil-page-added", self.__on_show)
+        self.add_event_handler("x-anvil-page-removed", self.__on_hide)
 
-        self._virtualizer = Virtualizer(
+        self.__virtualizer = Virtualizer(
             count=0,
             estimate_size=lambda idx: 48,
             component=self,
-            scroll_element=self._lp_node,
-            on_change=self._populate,
+            scroll_element=self.__lp_node,
+            on_change=self.__populate,
         )
 
     ###### PRIVATE METHODS ######
     @staticmethod
-    def _filter_contains(text, search):
+    def __filter_contains(text, search):
         return text.lower().find(search)
 
     @staticmethod
-    def _filter_startswith(text, search):
+    def __filter_startswith(text, search):
         return 0 if text.lower().startswith(search) else -1
 
-    def _gen_active_nodes(self):
-        prev_active = self._active
-        self._reset_autocomplete()
+    def __gen_active_nodes(self):
+        prev_active = self.__active
+        self.__reset_autocomplete()
 
         search_term = self.text.lower()
         if not search_term and not self.suggest_if_empty:
             return
 
         n = len(search_term)
-        filter_fn = self._filter_fn
+        filter_fn = self.__filter_fn
 
         def get_node_with_emph(text):
             i = filter_fn(text, search_term)
             if i == -1:
                 return False
-            node = self._get_node(text)
+            node = self.__get_node(text)
             if n:
                 node.tag.innerHTML = (
                     text[:i] + "<b>" + text[i : i + n] + "</b>" + text[i + n :]
                 )
             return node
 
-        self._active_nodes = [
+        self.__active_nodes = [
             node for node in map(get_node_with_emph, self.suggestions) if node
         ]
         try:
-            self._active_index = self._active_nodes.index(prev_active)
-            self._active = prev_active
-            self._active.role = "ae-autocomplete-active"
+            self.__active_index = self.__active_nodes.index(prev_active)
+            self.__active = prev_active
+            self.__active.role = "ae-autocomplete-active"
         except ValueError:
             pass
 
-        self._virtualizer.update(count=len(self._active_nodes))
+        self.__virtualizer.update(count=len(self.__active_nodes))
 
-    def _populate(self):
-        self._lp.clear()
+    def __populate(self):
+        self.__lp.clear()
 
-        self._lp_node.firstElementChild.style.height = (
-            f"{self._virtualizer.get_total_size()}px"
+        self.__lp_node.firstElementChild.style.height = (
+            f"{self.__virtualizer.get_total_size()}px"
         )
 
-        for item in self._virtualizer.get_virtual_items():
-            node = self._active_nodes[item.index]
+        for item in self.__virtualizer.get_virtual_items():
+            node = self.__active_nodes[item.index]
             if node.parent is not None:
                 print(f"Warning: you have duplicate suggestions - ignoring {node.text}")
                 continue
-            self._lp.add_component(node)
+            self.__lp.add_component(node)
             _get_dom_node(node).parentElement.style.top = f"{item.start}px"
 
-        self._lp.visible = bool(self._active_nodes)
+        self.__lp.visible = bool(self.__active_nodes)
 
-    def _get_node(self, text):
-        link = self._nodes.get(text)
+    def __get_node(self, text):
+        link = self.__nodes.get(text)
         if link:
             link.text = link.text
             return link
 
         link = _Link(text=text, spacing_above="none", spacing_below="none")
-        link.set_event_handler("click", self._set_text)
+        link.set_event_handler("click", self.__set_text)
         l_node = _get_dom_node(link)
         link.tag = l_node.querySelector("div")
         # this stops the lost_focus event firing when a suggestion is clicked
         l_node.addEventListener("mousedown", lambda e: e.preventDefault())
 
-        self._nodes[text] = link
+        self.__nodes[text] = link
         return link
 
-    def _set_text(self, sender=None, *e, **e_args):
+    def __set_text(self, sender=None, *e, **e_args):
         if sender is not None:
             self.text = sender.text
-            self._reset_autocomplete()
+            self.__reset_autocomplete()
             self.raise_event("suggestion_clicked")
-        elif self._active is not None:
-            self.text = self._active.text
-            self._reset_autocomplete()
+        elif self.__active is not None:
+            self.text = self.__active.text
+            self.__reset_autocomplete()
         else:
-            self._reset_autocomplete()
+            self.__reset_autocomplete()
 
-    def _reset_autocomplete(self):
-        if self._active is not None:
-            self._active.role = None
-        self._active = None
-        self._lp.visible = False
-        self._active_nodes = []
-        self._active_index = -1
-        self._lp_node.scrollTop = 0
-        self._virtualizer.update(count=0)
+    def __reset_autocomplete(self):
+        if self.__active is not None:
+            self.__active.role = None
+        self.__active = None
+        self.__lp.visible = False
+        self.__active_nodes = []
+        self.__active_index = -1
+        self.__lp_node.scrollTop = 0
+        self.__virtualizer.update(count=0)
 
-    def _reset_position(self, *e):
-        rect = self._dom_node.getBoundingClientRect()
+    def __reset_position(self, *e):
+        rect = self.__dom_node.getBoundingClientRect()
         root_rect = _document.documentElement.getBoundingClientRect()
         body_rect = _document.body.getBoundingClientRect()
         fixed_offset_top = body_rect.top - root_rect.top
-        lp_node = self._lp_node
+        lp_node = self.__lp_node
         lp_node.style.left = f"{rect.left - body_rect.left}px"
         lp_node.style.top = f"{rect.bottom - body_rect.top + fixed_offset_top + 5}px"
         lp_node.style.width = f"{rect.width}px"
 
     ###### INTERNAL EVENTS ######
-    def _on_keydown(self, e):
+    def __on_keydown(self, e):
         key = getattr(e, "key", None)
         if key in ("ArrowDown", "ArrowUp"):
             e.preventDefault()
         elif key == "Enter":
-            self._set_text()
+            self.__set_text()
             return
         elif key == "Escape":
-            self._reset_autocomplete()
+            self.__reset_autocomplete()
             return
         else:
             return
 
         try:
             if key == "ArrowDown":
-                i = min(self._active_index + 1, len(self._active_nodes) - 1)
-                new_active = self._active_nodes[i]
+                i = min(self.__active_index + 1, len(self.__active_nodes) - 1)
+                new_active = self.__active_nodes[i]
             else:
-                i = max(self._active_index - 1, -1)
-                new_active = None if i == -1 else self._active_nodes[i]
+                i = max(self.__active_index - 1, -1)
+                new_active = None if i == -1 else self.__active_nodes[i]
         except IndexError:
             return
 
-        self._active_index = i
-        if self._active is not None:
-            self._active.role = None
+        self.__active_index = i
+        if self.__active is not None:
+            self.__active.role = None
         if new_active is not None:
             new_active.role = "ae-autocomplete-active"
-            self._virtualizer.scroll_to_index(i)
+            self.__virtualizer.scroll_to_index(i)
 
-        self._active = new_active
+        self.__active = new_active
 
-    def _on_input(self, e):
+    def __on_input(self, e):
         """This method is called when the text in this text box is edited"""
-        self._gen_active_nodes()
-        self._populate()
+        self.__gen_active_nodes()
+        self.__populate()
 
-    def _on_focus(self, e):
+    def __on_focus(self, e):
         """This method is called when the TextBox gets focus"""
-        self._reset_position()
-        self._gen_active_nodes()
-        self._populate()
+        self.__reset_position()
+        self.__gen_active_nodes()
+        self.__populate()
 
-    def _on_blur(self, e):
+    def __on_blur(self, e):
         """This method is called when the TextBox loses focus"""
-        self._reset_autocomplete()
+        self.__reset_autocomplete()
 
-    def _on_show(self, **e_args):
+    def __on_show(self, **e_args):
         """This method is called when the TextBox is shown on the screen"""
-        _document.body.appendChild(self._lp_node)
-        _S(_window).on("resize", self._reset_position)
+        _document.body.appendChild(self.__lp_node)
+        _S(_window).on("resize", self.__reset_position)
 
-    def _on_hide(self, **e_args):
+    def __on_hide(self, **e_args):
         """This method is called when the TextBox is removed from the screen"""
         try:
-            self._lp_node.remove()
+            self.__lp_node.remove()
         except Exception:
             pass
-        _S(_window).off("resize", self._reset_position)
-        self._nodes = {}
+        _S(_window).off("resize", self.__reset_position)
+        self.__nodes = {}
 
-    def _handle_popover(self, init_node, **event_args):
-        init_node(self._lp_node)
+    def __handle_popover(self, init_node, **event_args):
+        init_node(self.__lp_node)
 
     ##### Properties ######
     @property
     def suggestions(self):
-        return self._data or []
+        return self.__data or []
 
     @suggestions.setter
     def suggestions(self, val):
-        self._data = val
-        if self._dom_node is _document.activeElement:
-            self._gen_active_nodes()
-            self._populate()
+        self.__data = val
+        if self.__dom_node is _document.activeElement:
+            self.__gen_active_nodes()
+            self.__populate()
 
     @property
     def filter_mode(self):
-        return self._filter_mode
+        return self.__filter_mode
 
     @filter_mode.setter
     def filter_mode(self, value):
-        self._filter_mode = value
+        self.__filter_mode = value
         if value == "startswith":
-            self._filter_fn = self._filter_startswith
+            self.__filter_fn = self.__filter_startswith
         else:
-            self._filter_fn = self._filter_contains
+            self.__filter_fn = self.__filter_contains

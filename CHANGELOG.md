@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+- autocomplete - fix name collisions with M3 textbox
+  https://github.com/anvilistas/anvil-extras/pull/624
+
 # v3.4.0
 
 ## Enhancements
