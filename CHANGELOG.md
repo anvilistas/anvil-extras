@@ -1,4 +1,4 @@
-# Unreleased
+# v3.4.1
 
 ## Bug Fixes
 - autocomplete - fix name collisions with M3 textbox
