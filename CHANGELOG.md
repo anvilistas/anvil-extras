@@ -3,6 +3,8 @@
 ## Bug Fixes
 - autocomplete - fix name collisions with M3 textbox
   https://github.com/anvilistas/anvil-extras/pull/624
+- multiselect - fix selected property set on init
+  https://github.com/anvilistas/anvil-extras/pull/625
 
 # v3.4.0
 

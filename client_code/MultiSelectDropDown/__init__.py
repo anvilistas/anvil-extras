@@ -347,10 +347,12 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     @property
     def selected_keys(self):
+        self._lazy_build()
         return [opt["key"] for opt in self._options if opt.get("selected")]
 
     @property
     def selected(self):
+        self._lazy_build()
         return [opt["value"] for opt in self._options if opt.get("selected")]
 
     @selected.setter
@@ -456,6 +458,7 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         if self._options_built:
             return
 
+        self._options_built = True
         selected_snapshot = list(self.selected) + list(self._invalid)
         options = self._normalize_items(self._raw_items)
         self._dd.options = self._options = options
@@ -466,7 +469,6 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
         if selected_snapshot:
             self.selected = selected_snapshot
-        self._options_built = True
 
     def _open(self, **e):
         self._lazy_build()
