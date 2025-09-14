@@ -9,7 +9,7 @@ from .logging import INFO
 from .logging import Logger as _Logger
 from .utils._warnings import warn as _warn
 
-__version__ = "3.4.0"
+__version__ = "3.4.1"
 
 
 _null_logger = _Logger()

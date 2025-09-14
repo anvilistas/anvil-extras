@@ -11,7 +11,7 @@ from anvil.js import get_dom_node as _get_dom_node
 from ..utils._component_helpers import _html_injector, _spacing_property
 from ._anvil_designer import ChipTemplate
 
-__version__ = "3.4.0"
+__version__ = "3.4.1"
 
 _html_injector.css(
     """.ae-chip{

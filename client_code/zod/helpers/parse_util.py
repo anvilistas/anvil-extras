@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "3.4.0"
+__version__ = "3.4.1"
 
 from ..errors import get_default_error_map, get_error_map
 from .dict_util import DictLike
