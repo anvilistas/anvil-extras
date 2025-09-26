@@ -38,7 +38,7 @@ HANDLE_SIZE = "--ae-slider-handle-size"
 _html_injector.css(
     f"""
 .ae-slider-container {{
-  padding: calc(var(--ae-slider-handle-size) / 2);
+  padding: calc(calc(var({HANDLE_SIZE}) - var({BAR_HEIGHT}) + 8px) / 2) calc(var({HANDLE_SIZE}) / 2);
 }}
 .ae-slider-container.has-pips {{
   padding-bottom: 40px;
@@ -58,6 +58,9 @@ _html_injector.css(
 }}
 .noUi-handle::before, .noUi-handle::after {{
     content: none
+}}
+.noUi-pips-horizontal {{
+    height: 40px;
 }}
 """
 )
@@ -199,6 +202,8 @@ def _recreate_slider(self):
     try:
         self._parse_props()
         self._create_slider()
+        if self.visible:
+            self._update_tooltip_positions()
         if not in_designer:
             self.values = values
     except Exception as e:
