@@ -59,6 +59,9 @@ _html_injector.css(
 .noUi-handle::before, .noUi-handle::after {{
     content: none
 }}
+.noUi-pips-horizontal {{
+    height: 40px;
+}}
 """
 )
 
