@@ -38,7 +38,7 @@ HANDLE_SIZE = "--ae-slider-handle-size"
 _html_injector.css(
     f"""
 .ae-slider-container {{
-  padding: calc(var(--ae-slider-handle-size) / 2);
+  padding: calc(calc(var({HANDLE_SIZE}) - var({BAR_HEIGHT}) + 8px) / 2) calc(var({HANDLE_SIZE}) / 2);
 }}
 .ae-slider-container.has-pips {{
   padding-bottom: 40px;
