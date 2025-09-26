@@ -520,6 +520,10 @@ class DropDown(DropDownTemplate):
         """Ensure keydown continues to be received after scroll/renders.
         We prefer to keep focus within the options container so Arrow keys work.
         """
+        if self.enable_filtering:
+            # Fixes an issue on chrome tablets, where the focus is lost when the search box is focused
+            return
+
         active = document.activeElement
 
         if active and self.dd_node.contains(active):

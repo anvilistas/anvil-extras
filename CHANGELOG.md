@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+- multiselect - fix bug on chrome tablet where focus was lost from search box
+  https://github.com/anvilistas/anvil-extras/pull/627
+
 # v3.4.1
 
 ## Bug Fixes
