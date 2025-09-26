@@ -1,4 +1,4 @@
-# Unreleased
+# v3.4.2
 
 ## Bug Fixes
 - multiselect - fix bug on chrome tablet where focus was lost from search box
