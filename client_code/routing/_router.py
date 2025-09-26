@@ -16,7 +16,7 @@ from ._alert import handle_alert_unload as _handle_alert_unload
 from ._logging import logger
 from ._utils import ANY, TemplateInfo, get_url_components
 
-__version__ = "3.4.1"
+__version__ = "3.4.2"
 
 
 class NavigationExit(Exception):

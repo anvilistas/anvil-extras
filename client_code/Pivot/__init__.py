@@ -10,7 +10,7 @@ import anvil.js
 from ..utils import _component_helpers as helpers
 from ._anvil_designer import PivotTemplate
 
-__version__ = "3.4.1"
+__version__ = "3.4.2"
 
 pivottable_version = "2.23.0"
 jqueryui_version = "1.11.4"

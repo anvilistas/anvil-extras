@@ -17,7 +17,7 @@ from anvil.js.window import window as _window
 from ..utils._component_helpers import _html_injector
 from ..virtualize import Virtualizer
 
-__version__ = "3.4.1"
+__version__ = "3.4.2"
 
 
 _html_injector.css(

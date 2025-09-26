@@ -5,7 +5,7 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "3.4.1"
+__version__ = "3.4.2"
 
 import anvil
 from anvil import alert as anvil_alert
