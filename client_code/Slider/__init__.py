@@ -202,6 +202,8 @@ def _recreate_slider(self):
     try:
         self._parse_props()
         self._create_slider()
+        if self.visible:
+            self._update_tooltip_positions()
         if not in_designer:
             self.values = values
     except Exception as e:
