@@ -102,13 +102,17 @@ def lazy_route(
 
     def wrapper(fn):
         class Lazy:
-            _form = None
+            _form_async_call = None
 
             def __new__(cls, **properties):
-                form_class = cls._form
-                if form_class is None:
-                    form_class = cls._form = fn()
-                return form_class.__new__(form_class, **properties)
+                form_async_call = cls._form_async_call
+                if form_async_call is None:
+                    from ..non_blocking import call_async
+
+                    form_async_call = cls._form_async_call = call_async(fn)
+
+                form = form_async_call.await_result()
+                return form.__new__(form, **properties)
 
         route_wrapper(Lazy)
         return fn
