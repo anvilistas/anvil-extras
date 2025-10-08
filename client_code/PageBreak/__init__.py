@@ -9,7 +9,7 @@ import anvil
 from ..utils._component_helpers import _css_length
 from ._anvil_designer import PageBreakTemplate
 
-__version__ = "3.4.2"
+__version__ = "3.4.3"
 
 
 class PageBreak(PageBreakTemplate):

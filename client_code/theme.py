@@ -7,7 +7,7 @@
 
 import anvil
 
-__version__ = "3.4.2"
+__version__ = "3.4.3"
 
 M3_DEFAULT_SCHEMES = {
     "Material": {

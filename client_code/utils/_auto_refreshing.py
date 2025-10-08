@@ -10,7 +10,7 @@ from functools import lru_cache
 
 from anvil.server import portable_class
 
-__version__ = "3.4.2"
+__version__ = "3.4.3"
 
 
 def wrap_method(meth_name, refresh=False):

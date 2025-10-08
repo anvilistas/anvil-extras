@@ -12,7 +12,7 @@ from ...popover import pop
 from ...virtualize import Virtualizer
 from ._anvil_designer import DropDownTemplate
 
-__version__ = "3.4.2"
+__version__ = "3.4.3"
 
 _TEMP_DIV = document.createElement("div")
 
