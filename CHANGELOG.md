@@ -1,3 +1,9 @@
+# v3.4.3
+
+## Bug Fixes
+- routing - fix circular import error edge case when using lazy routes
+  https://github.com/anvilistas/anvil-extras/pull/629
+
 # v3.4.2
 
 ## Bug Fixes
