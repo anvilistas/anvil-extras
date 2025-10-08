@@ -164,6 +164,9 @@ def navigate(url_hash=None, url_pattern=None, url_dict=None, **properties):
             )
         else:
             logger.debug(f"loading route: {form.__class__.__name__!r} from cache")
+
+        nav_context.check_stale()
+
         with ViewTransition(form):
             clear_container()
             nav_context.check_stale()
