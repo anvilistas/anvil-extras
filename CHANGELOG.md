@@ -1,3 +1,9 @@
+# Unreleased
+
+## Features
+- CheckBoxGroup - add CheckBoxGroup component
+  https://github.com/anvilistas/anvil-extras/pull/630
+
 # v3.4.3
 
 ## Bug Fixes
