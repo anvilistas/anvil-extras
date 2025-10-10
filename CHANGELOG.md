@@ -1,4 +1,4 @@
-# Unreleased
+# v3.5.0
 
 ## Features
 - CheckBoxGroup - add CheckBoxGroup component
