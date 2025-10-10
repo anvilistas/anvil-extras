@@ -17,7 +17,7 @@ from ..utils._component_helpers import (
     _supports_relative_colors,
 )
 
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 primary = _primary_color
 

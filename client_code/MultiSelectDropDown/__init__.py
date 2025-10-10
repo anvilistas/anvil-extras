@@ -14,7 +14,7 @@ from ..utils._component_helpers import _css_length, _html_injector, _spacing_pro
 from ._anvil_designer import MultiSelectDropDownTemplate
 from .DropDown import DropDown
 
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 _css = """
 .anvil-role-ae-ms-btn > button {

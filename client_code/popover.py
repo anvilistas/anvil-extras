@@ -9,7 +9,7 @@
 # for more information visit the w3 bootstrap popover page
 # https://www.w3schools.com/bootstrap4/bootstrap_ref_js_popover.asp
 #
-# or the bootstrap popover page for v 3.4.3
+# or the bootstrap popover page for v 3.5.0
 # https://getbootstrap.com/docs/3.4/javascript/#popovers
 #
 
@@ -25,7 +25,7 @@ from .utils._component_helpers import walk as _walk
 from .utils._deprecated import deprecated as _deprecated
 from .utils._warnings import warn as _warn
 
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 __all__ = [
     "popover",
@@ -676,9 +676,9 @@ def popover(
 
 def pop(self, behavior):
     """behaviour can be any of
-    show, hide, toggle, destroy (included with bootstrap 3.4.3)
+    show, hide, toggle, destroy (included with bootstrap 3.5.0)
 
-    features added not in bootstrap 3.4.3 docs:
+    features added not in bootstrap 3.5.0 docs:
     update  - updates position of popover - useful for dynamic content that changes the size of the popover
     shown: returns True or False if the popover is visible - note a popover will only be visible after it has animated onto screen so may need to sleep(.15) before calling
     is_visible: same as shown

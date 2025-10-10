@@ -8,7 +8,7 @@ import anvil.server
 
 from .utils._warnings import warn as _warn
 
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 
 def _snakify(text):

@@ -8,7 +8,7 @@
 default_error_map = None
 error_map = None
 
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 
 def get_default_error_map():

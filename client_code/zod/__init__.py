@@ -40,6 +40,6 @@ from ._zod_error import ZodError, ZodIssueCode
 ParseError = ZodError
 IssueCode = ZodIssueCode
 
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 __all__ = []  # it would be dangerous to do import *
