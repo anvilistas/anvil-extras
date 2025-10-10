@@ -16,4 +16,6 @@ toolbox_sections:
   - items:
     - component: {type: anvil_extras.RadioGroup}
       title: RadioGroup
+    - component: {type: anvil_extras.CheckBoxGroup}
+      title: CheckBoxGroup
     packageName: anvil_extras
