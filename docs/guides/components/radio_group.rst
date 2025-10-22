@@ -20,7 +20,7 @@ Add as a container and append buttons
 .. code-block:: python
 
     from anvil import RadioButton
-    from anvil_extras import RadioGroup
+    from anvil_extras.RadioGroup import RadioGroup
 
 
     class Form(FormTemplate):
@@ -47,7 +47,7 @@ Use the items property (like Dropdown)
 
 .. code-block:: python
 
-    from anvil_extras import RadioGroup
+    from anvil_extras.RadioGroup import RadioGroup
 
     # Simple list of strings: value equals the text
     self.radio_group = RadioGroup(items=["One", "Two", "Three"])  # selected_value is one of the strings
@@ -69,7 +69,7 @@ If you already have individual ``RadioButton`` components on a form, you can gro
 
 .. code-block:: python
 
-    from anvil_extras import RadioGroup
+    from anvil_extras.RadioGroup import RadioGroup
 
     # If you already have RadioButtons on your form (e.g. placed in the Designer),
     # you can add group behaviour without moving them into the RadioGroup container.
