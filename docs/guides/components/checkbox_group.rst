@@ -20,7 +20,7 @@ Add as a container and append checkboxes
 .. code-block:: python
 
     from anvil import CheckBox
-    from anvil_extras import CheckBoxGroup
+    from anvil_extras.CheckBoxGroup import CheckBoxGroup
 
 
     class Form(FormTemplate):
@@ -47,7 +47,7 @@ Use the items property (like Dropdown)
 
 .. code-block:: python
 
-    from anvil_extras import CheckBoxGroup
+    from anvil_extras.CheckBoxGroup import CheckBoxGroup
 
     # Simple list of strings: values equal the text
     self.checkbox_group = CheckBoxGroup(items=["One", "Two", "Three"])  # selected_values is a list of strings
@@ -69,7 +69,7 @@ If you already have individual ``CheckBox`` components on a form, you can group 
 
 .. code-block:: python
 
-    from anvil_extras import CheckBoxGroup
+    from anvil_extras.CheckBoxGroup import CheckBoxGroup
 
     # If you already have CheckBoxes on your form (e.g. placed in the Designer),
     # you can add group behaviour without moving them into the CheckBoxGroup container.
