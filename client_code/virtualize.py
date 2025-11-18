@@ -6,16 +6,13 @@
 # This software is published at https://github.com/anvilistas/anvil-extras
 
 import anvil
-from anvil.js import import_from, window
+
+from .utils._cdn_loader import load_asset
 
 __version__ = "3.5.0"
 
-if window.get("tanstackvirtualCore"):
-    virtual_core = window.tanstackvirtualCore
-else:
-    virtual_core = import_from(
-        "https://cdn.jsdelivr.net/npm/@tanstack/virtual-core@3.13.12/+esm"
-    )
+# Load tanstack-virtual-core asset (handles window check, CDN/local fallback)
+virtual_core = load_asset("tanstack-virtual-core")
 
 
 def noop(*args, **kwargs):

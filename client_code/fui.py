@@ -5,19 +5,12 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-from anvil.js import import_from
-from anvil.js.window import window as _W
+from .utils._cdn_loader import load_asset
 
 __version__ = "3.5.0"
 
-try:
-    # support preloaded FloatingUIDOM
-    FloatingUIDOM = _W.FloatingUIDOM
-except AttributeError:
-    # https://floating-ui.com/
-    FloatingUIDOM = import_from(
-        "https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.4/+esm"
-    )
+# Load floating-ui asset (handles window check, CDN/local fallback)
+FloatingUIDOM = load_asset("floating-ui")
 
 _static_arrow_position = {
     "top": "bottom",

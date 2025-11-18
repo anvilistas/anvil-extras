@@ -14,6 +14,7 @@ from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
 from ..fui import auto_update
+from ..utils._cdn_loader import load_asset
 from ..utils._component_helpers import _get_color, _html_injector, _spacing_property
 from ._anvil_designer import SliderTemplate
 
@@ -24,11 +25,8 @@ except ImportError:
 
 __version__ = "3.5.0"
 
-noui_version = "15.4.0"
-
-_html_injector.cdn(
-    f"https://cdn.jsdelivr.net/npm/nouislider@{noui_version}/dist/nouislider.min.css"
-)
+# Load nouislider asset (handles CSS, JS loading, CDN/local fallback)
+_Slider = load_asset("nouislider")
 
 BAR_HEIGHT = "--ae-slider-height"
 BAR_COLOR = "--ae-slider-bar_color"
@@ -64,10 +62,6 @@ _html_injector.css(
 }}
 """
 )
-
-_Slider = anvil.js.import_from(
-    "https://cdn.skypack.dev/pin/nouislider@v15.4.0-qwAfTOVKkfvhMhVnBPSn/mode=imports,min/optimized/nouislider.js"
-).default
 
 
 import json

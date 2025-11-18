@@ -1,3 +1,10 @@
+# Unreleased
+
+## Features
+
+* CDN configuration - opt out of CDN loading and use local assets only
+  https://github.com/anvilistas/anvil-extras/pull/633
+
 # v3.5.0
 
 ## Features

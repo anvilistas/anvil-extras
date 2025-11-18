@@ -1,4 +1,7 @@
 allow_embedding: false
+config_schema:
+  client:
+    cdn: {type: boolean, default_value: true}
 db_schema: {}
 metadata: {}
 name: anvil_extras

@@ -7,20 +7,16 @@
 
 from datetime import date, datetime
 
-import anvil.js
-from anvil.js import ExternalError
+from anvil.js import ExternalError, await_promise
 from anvil.js import window as _window
+
+from .utils._cdn_loader import load_asset
 
 __version__ = "3.5.0"
 __all__ = ["local_storage", "indexed_db"]
 
-try:
-    _forage = _window.localforage
-except AttributeError:
-    _ForageModule = anvil.js.import_from(
-        "https://cdn.skypack.dev/pin/localforage@v1.10.0-vSTz1U7CF0tUryZh6xTs/mode=imports,min/optimized/localforage.js"
-    )
-    _forage = _ForageModule.default
+# Load localforage asset (handles window check, CDN/local fallback)
+_forage = load_asset("localforage")
 
 _forage.dropInstance()
 
@@ -276,7 +272,7 @@ def _fail_db(*args):
         req.onsuccess = lambda r: res(None)
 
     # this is asyncronous so use the Promise api
-    anvil.js.await_promise(_window.Promise(check_db))
+    await_promise(_window.Promise(check_db))
 
 
 def _fail_ls(*args):
