@@ -1,4 +1,4 @@
-# Unreleased
+# v3.6.0
 
 ## Features
 
