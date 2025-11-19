@@ -8,7 +8,7 @@ from anvil import Label, Link, get_open_form, set_url_hash
 
 from .utils._view_transition import ViewTransition, use_transitions
 
-__version__ = "3.5.0"
+__version__ = "3.6.0"
 
 # A dict mapping a form's name to a further dict with the form's class and title
 _forms = {}

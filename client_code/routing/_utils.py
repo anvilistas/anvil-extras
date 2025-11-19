@@ -12,7 +12,7 @@ from anvil.js.window import location
 
 from ._logging import logger
 
-__version__ = "3.5.0"
+__version__ = "3.6.0"
 
 
 ANY = object()

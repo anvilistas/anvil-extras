@@ -5,4 +5,4 @@
 #
 # This software is published at https://github.com/anvilistas/anvil-extras
 
-__version__ = "3.5.0"
+__version__ = "3.6.0"

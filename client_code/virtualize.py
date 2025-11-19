@@ -9,7 +9,7 @@ import anvil
 
 from .utils._cdn_loader import load_asset
 
-__version__ = "3.5.0"
+__version__ = "3.6.0"
 
 # Load tanstack-virtual-core asset (handles window check, CDN/local fallback)
 virtual_core = load_asset("tanstack-virtual-core")

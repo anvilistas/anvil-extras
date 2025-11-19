@@ -12,7 +12,7 @@ from anvil.js import window as _window
 
 from .utils._cdn_loader import load_asset
 
-__version__ = "3.5.0"
+__version__ = "3.6.0"
 __all__ = ["local_storage", "indexed_db"]
 
 # Load localforage asset (handles window check, CDN/local fallback)

@@ -11,7 +11,7 @@ from anvil.js import window as _window
 
 from ._component_helpers import _html_injector
 
-__version__ = "3.5.0"
+__version__ = "3.6.0"
 
 config = anvil.app.get_client_config("anvil_extras")
 cdn = bool(config.get("cdn", True))
