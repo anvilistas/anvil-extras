@@ -82,3 +82,32 @@ Add anvil-extras as a dependency to your own app(s)
 * From the 'Add a dependency' dropdown, select 'Anvil Extras'
 
 That's it! You should now see the extra components available in your app's toolbox on the right hand side and all the other features are available for you to import.
+
+CDN Configuration
+-----------------
+anvil-extras uses external JavaScript libraries (such as Quill, Floating UI, noUiSlider, etc.) that can be loaded either from CDN or from local assets bundled with the library.
+
+By default, anvil-extras will attempt to load assets from CDN with automatic fallback to local assets if the CDN fails. You can configure this behavior:
+
+* From the gear icon in your app's left hand sidebar, select 'Dependencies'
+* Find 'anvil-extras' in your dependencies list
+* Click the edit icon (pencil) next to 'anvil-extras'
+* Navigate to **Client** → **cdn**
+* Set to ``true`` to use CDN (with local fallback) or ``false`` to use local assets only
+
+**CDN mode (default, ``cdn: true``):**
+  - Attempts to load assets from CDN first
+  - Automatically falls back to local assets if CDN fails
+  - Best for most use cases as it provides redundancy
+
+**Local mode (``cdn: false``):**
+  - Loads all assets from local files bundled with anvil-extras
+  - Useful for offline applications or when you want to avoid external CDN dependencies
+  - All required assets are included in the library's theme directory
+
+The following assets are managed by this configuration:
+  - Quill (rich text editor)
+  - Floating UI (positioning library for popovers and slider)
+  - noUiSlider (slider component)
+  - localforage (storage library)
+  - TanStack Virtual Core (virtualization library for large lists in multiselect dropdown and autocomplete)
