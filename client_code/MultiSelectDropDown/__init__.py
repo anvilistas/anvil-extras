@@ -377,6 +377,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         first = True
 
         for opt in self._options:
+            # Dividers do not carry selection state
+            if opt.get("is_divider"):
+                continue
             try:
                 idx = values.index(opt["value"])
             except ValueError:
