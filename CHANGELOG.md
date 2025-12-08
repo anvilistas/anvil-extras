@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+- Fix dividers in multiselect break setting selected value
+  https://github.com/anvilistas/anvil-extras/issues/634
+
 # v3.6.0
 
 ## Features

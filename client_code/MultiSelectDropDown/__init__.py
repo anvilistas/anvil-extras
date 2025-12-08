@@ -348,12 +348,20 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
     @property
     def selected_keys(self):
         self._lazy_build()
-        return [opt["key"] for opt in self._options if opt.get("selected")]
+        return [
+            opt["key"]
+            for opt in self._options
+            if not opt.get("is_divider") and opt.get("selected")
+        ]
 
     @property
     def selected(self):
         self._lazy_build()
-        return [opt["value"] for opt in self._options if opt.get("selected")]
+        return [
+            opt["value"]
+            for opt in self._options
+            if not opt.get("is_divider") and opt.get("selected")
+        ]
 
     @selected.setter
     def selected(self, values):
@@ -377,6 +385,9 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
         first = True
 
         for opt in self._options:
+            # Dividers do not carry selection state
+            if opt.get("is_divider"):
+                continue
             try:
                 idx = values.index(opt["value"])
             except ValueError:
