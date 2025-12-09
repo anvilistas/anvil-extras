@@ -1,4 +1,4 @@
-# Unreleased
+# v3.6.1
 
 ## Bug Fixes
 - Fix dividers in multiselect break setting selected value
