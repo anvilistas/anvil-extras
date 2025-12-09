@@ -15,7 +15,7 @@ from ..utils._cdn_loader import load_asset
 from ..utils._component_helpers import _html_injector, _spacing_property
 from ._anvil_designer import QuillTemplate
 
-__version__ = "3.6.0"
+__version__ = "3.6.1"
 
 # Load Quill asset (handles CSS, JS loading, window check, CDN/local fallback)
 _Quill = load_asset("quill")

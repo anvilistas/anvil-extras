@@ -7,7 +7,7 @@
 
 from anvil.js import window as _window
 
-__version__ = "3.6.0"
+__version__ = "3.6.1"
 
 
 class Deferred:

@@ -23,7 +23,7 @@ try:
 except ImportError:
     in_designer = False
 
-__version__ = "3.6.0"
+__version__ = "3.6.1"
 
 # Load nouislider asset (handles CSS, JS loading, CDN/local fallback)
 _Slider = load_asset("nouislider")

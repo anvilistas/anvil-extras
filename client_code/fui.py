@@ -7,7 +7,7 @@
 
 from .utils._cdn_loader import load_asset
 
-__version__ = "3.6.0"
+__version__ = "3.6.1"
 
 # Load floating-ui asset (handles window check, CDN/local fallback)
 FloatingUIDOM = load_asset("floating-ui")
