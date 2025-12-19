@@ -547,7 +547,7 @@ class DropDown(DropDownTemplate):
         for i, opt in enumerate(self._options_data):
             if opt.get("is_divider"):
                 continue
-            total = len(opt.get("key", "")) + len(opt.get("subtext", ""))
+            total = len(opt.get("key") or "") + len(opt.get("subtext") or "")
             if opt.get("icon"):
                 total += 2
 
