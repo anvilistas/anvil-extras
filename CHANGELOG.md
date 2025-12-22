@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+- Fix MultiSelectDropDown TypeError when items have None key or subtext values
+  https://github.com/anvilistas/anvil-extras/issues/636
+
 # v3.6.1
 
 ## Bug Fixes
