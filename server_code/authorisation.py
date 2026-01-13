@@ -14,6 +14,8 @@ __version__ = "3.6.1"
 
 config = {"get_roles": itemgetter("roles")}
 
+sentinel = object()
+
 
 def set_config(**kwargs):
     if "get_roles" in kwargs:
@@ -46,9 +48,10 @@ def authentication_required(func):
     return wrapper
 
 
-def has_permission(permissions):
+def has_permission(permissions, user=sentinel):
     """Returns True/False depending on whether a user has permission or not"""
-    user = anvil.users.get_user()
+    user = anvil.users.get_user() if user is sentinel else user
+
     if user is None:
         return False
 
@@ -69,12 +72,13 @@ def has_permission(permissions):
     return required_permissions.issubset(user_permissions)
 
 
-def check_permissions(permissions):
+def check_permissions(permissions, user=sentinel):
     """Checks a users permissions, raises ValueError if user does not have permissions"""
-    if has_permission(permissions):
+    user = anvil.users.get_user() if user is sentinel else None
+
+    if has_permission(permissions, user=user):
         return
 
-    user = anvil.users.get_user()
     fail = "Authentication" if user is None else "Authorisation"
 
     raise ValueError(f"{fail} required")

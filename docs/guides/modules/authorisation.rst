@@ -93,13 +93,17 @@ API
     permissions should be a string or iterable of strings
 
 
-.. function:: has_permission(permissions)
+.. function:: has_permission(permissions[, user])
 
     Returns True/False on whether a user is logged in and has valid permissions
 
-.. function:: check_permissions(permissions)
+    If ``user`` is not provided, defaults to ``anvil.users.get_user()``
+
+.. function:: check_permissions(permissions[, user])
 
     Raises a ValueError if there is no user or the user does not have valid permissions
+
+    If ``user`` is not provided, defaults to ``anvil.users.get_user()``
 
 .. function:: set_config(**kwargs)
 
