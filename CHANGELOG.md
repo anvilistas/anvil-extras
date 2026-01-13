@@ -1,8 +1,13 @@
 # Unreleased
 
+## Bug Fixes
+- Fix MultiSelectDropDown TypeError when items have None key or subtext values
+  https://github.com/anvilistas/anvil-extras/issues/636
+
 ## Features
 - authorisation - has_permission() and check_permissions() now take a keyword arg user
 https://github.com/anvilistas/anvil-extras/pull/644
+
 # v3.6.1
 
 ## Bug Fixes
