@@ -332,11 +332,21 @@ class MultiSelectDropDown(MultiSelectDropDownTemplate):
 
     @items.setter
     def items(self, value):
+        # Preserve current selection so refreshes don't clear valid values.
+        pending_selected = list(self._invalid)
+        if self._options_built:
+            pending_selected = [
+                opt["value"]
+                for opt in self._options
+                if not opt.get("is_divider") and opt.get("selected")
+            ] + pending_selected
+
         # store raw items and mark for lazy build
         self._props["items"] = value
         self._raw_items = list(value) if value else []
         self._options_built = False
         self._options = []  # list[dict]
+        self._invalid = pending_selected
         self._dd.options = []  # html renderer expects list[dict]
         self._total = 0
 
