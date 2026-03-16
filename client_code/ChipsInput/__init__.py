@@ -17,8 +17,7 @@ __version__ = "3.6.1"
 
 _primary = _get_color(None)
 
-_html_injector.css(
-    """
+_html_injector.css("""
 .ae-chips-input input {
     box-shadow: none !important;
     border: none !important;
@@ -36,8 +35,7 @@ _html_injector.css(
     padding-bottom: 4px;
 }
 
-"""
-)
+""")
 
 _defaults = {
     "primary_placeholder": "",

@@ -20,8 +20,7 @@ from ..virtualize import Virtualizer
 __version__ = "3.6.1"
 
 
-_html_injector.css(
-    """
+_html_injector.css("""
 .anvil-role-ae-autocomplete {
     padding: 0 !important;
 }
@@ -60,8 +59,7 @@ _html_injector.css(
 .anvil-role-ae-autocomplete a:hover, .anvil-role-ae-autocomplete a.anvil-role-ae-autocomplete-active {
     background-color: #eee;
 }
-"""
-)
+""")
 
 
 TB = _pluggable_ui["anvil.TextBox"]

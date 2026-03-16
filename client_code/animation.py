@@ -238,13 +238,11 @@ fly_out_right = reversed(fly_in_right)
 
 
 # add a method to the window.Animation class for our convenience
-_window.Function(
-    """
+_window.Function("""
 Animation.prototype.wait = function() {
     return this.finished;
 };
-"""
-)()
+""")()
 
 
 class Animation:
