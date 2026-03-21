@@ -7,6 +7,7 @@
 
 from time import sleep
 
+from anvil.js import await_promise
 from anvil.js.window import document, setTimeout
 
 from ._deferred import Deferred
@@ -44,6 +45,15 @@ class ViewTransition:
             _transition = None
         self.deferred.resolve(None)
 
+    def _observe_ready(self):
+        ready = getattr(self.transition, "ready", None)
+        if ready is None:
+            return
+        try:
+            await_promise(ready)
+        except Exception:
+            pass
+
     def show(self, **event_args):
         self.resolve()
         try:
@@ -59,6 +69,7 @@ class ViewTransition:
             if _transition is None and _can_transition and _use_transition and visible:
                 self.transition = document.startViewTransition(self.promise_callback)
                 _transition = self.transition
+                setTimeout(self._observe_ready, 0)
                 sleep(0)
                 setTimeout(self.resolve, 100)
 
