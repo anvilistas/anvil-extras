@@ -1,8 +1,12 @@
-# Unreleased
+# v3.6.2
 
 ## Bug Fixes
 - Fix MultiSelectDropDown TypeError when items have None key or subtext values
   https://github.com/anvilistas/anvil-extras/issues/636
+- multiselect - preserve selection when items are reset
+  https://github.com/anvilistas/anvil-extras/pull/648
+- routing - observe transition.ready to avoid invalid state errors
+  https://github.com/anvilistas/anvil-extras/pull/649
 
 ## Features
 - authorisation - has_permission() and check_permissions() now take a keyword arg user
