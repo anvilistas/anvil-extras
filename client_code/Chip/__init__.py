@@ -13,8 +13,7 @@ from ._anvil_designer import ChipTemplate
 
 __version__ = "3.6.3"
 
-_html_injector.css(
-    """.ae-chip{
+_html_injector.css(""".ae-chip{
     height: 32px;
     font-size: 14px;
     font-weight: 500;
@@ -41,8 +40,7 @@ _html_injector.css(
 .ae-chip span, .ae-chip a > div {
     padding: 0 !important;
 }
-"""
-)
+""")
 
 _defaults = {
     "icon": "",
