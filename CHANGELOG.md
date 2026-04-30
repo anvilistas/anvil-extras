@@ -1,3 +1,9 @@
+# Unreleased
+
+## Bug Fixes
+- Fix MultiSelectDropDown stale search filter after closing and reopening
+  https://github.com/anvilistas/anvil-extras/issues/650
+
 # v3.6.2
 
 ## Bug Fixes

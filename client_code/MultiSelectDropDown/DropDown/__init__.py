@@ -112,11 +112,17 @@ class DropDown(DropDownTemplate):
         setTimeout(self.filter_box.focus, 10)
 
     def _on_filter_hide(self, **event_args):
+        self._reset_filter()
+
+    def _reset_filter(self):
+        clearTimeout(self._filter_timer)
+        self._filter_timer = None
+        self._last_filter_term = ""
         self.filter_box.text = ""
-        # show all
         for opt in self._options_data:
             opt["_visible"] = True
-        # clear any active element when filter/search UI is hidden
+        self._recompute_filtered()
+        self._render_virtual()
         self._set_active_idx(-1)
 
     def _on_filter_change(self, **event_args):
