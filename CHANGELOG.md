@@ -1,4 +1,4 @@
-# Unreleased
+# v3.6.3
 
 ## Bug Fixes
 - Fix MultiSelectDropDown stale search filter after closing and reopening
