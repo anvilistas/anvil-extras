@@ -33,8 +33,7 @@ BAR_COLOR = "--ae-slider-bar_color"
 HANDLE_SIZE = "--ae-slider-handle-size"
 
 
-_html_injector.css(
-    f"""
+_html_injector.css(f"""
 .ae-slider-container {{
   padding: calc(calc(var({HANDLE_SIZE}) - var({BAR_HEIGHT}) + 8px) / 2) calc(var({HANDLE_SIZE}) / 2);
 }}
@@ -60,8 +59,7 @@ _html_injector.css(
 .noUi-pips-horizontal {{
     height: 40px;
 }}
-"""
-)
+""")
 
 
 import json
