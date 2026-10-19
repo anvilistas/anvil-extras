@@ -22,8 +22,7 @@ from ._anvil_designer import TabsTemplate
 
 __version__ = "3.6.3"
 
-_html_injector.css(
-    """
+_html_injector.css("""
 .ae-tabs-container.anvil-role-card {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
@@ -104,8 +103,7 @@ _html_injector.css(
         background-color: rgb(from var(--color) r g b / 0.4);
     }
 }
-"""
-)
+""")
 
 if _supports_relative_colors():
     _get_rgb = _get_color

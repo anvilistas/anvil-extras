@@ -7,9 +7,13 @@
 
 import anvil.js
 from anvil import HtmlPanel as _HtmlPanel
-from anvil.js.window import cancelAnimationFrame, clearTimeout
+from anvil.js.window import (
+    cancelAnimationFrame,
+    clearTimeout,
+    requestAnimationFrame,
+    setTimeout,
+)
 from anvil.js.window import document as _document
-from anvil.js.window import requestAnimationFrame, setTimeout
 from anvil.property_utils import get_unset_spacing as _get_unset_spacing
 from anvil.property_utils import set_element_spacing as _set_spacing
 
@@ -33,8 +37,7 @@ BAR_COLOR = "--ae-slider-bar_color"
 HANDLE_SIZE = "--ae-slider-handle-size"
 
 
-_html_injector.css(
-    f"""
+_html_injector.css(f"""
 .ae-slider-container {{
   padding: calc(calc(var({HANDLE_SIZE}) - var({BAR_HEIGHT}) + 8px) / 2) calc(var({HANDLE_SIZE}) / 2);
 }}
@@ -60,8 +63,7 @@ _html_injector.css(
 .noUi-pips-horizontal {{
     height: 40px;
 }}
-"""
-)
+""")
 
 
 import json
