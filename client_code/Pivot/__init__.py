@@ -24,8 +24,7 @@ jqueryui = f"{prefix}/jqueryui/{jqueryui_version}/jquery-ui.min.js"
 
 _jquery = anvil.js.window.jQuery
 
-helpers._html_injector.css(
-    """.anvil-container-overflow, .anvil-panel-col {
+helpers._html_injector.css(""".anvil-container-overflow, .anvil-panel-col {
         overflow: visible;
     }
     .ae-pivot-container {
@@ -34,8 +33,7 @@ helpers._html_injector.css(
     .pivot-placeholder {
         overflow: auto
     }
-    """
-)
+    """)
 
 if "ui" not in _jquery.keys():
     helpers._html_injector.cdn(jqueryui)
