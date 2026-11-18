@@ -2,6 +2,8 @@ Autocomplete
 ============
 A material design TextBox with autocomplete. A subclass of TextBox - other properties, events and methods inherited from TextBox.
 
+For a custom list that renders suggestions on demand, see :doc:`../modules/virtualizer`.
+
 Properties
 ----------
 

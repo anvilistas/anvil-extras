@@ -2,6 +2,8 @@ MultiSelectDropdown
 ===================
 A multi select dropdown component with optional search bar
 
+For a custom list that renders options on demand, see :doc:`../modules/virtualizer`.
+
 
 Overrides
 ---------
